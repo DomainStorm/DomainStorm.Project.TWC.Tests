@@ -1,0 +1,20 @@
+{
+  "applyCaseNo": "111123",
+  "applyDate": "2023/01/05",
+  "operatingArea": "41",
+  "waterNo": "41101234568",
+  "typeChange": "1",
+  "userCode": "admin",
+  "deviceLocation": "台中市西屯區逢甲路100號",
+  "applicant": "馬啟用1",
+  "idNo": "A123456789",
+  "unino": "16753217",
+  "telNo": "04666666",
+  "mobileNo": "0939123456",
+  "pipeDiameter": "20",
+  "waterType": "1 普通用水",
+  "scoreSheet": "2 分表",
+  "waterBuildLic": "109,中都,00322,,1111213",
+  "waterUseLic": "111,中都,000990,A01附啟用單,1110628",
+  "billAddress": "帳單地址台中市西屯區逢甲路100號"
+}
