@@ -140,11 +140,6 @@ namespace DomainStorm.Project.TWC.Tests
             ClickRow("111123");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-
-            var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
-            var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormNavigation = stormDocumentListDetail.FindElement(By.CssSelector("storm-vertical-navigation"));
-
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             _driver.SwitchTo().Frame(0);
@@ -152,16 +147,36 @@ namespace DomainStorm.Project.TWC.Tests
             var 受理編號 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
             var 水號 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-water-no]")));
             var 受理日期 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-date]")));
+            var 身份證號碼 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-id-no]")));
+            var 營利事業統一編號 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-uni-no]")));
 
             That(受理編號.Text, Is.EqualTo("111123"));
             That(水號.Text, Is.EqualTo("41101234568"));
             That(受理日期.Text, Is.EqualTo("41101234568"));
-            //var trList = stormTable.GetShadowRoot()
-            //    .FindElements(By.CssSelector("tr"));
+            That(身份證號碼.Text, Is.EqualTo("A123456789"));
+            That(營利事業統一編號.Text, Is.EqualTo("16753217"));
+        }
 
-            //That(trList[1].FindElement(By.CssSelector("td:nth-child(3)")).Text, Is.EqualTo("科長"));
-            //That(trList[2].FindElement(By.CssSelector("td:nth-child(3)")).Text, Is.EqualTo("副處長"));
-            //That(trList[3].FindElement(By.CssSelector("td:nth-child(3)")).Text, Is.EqualTo("處長"));
+        [Test]
+        [Order(3)]
+        public async Task Twc01_04()
+        {
+            await Login("admin", "admin");
+
+            _driver.Navigate().GoToUrl($@"{BaseUrl}/draft");
+
+            ClickRow("111123");
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
+            _driver.SwitchTo().Frame(0);
+
+            var waterBuildLic = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-water-build-lic]")));
+            var waterUseLic = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-water-use-lic]")));
+
+            That(waterBuildLic.Text, Is.EqualTo("建築執照號碼109中都工建建字00322號\r\n建照發照日期111年12月13日"));
+            That(waterUseLic.Text, Is.EqualTo("建築使用執照111中都工建使字000990號\r\nA01附啟用單使照發照日期111年06月28日"));
         }
     }
     public class TokenResponse
