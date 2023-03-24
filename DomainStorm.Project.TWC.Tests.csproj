@@ -29,7 +29,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="tpcweb_01_1啟用_bmEnableApply.json">
+	  <None Update="Assets\tpcweb_01_1_ID_反面.jpg">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\tpcweb_01_1_ID_正面.jpg">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\tpcweb_01_1_夾帶附件1.pdf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\tpcweb_01_1_夾帶附件2.pdf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\tpcweb_01_1啟用_bmEnableApply.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
