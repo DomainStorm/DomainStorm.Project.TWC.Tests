@@ -44,6 +44,9 @@
 	  <None Update="Assets\tpcweb_01_1啟用_bmEnableApply.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Assets\tpcweb_03_臨櫃模擬情境_2復用_bmRecoverApply.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

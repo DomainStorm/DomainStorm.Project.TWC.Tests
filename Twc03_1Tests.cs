@@ -8,12 +8,12 @@ using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
 {
-    public class Twc01_1Tests
+    public class Twc03_1Tests
     {
         private IWebDriver _driver = null!;
         private string? _accessToken;
 
-        public Twc01_1Tests()
+        public Twc03_1Tests()
         {
         }
 
@@ -36,18 +36,12 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _accessToken ??= await TestHelper.GetAccessToken();
             That(_accessToken, Is.Not.Empty);
-        }
-
-        [Test]
-        [Order(1)]
-        public async Task Twc01_02()
-        {
-            var client = new RestClient($"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm");
+            var client = new RestClient($"{TestHelper.BaseUrl}/api/v1/bmRecoverApply/confirm");
             var request = new RestRequest();
             request.AddHeader("Content-Type", "application/json");
             request.AddHeader("Authorization", $"Bearer {_accessToken}");
 
-            using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/tpcweb_01_1啟用_bmEnableApply.json"));
+            using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/tpcweb_03_臨櫃模擬情境_2復用_bmRecoverApply.json"));
             var json = await r.ReadToEndAsync();
 
             request.AddParameter("application/json", json, ParameterType.RequestBody);
@@ -56,14 +50,14 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(2)]
-        public async Task Twc01_03()
+        [Order(1)]
+        public async Task Twc01_02()
         {
             await TestHelper.Login(_driver, "admin", "admin");
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
 
-            TestHelper.ClickRow(_driver, "111123");
+            TestHelper.ClickRow(_driver, "202302");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -84,25 +78,15 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
+        [Order(2)]
+        public async Task Twc01_03()
+        {
+        }
+
+        [Test]
         [Order(3)]
         public async Task Twc01_04()
         {
-            await TestHelper.Login(_driver, "admin", "admin");
-
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-
-            TestHelper.ClickRow(_driver, "111123");
-
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            _driver.SwitchTo().Frame(0);
-
-            var waterBuildLic = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-water-build-lic]")));
-            var waterUseLic = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-water-use-lic]")));
-
-            That(waterBuildLic.Text, Is.EqualTo("建築執照號碼109中都工建建字00322號\r\n建照發照日期111年12月13日"));
-            That(waterUseLic.Text, Is.EqualTo("建築使用執照111中都工建使字000990號\r\nA01附啟用單使照發照日期111年06月28日"));
         }
     }
 }

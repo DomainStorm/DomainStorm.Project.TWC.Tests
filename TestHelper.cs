@@ -11,6 +11,10 @@ public class TestHelper
 {
     public const string BaseUrl = "https://localhost:9003";
     public const string TokenUrl = "http://localhost:5050/connect/token";
+    public class TokenResponse
+    {
+        public string access_token { get; set; }
+    }
 
     public static async Task<string> GetAccessToken()
     {
