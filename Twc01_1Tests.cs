@@ -104,5 +104,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(waterBuildLic.Text, Is.EqualTo("建築執照號碼109中都工建建字00322號\r\n建照發照日期111年12月13日"));
             That(waterUseLic.Text, Is.EqualTo("建築使用執照111中都工建使字000990號\r\nA01附啟用單使照發照日期111年06月28日"));
         }
+
+
     }
 }
