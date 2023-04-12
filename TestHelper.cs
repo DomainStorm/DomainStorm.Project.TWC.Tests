@@ -4,13 +4,42 @@ using OpenQA.Selenium.Support.UI;
 using RestSharp;
 using SeleniumExtras.WaitHelpers;
 using System.Drawing;
+using Microsoft.Extensions.Configuration;
 
 namespace DomainStorm.Project.TWC.Tests;
 
 public class TestHelper
 {
-    public const string BaseUrl = "https://localhost:9003";
-    public const string TokenUrl = "http://localhost:5050/connect/token";
+    private static TestConfig GetTestConfig()
+    {
+        return new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", false, false)
+            .AddEnvironmentVariables()
+            .Build()
+            .GetSection("TestConfig")
+            .Get<TestConfig>();
+    }
+
+    private static string? _baseUrl;
+    public static string BaseUrl
+    {
+        get
+        {
+            _baseUrl ??= GetTestConfig().BaseUrl;
+            return _baseUrl;
+        }
+    }
+
+    private static string? _tokenUrl;
+    public static string TokenUrl
+    {
+        get
+        {
+            _tokenUrl ??= GetTestConfig().TokenUrl;
+            return _tokenUrl;
+        }
+    }
+
     public class TokenResponse
     {
         public string access_token { get; set; }
@@ -39,7 +68,7 @@ public class TestHelper
     }
     public static Task Login(IWebDriver webDriver, string userId, string password)
     {
-        webDriver.Navigate().GoToUrl($@"{BaseUrl}");
+        webDriver.Navigate().GoToUrl(BaseUrl);
         webDriver.Manage().Window.Size = new Size(1200, 800);
 
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
@@ -76,4 +105,10 @@ public class TestHelper
 
         element!.Click();
     }
+}
+public class TestConfig
+{
+    public string BaseUrl { get; set; }
+
+    public string TokenUrl { get; set; }
 }
