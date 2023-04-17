@@ -5,11 +5,13 @@ using RestSharp;
 using SeleniumExtras.WaitHelpers;
 using System.Drawing;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace DomainStorm.Project.TWC.Tests;
 
 public class TestHelper
 {
+    private const bool IsRemote = true;
     private static TestConfig GetTestConfig()
     {
         return new ConfigurationBuilder()
@@ -21,7 +23,7 @@ public class TestHelper
     }
 
     private static string? _baseUrl;
-    public static string BaseUrl
+    public static string? BaseUrl
     {
         get
         {
@@ -31,12 +33,22 @@ public class TestHelper
     }
 
     private static string? _tokenUrl;
-    public static string TokenUrl
+    public static string? TokenUrl
     {
         get
         {
             _tokenUrl ??= GetTestConfig().TokenUrl;
             return _tokenUrl;
+        }
+    }
+
+    private static string? _loginUrl;
+    public static string? LoginUrl
+    {
+        get
+        {
+            _loginUrl ??= GetTestConfig().LoginUrl;
+            return _loginUrl;
         }
     }
 
@@ -49,6 +61,7 @@ public class TestHelper
     {
         var client = new RestClient(TokenUrl);
         var request = new RestRequest();
+
         const string clientId = "bmuser";
         const string clientSecret = "4xW8KpkKkeFc";
         var encodedData = Convert.ToBase64String(
@@ -64,14 +77,24 @@ public class TestHelper
         var restResponse = await client.PostAsync<TokenResponse>(request);
 
         return restResponse?.access_token ?? throw new InvalidOperationException();
-            
     }
     public static Task Login(IWebDriver webDriver, string userId, string password)
     {
-        webDriver.Navigate().GoToUrl(BaseUrl);
+
+        webDriver.Navigate().GoToUrl(LoginUrl);
         webDriver.Manage().Window.Size = new Size(1200, 800);
 
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+
+        if (IsRemote)
+        {
+            var detailsButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#details-button")));
+            detailsButton.Click();
+
+            var proceedLink = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#proceed-link")));
+            proceedLink.Click();
+
+        }
 
         var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
@@ -105,10 +128,42 @@ public class TestHelper
 
         element!.Click();
     }
+
+    public static Serialization GetSerializationObject(string jsonString)
+    {
+        Serialization serializationObject = JsonConvert.DeserializeObject<Serialization>(jsonString);
+        return serializationObject;
+    }
 }
+
+public class Serialization
+{
+    public string applyCaseNo { get; set; }
+    public string applyDate { get; set; }
+    public string operatingArea { get; set; }
+    public string waterNo { get; set; }
+    public string typeChange { get; set; }
+    public string userCode { get; set; }
+    public string deviceLocation { get; set; }
+    public string applicant { get; set; }
+    public string idNo { get; set; }
+    public string unino { get; set; }
+    public string telNo { get; set; }
+    public string mobileNo { get; set; }
+    public string pipeDiameter { get; set; }
+    public string waterType { get; set; }
+    public string scoreSheet { get; set; }
+    public string waterBuildLic { get; set; }
+    public string waterUseLic { get; set; }
+    public string billAddress { get; set; }
+}
+
+
 public class TestConfig
 {
-    public string BaseUrl { get; set; }
+    public string? BaseUrl { get; set; }
 
-    public string TokenUrl { get; set; }
+    public string? TokenUrl { get; set; }
+
+    public string? LoginUrl { get; set; }
 }

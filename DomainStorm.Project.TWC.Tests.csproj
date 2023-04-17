@@ -9,6 +9,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Twc03_1Tests.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Remove=".git" />
 		<None Remove=".gitattributes" />
 		<None Remove=".gitignore" />
@@ -21,6 +25,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.0.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="NSubstitute" Version="4.4.0" />
 		<PackageReference Include="NUnit" Version="3.13.3" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
@@ -33,6 +38,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Update="appsettings.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Assets\tpcweb_01_1_ID_反面.jpg">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
@@ -43,6 +51,9 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="Assets\tpcweb_01_1_夾帶附件2.pdf">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\tpcweb_01_1啟用_01欄位檢查_bmEnableApply.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="Assets\tpcweb_01_1啟用_bmEnableApply.json">
