@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 using RestSharp;
 using SeleniumExtras.WaitHelpers;
@@ -138,10 +139,11 @@ namespace DomainStorm.Project.TWC.Tests
             var 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
+            Thread.Sleep(2000);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理);
 
-            Actions actions = new Actions(_driver);
-            actions.MoveToElement(受理).Click().Perform();
-
+            //_driver.ExecuteJavaScript("document.getElementById('受理').dispatchEvent(new Event('click'));");
+            Thread.Sleep(2000);
             Console.WriteLine();
         }
 
