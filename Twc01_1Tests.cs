@@ -55,10 +55,9 @@ namespace DomainStorm.Project.TWC.Tests
             var json = await r.ReadToEndAsync();
 
 
-            var obj = TestHelper.GetSerializationObject(json);
-            obj.applyCaseNo = "111124";
-           // obj.applyCaseNo = Guid.NewGuid().ToString();
-            var updatedJson = JsonConvert.SerializeObject(obj);
+            var guid = TestHelper.GetSerializationObject(json);
+            guid.applyCaseNo = "111124";
+            var updatedJson = JsonConvert.SerializeObject(guid);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
             var response = await client.PostAsync(request);
@@ -109,15 +108,10 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             var 身分證字號 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input ")));
-            
-            //var action = new Actions(_driver);
 
-            //action.MoveToElement(身分證字號).Perform();
             身分證字號.SendKeys("A123456789");
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 身分證字號);
-
-            ////((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].value = 'A123456789';", 身分證字號);
 
             That(身分證字號.GetAttribute("value"), Is.EqualTo("A123456789"));
         }
@@ -139,12 +133,31 @@ namespace DomainStorm.Project.TWC.Tests
             var 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            Thread.Sleep(2000);
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理);
 
-            //_driver.ExecuteJavaScript("document.getElementById('受理').dispatchEvent(new Event('click'));");
-            Thread.Sleep(2000);
-            Console.WriteLine();
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理);
+        }
+
+        [Test]
+        [Order(5)]
+        public async Task Twc01_06()
+        {
+            await TestHelper.Login(_driver, "0511", "password");
+
+            _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+
+            TestHelper.ClickRow(_driver, "111124");
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
+
+            var stormTreeView = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-tree-view")));
+            var stormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
+
+            var link = stormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href*='#contract_1']"));
+
+            Actions actions = new Actions(_driver);
+            actions.MoveToElement(link).Click().Perform();
         }
 
     }
