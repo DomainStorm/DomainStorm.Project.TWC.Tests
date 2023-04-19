@@ -147,18 +147,21 @@ namespace DomainStorm.Project.TWC.Tests
 
             TestHelper.ClickRow(_driver, "111124");
 
+            //var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            //var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            //var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            //var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
+
+            //var stormTreeNodes = stormTreeNode[1];
+
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            _driver.SwitchTo().Frame(0);
-
-            var stormTreeView = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-tree-view")));
-            var stormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
-
-            var link = stormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href*='#contract_1']"));
+            IWebElement element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("(.//*[normalize-space(text()) and normalize-space(.)='sync'])[1]/following::storm-vertical-navigation[1]")));
 
             Actions actions = new Actions(_driver);
-            actions.MoveToElement(link).Click().Perform();
-        }
+            actions.MoveToElement(element).Click().Perform();
 
+            _driver.FindElement(By.Id("消費性用水服務契約")).Click();
+
+        }
     }
 }
