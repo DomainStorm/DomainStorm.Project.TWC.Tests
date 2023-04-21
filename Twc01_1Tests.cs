@@ -146,6 +146,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
 
             TestHelper.ClickRow(_driver, "111124");
+
             Thread.Sleep(1000);
 
             string[] segments = _driver.Url.Split('/');
@@ -168,8 +169,17 @@ namespace DomainStorm.Project.TWC.Tests
             Actions actions = new Actions(_driver);
             actions.MoveToElement(href).Click().Perform();
 
-            
+            var checkBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("消費性用水服務契約")));
+            var 消費性用水服務契約 = _driver.FindElement(By.Id("消費性用水服務契約"));
 
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
+
+            Thread.Sleep(2000);
+
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
         }
+
+
+
     }
 }
