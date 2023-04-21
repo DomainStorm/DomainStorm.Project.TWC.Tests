@@ -147,12 +147,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             TestHelper.ClickRow(_driver, "111124");
 
-            Thread.Sleep(1000);
+            await TestHelper.OpenSecondScreen(_driver, "111124");
+            //Thread.Sleep(1000);
 
-            string[] segments = _driver.Url.Split('/');
-            string id = segments[segments.Length - 1];
+            //string[] segments = _driver.Url.Split('/');
+            //string id = segments[segments.Length - 1];
 
-            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            //_driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
