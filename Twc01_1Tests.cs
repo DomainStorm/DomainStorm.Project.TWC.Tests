@@ -54,7 +54,6 @@ namespace DomainStorm.Project.TWC.Tests
             using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/tpcweb_01_1啟用_bmEnableApply.json"));
             var json = await r.ReadToEndAsync();
 
-
             var guid = TestHelper.GetSerializationObject(json);
             guid.applyCaseNo = "111124";
             var updatedJson = JsonConvert.SerializeObject(guid);
@@ -73,12 +72,6 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
             TestHelper.ClickRow(_driver, "111124");
-            Thread.Sleep(1000);
-
-            string[] segments = _driver.Url.Split('/');
-            string id = segments[segments.Length - 1];
-
-            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -125,6 +118,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
 
             TestHelper.ClickRow(_driver, "111124");
+            //await TestHelper.OpenSecondScreen(_driver, "111124");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -147,13 +141,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             TestHelper.ClickRow(_driver, "111124");
 
-            await TestHelper.OpenSecondScreen(_driver, "111124");
-            //Thread.Sleep(1000);
+            Thread.Sleep(1000);
 
-            //string[] segments = _driver.Url.Split('/');
-            //string id = segments[segments.Length - 1];
+            string[] segments = _driver.Url.Split('/');
+            string id = segments[segments.Length - 1];
 
-            //_driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -161,7 +154,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
-            
+
             var stormTreeNodes = stormTreeNode[1];
             var stormTreeRoot = stormTreeNodes.GetShadowRoot();
             var firstStormTreeNode = stormTreeRoot.FindElement(By.CssSelector("storm-tree-node:first-child"));
@@ -180,7 +173,42 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
         }
 
+        [Test]
+        [Order(6)]
+        public async Task Twc01_07()
+        {
+            await TestHelper.Login(_driver, "0511", "password");
+
+            _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+
+            TestHelper.ClickRow(_driver, "111124");
+
+            Thread.Sleep(1000);
+
+            string[] segments = _driver.Url.Split('/');
+            string id = segments[segments.Length - 1];
+
+            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormCard = stormVerticalNavigation.GetShadowRoot().FindElements(By.CssSelector("storm-card"));
+
+            var stormCards = stormCard[2];
+            var 公司個人資料保護告知事項 = stormCards.GetShadowRoot().FindElements(By.CssSelector("#公司個人資料保護告知事項"));
 
 
+            var checkBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("公司個人資料保護告知事項")));
+            //var 公司個人資料保護告知事項 = _driver.FindElement(By.Id("公司個人資料保護告知事項"));
+
+            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
+
+            //Thread.Sleep(2000);
+
+            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
+
+        }
     }
 }
