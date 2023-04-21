@@ -146,21 +146,29 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
 
             TestHelper.ClickRow(_driver, "111124");
+            Thread.Sleep(1000);
 
-            //var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            //var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
-            //var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            //var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
+            string[] segments = _driver.Url.Split('/');
+            string id = segments[segments.Length - 1];
 
-            //var stormTreeNodes = stormTreeNode[1];
+            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            IWebElement element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("(.//*[normalize-space(text()) and normalize-space(.)='sync'])[1]/following::storm-vertical-navigation[1]")));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
+            
+            var stormTreeNodes = stormTreeNode[1];
+            var stormTreeRoot = stormTreeNodes.GetShadowRoot();
+            var firstStormTreeNode = stormTreeRoot.FindElement(By.CssSelector("storm-tree-node:first-child"));
+
+            var href = firstStormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
             Actions actions = new Actions(_driver);
-            actions.MoveToElement(element).Click().Perform();
+            actions.MoveToElement(href).Click().Perform();
 
-            _driver.FindElement(By.Id("消費性用水服務契約")).Click();
+            
 
         }
     }
