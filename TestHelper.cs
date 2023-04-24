@@ -52,6 +52,15 @@ public class TestHelper
         }
     }
 
+    public static async Task OpenSecondScreen(IWebDriver driver, string id)
+    {
+        Thread.Sleep(1000);
+        string[] segments = driver.Url.Split('/');
+        string secondscreenUrl = $@"{LoginUrl}/draft/second-screen/{segments[segments.Length - 1]}";
+        driver.Navigate().GoToUrl(secondscreenUrl);
+    }
+
+
     public class TokenResponse
     {
         public string access_token { get; set; }
@@ -167,3 +176,5 @@ public class TestConfig
 
     public string? LoginUrl { get; set; }
 }
+
+

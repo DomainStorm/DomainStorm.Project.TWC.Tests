@@ -55,10 +55,9 @@ namespace DomainStorm.Project.TWC.Tests
             var json = await r.ReadToEndAsync();
 
 
-            var obj = TestHelper.GetSerializationObject(json);
-            obj.applyCaseNo = "111124";
-           // obj.applyCaseNo = Guid.NewGuid().ToString();
-            var updatedJson = JsonConvert.SerializeObject(obj);
+            var guid = TestHelper.GetSerializationObject(json);
+            guid.applyCaseNo = "111124";
+            var updatedJson = JsonConvert.SerializeObject(guid);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
             var response = await client.PostAsync(request);
@@ -109,15 +108,10 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             var 身分證字號 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input ")));
-            
-            //var action = new Actions(_driver);
 
-            //action.MoveToElement(身分證字號).Perform();
             身分證字號.SendKeys("A123456789");
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 身分證字號);
-
-            ////((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].value = 'A123456789';", 身分證字號);
 
             That(身分證字號.GetAttribute("value"), Is.EqualTo("A123456789"));
         }
@@ -139,13 +133,54 @@ namespace DomainStorm.Project.TWC.Tests
             var 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            Thread.Sleep(2000);
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理);
 
-            //_driver.ExecuteJavaScript("document.getElementById('受理').dispatchEvent(new Event('click'));");
-            Thread.Sleep(2000);
-            Console.WriteLine();
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理);
         }
+
+        [Test]
+        [Order(5)]
+        public async Task Twc01_06()
+        {
+            await TestHelper.Login(_driver, "0511", "password");
+
+            _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+
+            TestHelper.ClickRow(_driver, "111124");
+
+            await TestHelper.OpenSecondScreen(_driver, "111124");
+            //Thread.Sleep(1000);
+
+            //string[] segments = _driver.Url.Split('/');
+            //string id = segments[segments.Length - 1];
+
+            //_driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
+            
+            var stormTreeNodes = stormTreeNode[1];
+            var stormTreeRoot = stormTreeNodes.GetShadowRoot();
+            var firstStormTreeNode = stormTreeRoot.FindElement(By.CssSelector("storm-tree-node:first-child"));
+
+            var href = firstStormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
+            Actions actions = new Actions(_driver);
+            actions.MoveToElement(href).Click().Perform();
+
+            var checkBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("消費性用水服務契約")));
+            var 消費性用水服務契約 = _driver.FindElement(By.Id("消費性用水服務契約"));
+
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
+
+            Thread.Sleep(2000);
+
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
+        }
+
+
 
     }
 }
