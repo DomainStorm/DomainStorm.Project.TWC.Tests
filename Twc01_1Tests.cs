@@ -1,3 +1,4 @@
+using Castle.Components.DictionaryAdapter.Xml;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -54,7 +55,6 @@ namespace DomainStorm.Project.TWC.Tests
             using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/tpcweb_01_1啟用_bmEnableApply.json"));
             var json = await r.ReadToEndAsync();
 
-
             var guid = TestHelper.GetSerializationObject(json);
             guid.applyCaseNo = "111124";
             var updatedJson = JsonConvert.SerializeObject(guid);
@@ -73,12 +73,6 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
             TestHelper.ClickRow(_driver, "111124");
-            Thread.Sleep(1000);
-
-            string[] segments = _driver.Url.Split('/');
-            string id = segments[segments.Length - 1];
-
-            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -125,6 +119,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
 
             TestHelper.ClickRow(_driver, "111124");
+            //await TestHelper.OpenSecondScreen(_driver, "111124");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -147,13 +142,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             TestHelper.ClickRow(_driver, "111124");
 
-            await TestHelper.OpenSecondScreen(_driver, "111124");
-            //Thread.Sleep(1000);
+            Thread.Sleep(1000);
 
-            //string[] segments = _driver.Url.Split('/');
-            //string id = segments[segments.Length - 1];
+            string[] segments = _driver.Url.Split('/');
+            string id = segments[segments.Length - 1];
 
-            //_driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -161,7 +155,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
-            
+
             var stormTreeNodes = stormTreeNode[1];
             var stormTreeRoot = stormTreeNodes.GetShadowRoot();
             var firstStormTreeNode = stormTreeRoot.FindElement(By.CssSelector("storm-tree-node:first-child"));
@@ -175,12 +169,98 @@ namespace DomainStorm.Project.TWC.Tests
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
 
-            Thread.Sleep(2000);
+            //Thread.Sleep(2000);
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
         }
 
+        [Test]
+        [Order(6)]
+        public async Task Twc01_07()
+        {
+            await TestHelper.Login(_driver, "0511", "password");
 
+            _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
 
+            TestHelper.ClickRow(_driver, "111124");
+
+            Thread.Sleep(1000);
+
+            string[] segments = _driver.Url.Split('/');
+            string id = segments[segments.Length - 1];
+
+            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
+
+            var stormTreeNodes = stormTreeNode[1];
+            var stormTreeRoot = stormTreeNodes.GetShadowRoot();
+
+            var secondStormTreeNode = stormTreeRoot.FindElements(By.CssSelector("storm-tree-node"))[1];
+            var secondStormTreeNodeShadowRoot = secondStormTreeNode.GetShadowRoot();
+
+            var href = secondStormTreeNodeShadowRoot.FindElement(By.CssSelector("a[href='#contract_2']"));
+            Actions actions = new Actions(_driver);
+            actions.MoveToElement(href).Click().Perform();
+
+            var checkBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("公司個人資料保護告知事項")));
+            var 公司個人資料保護告知事項 = _driver.FindElement(By.Id("公司個人資料保護告知事項"));
+
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
+
+            //Thread.Sleep(2000);
+
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
+        }
+
+        [Test]
+        [Order(7)]
+        public async Task Twc01_08()
+        {
+            await TestHelper.Login(_driver, "0511", "password");
+
+            _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+
+            TestHelper.ClickRow(_driver, "111124");
+
+            Thread.Sleep(1000);
+
+            string[] segments = _driver.Url.Split('/');
+            string id = segments[segments.Length - 1];
+
+            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
+
+            var stormTreeNodes = stormTreeNode[1];
+            var stormTreeRoot = stormTreeNodes.GetShadowRoot();
+
+            var thirdStormTreeNode = stormTreeRoot.FindElements(By.CssSelector("storm-tree-node"))[2];
+            var thirdStormTreeNodeShadowRoot = thirdStormTreeNode.GetShadowRoot();
+
+            var href = thirdStormTreeNodeShadowRoot.FindElement(By.CssSelector("a[href='#contract_3']"));
+            Actions actions = new Actions(_driver);
+            actions.MoveToElement(href).Click().Perform();
+
+            var checkBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("公司營業章程")));
+            var 公司營業章程 = _driver.FindElement(By.Id("公司營業章程"));
+
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
+
+            //Thread.Sleep(2000);
+
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司營業章程);
+            //Thread.Sleep(2000);
+        }
     }
 }
