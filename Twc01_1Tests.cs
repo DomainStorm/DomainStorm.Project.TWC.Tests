@@ -1,3 +1,4 @@
+using Castle.Components.DictionaryAdapter.Xml;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -194,20 +195,18 @@ namespace DomainStorm.Project.TWC.Tests
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
-            var stormCard = stormVerticalNavigation.GetShadowRoot().FindElements(By.CssSelector("storm-card"));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
 
-            var stormCards = stormCard[2];
-            var 公司個人資料保護告知事項 = stormCards.GetShadowRoot().FindElements(By.CssSelector("#公司個人資料保護告知事項"));
+            var stormTreeNodes = stormTreeNode[1];
+            var stormTreeRoot = stormTreeNodes.GetShadowRoot();
 
+            var secondStormTreeNode = stormTreeRoot.FindElements(By.CssSelector("storm-tree-node"))[1];
+            var secondStormTreeNodeShadowRoot = secondStormTreeNode.GetShadowRoot();
+            var href = secondStormTreeNodeShadowRoot.FindElement(By.CssSelector("a[href='#contract_2']"));
+            Actions actions = new Actions(_driver);
+            actions.MoveToElement(href).Click().Perform();
 
-            var checkBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("公司個人資料保護告知事項")));
-            //var 公司個人資料保護告知事項 = _driver.FindElement(By.Id("公司個人資料保護告知事項"));
-
-            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
-
-            //Thread.Sleep(2000);
-
-            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
 
         }
     }
