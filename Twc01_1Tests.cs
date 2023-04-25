@@ -207,7 +207,14 @@ namespace DomainStorm.Project.TWC.Tests
             Actions actions = new Actions(_driver);
             actions.MoveToElement(href).Click().Perform();
 
+            var checkBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("公司個人資料保護告知事項")));
+            var 公司個人資料保護告知事項 = _driver.FindElement(By.Id("公司個人資料保護告知事項"));
 
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
+
+            Thread.Sleep(2000);
+
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
         }
     }
 }
