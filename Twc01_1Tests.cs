@@ -16,7 +16,7 @@ namespace DomainStorm.Project.TWC.Tests
     public class Twc01_1Tests
     {
         private IWebDriver _driver = null!;
-        private string? _accessToken;
+        private static string _accessToken;
 
         public Twc01_1Tests()
         {
@@ -47,6 +47,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(1)]
         public async Task Twc01_02()
         {
+            var _accessToken = await TestHelper.GetAccessToken();
             var client = new RestClient($"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm");
             var request = new RestRequest();
             request.AddHeader("Content-Type", "application/json");
@@ -263,4 +264,7 @@ namespace DomainStorm.Project.TWC.Tests
             //Thread.Sleep(2000);
         }
     }
+
+
+        
 }
