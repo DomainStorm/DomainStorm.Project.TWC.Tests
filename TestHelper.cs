@@ -52,8 +52,6 @@ public class TestHelper
         }
     }
 
-    private static string _accessToken;
-
     public class TokenResponse
     {
         public string access_token { get; set; }
@@ -61,11 +59,6 @@ public class TestHelper
 
     public static async Task<string> GetAccessToken()
     {
-        if (_accessToken != null)
-        {
-            return _accessToken;
-        }
-
         var client = new RestClient(TokenUrl);
         var request = new RestRequest();
 

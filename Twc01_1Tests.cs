@@ -25,6 +25,7 @@ namespace DomainStorm.Project.TWC.Tests
         [SetUp]
         public Task Setup()
         {
+            // 設定 ChromeDriver 並設定隱含等待時間為 10 秒
             _driver = new ChromeDriver();
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             return Task.CompletedTask;
@@ -39,6 +40,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(0)]
         public async Task Twc01_01()
         {
+            // 如果 _accessToken 為 null，則呼叫 GetAccessToken() 方法取得存取Token
             _accessToken ??= await TestHelper.GetAccessToken();
             That(_accessToken, Is.Not.Empty);
         }
@@ -47,7 +49,6 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(1)]
         public async Task Twc01_02()
         {
-            var _accessToken = await TestHelper.GetAccessToken();
             var client = new RestClient($"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm");
             var request = new RestRequest();
             request.AddHeader("Content-Type", "application/json");
@@ -61,8 +62,8 @@ namespace DomainStorm.Project.TWC.Tests
             var updatedJson = JsonConvert.SerializeObject(guid);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
-            var response = await client.PostAsync(request);
-            That(response.IsSuccessful, Is.True);
+            var response = await client.ExecuteAsync(request);
+            That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
         [Test]
@@ -263,8 +264,21 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司營業章程);
             //Thread.Sleep(2000);
         }
+
+        //[Test]
+        //[Order(8)]
+        //public async Task Twc01_09()
+        //{
+
+        //}
+
+
+        //[Test]
+        //[Order(9)]
+        //public async Task Twc01_10()
+        //{
+
+        //}
     }
-
-
         
 }
