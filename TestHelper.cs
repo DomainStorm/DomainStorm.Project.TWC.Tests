@@ -51,11 +51,14 @@ public class TestHelper
             return _loginUrl;
         }
     }
-
     public class TokenResponse
     {
         public string access_token { get; set; }
     }
+
+    private static string? _accessToken;
+
+
 
     public static async Task<string> GetAccessToken()
     {
@@ -78,6 +81,7 @@ public class TestHelper
 
         return restResponse?.access_token ?? throw new InvalidOperationException();
     }
+
     public static Task Login(IWebDriver webDriver, string userId, string password)
     {
 
@@ -166,5 +170,6 @@ public class TestConfig
     public string? TokenUrl { get; set; }
 
     public string? LoginUrl { get; set; }
+
 }
 
