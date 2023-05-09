@@ -274,12 +274,48 @@ namespace DomainStorm.Project.TWC.Tests
             Thread.Sleep(20000);
         }
 
-        //[Test]
-        //[Order(8)]
-        //public async Task Twc01_09()
-        //{
-            
-        //}
+        [Test]
+        [Order(8)]
+        public async Task Twc01_09()
+        {
+            //_isNeedQuit = true;
+            //await TestHelper.Login(_driver, "0511", "password");
+
+            //_driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+
+            //TestHelper.ClickRow(_driver, "111124");
+
+            //Thread.Sleep(1000);
+
+            //string[] segments = _driver.Url.Split('/');
+            //string id = segments[segments.Length - 1];
+
+            //_driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
+            // 等待 vertical-navigation 可見
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+
+            // 找到 tree-view 元素
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+
+            // 找到 tree-node 元素
+            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[2];
+
+            // 取得 tree-node 元素的 ShadowRoot
+            var stormTreeNodeRoot = stormTreeNode.GetShadowRoot();
+
+            // 找到 href 元素
+            var href = stormTreeNodeRoot.FindElement(By.CssSelector("a[href='#signature']"));
+            Actions actions = new Actions(_driver);
+            actions.MoveToElement(href).Click().Perform();
+
+            var 簽名 = _driver.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 簽名);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 簽名);
+        }
 
 
         //[Test]
