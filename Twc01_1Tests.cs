@@ -17,7 +17,7 @@ namespace DomainStorm.Project.TWC.Tests
     {
         private IWebDriver _driver = null!;
         private static string _accessToken;
-        private bool _isNeedQuit = true;
+
 
         public Twc01_1Tests()
         {
@@ -26,22 +26,20 @@ namespace DomainStorm.Project.TWC.Tests
         [SetUp] // 在每個測試方法之前執行的方法
         public Task Setup()
         {
-            // 如果驅動程式為 null，表示還未建立過，就建立一個新的 ChromeDriver 並設定隱含等待時間為 10 秒
-            if (_driver == null)
-            {
-                _driver = new ChromeDriver();
-                _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            }
+            //建立一個新的 ChromeDriver 並設定隱含等待時間為 10 秒
+
+            _driver = new ChromeDriver();
+            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+           
             return Task.CompletedTask;
         }
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
-            // 如果需要 Quit，表示這個測試方法需要關閉瀏覽器，就執行 Quit()
-            if (_isNeedQuit)
-            {
+            //如果需要 Quit，表示這個測試方法需要關閉瀏覽器，就執行 Quit()
+
                 _driver.Quit();
-            }
+
         }
 
         [Test]
@@ -146,7 +144,6 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(5)]
         public async Task Twc01_06()
         {
-            _isNeedQuit = false;
             await TestHelper.Login(_driver, "0511", "password");
 
             _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
@@ -179,9 +176,6 @@ namespace DomainStorm.Project.TWC.Tests
             var 消費性用水服務契約 = _driver.FindElement(By.Id("消費性用水服務契約"));
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
-
-            //Thread.Sleep(2000);
-
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
         }
 
@@ -189,18 +183,19 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(6)]
         public async Task Twc01_07()
         {
-            //await TestHelper.Login(_driver, "0511", "password");
 
-            //_driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+            await TestHelper.Login(_driver, "0511", "password");
 
-            //TestHelper.ClickRow(_driver, "111124");
+            _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
 
-            //Thread.Sleep(1000);
+            TestHelper.ClickRow(_driver, "111124");
 
-            //string[] segments = _driver.Url.Split('/');
-            //string id = segments[segments.Length - 1];
+            Thread.Sleep(1000);
 
-            //_driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            string[] segments = _driver.Url.Split('/');
+            string id = segments[segments.Length - 1];
+
+            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -223,9 +218,6 @@ namespace DomainStorm.Project.TWC.Tests
             var 公司個人資料保護告知事項 = _driver.FindElement(By.Id("公司個人資料保護告知事項"));
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
-
-            //Thread.Sleep(2000);
-
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
         }
 
@@ -233,18 +225,19 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(7)]
         public async Task Twc01_08()
         {
-            //await TestHelper.Login(_driver, "0511", "password");
 
-            //_driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+            await TestHelper.Login(_driver, "0511", "password");
 
-            //TestHelper.ClickRow(_driver, "111124");
+            _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
 
-            //Thread.Sleep(1000);
+            TestHelper.ClickRow(_driver, "111124");
 
-            //string[] segments = _driver.Url.Split('/');
-            //string id = segments[segments.Length - 1];
+            Thread.Sleep(1000);
 
-            //_driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            string[] segments = _driver.Url.Split('/');
+            string id = segments[segments.Length - 1];
+
+            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -267,18 +260,13 @@ namespace DomainStorm.Project.TWC.Tests
             var 公司營業章程 = _driver.FindElement(By.Id("公司營業章程"));
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
-
-            //Thread.Sleep(2000);
-
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司營業章程);
-            Thread.Sleep(20000);
         }
 
         [Test]
         [Order(8)]
         public async Task Twc01_09()
         {
-            //_isNeedQuit = true;
             //await TestHelper.Login(_driver, "0511", "password");
 
             //_driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");

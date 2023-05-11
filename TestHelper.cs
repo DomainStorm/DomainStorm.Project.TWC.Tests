@@ -51,6 +51,16 @@ public class TestHelper
             return _loginUrl;
         }
     }
+
+    private static TestConfig _testConfig;
+    public static TestConfig TestConfig
+    {
+        get
+        {
+            _testConfig ??= GetTestConfig();
+            return _testConfig;
+        }
+    }
     public class TokenResponse
     {
         public string access_token { get; set; }
@@ -171,5 +181,6 @@ public class TestConfig
 
     public string? LoginUrl { get; set; }
 
+    public string? AccessToken { get; set; }
 }
 
