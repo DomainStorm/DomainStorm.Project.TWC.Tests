@@ -52,6 +52,17 @@ public class TestHelper
         }
     }
 
+    private static string? _accessToken;
+
+    public static string AccessToken
+    {
+        get
+        {
+            _accessToken ??= GetTestConfig().AccessToken;
+            return _accessToken;
+        }
+    }
+
     private static TestConfig _testConfig;
     public static TestConfig TestConfig
     {
@@ -60,15 +71,11 @@ public class TestHelper
             _testConfig ??= GetTestConfig();
             return _testConfig;
         }
-    }
+    }   
     public class TokenResponse
     {
         public string access_token { get; set; }
     }
-
-    private static string? _accessToken;
-
-
 
     public static async Task<string> GetAccessToken()
     {

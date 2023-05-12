@@ -46,7 +46,6 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(0)]
         public async Task Twc01_01()
         {
-            // 如果 _accessToken 為 null，則呼叫 GetAccessToken() 方法取得存取Token
             _accessToken ??= await TestHelper.GetAccessToken();
             That(_accessToken, Is.Not.Empty);
         }
@@ -58,7 +57,7 @@ namespace DomainStorm.Project.TWC.Tests
             var client = new RestClient($"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm");
             var request = new RestRequest();
             request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("Authorization", $"Bearer {_accessToken}");
+            request.AddHeader("Authorization", $"Bearer {TestHelper.AccessToken}");
 
             using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/tpcweb_01_1啟用_bmEnableApply.json"));
             var json = await r.ReadToEndAsync();
@@ -137,7 +136,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
 
+            wait.Until(ExpectedConditions.ElementToBeClickable(受理));
+
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理);
+            That(受理.Displayed, Is.True);
         }
 
         [Test]
@@ -176,7 +178,9 @@ namespace DomainStorm.Project.TWC.Tests
             var 消費性用水服務契約 = _driver.FindElement(By.Id("消費性用水服務契約"));
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
+            wait.Until(ExpectedConditions.ElementToBeClickable(消費性用水服務契約));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
+            That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
@@ -218,7 +222,9 @@ namespace DomainStorm.Project.TWC.Tests
             var 公司個人資料保護告知事項 = _driver.FindElement(By.Id("公司個人資料保護告知事項"));
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
+            wait.Until(ExpectedConditions.ElementToBeClickable(公司個人資料保護告知事項));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
+            That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
@@ -260,7 +266,9 @@ namespace DomainStorm.Project.TWC.Tests
             var 公司營業章程 = _driver.FindElement(By.Id("公司營業章程"));
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
+            wait.Until(ExpectedConditions.ElementToBeClickable(公司營業章程));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司營業章程);
+            That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
