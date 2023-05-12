@@ -17,6 +17,8 @@ namespace DomainStorm.Project.TWC.Tests
     {
         private IWebDriver _driver = null!;
         private static string _accessToken;
+        private bool _runSetup = true;
+        private bool _runTearDown = true;
 
 
         public Twc01_1Tests()
@@ -26,20 +28,24 @@ namespace DomainStorm.Project.TWC.Tests
         [SetUp] // 在每個測試方法之前執行的方法
         public Task Setup()
         {
-            //建立一個新的 ChromeDriver 並設定隱含等待時間為 10 秒
+            if (_runSetup)
+            {
+                //建立一個新的 ChromeDriver 並設定隱含等待時間為 10 秒
 
-            _driver = new ChromeDriver();
-            _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-           
-            return Task.CompletedTask;
+                _driver = new ChromeDriver();
+                _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            }
+                return Task.CompletedTask;
+            
         }
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
             //如果需要 Quit，表示這個測試方法需要關閉瀏覽器，就執行 Quit()
-
+            if (_runTearDown)
+            {
                 _driver.Quit();
-
+            }
         }
 
         [Test]
@@ -146,6 +152,8 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(5)]
         public async Task Twc01_06()
         {
+            _runSetup = false;
+            _runTearDown = false;
             await TestHelper.Login(_driver, "0511", "password");
 
             _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
@@ -187,19 +195,18 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(6)]
         public async Task Twc01_07()
         {
+            //await TestHelper.Login(_driver, "0511", "password");
 
-            await TestHelper.Login(_driver, "0511", "password");
+            //_driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
 
-            _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+            //TestHelper.ClickRow(_driver, "111124");
 
-            TestHelper.ClickRow(_driver, "111124");
+            //Thread.Sleep(1000);
 
-            Thread.Sleep(1000);
+            //string[] segments = _driver.Url.Split('/');
+            //string id = segments[segments.Length - 1];
 
-            string[] segments = _driver.Url.Split('/');
-            string id = segments[segments.Length - 1];
-
-            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            //_driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -232,18 +239,18 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task Twc01_08()
         {
 
-            await TestHelper.Login(_driver, "0511", "password");
+            //await TestHelper.Login(_driver, "0511", "password");
 
-            _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+            //_driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(_driver, "111124");
+            //TestHelper.ClickRow(_driver, "111124");
 
-            Thread.Sleep(1000);
+            //Thread.Sleep(1000);
 
-            string[] segments = _driver.Url.Split('/');
-            string id = segments[segments.Length - 1];
+            //string[] segments = _driver.Url.Split('/');
+            //string id = segments[segments.Length - 1];
 
-            _driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            //_driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -310,16 +317,43 @@ namespace DomainStorm.Project.TWC.Tests
 
             var 簽名 = _driver.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 簽名);
+            wait.Until(ExpectedConditions.ElementToBeClickable(簽名));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 簽名);
+
+
+            var img = _driver.FindElement(By.CssSelector("img[src^='data:image/png;']"));
+            That(_driver.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
         }
 
 
-        //[Test]
-        //[Order(9)]
-        //public async Task Twc01_10()
-        //{
+        [Test]
+        [Order(9)]
+        public async Task Twc01_10()
+        {
+            _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
 
-        //}
+            TestHelper.ClickRow(_driver, "111124");
+
+            Thread.Sleep(1000);
+
+            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
+
+            // 等待 vertical-navigation 可見
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+
+            // 找到 card 元素
+            var stormCard = stormVerticalNavigation.GetShadowRoot().FindElements(By.CssSelector("storm-card"))[5];
+
+            var 啟動掃描證件 = _driver.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 啟動掃描證件);
+            wait.Until(ExpectedConditions.ElementToBeClickable(啟動掃描證件));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 啟動掃描證件);
+
+            var img = _driver.FindElement(By.CssSelector("img[src^='data:image/png;']"));
+            That(_driver.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
+        }
     }
         
 }
