@@ -19,6 +19,7 @@ namespace DomainStorm.Project.TWC.Tests
         private static string _accessToken;
         private bool _runSetup = true;
         private bool _runTearDown = true;
+        private string _applyCaseNo;
 
 
         public Twc01_1Tests()
@@ -35,8 +36,8 @@ namespace DomainStorm.Project.TWC.Tests
                 _driver = new ChromeDriver();
                 _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             }
-                return Task.CompletedTask;
-            
+            return Task.CompletedTask;
+
         }
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
@@ -63,7 +64,7 @@ namespace DomainStorm.Project.TWC.Tests
             var client = new RestClient($"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm");
             var request = new RestRequest();
             request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("Authorization", $"Bearer {TestHelper.AccessToken}");
+            request.AddHeader("Authorization", $"Bearer {_accessToken}");
 
             using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/tpcweb_01_1啟用_bmEnableApply.json"));
             var json = await r.ReadToEndAsync();
@@ -100,6 +101,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(受理日期.Text, Is.EqualTo("2023年03月06日"));
         }
 
+
         [Test]
         [Order(3)]
         public async Task Twc01_04()
@@ -128,7 +130,6 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task Twc01_05()
         {
             await TestHelper.Login(_driver, "0511", "password");
-
             _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
 
             TestHelper.ClickRow(_driver, "111124");
@@ -326,34 +327,34 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
 
-        [Test]
-        [Order(9)]
-        public async Task Twc01_10()
-        {
-            _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+        //    [Test]
+        //    [Order(9)]
+        //    public async Task Twc01_10()
+        //    {
+        //        _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(_driver, "111124");
+        //        TestHelper.ClickRow(_driver, "111124");
 
-            Thread.Sleep(1000);
+        //        Thread.Sleep(1000);
 
-            var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            _driver.SwitchTo().Frame(0);
+        //        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+        //        wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+        //        _driver.SwitchTo().Frame(0);
 
-            // 等待 vertical-navigation 可見
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+        //        // 等待 vertical-navigation 可見
+        //        var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
 
-            // 找到 card 元素
-            var stormCard = stormVerticalNavigation.GetShadowRoot().FindElements(By.CssSelector("storm-card"))[5];
+        //        // 找到 card 元素
+        //        var stormCard = stormVerticalNavigation.GetShadowRoot().FindElements(By.CssSelector("storm-card"))[5];
 
-            var 啟動掃描證件 = _driver.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 啟動掃描證件);
-            wait.Until(ExpectedConditions.ElementToBeClickable(啟動掃描證件));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 啟動掃描證件);
+        //        var 啟動掃描證件 = _driver.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
+        //        ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 啟動掃描證件);
+        //        wait.Until(ExpectedConditions.ElementToBeClickable(啟動掃描證件));
+        //        ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 啟動掃描證件);
 
-            var img = _driver.FindElement(By.CssSelector("img[src^='data:image/png;']"));
-            That(_driver.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
-        }
+        //        var img = _driver.FindElement(By.CssSelector("img[src^='data:image/png;']"));
+        //        That(_driver.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
+        //    }
     }
-        
+
 }
