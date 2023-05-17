@@ -18,8 +18,8 @@ namespace DomainStorm.Project.TWC.Tests
         private IWebDriver _driver1;
         private IWebDriver _driver2;
         private static string _accessToken;
-        private bool _runSetup = true;
-        private bool _runTearDown = true;
+        private bool _skipSetup = true;
+        private bool _skipTearDown = true;
 
 
 
@@ -30,9 +30,7 @@ namespace DomainStorm.Project.TWC.Tests
         [SetUp] // 在每個測試方法之前執行的方法
         public Task Setup()
         {
-            _runSetup = true;
-
-            if (_runSetup)
+            if (_skipSetup)
             {
                 _driver1 = new ChromeDriver();
                 _driver1.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
@@ -45,9 +43,7 @@ namespace DomainStorm.Project.TWC.Tests
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
-            _runTearDown = true;
-
-            if (_runTearDown)
+            if (_skipTearDown)
             {
                 _driver1.Quit();
                 _driver2.Quit();
@@ -101,11 +97,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             await TestHelper.Login(_driver2, "0511", "password");
             _driver2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
-            TestHelper.ClickRow(_driver2, "111124");
-
-            Thread.Sleep(5000);
-
-            _driver1.SwitchTo().Window(_driver1.CurrentWindowHandle);
 
             var wait = new WebDriverWait(_driver1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -131,6 +122,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             TestHelper.ClickRow(_driver1, "111124");
 
+            Thread.Sleep(1000);
+
+            string[] segments = _driver1.Url.Split('/');
+            string id = segments[segments.Length - 1];
+
+            await TestHelper.Login(_driver2, "0511", "password");
+            _driver2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+
             var wait = new WebDriverWait(_driver1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver1.SwitchTo().Frame(0);
@@ -149,10 +148,18 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task Twc01_05()
         {
             await TestHelper.Login(_driver1, "0511", "password");
-            _driver1.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+
+            _driver1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
             TestHelper.ClickRow(_driver1, "111124");
-            //await TestHelper.OpenSecondScreen(_driver, "111124");
+
+            Thread.Sleep(1000);
+
+            string[] segments = _driver1.Url.Split('/');
+            string id = segments[segments.Length - 1];
+
+            await TestHelper.Login(_driver2, "0511", "password");
+            _driver2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -172,11 +179,11 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(5)]
         public async Task Twc01_06()
         {
-            _runSetup = false;
-            _runTearDown = false;
+            _skipSetup = false;
+            _skipTearDown = false;
             await TestHelper.Login(_driver1, "0511", "password");
 
-            _driver1.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+            _driver1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
             TestHelper.ClickRow(_driver1, "111124");
 
@@ -185,9 +192,12 @@ namespace DomainStorm.Project.TWC.Tests
             string[] segments = _driver1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
+            await TestHelper.Login(_driver2, "0511", "password");
             _driver2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
-            var wait = new WebDriverWait(_driver1, TimeSpan.FromSeconds(10));
+            Thread.Sleep(5000);
+
+            var wait = new WebDriverWait(_driver2, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -199,15 +209,15 @@ namespace DomainStorm.Project.TWC.Tests
             var firstStormTreeNode = stormTreeRoot.FindElement(By.CssSelector("storm-tree-node:first-child"));
 
             var href = firstStormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
-            Actions actions = new Actions(_driver1);
+            Actions actions = new Actions(_driver2);
             actions.MoveToElement(href).Click().Perform();
 
-            var checkBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("消費性用水服務契約")));
-            var 消費性用水服務契約 = _driver1.FindElement(By.Id("消費性用水服務契約"));
+            var Id = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("消費性用水服務契約")));
+            var 消費性用水服務契約 = _driver2.FindElement(By.Id("消費性用水服務契約"));
 
-            ((IJavaScriptExecutor)_driver1).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
+            ((IJavaScriptExecutor)_driver2).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
             wait.Until(ExpectedConditions.ElementToBeClickable(消費性用水服務契約));
-            ((IJavaScriptExecutor)_driver1).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
+            ((IJavaScriptExecutor)_driver2).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
             That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
@@ -215,18 +225,19 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(6)]
         public async Task Twc01_07()
         {
-            //await TestHelper.Login(_driver, "0511", "password");
+            //await TestHelper.Login(_driver1, "0511", "password");
 
-            //_driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+            //_driver1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            //TestHelper.ClickRow(_driver, "111124");
+            //TestHelper.ClickRow(_driver1, "111124");
 
             //Thread.Sleep(1000);
 
-            //string[] segments = _driver.Url.Split('/');
+            //string[] segments = _driver1.Url.Split('/');
             //string id = segments[segments.Length - 1];
 
-            //_driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            //await TestHelper.Login(_driver2, "0511", "password");
+            //_driver2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -259,18 +270,19 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task Twc01_08()
         {
 
-            //await TestHelper.Login(_driver, "0511", "password");
+            //await TestHelper.Login(_driver1, "0511", "password");
 
-            //_driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+            //_driver1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            //TestHelper.ClickRow(_driver, "111124");
+            //TestHelper.ClickRow(_driver1, "111124");
 
             //Thread.Sleep(1000);
 
-            //string[] segments = _driver.Url.Split('/');
+            //string[] segments = _driver1.Url.Split('/');
             //string id = segments[segments.Length - 1];
 
-            //_driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            //await TestHelper.Login(_driver2, "0511", "password");
+            //_driver2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -302,18 +314,19 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(8)]
         public async Task Twc01_09()
         {
-            //await TestHelper.Login(_driver, "0511", "password");
+            //await TestHelper.Login(_driver1, "0511", "password");
 
-            //_driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+            //_driver1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            //TestHelper.ClickRow(_driver, "111124");
+            //TestHelper.ClickRow(_driver1, "111124");
 
             //Thread.Sleep(1000);
 
-            //string[] segments = _driver.Url.Split('/');
+            //string[] segments = _driver1.Url.Split('/');
             //string id = segments[segments.Length - 1];
 
-            //_driver.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            //await TestHelper.Login(_driver2, "0511", "password");
+            //_driver2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(_driver1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -350,11 +363,19 @@ namespace DomainStorm.Project.TWC.Tests
         //    [Order(9)]
         //    public async Task Twc01_10()
         //    {
-        //        _driver.Navigate().GoToUrl($"{TestHelper.LoginUrl}/draft");
+        //await TestHelper.Login(_driver1, "0511", "password");
 
-        //        TestHelper.ClickRow(_driver, "111124");
+        //_driver1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-        //        Thread.Sleep(1000);
+        //TestHelper.ClickRow(_driver1, "111124");
+
+        //    Thread.Sleep(1000);
+
+        //    string[] segments = _driver1.Url.Split('/');
+        //string id = segments[segments.Length - 1];
+
+        //await TestHelper.Login(_driver2, "0511", "password");
+        //_driver2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
         //        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         //        wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
