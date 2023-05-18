@@ -93,7 +93,7 @@ namespace DomainStorm.Project.TWC.Tests
             string[] segments = 螢幕1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
-            await TestHelper.Login(螢幕1, "0511", "password");
+            await TestHelper.Login(螢幕2, "0511", "password");
             螢幕2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
@@ -208,13 +208,15 @@ namespace DomainStorm.Project.TWC.Tests
             Actions actions = new Actions(螢幕1);
             actions.MoveToElement(href).Click().Perform();
 
-            var 消費性用水服務契約 = 螢幕1.FindElement(By.Id("消費性用水服務契約"));
-            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
+            var 消費性用水服務契約_螢幕1 = 螢幕1.FindElement(By.Id("消費性用水服務契約"));
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約_螢幕1);
 
-            螢幕2.SwitchTo().Frame(0);
-            ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
+            var 消費性用水服務契約_螢幕2 = 螢幕2.FindElement(By.Id("消費性用水服務契約"));
+            //螢幕2.SwitchTo().Window(螢幕2.WindowHandles[0]);
+            ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 消費性用水服務契約_螢幕2);
 
-            That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
+            //螢幕1.SwitchTo().Window(螢幕1.WindowHandles[0]);
+            That(消費性用水服務契約_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
