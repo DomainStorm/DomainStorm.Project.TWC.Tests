@@ -204,6 +204,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTreeRoot = stormTreeNodes.GetShadowRoot();
             var firstStormTreeNode = stormTreeRoot.FindElement(By.CssSelector("storm-tree-node:first-child"));
 
+            // 找到 href 元素
             var href = firstStormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
             Actions actions = new Actions(螢幕1);
             actions.MoveToElement(href).Click().Perform();
@@ -216,27 +217,14 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 消費性用水服務契約_螢幕2);
 
             //螢幕1.SwitchTo().Window(螢幕1.WindowHandles[0]);
-            That(消費性用水服務契約_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
+            wait.Until(driver => 消費性用水服務契約_螢幕1.GetAttribute("checked") == "true");
+            //That(消費性用水服務契約_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
         [Order(6)]
         public async Task Twc01_07()
         {
-            //await TestHelper.Login(_driver1, "0511", "password");
-
-            //_driver1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-
-            //TestHelper.ClickRow(_driver1, "111124");
-
-            //Thread.Sleep(1000);
-
-            //string[] segments = _driver1.Url.Split('/');
-            //string id = segments[segments.Length - 1];
-
-            //await TestHelper.Login(_driver2, "0511", "password");
-            //_driver2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
-
             var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
@@ -254,34 +242,19 @@ namespace DomainStorm.Project.TWC.Tests
             Actions actions = new Actions(螢幕1);
             actions.MoveToElement(href).Click().Perform();
 
-            var checkBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("公司個人資料保護告知事項")));
-            var 公司個人資料保護告知事項 = 螢幕1.FindElement(By.Id("公司個人資料保護告知事項"));
+            var 公司個人資料保護告知事項_螢幕1 = 螢幕1.FindElement(By.Id("公司個人資料保護告知事項"));
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項_螢幕1);
 
-            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
-            wait.Until(ExpectedConditions.ElementToBeClickable(公司個人資料保護告知事項));
-            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
-            That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
+            var 公司個人資料保護告知事項_螢幕2 = 螢幕2.FindElement(By.Id("公司個人資料保護告知事項"));
+            ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項_螢幕2);
+
+            wait.Until(driver => 公司個人資料保護告知事項_螢幕1.GetAttribute("checked") == "true");
         }
 
         [Test]
         [Order(7)]
         public async Task Twc01_08()
         {
-
-            //await TestHelper.Login(_driver1, "0511", "password");
-
-            //_driver1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-
-            //TestHelper.ClickRow(_driver1, "111124");
-
-            //Thread.Sleep(1000);
-
-            //string[] segments = _driver1.Url.Split('/');
-            //string id = segments[segments.Length - 1];
-
-            //await TestHelper.Login(_driver2, "0511", "password");
-            //_driver2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
-
             var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
@@ -299,100 +272,59 @@ namespace DomainStorm.Project.TWC.Tests
             Actions actions = new Actions(螢幕1);
             actions.MoveToElement(href).Click().Perform();
 
-            var checkBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.Id("公司營業章程")));
-            var 公司營業章程 = 螢幕1.FindElement(By.Id("公司營業章程"));
+            var 公司營業章程_螢幕1 = 螢幕1.FindElement(By.Id("公司營業章程"));
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程_螢幕1);
 
-            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
-            wait.Until(ExpectedConditions.ElementToBeClickable(公司營業章程));
-            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].click();", 公司營業章程);
-            That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
+            var 公司營業章程_螢幕2 = 螢幕2.FindElement(By.Id("公司營業章程"));
+            ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 公司營業章程_螢幕2);
+
+            wait.Until(driver => 公司營業章程_螢幕1.GetAttribute("checked") == "true");
         }
 
         [Test]
         [Order(8)]
         public async Task Twc01_09()
         {
-            //await TestHelper.Login(_driver1, "0511", "password");
-
-            //_driver1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-
-            //TestHelper.ClickRow(_driver1, "111124");
-
-            //Thread.Sleep(1000);
-
-            //string[] segments = _driver1.Url.Split('/');
-            //string id = segments[segments.Length - 1];
-
-            //await TestHelper.Login(_driver2, "0511", "password");
-            //_driver2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
-
             var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            // 等待 vertical-navigation 可見
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
-
-            // 找到 tree-view 元素
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-
-            // 找到 tree-node 元素
             var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[2];
-
-            // 取得 tree-node 元素的 ShadowRoot
             var stormTreeNodeRoot = stormTreeNode.GetShadowRoot();
 
-            // 找到 href 元素
             var href = stormTreeNodeRoot.FindElement(By.CssSelector("a[href='#signature']"));
             Actions actions = new Actions(螢幕1);
             actions.MoveToElement(href).Click().Perform();
 
-            var 簽名 = 螢幕1.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
-            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 簽名);
-            wait.Until(ExpectedConditions.ElementToBeClickable(簽名));
-            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].click();", 簽名);
+            var 簽名_螢幕1 = 螢幕1.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 簽名_螢幕1);
 
-
-            var img = 螢幕1.FindElement(By.CssSelector("img[src^='data:image/png;']"));
-            That(螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
+            var 簽名_螢幕2 = 螢幕2.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
+            ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 簽名_螢幕2);
+            wait.Until(driver => 螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
         }
 
 
-        //    [Test]
-        //    [Order(9)]
-        //    public async Task Twc01_10()
-        //    {
-        //await TestHelper.Login(_driver1, "0511", "password");
+        [Test]
+        [Order(9)]
+        public async Task Twc01_10()
+        {
+            var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-        //_driver1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            //        var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
 
-        //TestHelper.ClickRow(_driver1, "111124");
+            //        var stormCard = stormVerticalNavigation.GetShadowRoot().FindElements(By.CssSelector("storm-card"))[5];
 
-        //    Thread.Sleep(1000);
+            //        var 啟動掃描證件 = _driver.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
+            //        ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 啟動掃描證件);
+            //        wait.Until(ExpectedConditions.ElementToBeClickable(啟動掃描證件));
+            //        ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 啟動掃描證件);
 
-        //    string[] segments = _driver1.Url.Split('/');
-        //string id = segments[segments.Length - 1];
-
-        //await TestHelper.Login(_driver2, "0511", "password");
-        //_driver2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
-
-        //        var wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-        //        wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-        //        _driver.SwitchTo().Frame(0);
-
-        //        // 等待 vertical-navigation 可見
-        //        var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
-
-        //        // 找到 card 元素
-        //        var stormCard = stormVerticalNavigation.GetShadowRoot().FindElements(By.CssSelector("storm-card"))[5];
-
-        //        var 啟動掃描證件 = _driver.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
-        //        ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 啟動掃描證件);
-        //        wait.Until(ExpectedConditions.ElementToBeClickable(啟動掃描證件));
-        //        ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 啟動掃描證件);
-
-        //        var img = _driver.FindElement(By.CssSelector("img[src^='data:image/png;']"));
-        //        That(_driver.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
-        //    }
+            //        var img = _driver.FindElement(By.CssSelector("img[src^='data:image/png;']"));
+            //        That(_driver.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
+        }
     }
 
 }
