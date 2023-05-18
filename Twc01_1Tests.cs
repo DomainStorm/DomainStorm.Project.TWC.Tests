@@ -313,18 +313,20 @@ namespace DomainStorm.Project.TWC.Tests
             var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            //        var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
+            var stormTreeNodeRoot = stormTreeNode.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
+            var UnderRootstormTreeNode = stormTreeNodeRoot.GetShadowRoot();
+            var href = UnderRootstormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
+            Actions actions = new Actions(螢幕1);
+            actions.MoveToElement(href).Click().Perform();
 
-            //        var stormCard = stormVerticalNavigation.GetShadowRoot().FindElements(By.CssSelector("storm-card"))[5];
+            var 啟動掃描證件 = 螢幕1.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 啟動掃描證件);
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].click();", 啟動掃描證件);
 
-            //        var 啟動掃描證件 = _driver.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
-            //        ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 啟動掃描證件);
-            //        wait.Until(ExpectedConditions.ElementToBeClickable(啟動掃描證件));
-            //        ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 啟動掃描證件);
-
-            //        var img = _driver.FindElement(By.CssSelector("img[src^='data:image/png;']"));
-            //        That(_driver.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
+            wait.Until(driver => 螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
         }
     }
-
 }
