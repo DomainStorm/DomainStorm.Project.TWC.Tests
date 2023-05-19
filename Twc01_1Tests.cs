@@ -53,7 +53,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(0)]
         public async Task Twc01_01()
         {
-            _accessToken ??= await TestHelper.GetAccessToken();
+            _accessToken = await TestHelper.GetAccessToken();
             That(_accessToken, Is.Not.Empty);
         }
 
@@ -203,8 +203,8 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 消費性用水服務契約_螢幕2);
 
             //wait.Until(driver => 消費性用水服務契約_螢幕1.GetAttribute("checked") == "true");
-            Thread.Sleep(1000);
-            That(消費性用水服務契約_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("消費性用水服務契約")));
+            That(消費性用水服務契約_螢幕1 .GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
@@ -235,7 +235,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項_螢幕2);
 
             //wait.Until(driver => 公司個人資料保護告知事項_螢幕1.GetAttribute("checked") == "true");
-            Thread.Sleep(1000);
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("公司個人資料保護告知事項")));
             That(公司個人資料保護告知事項_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
@@ -267,7 +267,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 公司營業章程_螢幕2);
 
             //wait.Until(driver => 公司營業章程_螢幕1.GetAttribute("checked") == "true");
-            Thread.Sleep(1000);
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("公司營業章程")));
             That(公司營業章程_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
@@ -294,7 +294,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 簽名_螢幕2);
 
             //wait.Until(driver => 螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
-            Thread.Sleep(1000);
+            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button.btn.btn-primary.ms-2")));
             That(螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
         }
 
@@ -320,7 +320,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].click();", 啟動掃描證件);
 
             //wait.Until(driver => 螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
-            Thread.Sleep(1000);
+            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button.btn.btn-primary.ms-2")));
             That(螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
         }
 
