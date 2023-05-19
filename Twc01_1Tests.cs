@@ -1,4 +1,4 @@
-using Castle.Components.DictionaryAdapter.Xml;
+ï»¿using Castle.Components.DictionaryAdapter.Xml;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -15,8 +15,8 @@ namespace DomainStorm.Project.TWC.Tests
 {
     public class Twc01_1Tests
     {
-        private IWebDriver ¿Ã¹õ1;
-        private IWebDriver ¿Ã¹õ2;
+        private IWebDriver è¢å¹•1;
+        private IWebDriver è¢å¹•2;
         private static string _accessToken;
         private bool _skipSetup = true;
         private bool _skipTearDown = true;
@@ -25,26 +25,26 @@ namespace DomainStorm.Project.TWC.Tests
         {
         }
 
-        [SetUp] // ¦b¨C­Ó´ú¸Õ¤èªk¤§«e°õ¦æªº¤èªk
+        [SetUp] // åœ¨æ¯å€‹æ¸¬è©¦æ–¹æ³•ä¹‹å‰åŸ·è¡Œçš„æ–¹æ³•
         public Task Setup()
         {
             if (_skipSetup)
             {
-                ¿Ã¹õ1 = new ChromeDriver();
-                ¿Ã¹õ1.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+                è¢å¹•1 = new ChromeDriver();
+                è¢å¹•1.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
 
-                ¿Ã¹õ2 = new ChromeDriver();
-                ¿Ã¹õ2.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+                è¢å¹•2 = new ChromeDriver();
+                è¢å¹•2.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             }
             return Task.CompletedTask;
         }
-        [TearDown] // ¦b¨C­Ó´ú¸Õ¤èªk¤§«á°õ¦æªº¤èªk
+        [TearDown] // åœ¨æ¯å€‹æ¸¬è©¦æ–¹æ³•ä¹‹å¾ŒåŸ·è¡Œçš„æ–¹æ³•
         public void TearDown()
         {
             if (_skipTearDown)
             {
-                ¿Ã¹õ1.Quit();
-                ¿Ã¹õ2.Quit();
+                è¢å¹•1.Quit();
+                è¢å¹•2.Quit();
             }
         }
 
@@ -82,31 +82,31 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(2)]
         public async Task Twc01_03()
         {
-            await TestHelper.Login(¿Ã¹õ1, "0511", "password");
+            await TestHelper.Login(è¢å¹•1, "0511", "password");
 
-            ¿Ã¹õ1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            è¢å¹•1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(¿Ã¹õ1, "111124");
+            TestHelper.ClickRow(è¢å¹•1, "111124");
 
             Thread.Sleep(1000);
 
-            string[] segments = ¿Ã¹õ1.Url.Split('/');
+            string[] segments = è¢å¹•1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
-            await TestHelper.Login(¿Ã¹õ2, "0511", "password");
-            ¿Ã¹õ2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            await TestHelper.Login(è¢å¹•2, "0511", "password");
+            è¢å¹•2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
-            var wait = new WebDriverWait(¿Ã¹õ1, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(è¢å¹•1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            ¿Ã¹õ1.SwitchTo().Frame(0);
+            è¢å¹•1.SwitchTo().Frame(0);
 
-            var ¨ü²z½s¸¹ = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
-            var ¤ô¸¹ = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-water-no]")));
-            var ¨ü²z¤é´Á = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-date]")));
+            var å—ç†ç·¨è™Ÿ = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
+            var æ°´è™Ÿ = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-water-no]")));
+            var å—ç†æ—¥æœŸ = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-date]")));
 
-            That(¨ü²z½s¸¹.Text, Is.EqualTo("111124"));
-            That(¤ô¸¹.Text, Is.EqualTo("41101202191"));
-            That(¨ü²z¤é´Á.Text, Is.EqualTo("2023¦~03¤ë06¤é"));
+            That(å—ç†ç·¨è™Ÿ.Text, Is.EqualTo("111124"));
+            That(æ°´è™Ÿ.Text, Is.EqualTo("41101202191"));
+            That(å—ç†æ—¥æœŸ.Text, Is.EqualTo("2023å¹´03æœˆ06æ—¥"));
         }
 
 
@@ -114,31 +114,31 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(3)]
         public async Task Twc01_04()
         {
-            await TestHelper.Login(¿Ã¹õ1, "0511", "password");
+            await TestHelper.Login(è¢å¹•1, "0511", "password");
 
-            ¿Ã¹õ1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            è¢å¹•1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(¿Ã¹õ1, "111124");
+            TestHelper.ClickRow(è¢å¹•1, "111124");
 
             Thread.Sleep(1000);
 
-            string[] segments = ¿Ã¹õ1.Url.Split('/');
+            string[] segments = è¢å¹•1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
-            await TestHelper.Login(¿Ã¹õ2, "0511", "password");
-            ¿Ã¹õ2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            await TestHelper.Login(è¢å¹•2, "0511", "password");
+            è¢å¹•2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
-            var wait = new WebDriverWait(¿Ã¹õ1, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(è¢å¹•1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            ¿Ã¹õ1.SwitchTo().Frame(0);
+            è¢å¹•1.SwitchTo().Frame(0);
 
-            var ¨­¤ÀÃÒ¦r¸¹ = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input ")));
+            var èº«åˆ†è­‰å­—è™Ÿ = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input ")));
 
-            ¨­¤ÀÃÒ¦r¸¹.SendKeys("A123456789");
+            èº«åˆ†è­‰å­—è™Ÿ.SendKeys("A123456789");
 
-            ((IJavaScriptExecutor)¿Ã¹õ1).ExecuteScript("arguments[0].scrollIntoView(true);", ¨­¤ÀÃÒ¦r¸¹);
+            ((IJavaScriptExecutor)è¢å¹•1).ExecuteScript("arguments[0].scrollIntoView(true);", èº«åˆ†è­‰å­—è™Ÿ);
 
-            That(¨­¤ÀÃÒ¦r¸¹.GetAttribute("value"), Is.EqualTo("A123456789"));
+            That(èº«åˆ†è­‰å­—è™Ÿ.GetAttribute("value"), Is.EqualTo("A123456789"));
         }
 
         [Test]
@@ -147,40 +147,40 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _skipSetup = false;
             _skipTearDown = false;
-            await TestHelper.Login(¿Ã¹õ1, "0511", "password");
+            await TestHelper.Login(è¢å¹•1, "0511", "password");
 
-            ¿Ã¹õ1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            è¢å¹•1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(¿Ã¹õ1, "111124");
+            TestHelper.ClickRow(è¢å¹•1, "111124");
 
             Thread.Sleep(1000);
 
-            string[] segments = ¿Ã¹õ1.Url.Split('/');
+            string[] segments = è¢å¹•1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
-            await TestHelper.Login(¿Ã¹õ2, "0511", "password");
-            ¿Ã¹õ2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
+            await TestHelper.Login(è¢å¹•2, "0511", "password");
+            è¢å¹•2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
-            var wait = new WebDriverWait(¿Ã¹õ1, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(è¢å¹•1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            ¿Ã¹õ1.SwitchTo().Frame(0);
+            è¢å¹•1.SwitchTo().Frame(0);
 
-            var ¨ü²z = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#¨ü²z")));
+            var å—ç† = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#å—ç†")));
 
-            ((IJavaScriptExecutor)¿Ã¹õ1).ExecuteScript("arguments[0].scrollIntoView(true);", ¨ü²z);
+            ((IJavaScriptExecutor)è¢å¹•1).ExecuteScript("arguments[0].scrollIntoView(true);", å—ç†);
 
-            wait.Until(ExpectedConditions.ElementToBeClickable(¨ü²z));
+            wait.Until(ExpectedConditions.ElementToBeClickable(å—ç†));
 
-            ((IJavaScriptExecutor)¿Ã¹õ1).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", ¨ü²z);
-            That(¨ü²z.Displayed, Is.True);
+            ((IJavaScriptExecutor)è¢å¹•1).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", å—ç†);
+            That(å—ç†.Displayed, Is.True);
         }
 
         [Test]
         [Order(5)]
         public async Task Twc01_06()
         {
-            ¿Ã¹õ1.SwitchTo().DefaultContent();
-            var wait = new WebDriverWait(¿Ã¹õ1, TimeSpan.FromSeconds(10));
+            è¢å¹•1.SwitchTo().DefaultContent();
+            var wait = new WebDriverWait(è¢å¹•1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -191,27 +191,27 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTreeRoot = stormTreeNodes.GetShadowRoot();
             var firstStormTreeNode = stormTreeRoot.FindElement(By.CssSelector("storm-tree-node:first-child"));
 
-            // §ä¨ì href ¤¸¯À
+            // æ‰¾åˆ° href å…ƒç´ 
             var href = firstStormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
-            Actions actions = new Actions(¿Ã¹õ1);
+            Actions actions = new Actions(è¢å¹•1);
             actions.MoveToElement(href).Click().Perform();
 
-            var ®ø¶O©Ê¥Î¤ôªA°È«´¬ù_¿Ã¹õ1 = ¿Ã¹õ1.FindElement(By.Id("®ø¶O©Ê¥Î¤ôªA°È«´¬ù"));
-            ((IJavaScriptExecutor)¿Ã¹õ1).ExecuteScript("arguments[0].scrollIntoView(true);", ®ø¶O©Ê¥Î¤ôªA°È«´¬ù_¿Ã¹õ1);
+            var æ¶ˆè²»æ€§ç”¨æ°´æœå‹™å¥‘ç´„_è¢å¹•1 = è¢å¹•1.FindElement(By.Id("æ¶ˆè²»æ€§ç”¨æ°´æœå‹™å¥‘ç´„"));
+            ((IJavaScriptExecutor)è¢å¹•1).ExecuteScript("arguments[0].scrollIntoView(true);", æ¶ˆè²»æ€§ç”¨æ°´æœå‹™å¥‘ç´„_è¢å¹•1);
 
-            var ®ø¶O©Ê¥Î¤ôªA°È«´¬ù_¿Ã¹õ2 = ¿Ã¹õ2.FindElement(By.Id("®ø¶O©Ê¥Î¤ôªA°È«´¬ù"));
-            ((IJavaScriptExecutor)¿Ã¹õ2).ExecuteScript("arguments[0].click();", ®ø¶O©Ê¥Î¤ôªA°È«´¬ù_¿Ã¹õ2);
+            var æ¶ˆè²»æ€§ç”¨æ°´æœå‹™å¥‘ç´„_è¢å¹•2 = è¢å¹•2.FindElement(By.Id("æ¶ˆè²»æ€§ç”¨æ°´æœå‹™å¥‘ç´„"));
+            ((IJavaScriptExecutor)è¢å¹•2).ExecuteScript("arguments[0].click();", æ¶ˆè²»æ€§ç”¨æ°´æœå‹™å¥‘ç´„_è¢å¹•2);
 
-            //wait.Until(driver => ®ø¶O©Ê¥Î¤ôªA°È«´¬ù_¿Ã¹õ1.GetAttribute("checked") == "true");
+            //wait.Until(driver => æ¶ˆè²»æ€§ç”¨æ°´æœå‹™å¥‘ç´„_è¢å¹•1.GetAttribute("checked") == "true");
             Thread.Sleep(1000);
-            That(®ø¶O©Ê¥Î¤ôªA°È«´¬ù_¿Ã¹õ1.GetAttribute("checked"), Is.EqualTo("true"));
+            That(æ¶ˆè²»æ€§ç”¨æ°´æœå‹™å¥‘ç´„_è¢å¹•1.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
         [Order(6)]
         public async Task Twc01_07()
         {
-            var wait = new WebDriverWait(¿Ã¹õ1, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(è¢å¹•1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -225,25 +225,25 @@ namespace DomainStorm.Project.TWC.Tests
             var secondStormTreeNodeShadowRoot = secondStormTreeNode.GetShadowRoot();
 
             var href = secondStormTreeNodeShadowRoot.FindElement(By.CssSelector("a[href='#contract_2']"));
-            Actions actions = new Actions(¿Ã¹õ1);
+            Actions actions = new Actions(è¢å¹•1);
             actions.MoveToElement(href).Click().Perform();
 
-            var ¤½¥q­Ó¤H¸ê®Æ«OÅ@§iª¾¨Æ¶µ_¿Ã¹õ1 = ¿Ã¹õ1.FindElement(By.Id("¤½¥q­Ó¤H¸ê®Æ«OÅ@§iª¾¨Æ¶µ"));
-            ((IJavaScriptExecutor)¿Ã¹õ1).ExecuteScript("arguments[0].scrollIntoView(true);", ¤½¥q­Ó¤H¸ê®Æ«OÅ@§iª¾¨Æ¶µ_¿Ã¹õ1);
+            var å…¬å¸å€‹äººè³‡æ–™ä¿è­·å‘ŠçŸ¥äº‹é …_è¢å¹•1 = è¢å¹•1.FindElement(By.Id("å…¬å¸å€‹äººè³‡æ–™ä¿è­·å‘ŠçŸ¥äº‹é …"));
+            ((IJavaScriptExecutor)è¢å¹•1).ExecuteScript("arguments[0].scrollIntoView(true);", å…¬å¸å€‹äººè³‡æ–™ä¿è­·å‘ŠçŸ¥äº‹é …_è¢å¹•1);
 
-            var ¤½¥q­Ó¤H¸ê®Æ«OÅ@§iª¾¨Æ¶µ_¿Ã¹õ2 = ¿Ã¹õ2.FindElement(By.Id("¤½¥q­Ó¤H¸ê®Æ«OÅ@§iª¾¨Æ¶µ"));
-            ((IJavaScriptExecutor)¿Ã¹õ2).ExecuteScript("arguments[0].click();", ¤½¥q­Ó¤H¸ê®Æ«OÅ@§iª¾¨Æ¶µ_¿Ã¹õ2);
+            var å…¬å¸å€‹äººè³‡æ–™ä¿è­·å‘ŠçŸ¥äº‹é …_è¢å¹•2 = è¢å¹•2.FindElement(By.Id("å…¬å¸å€‹äººè³‡æ–™ä¿è­·å‘ŠçŸ¥äº‹é …"));
+            ((IJavaScriptExecutor)è¢å¹•2).ExecuteScript("arguments[0].click();", å…¬å¸å€‹äººè³‡æ–™ä¿è­·å‘ŠçŸ¥äº‹é …_è¢å¹•2);
 
-            //wait.Until(driver => ¤½¥q­Ó¤H¸ê®Æ«OÅ@§iª¾¨Æ¶µ_¿Ã¹õ1.GetAttribute("checked") == "true");
+            //wait.Until(driver => å…¬å¸å€‹äººè³‡æ–™ä¿è­·å‘ŠçŸ¥äº‹é …_è¢å¹•1.GetAttribute("checked") == "true");
             Thread.Sleep(1000);
-            That(¤½¥q­Ó¤H¸ê®Æ«OÅ@§iª¾¨Æ¶µ_¿Ã¹õ1.GetAttribute("checked"), Is.EqualTo("true"));
+            That(å…¬å¸å€‹äººè³‡æ–™ä¿è­·å‘ŠçŸ¥äº‹é …_è¢å¹•1.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
         [Order(7)]
         public async Task Twc01_08()
         {
-            var wait = new WebDriverWait(¿Ã¹õ1, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(è¢å¹•1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -257,25 +257,25 @@ namespace DomainStorm.Project.TWC.Tests
             var thirdStormTreeNodeShadowRoot = thirdStormTreeNode.GetShadowRoot();
 
             var href = thirdStormTreeNodeShadowRoot.FindElement(By.CssSelector("a[href='#contract_3']"));
-            Actions actions = new Actions(¿Ã¹õ1);
+            Actions actions = new Actions(è¢å¹•1);
             actions.MoveToElement(href).Click().Perform();
 
-            var ¤½¥qÀç·~³¹µ{_¿Ã¹õ1 = ¿Ã¹õ1.FindElement(By.Id("¤½¥qÀç·~³¹µ{"));
-            ((IJavaScriptExecutor)¿Ã¹õ1).ExecuteScript("arguments[0].scrollIntoView(true);", ¤½¥qÀç·~³¹µ{_¿Ã¹õ1);
+            var å…¬å¸ç‡Ÿæ¥­ç« ç¨‹_è¢å¹•1 = è¢å¹•1.FindElement(By.Id("å…¬å¸ç‡Ÿæ¥­ç« ç¨‹"));
+            ((IJavaScriptExecutor)è¢å¹•1).ExecuteScript("arguments[0].scrollIntoView(true);", å…¬å¸ç‡Ÿæ¥­ç« ç¨‹_è¢å¹•1);
 
-            var ¤½¥qÀç·~³¹µ{_¿Ã¹õ2 = ¿Ã¹õ2.FindElement(By.Id("¤½¥qÀç·~³¹µ{"));
-            ((IJavaScriptExecutor)¿Ã¹õ2).ExecuteScript("arguments[0].click();", ¤½¥qÀç·~³¹µ{_¿Ã¹õ2);
+            var å…¬å¸ç‡Ÿæ¥­ç« ç¨‹_è¢å¹•2 = è¢å¹•2.FindElement(By.Id("å…¬å¸ç‡Ÿæ¥­ç« ç¨‹"));
+            ((IJavaScriptExecutor)è¢å¹•2).ExecuteScript("arguments[0].click();", å…¬å¸ç‡Ÿæ¥­ç« ç¨‹_è¢å¹•2);
 
-            //wait.Until(driver => ¤½¥qÀç·~³¹µ{_¿Ã¹õ1.GetAttribute("checked") == "true");
+            //wait.Until(driver => å…¬å¸ç‡Ÿæ¥­ç« ç¨‹_è¢å¹•1.GetAttribute("checked") == "true");
             Thread.Sleep(1000);
-            That(¤½¥qÀç·~³¹µ{_¿Ã¹õ1.GetAttribute("checked"), Is.EqualTo("true"));
+            That(å…¬å¸ç‡Ÿæ¥­ç« ç¨‹_è¢å¹•1.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
         [Order(8)]
         public async Task Twc01_09()
         {
-            var wait = new WebDriverWait(¿Ã¹õ1, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(è¢å¹•1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -284,18 +284,18 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTreeNodeRoot = stormTreeNode.GetShadowRoot();
 
             var href = stormTreeNodeRoot.FindElement(By.CssSelector("a[href='#signature']"));
-            Actions actions = new Actions(¿Ã¹õ1);
+            Actions actions = new Actions(è¢å¹•1);
             actions.MoveToElement(href).Click().Perform();
 
-            var Ã±¦W_¿Ã¹õ1 = ¿Ã¹õ1.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
-            ((IJavaScriptExecutor)¿Ã¹õ1).ExecuteScript("arguments[0].scrollIntoView(true);", Ã±¦W_¿Ã¹õ1);
+            var ç°½å_è¢å¹•1 = è¢å¹•1.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
+            ((IJavaScriptExecutor)è¢å¹•1).ExecuteScript("arguments[0].scrollIntoView(true);", ç°½å_è¢å¹•1);
 
-            var Ã±¦W_¿Ã¹õ2 = ¿Ã¹õ2.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
-            ((IJavaScriptExecutor)¿Ã¹õ2).ExecuteScript("arguments[0].click();", Ã±¦W_¿Ã¹õ2);
+            var ç°½å_è¢å¹•2 = è¢å¹•2.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
+            ((IJavaScriptExecutor)è¢å¹•2).ExecuteScript("arguments[0].click();", ç°½å_è¢å¹•2);
 
-            //wait.Until(driver => ¿Ã¹õ1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
+            //wait.Until(driver => è¢å¹•1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
             Thread.Sleep(1000);
-            That(¿Ã¹õ1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
+            That(è¢å¹•1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
         }
 
 
@@ -303,7 +303,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(9)]
         public async Task Twc01_10()
         {
-            var wait = new WebDriverWait(¿Ã¹õ1, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(è¢å¹•1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -312,16 +312,16 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTreeNodeRoot = stormTreeNode.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
             var UnderRootstormTreeNode = stormTreeNodeRoot.GetShadowRoot();
             var href = UnderRootstormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
-            Actions actions = new Actions(¿Ã¹õ1);
+            Actions actions = new Actions(è¢å¹•1);
             actions.MoveToElement(href).Click().Perform();
 
-            var ±Ò°Ê±½´yÃÒ¥ó = ¿Ã¹õ1.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
-            ((IJavaScriptExecutor)¿Ã¹õ1).ExecuteScript("arguments[0].scrollIntoView(true);", ±Ò°Ê±½´yÃÒ¥ó);
-            ((IJavaScriptExecutor)¿Ã¹õ1).ExecuteScript("arguments[0].click();", ±Ò°Ê±½´yÃÒ¥ó);
+            var å•Ÿå‹•æƒæè­‰ä»¶ = è¢å¹•1.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
+            ((IJavaScriptExecutor)è¢å¹•1).ExecuteScript("arguments[0].scrollIntoView(true);", å•Ÿå‹•æƒæè­‰ä»¶);
+            ((IJavaScriptExecutor)è¢å¹•1).ExecuteScript("arguments[0].click();", å•Ÿå‹•æƒæè­‰ä»¶);
 
-            //wait.Until(driver => ¿Ã¹õ1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
+            //wait.Until(driver => è¢å¹•1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
             Thread.Sleep(1000);
-            That(¿Ã¹õ1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
+            That(è¢å¹•1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
         }
 
         //[Test]
@@ -336,7 +336,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _skipSetup = true;
             _skipTearDown = true;
-            var wait = new WebDriverWait(¿Ã¹õ1, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(è¢å¹•1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -345,12 +345,12 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTreeNodeRoot = stormTreeNode.GetShadowRoot();
 
             var href = stormTreeNodeRoot.FindElement(By.CssSelector("a[href='#finished']"));
-            Actions actions = new Actions(¿Ã¹õ1);
+            Actions actions = new Actions(è¢å¹•1);
             actions.MoveToElement(href).Click().Perform();
 
-            var ½T»{¨ü²z = ¿Ã¹õ1.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-            ((IJavaScriptExecutor)¿Ã¹õ1).ExecuteScript("arguments[0].scrollIntoView(true);", ½T»{¨ü²z);
-            ((IJavaScriptExecutor)¿Ã¹õ1).ExecuteScript("arguments[0].click();", ½T»{¨ü²z);
+            var ç¢ºèªå—ç† = è¢å¹•1.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+            ((IJavaScriptExecutor)è¢å¹•1).ExecuteScript("arguments[0].scrollIntoView(true);", ç¢ºèªå—ç†);
+            ((IJavaScriptExecutor)è¢å¹•1).ExecuteScript("arguments[0].click();", ç¢ºèªå—ç†);
         }
     }
 }
