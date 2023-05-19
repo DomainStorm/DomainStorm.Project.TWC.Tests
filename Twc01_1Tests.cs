@@ -53,7 +53,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(0)]
         public async Task Twc01_01()
         {
-            _accessToken ??= await TestHelper.GetAccessToken();
+            _accessToken = await TestHelper.GetAccessToken();
             That(_accessToken, Is.Not.Empty);
         }
 
@@ -96,17 +96,17 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(螢幕2, "0511", "password");
             螢幕2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
-            var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(螢幕2, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            螢幕1.SwitchTo().Frame(0);
+            螢幕2.SwitchTo().Frame(0);
 
-            var 受理編號 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
-            var 水號 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-water-no]")));
-            var 受理日期 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-date]")));
+            var 受理編號_螢幕2 = 螢幕2.FindElement(By.CssSelector("[sti-apply-case-no]"));
+            var 水號_螢幕2 = 螢幕2.FindElement(By.CssSelector("[sti-water-no]"));
+            var 受理日期_螢幕2 = 螢幕2.FindElement(By.CssSelector("[sti-apply-date]"));
 
-            That(受理編號.Text, Is.EqualTo("111124"));
-            That(水號.Text, Is.EqualTo("41101202191"));
-            That(受理日期.Text, Is.EqualTo("2023年03月06日"));
+            That(受理編號_螢幕2.Text, Is.EqualTo("111124"));
+            That(水號_螢幕2.Text, Is.EqualTo("41101202191"));
+            That(受理日期_螢幕2.Text, Is.EqualTo("2023年03月06日"));
         }
 
 
@@ -132,13 +132,13 @@ namespace DomainStorm.Project.TWC.Tests
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             螢幕1.SwitchTo().Frame(0);
 
-            var 身分證字號 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input ")));
+            var 身分證字號_螢幕1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input ")));
+            var 身分證字號_螢幕2 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input ")));
+            身分證字號_螢幕1.SendKeys("A123456789");
 
-            身分證字號.SendKeys("A123456789");
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 身分證字號_螢幕1);
 
-            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 身分證字號);
-
-            That(身分證字號.GetAttribute("value"), Is.EqualTo("A123456789"));
+            That(身分證字號_螢幕2.GetAttribute("value"), Is.EqualTo("A123456789"));
         }
 
         [Test]
@@ -161,18 +161,23 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(螢幕2, "0511", "password");
             螢幕2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
-            var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            var wait_螢幕1 = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
+            wait_螢幕1.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            var wait_螢幕2 = new WebDriverWait(螢幕2, TimeSpan.FromSeconds(10));
+            wait_螢幕2.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             螢幕1.SwitchTo().Frame(0);
 
-            var 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            var 受理_螢幕1 = wait_螢幕1.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 受理_螢幕1);
 
-            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
+            wait_螢幕1.Until(ExpectedConditions.ElementToBeClickable(受理_螢幕1));
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理_螢幕1);
 
-            wait.Until(ExpectedConditions.ElementToBeClickable(受理));
+            wait_螢幕2.Until(ExpectedConditions.FrameToBeAvailableAndSwitchToIt(By.CssSelector("iframe")));
+            var 已受理 = 螢幕2.FindElements(By.CssSelector("[class='sign']"));
+            That(已受理, Is.Not.Empty, "未受理");
 
-            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理);
-            That(受理.Displayed, Is.True);
         }
 
         [Test]
@@ -180,6 +185,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task Twc01_06()
         {
             螢幕1.SwitchTo().DefaultContent();
+            螢幕2.SwitchTo().DefaultContent();
             var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
@@ -202,9 +208,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 消費性用水服務契約_螢幕2 = 螢幕2.FindElement(By.Id("消費性用水服務契約"));
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 消費性用水服務契約_螢幕2);
 
-            //wait.Until(driver => 消費性用水服務契約_螢幕1.GetAttribute("checked") == "true");
-            Thread.Sleep(1000);
-            That(消費性用水服務契約_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("消費性用水服務契約")));
+            That(消費性用水服務契約_螢幕2.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
@@ -234,9 +239,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 公司個人資料保護告知事項_螢幕2 = 螢幕2.FindElement(By.Id("公司個人資料保護告知事項"));
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項_螢幕2);
 
-            //wait.Until(driver => 公司個人資料保護告知事項_螢幕1.GetAttribute("checked") == "true");
-            Thread.Sleep(1000);
-            That(公司個人資料保護告知事項_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("公司個人資料保護告知事項")));
+            That(公司個人資料保護告知事項_螢幕2.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
@@ -266,9 +270,9 @@ namespace DomainStorm.Project.TWC.Tests
             var 公司營業章程_螢幕2 = 螢幕2.FindElement(By.Id("公司營業章程"));
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 公司營業章程_螢幕2);
 
-            //wait.Until(driver => 公司營業章程_螢幕1.GetAttribute("checked") == "true");
-            Thread.Sleep(1000);
-            That(公司營業章程_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.Id("公司營業章程")));
+            That(公司營業章程_螢幕2.GetAttribute("checked"), Is.EqualTo("true"));
+
         }
 
         [Test]
@@ -293,8 +297,6 @@ namespace DomainStorm.Project.TWC.Tests
             var 簽名_螢幕2 = 螢幕2.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 簽名_螢幕2);
 
-            //wait.Until(driver => 螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
-            Thread.Sleep(1000);
             That(螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
         }
 
@@ -319,9 +321,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 啟動掃描證件);
             ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].click();", 啟動掃描證件);
 
-            //wait.Until(driver => 螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
-            Thread.Sleep(1000);
-            That(螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
+            That(螢幕2.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
         }
 
         //[Test]

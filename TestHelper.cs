@@ -11,7 +11,6 @@ namespace DomainStorm.Project.TWC.Tests;
 
 public class TestHelper
 {
-    private const bool IsRemote = true;
     private static TestConfig GetTestConfig()
     {
         return new ConfigurationBuilder()
@@ -106,8 +105,8 @@ public class TestHelper
         webDriver.Manage().Window.Size = new Size(1200, 800);
 
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-
-        if (IsRemote)
+        var detailsButtonElements = webDriver.FindElements(By.CssSelector("#details-button"));
+        if (detailsButtonElements.Count > 0)
         {
             var detailsButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#details-button")));
             detailsButton.Click();
