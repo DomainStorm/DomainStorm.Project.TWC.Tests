@@ -66,7 +66,7 @@ namespace DomainStorm.Project.TWC.Tests
             request.AddHeader("Content-Type", "application/json");
             request.AddHeader("Authorization", $"Bearer {_accessToken}");
 
-            using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/tpcweb_01_1啟用_bmEnableApply.json"));
+            using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A100_bmEnableApply.json"));
             var json = await r.ReadToEndAsync();
 
             var guid = TestHelper.GetSerializationObject(json);
@@ -145,6 +145,8 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(4)]
         public async Task Twc01_05()
         {
+            _skipSetup = false;
+            _skipTearDown = false;
             await TestHelper.Login(螢幕1, "0511", "password");
 
             螢幕1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
@@ -177,22 +179,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(5)]
         public async Task Twc01_06()
         {
-            _skipSetup = false;
-            _skipTearDown = false;
-            await TestHelper.Login(螢幕1, "0511", "password");
-
-            螢幕1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-
-            TestHelper.ClickRow(螢幕1, "111124");
-
-            Thread.Sleep(1000);
-
-            string[] segments = 螢幕1.Url.Split('/');
-            string id = segments[segments.Length - 1];
-
-            await TestHelper.Login(螢幕2, "0511", "password");
-            螢幕2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
-
+            螢幕1.SwitchTo().DefaultContent();
             var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
@@ -213,12 +200,11 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約_螢幕1);
 
             var 消費性用水服務契約_螢幕2 = 螢幕2.FindElement(By.Id("消費性用水服務契約"));
-            //螢幕2.SwitchTo().Window(螢幕2.WindowHandles[0]);
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 消費性用水服務契約_螢幕2);
 
-            //螢幕1.SwitchTo().Window(螢幕1.WindowHandles[0]);
-            wait.Until(driver => 消費性用水服務契約_螢幕1.GetAttribute("checked") == "true");
-            //That(消費性用水服務契約_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
+            //wait.Until(driver => 消費性用水服務契約_螢幕1.GetAttribute("checked") == "true");
+            Thread.Sleep(1000);
+            That(消費性用水服務契約_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
@@ -248,7 +234,9 @@ namespace DomainStorm.Project.TWC.Tests
             var 公司個人資料保護告知事項_螢幕2 = 螢幕2.FindElement(By.Id("公司個人資料保護告知事項"));
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項_螢幕2);
 
-            wait.Until(driver => 公司個人資料保護告知事項_螢幕1.GetAttribute("checked") == "true");
+            //wait.Until(driver => 公司個人資料保護告知事項_螢幕1.GetAttribute("checked") == "true");
+            Thread.Sleep(1000);
+            That(公司個人資料保護告知事項_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
@@ -278,7 +266,9 @@ namespace DomainStorm.Project.TWC.Tests
             var 公司營業章程_螢幕2 = 螢幕2.FindElement(By.Id("公司營業章程"));
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 公司營業章程_螢幕2);
 
-            wait.Until(driver => 公司營業章程_螢幕1.GetAttribute("checked") == "true");
+            //wait.Until(driver => 公司營業章程_螢幕1.GetAttribute("checked") == "true");
+            Thread.Sleep(1000);
+            That(公司營業章程_螢幕1.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
@@ -302,7 +292,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             var 簽名_螢幕2 = 螢幕2.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 簽名_螢幕2);
-            wait.Until(driver => 螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
+
+            //wait.Until(driver => 螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
+            Thread.Sleep(1000);
+            That(螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
         }
 
 
@@ -326,7 +319,38 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 啟動掃描證件);
             ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].click();", 啟動掃描證件);
 
-            wait.Until(driver => 螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
+            //wait.Until(driver => 螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any());
+            Thread.Sleep(1000);
+            That(螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
+        }
+
+        //[Test]
+        //[Order(10)]
+        //public async Task Twc01_11()
+        //{
+        //}
+
+        [Test]
+        [Order(11)]
+        public async Task Twc01_12()
+        {
+            _skipSetup = true;
+            _skipTearDown = true;
+            var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
+            var stormTreeNodeRoot = stormTreeNode.GetShadowRoot();
+
+            var href = stormTreeNodeRoot.FindElement(By.CssSelector("a[href='#finished']"));
+            Actions actions = new Actions(螢幕1);
+            actions.MoveToElement(href).Click().Perform();
+
+            var 確認受理 = 螢幕1.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 確認受理);
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].click();", 確認受理);
         }
     }
 }
