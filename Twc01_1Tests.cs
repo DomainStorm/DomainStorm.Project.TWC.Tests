@@ -1,14 +1,11 @@
-﻿using Castle.Components.DictionaryAdapter.Xml;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 using RestSharp;
 using SeleniumExtras.WaitHelpers;
 using System.Net;
-using System.Runtime.CompilerServices;
 using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
