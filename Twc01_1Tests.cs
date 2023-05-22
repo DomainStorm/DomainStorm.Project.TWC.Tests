@@ -298,8 +298,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 簽名_螢幕2 = 螢幕2.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 簽名_螢幕2);
 
-            var containerElement_螢幕1 = 螢幕1.FindElement(By.CssSelector("div.dropzone.dz-started"));
-            var containerElement_螢幕2 = 螢幕2.FindElement(By.CssSelector("div.dropzone.dz-started"));
+            var containerElement_螢幕1 = 螢幕1.FindElement(By.CssSelector("div.dropzone-container"));
+            var containerElement_螢幕2 = 螢幕2.FindElement(By.CssSelector("div.dropzone-container"));
             var 圖片元素_螢幕1 = containerElement_螢幕1.FindElement(By.CssSelector("img"));
             var 圖片元素_螢幕2 = containerElement_螢幕2.FindElement(By.CssSelector("img"));
             var 圖片_螢幕1_src = 圖片元素_螢幕1.GetAttribute("src");
@@ -329,13 +329,20 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 啟動掃描證件);
             ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].click();", 啟動掃描證件);
 
-            That(螢幕2.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
+            var containerElement_螢幕1 = 螢幕1.FindElement(By.CssSelector("div.dropzone-container"));
+            var containerElement_螢幕2 = 螢幕2.FindElement(By.CssSelector("div.dropzone-container"));
+            var 圖片元素_螢幕1 = containerElement_螢幕1.FindElement(By.CssSelector("img"));
+            var 圖片元素_螢幕2 = containerElement_螢幕2.FindElement(By.CssSelector("img"));
+            var 圖片_螢幕1_src = 圖片元素_螢幕1.GetAttribute("src");
+            var 圖片_螢幕2_src = 圖片元素_螢幕2.GetAttribute("src");
+
+            That(圖片_螢幕1_src, Is.EqualTo(圖片_螢幕2_src));
         }
 
         //[Test]
         //[Order(10)]
         //public async Task Twc01_11()
-        //{
+        //{<div class="dropzone dz-clickable dz-started">
         //}
 
         [Test]
