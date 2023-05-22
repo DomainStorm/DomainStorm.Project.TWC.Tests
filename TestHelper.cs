@@ -113,7 +113,6 @@ public class TestHelper
 
             var proceedLink = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#proceed-link")));
             proceedLink.Click();
-
         }
 
         var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));

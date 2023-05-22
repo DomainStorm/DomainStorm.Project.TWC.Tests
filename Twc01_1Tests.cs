@@ -339,11 +339,37 @@ namespace DomainStorm.Project.TWC.Tests
             That(圖片_螢幕1_src, Is.EqualTo(圖片_螢幕2_src));
         }
 
-        //[Test]
-        //[Order(10)]
-        //public async Task Twc01_11()
-        //{<div class="dropzone dz-clickable dz-started">
-        //}
+        [Test]
+        [Order(10)]
+        public async Task Twc01_11()
+        {
+            var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
+            var SecondstormTreeNode = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+
+            var href = SecondstormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
+            Actions actions = new Actions(螢幕1);
+            actions.MoveToElement(href).Click().Perform();
+
+            var 新增文件 = 螢幕1.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].click();", 新增文件);
+
+
+            var container = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone.dz-clickable")));
+            actions.MoveToElement(container).Click().Perform();
+
+            //var inputFile = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#inputFile")));
+            //string tpcweb_01_1_夾帶附件1 = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tpcweb_01_1_夾帶附件1.pdf");
+            //string tpcweb_01_1_夾帶附件2 = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tpcweb_01_1_夾帶附件2.pdf");
+            //string filesToSend = $"{tpcweb_01_1_夾帶附件1};{tpcweb_01_1_夾帶附件2}";
+            //inputFile.SendKeys(filesToSend);
+
+        }
 
         [Test]
         [Order(11)]
