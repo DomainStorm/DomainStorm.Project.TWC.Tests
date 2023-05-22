@@ -153,6 +153,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             TestHelper.ClickRow(螢幕1, "111124");
 
+            var wait_螢幕1 = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
+            var wait_螢幕2 = new WebDriverWait(螢幕2, TimeSpan.FromSeconds(10));
             Thread.Sleep(1000);
 
             string[] segments = 螢幕1.Url.Split('/');
@@ -161,9 +163,8 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(螢幕2, "0511", "password");
             螢幕2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
-            var wait_螢幕1 = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
             wait_螢幕1.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            var wait_螢幕2 = new WebDriverWait(螢幕2, TimeSpan.FromSeconds(10));
+
             wait_螢幕2.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             螢幕1.SwitchTo().Frame(0);
 
@@ -297,7 +298,14 @@ namespace DomainStorm.Project.TWC.Tests
             var 簽名_螢幕2 = 螢幕2.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
             ((IJavaScriptExecutor)螢幕2).ExecuteScript("arguments[0].click();", 簽名_螢幕2);
 
-            That(螢幕1.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
+            var containerElement_螢幕1 = 螢幕1.FindElement(By.CssSelector("div.dropzone-container"));
+            var containerElement_螢幕2 = 螢幕2.FindElement(By.CssSelector("div.dropzone-container"));
+            var 圖片元素_螢幕1 = containerElement_螢幕1.FindElement(By.CssSelector("img"));
+            var 圖片元素_螢幕2 = containerElement_螢幕2.FindElement(By.CssSelector("img"));
+            var 圖片_螢幕1_src = 圖片元素_螢幕1.GetAttribute("src");
+            var 圖片_螢幕2_src = 圖片元素_螢幕2.GetAttribute("src");
+
+            That(圖片_螢幕2_src, Is.EqualTo(圖片_螢幕1_src));
         }
 
 
@@ -321,14 +329,47 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 啟動掃描證件);
             ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].click();", 啟動掃描證件);
 
-            That(螢幕2.FindElements(By.CssSelector("img[src^='data:image/png;']")).Any(), Is.True);
+            var containerElement_螢幕1 = 螢幕1.FindElement(By.CssSelector("div.dropzone-container"));
+            var containerElement_螢幕2 = 螢幕2.FindElement(By.CssSelector("div.dropzone-container"));
+            var 圖片元素_螢幕1 = containerElement_螢幕1.FindElement(By.CssSelector("img"));
+            var 圖片元素_螢幕2 = containerElement_螢幕2.FindElement(By.CssSelector("img"));
+            var 圖片_螢幕1_src = 圖片元素_螢幕1.GetAttribute("src");
+            var 圖片_螢幕2_src = 圖片元素_螢幕2.GetAttribute("src");
+
+            That(圖片_螢幕1_src, Is.EqualTo(圖片_螢幕2_src));
         }
 
-        //[Test]
-        //[Order(10)]
-        //public async Task Twc01_11()
-        //{
-        //}
+        [Test]
+        [Order(10)]
+        public async Task Twc01_11()
+        {
+            var wait = new WebDriverWait(螢幕1, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
+            var SecondstormTreeNode = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+
+            var href = SecondstormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
+            Actions actions = new Actions(螢幕1);
+            actions.MoveToElement(href).Click().Perform();
+
+            var 新增文件 = 螢幕1.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
+            ((IJavaScriptExecutor)螢幕1).ExecuteScript("arguments[0].click();", 新增文件);
+
+
+            var container = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone.dz-clickable")));
+            actions.MoveToElement(container).Click().Perform();
+
+            //var inputFile = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#inputFile")));
+            //string tpcweb_01_1_夾帶附件1 = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tpcweb_01_1_夾帶附件1.pdf");
+            //string tpcweb_01_1_夾帶附件2 = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tpcweb_01_1_夾帶附件2.pdf");
+            //string filesToSend = $"{tpcweb_01_1_夾帶附件1};{tpcweb_01_1_夾帶附件2}";
+            //inputFile.SendKeys(filesToSend);
+
+        }
 
         [Test]
         [Order(11)]
