@@ -84,8 +84,7 @@ public class TestHelper
         const string clientId = "bmuser";
         const string clientSecret = "4xW8KpkKkeFc";
         var encodedData = Convert.ToBase64String(
-            System.Text.Encoding.GetEncoding("UTF-8")
-                .GetBytes(clientId + ":" + clientSecret)
+            System.Text.Encoding.GetEncoding("UTF-8").GetBytes(clientId + ":" + clientSecret)
         );
         request.AddHeader("Authorization", $"Basic {encodedData}");
         request.AddHeader("Content-Type", "application/x-www-form-urlencoded");

@@ -62,7 +62,7 @@
 	  <None Update="Assets\twcweb-A100_bmEnableApply.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Assets\tpcweb_03_臨櫃模擬情境_2復用_bmRecoverApply.json">
+	  <None Update="Assets\twcweb-A101_bmEnableApply.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>
