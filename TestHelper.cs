@@ -6,6 +6,7 @@ using SeleniumExtras.WaitHelpers;
 using System.Drawing;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace DomainStorm.Project.TWC.Tests;
 
@@ -15,6 +16,7 @@ public class TestHelper
     {
         return new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", false, false)
+            .AddUserSecrets<TestHelper>()
             .AddEnvironmentVariables()
             .Build()
             .GetSection("TestConfig")
