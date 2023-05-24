@@ -67,11 +67,11 @@ namespace DomainStorm.Project.TWC.Tests
             var json = await r.ReadToEndAsync();
 
             var guid = TestHelper.GetSerializationObject(json);
-            guid.applyCaseNo = "111124";
+            //guid.applyCaseNo = "111124";
             var updatedJson = JsonConvert.SerializeObject(guid);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
-            var response = await client.ExecuteAsync(request);
+            var response = await client.PostAsync(request);
             That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
