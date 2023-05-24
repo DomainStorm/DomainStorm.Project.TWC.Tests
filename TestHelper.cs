@@ -75,7 +75,7 @@ public class TestHelper
     }   
     public class TokenResponse
     {
-        public string access_token { get; set; }
+        public string Access_token { get; set; }
     }
 
     public static async Task<string> GetAccessToken()
@@ -96,7 +96,7 @@ public class TestHelper
 
         var restResponse = await client.PostAsync<TokenResponse>(request);
 
-        return restResponse?.access_token ?? throw new InvalidOperationException();
+        return restResponse?.Access_token ?? throw new InvalidOperationException();
     }
 
     public static Task Login(IWebDriver webDriver, string userId, string password)

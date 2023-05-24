@@ -51,12 +51,12 @@ namespace DomainStorm.Project.TWC.Tests
             using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"));
             var json = await r.ReadToEndAsync();
 
-            var guid = TestHelper.GetSerializationObject(json);
-            guid.applyCaseNo = "111124";
-            var updatedJson = JsonConvert.SerializeObject(guid);
+            var update = JsonConvert.DeserializeObject<Serialization>(json);
+            update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
+            var updatedJson = JsonConvert.SerializeObject(update);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
-            var response = await client.ExecuteAsync(request);
+            var response = await client.PostAsync(request);
             That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
