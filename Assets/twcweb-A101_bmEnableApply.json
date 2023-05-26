@@ -8,13 +8,13 @@
   "deviceLocation": "台中市西屯區逢甲路100號",
   "applicant": "02191馬啟用公司行號文字",
   "idNo": "",
-  "unino": "16753217",
+  "uniNo": "16753217",
   "telNo": "04666666",
   "mobileNo": "0939123456",
   "pipeDiameter": "20",
   "waterType": "1 普通用水",
   "scoreSheet": "2 分表",
-  "waterBuildLic": "109,中都,00322,,1110528",
+  "waterBuildLic": "109,中都,00322,,",
   "waterUseLic": "111,中都,000990,A01附啟用單,1110628",
   "billAddress": "帳單地址台中市西屯區逢甲路100號"
 }
