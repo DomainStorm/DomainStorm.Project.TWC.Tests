@@ -31,12 +31,13 @@ namespace DomainStorm.Project.TWC.Tests
         {
             driver_1.Quit();
         }
-
+        
         [Test]
         [Order(0)]
         public async Task TwcA101_01()
         {
             _accessToken = await TestHelper.GetAccessToken();
+            TestHelper.TestConfig.AccessToken = _accessToken;
             That(_accessToken, Is.Not.Empty);
         }
 
@@ -44,10 +45,11 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(1)]
         public async Task TwcA101_02()
         {
+            var accessToken = TestHelper.AccessToken;
             var client = new RestClient($"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm");
             var request = new RestRequest();
             request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("Authorization", $"Bearer {_accessToken}");
+            request.AddHeader("Authorization", $"Bearer {accessToken}");
 
             using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"));
             var json = await r.ReadToEndAsync();

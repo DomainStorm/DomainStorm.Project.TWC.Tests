@@ -52,6 +52,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task Twc01_01()
         {
             _accessToken = await TestHelper.GetAccessToken();
+            TestHelper.TestConfig.AccessToken = _accessToken;
             That(_accessToken, Is.Not.Empty);
         }
 
@@ -59,17 +60,18 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(1)]
         public async Task Twc01_02()
         {
+            var accessToken = TestHelper.AccessToken;
             var client = new RestClient($"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm");
             var request = new RestRequest();
             request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("Authorization", $"Bearer {_accessToken}");
+            request.AddHeader("Authorization", $"Bearer {accessToken}");
 
             using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A100_bmEnableApply.json"));
             var json = await r.ReadToEndAsync();
 
-            var guid = TestHelper.GetSerializationObject(json);
+            var update = JsonConvert.DeserializeObject<Serialization>(json);
             //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
-            var updatedJson = JsonConvert.SerializeObject(guid);
+            var updatedJson = JsonConvert.SerializeObject(update);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
             var response = await client.PostAsync(request);
@@ -174,7 +176,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理_driver_1);
 
             wait_driver_2.Until(ExpectedConditions.FrameToBeAvailableAndSwitchToIt(By.CssSelector("iframe")));
-            var 已受理 = driver_1.FindElements(By.CssSelector("[class='sign']"));
+            var 已受理 = driver_2.FindElements(By.CssSelector("[class='sign']"));
             That(已受理, Is.Not.Empty, "未受理");
 
         }
