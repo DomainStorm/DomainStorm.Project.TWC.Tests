@@ -198,7 +198,6 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTreeRoot = stormTreeNodes.GetShadowRoot();
             var firstStormTreeNode = stormTreeRoot.FindElement(By.CssSelector("storm-tree-node:first-child"));
 
-            // 找到 href 元素
             var href = firstStormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
             Actions actions = new Actions(driver_1);
             actions.MoveToElement(href).Click().Perform();
