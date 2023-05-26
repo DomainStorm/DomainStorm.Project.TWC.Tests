@@ -14,7 +14,8 @@ namespace DomainStorm.Project.TWC.Tests
     {
         private IWebDriver driver_1;
         private IWebDriver driver_2;
-        private static string _accessToken;
+        private string _accessToken;
+        private string _applyCaseNo = "20230525173622";
         private bool _skipSetup = true;
         private bool _skipTearDown = true;
 
@@ -67,7 +68,7 @@ namespace DomainStorm.Project.TWC.Tests
             var json = await r.ReadToEndAsync();
 
             var guid = TestHelper.GetSerializationObject(json);
-
+            //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
             var updatedJson = JsonConvert.SerializeObject(guid);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
@@ -83,7 +84,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(driver_1, "111124");
+            TestHelper.ClickRow(driver_1, _applyCaseNo);
 
             Thread.Sleep(1000);
 
@@ -101,7 +102,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 水號_driver_2 = driver_2.FindElement(By.CssSelector("[sti-water-no]"));
             var 受理日期_driver_2 = driver_2.FindElement(By.CssSelector("[sti-apply-date]"));
 
-            That(受理編號_driver_2.Text, Is.EqualTo("111124"));
+            That(受理編號_driver_2.Text, Is.EqualTo(_applyCaseNo));
             That(水號_driver_2.Text, Is.EqualTo("41101202191"));
             That(受理日期_driver_2.Text, Is.EqualTo("2023年03月06日"));
         }
@@ -115,7 +116,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(driver_1, "111124");
+            TestHelper.ClickRow(driver_1, _applyCaseNo);
 
             Thread.Sleep(1000);
 
@@ -148,7 +149,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(driver_1, "111124");
+            TestHelper.ClickRow(driver_1, _applyCaseNo);
 
             var wait_driver_1 = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             var wait_driver_2 = new WebDriverWait(driver_2, TimeSpan.FromSeconds(10));
@@ -173,7 +174,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理_driver_1);
 
             wait_driver_2.Until(ExpectedConditions.FrameToBeAvailableAndSwitchToIt(By.CssSelector("iframe")));
-            var 已受理 = driver_2.FindElements(By.CssSelector("[class='sign']"));
+            var 已受理 = driver_1.FindElements(By.CssSelector("[class='sign']"));
             That(已受理, Is.Not.Empty, "未受理");
 
         }
@@ -207,7 +208,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver_2).ExecuteScript("arguments[0].click();", 消費性用水服務契約_driver_2);
 
             wait.Until(ExpectedConditions.ElementIsVisible(By.Id("消費性用水服務契約")));
-            That(消費性用水服務契約_driver_2.GetAttribute("checked"), Is.EqualTo("true"));
+            That(消費性用水服務契約_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
@@ -235,10 +236,10 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項_driver_1);
 
             var 公司個人資料保護告知事項_driver_2 = driver_2.FindElement(By.Id("公司個人資料保護告知事項"));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項_driver_1);
+            ((IJavaScriptExecutor)driver_2).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項_driver_2);
 
             wait.Until(ExpectedConditions.ElementIsVisible(By.Id("公司個人資料保護告知事項")));
-            That(公司個人資料保護告知事項_driver_2.GetAttribute("checked"), Is.EqualTo("true"));
+            That(公司個人資料保護告知事項_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
@@ -269,7 +270,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver_2).ExecuteScript("arguments[0].click();", 公司營業章程_driver_2);
 
             wait.Until(ExpectedConditions.ElementIsVisible(By.Id("公司營業章程")));
-            That(公司營業章程_driver_2.GetAttribute("checked"), Is.EqualTo("true"));
+            That(公司營業章程_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
 
         }
 

@@ -13,7 +13,8 @@ namespace DomainStorm.Project.TWC.Tests
     public class TwcA101Tests
     {
         private IWebDriver driver_1;
-        private static string _accessToken;
+        private string _accessToken;
+        private string _applyCaseNo = "111124";
         public TwcA101Tests()
         {
         }
@@ -52,10 +53,11 @@ namespace DomainStorm.Project.TWC.Tests
             var json = await r.ReadToEndAsync();
 
             var update = JsonConvert.DeserializeObject<Serialization>(json);
-            update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
+            //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
             var updatedJson = JsonConvert.SerializeObject(update);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
+
             var response = await client.PostAsync(request);
             That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         }
@@ -68,7 +70,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(driver_1, "111124");
+            TestHelper.ClickRow(driver_1, _applyCaseNo);
 
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -108,7 +110,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(driver_1, "111124");
+            TestHelper.ClickRow(driver_1, _applyCaseNo);
 
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -137,7 +139,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(driver_1, "111124");
+            TestHelper.ClickRow(driver_1, _applyCaseNo);
 
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -168,7 +170,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(driver_1, "111124");
+            TestHelper.ClickRow(driver_1, _applyCaseNo);
 
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
