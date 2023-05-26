@@ -15,7 +15,7 @@ namespace DomainStorm.Project.TWC.Tests
         private IWebDriver driver_1;
         private IWebDriver driver_2;
         private string _accessToken;
-        private string _applyCaseNo = "20230525173622";
+        private string _applyCaseNo = "111124";
         private bool _skipSetup = true;
         private bool _skipTearDown = true;
 
