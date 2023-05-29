@@ -14,7 +14,7 @@ namespace DomainStorm.Project.TWC.Tests
     {
         private IWebDriver driver_1;
         private string _accessToken;
-        private string _applyCaseNo = "111124";
+        private string _applyCaseNo = "0529101";
         public TwcA101Tests()
         {
         }
@@ -56,7 +56,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var update = JsonConvert.DeserializeObject<Serialization>(json);
             //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
-            //update.applyCaseNo = "111124";
+            update.applyCaseNo = "0529101";
             var updatedJson = JsonConvert.SerializeObject(update);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
