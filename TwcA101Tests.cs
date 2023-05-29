@@ -15,6 +15,9 @@ namespace DomainStorm.Project.TWC.Tests
         private IWebDriver driver_1;
         private string _accessToken;
         private string _applyCaseNo = "111124";
+        private string _userId = "0511";
+        private string _password = "password";
+
         public TwcA101Tests()
         {
         }
@@ -55,8 +58,8 @@ namespace DomainStorm.Project.TWC.Tests
             var json = await r.ReadToEndAsync();
 
             var update = JsonConvert.DeserializeObject<Serialization>(json);
-            //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
-            //update.applyCaseNo = "111124";
+            update.applyCaseNo = _applyCaseNo;
+            update.userCode = _userId;
             var updatedJson = JsonConvert.SerializeObject(update);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
@@ -69,7 +72,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(2)]
         public async Task TwcA101_03()
         {
-            await TestHelper.Login(driver_1, "0511", "password");
+            await TestHelper.Login(driver_1, _userId, _password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
@@ -109,7 +112,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(5)]
         public async Task TwcA101_06()
         {
-            await TestHelper.Login(driver_1, "0511", "password");
+            await TestHelper.Login(driver_1, _userId, _password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
@@ -138,7 +141,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(6)]
         public async Task TwcA101_07()
         {
-            await TestHelper.Login(driver_1, "0511", "password");
+            await TestHelper.Login(driver_1, _userId, _password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
@@ -169,7 +172,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(7)]
         public async Task TwcA101_08()
         {
-            await TestHelper.Login(driver_1, "0511", "password");
+            await TestHelper.Login(driver_1, _userId, _password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
