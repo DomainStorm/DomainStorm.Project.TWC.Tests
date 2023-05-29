@@ -10,16 +10,16 @@ using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
 {
-    public class Twc01_1Tests
+    public class TwcA100Tests
     {
         private IWebDriver driver_1;
         private IWebDriver driver_2;
         private string _accessToken;
-        private string _applyCaseNo = "20230525173622";
+        private string _applyCaseNo = "111124";
         private bool _skipSetup = true;
         private bool _skipTearDown = true;
 
-        public Twc01_1Tests()
+        public TwcA100Tests()
         {
         }
 
@@ -49,7 +49,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(0)]
-        public async Task Twc01_01()
+        public async Task TwcA100_01()
         {
             _accessToken = await TestHelper.GetAccessToken();
             TestHelper.TestConfig.AccessToken = _accessToken;
@@ -58,7 +58,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(1)]
-        public async Task Twc01_02()
+        public async Task TwcA100_02()
         {
             var accessToken = TestHelper.AccessToken;
             var client = new RestClient($"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm");
@@ -80,7 +80,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(2)]
-        public async Task Twc01_03()
+        public async Task TwcA100_03()
         {
             await TestHelper.Login(driver_1, "0511", "password");
 
@@ -112,7 +112,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(3)]
-        public async Task Twc01_04()
+        public async Task TwcA100_04()
         {
             await TestHelper.Login(driver_1, "0511", "password");
 
@@ -143,7 +143,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(4)]
-        public async Task Twc01_05()
+        public async Task TwcA100_05()
         {
             _skipSetup = false;
             _skipTearDown = false;
@@ -183,7 +183,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(5)]
-        public async Task Twc01_06()
+        public async Task TwcA100_06()
         {
             driver_1.SwitchTo().DefaultContent();
             driver_2.SwitchTo().DefaultContent();
@@ -215,7 +215,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(6)]
-        public async Task Twc01_07()
+        public async Task TwcA100_07()
         {
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -246,7 +246,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(7)]
-        public async Task Twc01_08()
+        public async Task TwcA100_08()
         {
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -278,7 +278,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(8)]
-        public async Task Twc01_09()
+        public async Task TwcA100_09()
         {
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -311,7 +311,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(9)]
-        public async Task Twc01_10()
+        public async Task TwcA100_10()
         {
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -341,7 +341,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(10)]
-        public async Task Twc01_11()
+        public async Task TwcA100_11()
         {
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -373,7 +373,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(11)]
-        public async Task Twc01_12()
+        public async Task TwcA100_12()
         {
             _skipSetup = true;
             _skipTearDown = true;
