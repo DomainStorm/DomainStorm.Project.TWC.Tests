@@ -37,7 +37,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA101_01()
         {
             _accessToken = await TestHelper.GetAccessToken();
-            TestHelper.TestConfig.AccessToken = _accessToken;
+            TestHelper.AccessToken = _accessToken;
             That(_accessToken, Is.Not.Empty);
         }
 

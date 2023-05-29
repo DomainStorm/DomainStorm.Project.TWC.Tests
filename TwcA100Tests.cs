@@ -15,9 +15,11 @@ namespace DomainStorm.Project.TWC.Tests
         private IWebDriver driver_1;
         private IWebDriver driver_2;
         private string _accessToken;
-        private string _applyCaseNo = "111124";
+        private string _applyCaseNo = "111121555";
         private bool _skipSetup = true;
         private bool _skipTearDown = true;
+        private string _userId = "admin";
+        private string _password = "adminadmin";
 
         public TwcA100Tests()
         {
@@ -52,7 +54,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_01()
         {
             _accessToken = await TestHelper.GetAccessToken();
-            TestHelper.TestConfig.AccessToken = _accessToken;
+            TestHelper.AccessToken = _accessToken;
             That(_accessToken, Is.Not.Empty);
         }
 
@@ -70,6 +72,7 @@ namespace DomainStorm.Project.TWC.Tests
             var json = await r.ReadToEndAsync();
 
             var update = JsonConvert.DeserializeObject<Serialization>(json);
+            update.applyCaseNo = _applyCaseNo;
             //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
             var updatedJson = JsonConvert.SerializeObject(update);
 
@@ -82,7 +85,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(2)]
         public async Task TwcA100_03()
         {
-            await TestHelper.Login(driver_1, "0511", "password");
+            await TestHelper.Login(driver_1, _userId, _password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
@@ -93,7 +96,7 @@ namespace DomainStorm.Project.TWC.Tests
             string[] segments = driver_1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
-            await TestHelper.Login(driver_2, "0511", "password");
+            await TestHelper.Login(driver_2, _userId, _password);
             driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(driver_2, TimeSpan.FromSeconds(10));
@@ -114,7 +117,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(3)]
         public async Task TwcA100_04()
         {
-            await TestHelper.Login(driver_1, "0511", "password");
+            await TestHelper.Login(driver_1, _userId, _password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
@@ -125,7 +128,7 @@ namespace DomainStorm.Project.TWC.Tests
             string[] segments = driver_1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
-            await TestHelper.Login(driver_2, "0511", "password");
+            await TestHelper.Login(driver_2, _userId, _password);
             driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
@@ -147,7 +150,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _skipSetup = false;
             _skipTearDown = false;
-            await TestHelper.Login(driver_1, "0511", "password");
+            await TestHelper.Login(driver_1, _userId, _password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
@@ -160,7 +163,7 @@ namespace DomainStorm.Project.TWC.Tests
             string[] segments = driver_1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
-            await TestHelper.Login(driver_2, "0511", "password");
+            await TestHelper.Login(driver_2, _userId, _password);
             driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             wait_driver_1.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -209,6 +212,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 消費性用水服務契約_driver_2 = driver_2.FindElement(By.Id("消費性用水服務契約"));
             ((IJavaScriptExecutor)driver_2).ExecuteScript("arguments[0].click();", 消費性用水服務契約_driver_2);
 
+            Thread.Sleep(1000);
+
             wait.Until(ExpectedConditions.ElementIsVisible(By.Id("消費性用水服務契約")));
             That(消費性用水服務契約_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
         }
@@ -240,6 +245,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 公司個人資料保護告知事項_driver_2 = driver_2.FindElement(By.Id("公司個人資料保護告知事項"));
             ((IJavaScriptExecutor)driver_2).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項_driver_2);
 
+            Thread.Sleep(1000);
+
             wait.Until(ExpectedConditions.ElementIsVisible(By.Id("公司個人資料保護告知事項")));
             That(公司個人資料保護告知事項_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
         }
@@ -270,6 +277,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             var 公司營業章程_driver_2 = driver_2.FindElement(By.Id("公司營業章程"));
             ((IJavaScriptExecutor)driver_2).ExecuteScript("arguments[0].click();", 公司營業章程_driver_2);
+
+            Thread.Sleep(1000);
 
             wait.Until(ExpectedConditions.ElementIsVisible(By.Id("公司營業章程")));
             That(公司營業章程_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
@@ -392,6 +401,9 @@ namespace DomainStorm.Project.TWC.Tests
             var 確認受理 = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 確認受理);
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 確認受理);
+
+
+            Thread.Sleep(7000);
         }
     }
 }
