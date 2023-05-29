@@ -11,16 +11,25 @@ namespace DomainStorm.Project.TWC.Tests;
 
 public class TestHelper
 {
+    private static TestConfig _testConfig;
+    public static TestConfig TestConfig
+    {
+        get
+        {
+            _testConfig ??= GetTestConfig();
+            return _testConfig;
+        }
+    }
     private static TestConfig GetTestConfig()
     {
         return new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", false, false)
+            .AddUserSecrets<TestHelper>()
             .AddEnvironmentVariables()
             .Build()
             .GetSection("TestConfig")
             .Get<TestConfig>();
     }
-
     private static string? _baseUrl;
     public static string? BaseUrl
     {
@@ -30,7 +39,6 @@ public class TestHelper
             return _baseUrl;
         }
     }
-
     private static string? _tokenUrl;
     public static string? TokenUrl
     {
@@ -40,7 +48,6 @@ public class TestHelper
             return _tokenUrl;
         }
     }
-
     private static string? _loginUrl;
     public static string? LoginUrl
     {
@@ -50,9 +57,7 @@ public class TestHelper
             return _loginUrl;
         }
     }
-
     private static string? _accessToken;
-
     public static string AccessToken
     {
         get
@@ -61,21 +66,10 @@ public class TestHelper
             return _accessToken;
         }
     }
-
-    private static TestConfig _testConfig;
-    public static TestConfig TestConfig
-    {
-        get
-        {
-            _testConfig ??= GetTestConfig();
-            return _testConfig;
-        }
-    }   
     public class TokenResponse
     {
-        public string access_token { get; set; }
+        public string Access_token { get; set; }
     }
-
     public static async Task<string> GetAccessToken()
     {
         var client = new RestClient(TokenUrl);
@@ -83,19 +77,15 @@ public class TestHelper
 
         const string clientId = "bmuser";
         const string clientSecret = "4xW8KpkKkeFc";
-        var encodedData = Convert.ToBase64String(
-            System.Text.Encoding.GetEncoding("UTF-8")
-                .GetBytes(clientId + ":" + clientSecret)
-        );
+        var encodedData = Convert.ToBase64String(System.Text.Encoding.GetEncoding("UTF-8").GetBytes(clientId + ":" + clientSecret));
         request.AddHeader("Authorization", $"Basic {encodedData}");
         request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
 
         request.AddParameter("grant_type", "client_credentials");
         request.AddParameter("scope", "template_read post_read");
 
-        var restResponse = await client.PostAsync<TokenResponse>(request);
-
-        return restResponse?.access_token ?? throw new InvalidOperationException();
+        var response = await client.PostAsync<TokenResponse>(request);
+        return response?.Access_token ?? throw new InvalidOperationException("Failed to get access token.");
     }
 
     public static Task Login(IWebDriver webDriver, string userId, string password)
@@ -146,12 +136,6 @@ public class TestHelper
         action.MoveToElement(element).Perform();
 
         element!.Click();
-    }
-
-    public static Serialization GetSerializationObject(string jsonString)
-    {
-        Serialization serializationObject = JsonConvert.DeserializeObject<Serialization>(jsonString);
-        return serializationObject;
     }
 }
 
