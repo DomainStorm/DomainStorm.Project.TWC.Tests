@@ -73,6 +73,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var update = JsonConvert.DeserializeObject<Serialization>(json);
             //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
+            //update.applyCaseNo ="";
             var updatedJson = JsonConvert.SerializeObject(update);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
