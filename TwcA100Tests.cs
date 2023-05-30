@@ -15,7 +15,7 @@ namespace DomainStorm.Project.TWC.Tests
         private IWebDriver driver_1;
         private IWebDriver driver_2;
         private string _accessToken;
-        private string _applyCaseNo = "111124";
+        private string _applyCaseNo = "0529100";
         private bool _skipSetup = true;
         private bool _skipTearDown = true;
 
@@ -72,8 +72,8 @@ namespace DomainStorm.Project.TWC.Tests
             var json = await r.ReadToEndAsync();
 
             var update = JsonConvert.DeserializeObject<Serialization>(json);
-            //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
-            //update.applyCaseNo ="";
+            update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
+            //update.applyCaseNo = "0529100";
             var updatedJson = JsonConvert.SerializeObject(update);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
@@ -370,6 +370,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(9)]
         public async Task TwcA100_07()
         {
+            //driver_2中看到掃描拍照證件圖像
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
@@ -393,32 +394,33 @@ namespace DomainStorm.Project.TWC.Tests
             var 圖片_driver_1_src = 圖片元素_driver_1.GetAttribute("src");
             var 圖片_driver_2_src = 圖片元素_driver_2.GetAttribute("src");
 
-            That(圖片_driver_1_src, Is.EqualTo(圖片_driver_2_src));
+            That(圖片_driver_2_src, Is.EqualTo(圖片_driver_1_src));
         }
 
-        [Test]
-        [Order(10)]
-        public async Task TwcA100_08()
-        {
-            var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+        //[Test]
+        //[Order(10)]
+        //public async Task TwcA100_08()
+        //{
+        //    //driver2中看到夾帶附件資訊
+        //    var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
+        //    wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
-            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
-            var SecondstormTreeNode = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+        //    var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+        //    var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+        //    var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
+        //    var SecondstormTreeNode = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
 
-            var href = SecondstormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
-            Actions actions = new Actions(driver_1);
-            actions.MoveToElement(href).Click().Perform();
+        //    var href = SecondstormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
+        //    Actions actions = new Actions(driver_1);
+        //    actions.MoveToElement(href).Click().Perform();
 
-            var 新增文件 = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 新增文件);
+        //    var 新增文件 = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
+        //    ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
+        //    ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 新增文件);
 
 
-            var container = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone.dz-clickable")));
-            actions.MoveToElement(container).Click().Perform();
+        //    var container = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone.dz-clickable")));
+        //    actions.MoveToElement(container).Click().Perform();
 
             //var inputFile = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#inputFile")));
             //string tpcweb_01_1_夾帶附件1 = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tpcweb_01_1_夾帶附件1.pdf");
@@ -426,12 +428,13 @@ namespace DomainStorm.Project.TWC.Tests
             //string filesToSend = $"{tpcweb_01_1_夾帶附件1};{tpcweb_01_1_夾帶附件2}";
             //inputFile.SendKeys(filesToSend);
 
-        }
+        //}
 
         [Test]
         [Order(11)]
         public async Task TwcA100_09()
         {
+            //申請案件進入未結案件中等待後續排程資料於結案後消失
             _skipSetup = true;
             _skipTearDown = true;
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
@@ -449,6 +452,16 @@ namespace DomainStorm.Project.TWC.Tests
             var 確認受理 = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 確認受理);
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 確認受理);
+
+            var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
+            var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
+            var stormTable = stormDocumentListDetail.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+
+            var findElements = stormTable.GetShadowRoot()
+                .FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+
+            var element = findElements.FirstOrDefault(e => e.Text == _applyCaseNo);
+            That(element.Text, Is.EqualTo(_applyCaseNo));
         }
     }
 }
