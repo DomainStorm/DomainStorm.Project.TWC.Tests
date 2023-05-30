@@ -15,9 +15,6 @@ namespace DomainStorm.Project.TWC.Tests
         private IWebDriver driver_1;
         private IWebDriver driver_2;
         private string _accessToken;
-        private string _applyCaseNo = "20230529100";
-        private string _userId = "0511";
-        private string _password = "password";
 
         public TwcA100Tests()
         {
@@ -68,8 +65,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             var update = JsonConvert.DeserializeObject<Serialization>(json);
             //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");//建立新表單時在啟用
-            update.applyCaseNo = _applyCaseNo;
-            update.userCode = _userId;
+            update.applyCaseNo = TestHelper.ApplyCaseNo;
+            update.userCode = TestHelper.UserId;
             var updatedJson = JsonConvert.SerializeObject(update);
 
             request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
@@ -82,18 +79,18 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_03()
         {
             //driver_2中看到申請之表單內容
-            await TestHelper.Login(driver_1, _userId, _password);
+            await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(driver_1, _applyCaseNo);
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
 
             Thread.Sleep(1000);
 
             string[] segments = driver_1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
-            await TestHelper.Login(driver_2, _userId, _password);
+            await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
             driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(driver_2, TimeSpan.FromSeconds(10));
@@ -104,7 +101,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 水號_driver_2 = driver_2.FindElement(By.CssSelector("[sti-water-no]"));
             var 受理日期_driver_2 = driver_2.FindElement(By.CssSelector("[sti-apply-date]"));
 
-            That(受理編號_driver_2.Text, Is.EqualTo(_applyCaseNo));
+            That(受理編號_driver_2.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
             That(水號_driver_2.Text, Is.EqualTo("41101202191"));
             That(受理日期_driver_2.Text, Is.EqualTo("2023年03月06日"));
         }
@@ -115,18 +112,18 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_04()
         {
             //driver_2中看到身分證字號欄位出現A123456789
-            await TestHelper.Login(driver_1, _userId, _password);
+            await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(driver_1, _applyCaseNo);
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
 
             Thread.Sleep(1000);
 
             string[] segments = driver_1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
-            await TestHelper.Login(driver_2, _userId, _password);
+            await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
             driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
@@ -147,11 +144,11 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_05()
         {
             //driver_2看到受理欄位有落章
-            await TestHelper.Login(driver_1, _userId, _password);
+            await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(driver_1, _applyCaseNo);
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
 
             var wait_driver_1 = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             var wait_driver_2 = new WebDriverWait(driver_2, TimeSpan.FromSeconds(10));
@@ -160,7 +157,7 @@ namespace DomainStorm.Project.TWC.Tests
             string[] segments = driver_1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
-            await TestHelper.Login(driver_2, _userId, _password);
+            await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
             driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             wait_driver_1.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -331,11 +328,11 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_10()
         {
             //driver_2中看到掃描拍照證件圖像
-            await TestHelper.Login(driver_1, _userId, _password);
+            await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
-            TestHelper.ClickRow(driver_1, _applyCaseNo);
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
 
             var wait_driver_1 = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             var wait_driver_2 = new WebDriverWait(driver_2, TimeSpan.FromSeconds(10));
@@ -344,7 +341,7 @@ namespace DomainStorm.Project.TWC.Tests
             string[] segments = driver_1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
-            await TestHelper.Login(driver_2, _userId, _password);
+            await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
             driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             wait_driver_1.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -441,9 +438,9 @@ namespace DomainStorm.Project.TWC.Tests
             var findElements = stormTable.GetShadowRoot()
                 .FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
-            var element = findElements.FirstOrDefault(e => e.Text == _applyCaseNo);
+            var element = findElements.FirstOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
             var applyCaseNo = element.Text;
-            That(applyCaseNo, Is.EqualTo(_applyCaseNo));
+            That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
     }
 }
