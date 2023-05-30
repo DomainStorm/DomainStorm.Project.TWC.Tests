@@ -5,21 +5,11 @@ using RestSharp;
 using SeleniumExtras.WaitHelpers;
 using System.Drawing;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 
 namespace DomainStorm.Project.TWC.Tests;
 
 public class TestHelper
 {
-    private static TestConfig _testConfig;
-    public static TestConfig TestConfig
-    {
-        get
-        {
-            _testConfig ??= GetTestConfig();
-            return _testConfig;
-        }
-    }
     private static TestConfig GetTestConfig()
     {
         return new ConfigurationBuilder()
@@ -57,14 +47,34 @@ public class TestHelper
             return _loginUrl;
         }
     }
+    private static string? _applyCaseNo;
+    public static string? ApplyCaseNo
+    {
+        get
+        {
+            _applyCaseNo ??= GetTestConfig().ApplyCaseNo;
+            return _applyCaseNo;
+        }
+    }
+    private static string? _password;
+    public static string? Password
+    {
+        get
+        {
+            _password ??= GetTestConfig().Password;
+            return _password;
+        }
+        set => _password = value;
+    }
     private static string? _accessToken;
-    public static string AccessToken
+    public static string? AccessToken
     {
         get
         {
             _accessToken ??= GetTestConfig().AccessToken;
             return _accessToken;
         }
+        set => _accessToken = value;
     }
     public class TokenResponse
     {
@@ -108,8 +118,7 @@ public class TestHelper
         var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
 
-        usernameElement.SendKeys(userId);
-        passwordElement.SendKeys(password);
+        usernameElement.SendKeys(userId); passwordElement.SendKeys(password);
 
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
         button.Click();
@@ -171,5 +180,9 @@ public class TestConfig
     public string? LoginUrl { get; set; }
 
     public string? AccessToken { get; set; }
+
+    public string? ApplyCaseNo { get; set; }
+
+    public string? Password { get; set; }
 }
 
