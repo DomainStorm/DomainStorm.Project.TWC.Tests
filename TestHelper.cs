@@ -47,6 +47,33 @@ public class TestHelper
             return _loginUrl;
         }
     }
+    private static string? _applyCaseNo;
+    public static string? ApplyCaseNo
+    {
+        get
+        {
+            _applyCaseNo ??= GetTestConfig().ApplyCaseNo;
+            return _applyCaseNo;
+        }
+    }
+    private static string? _userId;
+    public static string? UserId
+    {
+        get
+        {
+            _userId ??= GetTestConfig().UserId;
+            return _userId;
+        }
+    }
+    private static string? _password;
+    public static string? Password
+    {
+        get
+        {
+            _password ??= GetTestConfig().Password;
+            return _password;
+        }
+    }
     private static string? _accessToken;
     public static string? AccessToken
     {
@@ -161,5 +188,11 @@ public class TestConfig
     public string? LoginUrl { get; set; }
 
     public string? AccessToken { get; set; }
+
+    public string? ApplyCaseNo { get; set; }
+
+    public string? Password { get; set; }
+
+    public string? UserId { get; set; }
 }
 
