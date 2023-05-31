@@ -208,9 +208,9 @@ namespace DomainStorm.Project.TWC.Tests
             var 消費性用水服務契約_driver_2 = driver_2.FindElement(By.Id("消費性用水服務契約"));
             ((IJavaScriptExecutor)driver_2).ExecuteScript("arguments[0].click();", 消費性用水服務契約_driver_2);
 
-            wait.Until(driver =>
+            wait.Until(driver_1 =>
             {
-                var element = driver.FindElement(By.Id("消費性用水服務契約"));
+                var element = driver_1.FindElement(By.Id("消費性用水服務契約"));
                 return element.GetAttribute("checked") == "true";
             });
 
@@ -246,9 +246,9 @@ namespace DomainStorm.Project.TWC.Tests
             var 公司個人資料保護告知事項_driver_2 = driver_2.FindElement(By.Id("公司個人資料保護告知事項"));
             ((IJavaScriptExecutor)driver_2).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項_driver_2);
 
-            wait.Until(driver =>
+            wait.Until(driver_1 =>
             {
-                var element = driver.FindElement(By.Id("公司個人資料保護告知事項"));
+                var element = driver_1.FindElement(By.Id("公司個人資料保護告知事項"));
                 return element.GetAttribute("checked") == "true";
             });
 
@@ -285,9 +285,9 @@ namespace DomainStorm.Project.TWC.Tests
             var 公司營業章程_driver_2 = driver_2.FindElement(By.Id("公司營業章程"));
             ((IJavaScriptExecutor)driver_2).ExecuteScript("arguments[0].click();", 公司營業章程_driver_2);
 
-            wait.Until(driver =>
+            wait.Until(driver_1 =>
             {
-                var element = driver.FindElement(By.Id("公司營業章程"));
+                var element = driver_1.FindElement(By.Id("公司營業章程"));
                 return element.GetAttribute("checked") == "true";
             });
 
