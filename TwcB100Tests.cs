@@ -1,12 +1,49 @@
-﻿using System;
-
+﻿using Newtonsoft.Json;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
+using OpenQA.Selenium.Support.UI;
+using RestSharp;
+using SeleniumExtras.WaitHelpers;
+using System.Net;
+using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
 {
     public class TwcB100Tests
     {
+        private IWebDriver driver_1;
+        private IWebDriver driver_2;
+        private string _accessToken;
         public TwcB100Tests()
         {
+        }
+
+        [SetUp] // 在每個測試方法之前執行的方法
+        public Task Setup()
+        {
+            driver_1 = new ChromeDriver();
+            driver_1.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            driver_2 = new ChromeDriver();
+            driver_2.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+
+            return Task.CompletedTask;
+        }
+        [TearDown] // 在每個測試方法之後執行的方法
+        public void TearDown()
+        {
+            driver_1.Quit();
+            driver_2.Quit();
+        }
+
+        [Test]
+        [Order(0)]
+        public async Task TwcB100_01()
+        {
+            //取得token
+            _accessToken = await TestHelper.GetAccessToken();
+            TestHelper.AccessToken = _accessToken;
+            That(_accessToken, Is.Not.Empty);
         }
 
         [Test]
@@ -112,7 +149,7 @@ namespace DomainStorm.Project.TWC.Tests
             TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
 
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
-           
+
             Thread.Sleep(1000);
 
             string[] segments = driver_1.Url.Split('/');
