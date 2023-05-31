@@ -262,22 +262,54 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTreeRoot = stormTreeNodes.GetShadowRoot();
             var firstStormTreeNode = stormTreeRoot.FindElement(By.CssSelector("storm-tree-node:first-child"));
 
-            var href = firstStormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
+            var href_contract_1 = firstStormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
             Actions actions = new Actions(driver_1);
-            actions.MoveToElement(href).Click().Perform();
+            actions.MoveToElement(href_contract_1).Click().Perform();
 
             var 消費性用水服務契約_driver_1 = driver_1.FindElement(By.Id("消費性用水服務契約"));
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約_driver_1);
 
-            wait.Until(driver =>
+            wait.Until(driver_1 =>
             {
-                var element = driver.FindElement(By.Id("消費性用水服務契約"));
+                var element = driver_1.FindElement(By.Id("消費性用水服務契約"));
                 return element.GetAttribute("checked") == "true";
             });
 
             That(消費性用水服務契約_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
 
+            var secondStormTreeNode = stormTreeRoot.FindElements(By.CssSelector("storm-tree-node"))[1];
+            var secondStormTreeNodeShadowRoot = secondStormTreeNode.GetShadowRoot();
 
+            var href_contract_2 = secondStormTreeNodeShadowRoot.FindElement(By.CssSelector("a[href='#contract_2']"));
+            actions.MoveToElement(href_contract_2).Click().Perform();
+
+            var 公司個人資料保護告知事項_driver_1 = driver_1.FindElement(By.Id("公司個人資料保護告知事項"));
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項_driver_1);
+
+            wait.Until(driver_1 =>
+            {
+                var element = driver_1.FindElement(By.Id("公司個人資料保護告知事項"));
+                return element.GetAttribute("checked") == "true";
+            });
+
+            That(公司個人資料保護告知事項_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
+
+            var thirdStormTreeNode = stormTreeRoot.FindElements(By.CssSelector("storm-tree-node"))[2];
+            var thirdStormTreeNodeShadowRoot = thirdStormTreeNode.GetShadowRoot();
+
+            var href_contract_3 = thirdStormTreeNodeShadowRoot.FindElement(By.CssSelector("a[href='#contract_3']"));
+            actions.MoveToElement(href_contract_3).Click().Perform();
+
+            var 公司營業章程_driver_1 = driver_1.FindElement(By.Id("公司營業章程"));
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程_driver_1);
+
+            wait.Until(driver_1 =>
+            {
+                var element = driver_1.FindElement(By.Id("公司營業章程"));
+                return element.GetAttribute("checked") == "true";
+            });
+
+            That(公司營業章程_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
         }
     }
 
