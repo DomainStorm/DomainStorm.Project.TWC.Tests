@@ -12,8 +12,7 @@ namespace DomainStorm.Project.TWC.Tests
 {
     public class TwcA101Tests
     {
-        private IWebDriver driver_1;
-        private string _accessToken;
+        private List<ChromeDriver> _chromeDriverList;
 
         public TwcA101Tests()
         {
@@ -22,14 +21,25 @@ namespace DomainStorm.Project.TWC.Tests
         [SetUp] // 在每個測試方法之前執行的方法
         public Task Setup()
         {
-            driver_1 = new ChromeDriver();
-            driver_1.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+             _chromeDriverList = new List<ChromeDriver>();
+
             return Task.CompletedTask;
         }
+        private ChromeDriver GetNewChromeDriver()
+        {
+            var driver = new ChromeDriver();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            _chromeDriverList.Add(driver);
+            return driver;
+        }
+
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
-            driver_1.Quit();
+            foreach (ChromeDriver driver in _chromeDriverList)
+            {
+                driver.Quit();
+            }
         }
 
         [Test]
@@ -37,9 +47,8 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA101_01()
         {
             //取得token
-            _accessToken = await TestHelper.GetAccessToken();
-            TestHelper.AccessToken = _accessToken;
-            That(_accessToken, Is.Not.Empty);
+            TestHelper.AccessToken = await TestHelper.GetAccessToken();
+            That(TestHelper.AccessToken, Is.Not.Empty);
         }
 
         [Test]
@@ -56,7 +65,7 @@ namespace DomainStorm.Project.TWC.Tests
             using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"));
             var json = await r.ReadToEndAsync();
 
-            var update = JsonConvert.DeserializeObject<Serialization>(json);
+            var update = JsonConvert.DeserializeObject<WaterForm>(json);
             //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
             update.applyCaseNo = TestHelper.ApplyCaseNo;
             update.userCode = TestHelper.UserId;
@@ -73,6 +82,8 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA101_03()
         {
             //driver_1中看到申請之表單內容跳至夾帶附件區塊
+            var driver_1 = GetNewChromeDriver();
+
             await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
@@ -114,6 +125,8 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA101_06()
         {
             //driver_1中看到■用印或代送件只需夾帶附件已打勾
+            var driver_1 = GetNewChromeDriver();
+
             await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
@@ -144,6 +157,8 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA101_07()
         {
             //系統跳出【受理】尚未核章
+            var driver_1 = GetNewChromeDriver();
+
             await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
@@ -176,6 +191,8 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA101_08()
         {
             //driver_1中表單受理欄位中看到核章資訊
+            var driver_1 = GetNewChromeDriver();
+
             await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
@@ -202,6 +219,9 @@ namespace DomainStorm.Project.TWC.Tests
         {
             //確認完成畫面進入未結案件中
             await TwcA101_08();
+
+            var driver_1 = _chromeDriverList[0];
+
             driver_1.SwitchTo().DefaultContent();
 
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
@@ -245,6 +265,8 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA101_10()
         {
             //driver_1中看到夾帶附件區塊顯示該夾帶檔案。已勾選■已詳閱貴公司消費性用水服務契約，已勾選■已詳閱公司個人資料保護法，已勾選■已詳閱貴公司營業章程
+            var driver_1 = GetNewChromeDriver();
+
             await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/unfinished");

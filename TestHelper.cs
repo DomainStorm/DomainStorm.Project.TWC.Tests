@@ -156,7 +156,7 @@ public class TestHelper
     }
 }
 
-public class Serialization
+public class WaterForm
 {
     public string applyCaseNo { get; set; }
     public string applyDate { get; set; }

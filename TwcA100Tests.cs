@@ -71,7 +71,7 @@ namespace DomainStorm.Project.TWC.Tests
             using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A100_bmEnableApply.json"));
             var json = await r.ReadToEndAsync();
 
-            var update = JsonConvert.DeserializeObject<Serialization>(json);
+            var update = JsonConvert.DeserializeObject<WaterForm>(json);
             update.applyCaseNo = _applyCaseNo;
             update.userCode = _userId;
             //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
