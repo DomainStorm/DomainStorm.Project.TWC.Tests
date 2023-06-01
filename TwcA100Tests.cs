@@ -12,9 +12,7 @@ namespace DomainStorm.Project.TWC.Tests
 {
     public class TwcA100Tests
     {
-        private IWebDriver driver_1;
-        private IWebDriver driver_2;
-        private string _accessToken;
+        private List<ChromeDriver> _chromeDriverList;
 
         public TwcA100Tests()
         {
@@ -23,19 +21,26 @@ namespace DomainStorm.Project.TWC.Tests
         [SetUp] // 在每個測試方法之前執行的方法
         public Task Setup()
         {
-            driver_1 = new ChromeDriver();
-            driver_1.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-
-            driver_2 = new ChromeDriver();
-            driver_2.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            _chromeDriverList = new List<ChromeDriver>();
 
             return Task.CompletedTask;
         }
+
+        private ChromeDriver GetNewChromeDriver()
+        {
+            var driver = new ChromeDriver();
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            _chromeDriverList.Add(driver);
+            return  driver;
+        }
+
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
-            driver_1.Quit();
-            driver_2.Quit();
+            foreach (ChromeDriver driver in _chromeDriverList)
+            {
+                driver.Quit();
+            }
         }
 
 
@@ -44,9 +49,8 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_01()
         {
             //取得token
-            _accessToken = await TestHelper.GetAccessToken();
-            TestHelper.AccessToken = _accessToken;
-            That(_accessToken, Is.Not.Empty);
+            TestHelper.AccessToken = await TestHelper.GetAccessToken();
+            That(TestHelper.AccessToken, Is.Not.Empty);
         }
 
         [Test]
@@ -79,6 +83,9 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_03()
         {
             //driver_2中看到申請之表單內容
+
+            var driver_1 = GetNewChromeDriver();
+
             await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
@@ -89,6 +96,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             string[] segments = driver_1.Url.Split('/');
             string id = segments[segments.Length - 1];
+
+            var driver_2 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
             driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
@@ -112,6 +121,9 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_04()
         {
             //driver_2中看到身分證字號欄位出現A123456789
+
+            var driver_1 = GetNewChromeDriver();
+
             await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
@@ -122,6 +134,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             string[] segments = driver_1.Url.Split('/');
             string id = segments[segments.Length - 1];
+
+            var driver_2 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
             driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
@@ -144,24 +158,31 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_05()
         {
             //driver_2看到受理欄位有落章
+
+            var driver_1 = GetNewChromeDriver();
+
             await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
             TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
 
-            var wait_driver_1 = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
-            var wait_driver_2 = new WebDriverWait(driver_2, TimeSpan.FromSeconds(10));
             Thread.Sleep(1000);
 
             string[] segments = driver_1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
+            var driver_2 = GetNewChromeDriver();
+
             await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
             driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
+            var wait_driver_1 = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
+            var wait_driver_2 = new WebDriverWait(driver_2, TimeSpan.FromSeconds(10));
+
             wait_driver_1.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             wait_driver_2.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
             driver_1.SwitchTo().Frame(0);
 
             var 受理_driver_1 = wait_driver_1.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
@@ -182,7 +203,11 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_06()
         {
             //driver_2中勾選消費性用水服務契約
+
             await TwcA100_05();
+
+            var driver_1 = _chromeDriverList[0];
+            var driver_2 = _chromeDriverList[1];
 
             driver_1.SwitchTo().DefaultContent();
             driver_2.SwitchTo().DefaultContent();
@@ -224,6 +249,9 @@ namespace DomainStorm.Project.TWC.Tests
             //driver_2中勾選公司個人資料保護告知事項
             await TwcA100_06();
 
+            var driver_1 = _chromeDriverList[0];
+            var driver_2 = _chromeDriverList[1];
+
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
@@ -261,6 +289,9 @@ namespace DomainStorm.Project.TWC.Tests
         {
             //driver_2中勾選公司營業章程
             await TwcA100_07();
+
+            var driver_1 = _chromeDriverList[0];
+            var driver_2 = _chromeDriverList[1];
 
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -301,6 +332,9 @@ namespace DomainStorm.Project.TWC.Tests
             //driver_2中表單畫面完整呈現簽名內容，並於driver_1中看到相容內容
             await TwcA100_08();
 
+            var driver_1 = _chromeDriverList[0];
+            var driver_2 = _chromeDriverList[1];
+
             var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
@@ -337,26 +371,29 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_10()
         {
             //driver_2中看到掃描拍照證件圖像
+
+            var driver_1 = GetNewChromeDriver();
+
             await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
 
             driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
 
             TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
 
-            var wait_driver_1 = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
-            var wait_driver_2 = new WebDriverWait(driver_2, TimeSpan.FromSeconds(10));
+            var wait = new WebDriverWait(driver_1, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
             Thread.Sleep(1000);
 
             string[] segments = driver_1.Url.Split('/');
             string id = segments[segments.Length - 1];
 
+            var driver_2 = GetNewChromeDriver();
+
             await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
             driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
-            wait_driver_1.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            wait_driver_2.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            var stormVerticalNavigation = wait_driver_1.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
             var stormTreeNodeRoot = stormTreeNode.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
@@ -418,6 +455,9 @@ namespace DomainStorm.Project.TWC.Tests
         {
             //該申請案件進入未結案件中等待後續排程資料於結案後消失
             await TwcA100_09();
+
+            var driver_1 = _chromeDriverList[0];
+            var driver_2 = _chromeDriverList[1];
 
             driver_2.Quit();
 
