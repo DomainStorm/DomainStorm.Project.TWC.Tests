@@ -5,6 +5,8 @@ using RestSharp;
 using SeleniumExtras.WaitHelpers;
 using System.Drawing;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System.Net;
 
 namespace DomainStorm.Project.TWC.Tests;
 
@@ -104,6 +106,26 @@ public class TestHelper
 
         var response = await client.PostAsync<TokenResponse>(request);
         return response?.Access_token ?? throw new InvalidOperationException("Failed to get access token.");
+    }
+    public static async Task<HttpStatusCode> CreateForm(string accessToken, string apiUrl, string jsonFilePath)
+    {
+        var client = new RestClient(apiUrl);
+        var request = new RestRequest();
+        request.AddHeader("Content-Type", "application/json");
+        request.AddHeader("Authorization", $"Bearer {accessToken}");
+
+        using var r = new StreamReader(jsonFilePath);
+        var json = await r.ReadToEndAsync();
+
+        var update = JsonConvert.DeserializeObject<WaterForm>(json);
+        update.applyCaseNo = TestHelper.ApplyCaseNo;
+        update.userCode = TestHelper.UserId;
+        var updatedJson = JsonConvert.SerializeObject(update);
+
+        request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
+
+        var response = await client.PostAsync(request);
+        return response.StatusCode;
     }
 
     public static Task Login(IWebDriver webDriver, string userId, string password)

@@ -56,25 +56,8 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA101_02()
         {
             //呼叫bmEnableApply/confirm
-            var accessToken = TestHelper.AccessToken;
-            var client = new RestClient($"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm");
-            var request = new RestRequest();
-            request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("Authorization", $"Bearer {accessToken}");
-
-            using var r = new StreamReader(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"));
-            var json = await r.ReadToEndAsync();
-
-            var update = JsonConvert.DeserializeObject<WaterForm>(json);
-            //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
-            update.applyCaseNo = TestHelper.ApplyCaseNo;
-            update.userCode = TestHelper.UserId;
-            var updatedJson = JsonConvert.SerializeObject(update);
-
-            request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
-
-            var response = await client.PostAsync(request);
-            That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            var statusCode = await TestHelper.CreateForm(TestHelper.AccessToken, $"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"));
+            That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
         [Test]
