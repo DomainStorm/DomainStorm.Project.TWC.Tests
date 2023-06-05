@@ -118,8 +118,13 @@ public class TestHelper
         var json = await r.ReadToEndAsync();
 
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
-        update.applyCaseNo = TestHelper.ApplyCaseNo;
-        update.userCode = TestHelper.UserId;
+
+        if (ApplyCaseNo != null && UserId != null && update !=null)
+        {
+            update.applyCaseNo = ApplyCaseNo;
+            update.userCode = UserId;
+        }
+
         var updatedJson = JsonConvert.SerializeObject(update);
 
         request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
