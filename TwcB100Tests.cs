@@ -24,7 +24,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         private ChromeDriver GetNewChromeDriver()
         {
-            ChromeDriver driver = new ChromeDriver();
+            ChromeDriver driver = new ();
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             _chromeDriverList.Add(driver);
             return driver;
