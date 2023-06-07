@@ -26,8 +26,10 @@ namespace DomainStorm.Project.TWC.Tests
         private ChromeDriver GetNewChromeDriver()
         {
             ChromeDriver driver = new();
+
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             _chromeDriverList.Add(driver);
+
             return driver;
         }
 
@@ -58,12 +60,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcB101_02()
         {
             //呼叫bmRecoverApply/confirm
-            HttpStatusCode statusCode = default;
-
-            if (!string.IsNullOrEmpty(TestHelper.AccessToken))
-            {
-                statusCode = await TestHelper.CreateForm(TestHelper.AccessToken, $"{TestHelper.BaseUrl}/api/v1/bmRecoverApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-B101_bmRecoverApply.json"));
-            }
+            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken, $"{TestHelper.BaseUrl}/api/v1/bmRecoverApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-B101_bmRecoverApply.json"));
 
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
@@ -75,12 +72,9 @@ namespace DomainStorm.Project.TWC.Tests
             //driver_1中看到申請之表單內容跳至夾帶附件區塊
             ChromeDriver driver_1 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
-                driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-                TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
-            }
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
             WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -114,12 +108,9 @@ namespace DomainStorm.Project.TWC.Tests
             //driver_1中看到■用印或代送件只需夾帶附件已打勾
             ChromeDriver driver_1 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
-                driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-                TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
-            }
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
             WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -147,12 +138,9 @@ namespace DomainStorm.Project.TWC.Tests
             //系統跳出【受理】尚未核章
             ChromeDriver driver_1 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
-                driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-                TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
-            }
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
             WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -182,13 +170,10 @@ namespace DomainStorm.Project.TWC.Tests
         {
             //driver_1表單受理欄位中看到核章資訊
             ChromeDriver driver_1 = GetNewChromeDriver();
-
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
-                driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-                TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
-            }
+            
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
             WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -260,12 +245,9 @@ namespace DomainStorm.Project.TWC.Tests
             //driver_1中看到夾帶附件區塊顯示該夾帶檔案。已勾選■已詳閱貴公司消費性用水服務契約、公司個人資料保護法、貴公司營業章程
             ChromeDriver driver_1 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
-                driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/unfinished");
-                TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
-            }
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/unfinished");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
             WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -334,12 +316,9 @@ namespace DomainStorm.Project.TWC.Tests
             //driver_1夾帶附件處只出現[tpcweb_01_1_夾帶附件2.pdf]
             ChromeDriver driver_1 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
-                driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/unfinished");
-                TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
-            }
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/unfinished");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
             WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));

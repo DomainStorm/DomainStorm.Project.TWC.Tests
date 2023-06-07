@@ -119,8 +119,8 @@ public class TestHelper
         var json = await r.ReadToEndAsync();
 
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
-        update.applyCaseNo = TestHelper.ApplyCaseNo;
-        update.userCode = TestHelper.UserId;
+        update.applyCaseNo = ApplyCaseNo;
+        update.userCode = UserId;
         var updatedJson = JsonConvert.SerializeObject(update);
 
         request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
@@ -165,8 +165,7 @@ public class TestHelper
         var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
         var stormTable = stormDocumentListDetail.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-        var findElements = stormTable.GetShadowRoot()
-            .FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+        var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
         var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
 

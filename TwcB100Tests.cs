@@ -25,8 +25,10 @@ namespace DomainStorm.Project.TWC.Tests
         private ChromeDriver GetNewChromeDriver()
         {
             ChromeDriver driver = new ();
+
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             _chromeDriverList.Add(driver);
+
             return driver;
         }
         [TearDown] // 在每個測試方法之後執行的方法
@@ -53,12 +55,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcB100_02()
         {
             //呼叫bmRecoverApply/confirm
-            HttpStatusCode statusCode = default;
-
-            if (!string.IsNullOrEmpty(TestHelper.AccessToken))
-            {
-                statusCode = await TestHelper.CreateForm(TestHelper.AccessToken, $"{TestHelper.BaseUrl}/api/v1/bmRecoverApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-B100_bmRecoverApply.json"));
-            }
+            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken, $"{TestHelper.BaseUrl}/api/v1/bmRecoverApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-B100_bmRecoverApply.json"));
 
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
@@ -70,22 +67,15 @@ namespace DomainStorm.Project.TWC.Tests
             //於數位簽名板driver_2中看到申請之表單內容
             ChromeDriver driver_1 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
-                driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-                TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
-            }
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
             string id = TestHelper.GetLastSegmentFromUrl(driver_1);
-
             ChromeDriver driver_2 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
-                driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
-            }
+            await TestHelper.Login(driver_2, TestHelper.UserId!, TestHelper.Password!);
+            driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             WebDriverWait wait = new(driver_2, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -109,22 +99,15 @@ namespace DomainStorm.Project.TWC.Tests
             //driver_2可看到身分證字號欄位出現A123456789
             ChromeDriver driver_1 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
-                driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-                TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
-            }
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
             string id = TestHelper.GetLastSegmentFromUrl(driver_1);
-
             ChromeDriver driver_2 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
-                driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
-            }
+            await TestHelper.Login(driver_2, TestHelper.UserId!, TestHelper.Password!);
+            driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -146,25 +129,17 @@ namespace DomainStorm.Project.TWC.Tests
             //driver_2可看到顯示■繳費
             ChromeDriver driver_1 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
-                driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-                TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
-            }
-
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
             string id = TestHelper.GetLastSegmentFromUrl(driver_1);
-
             ChromeDriver driver_2 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
-                driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
-            }
+            await TestHelper.Login(driver_2, TestHelper.UserId!, TestHelper.Password!);
+            driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
+            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             driver_1.SwitchTo().Frame(0);
 
@@ -182,22 +157,16 @@ namespace DomainStorm.Project.TWC.Tests
             //driver_2看到受理欄位有落章
             ChromeDriver driver_1 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
-                driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-                TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
-            }
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
             string id = TestHelper.GetLastSegmentFromUrl(driver_1);
 
             ChromeDriver driver_2 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
-                driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
-            }
+            await TestHelper.Login(driver_2, TestHelper.UserId!, TestHelper.Password!);
+            driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             WebDriverWait wait_driver_1 = new(driver_1, TimeSpan.FromSeconds(10));
             wait_driver_1.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -388,22 +357,16 @@ namespace DomainStorm.Project.TWC.Tests
             //driver_2中看到掃描拍照證件圖像
             ChromeDriver driver_1 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_1, TestHelper.UserId, TestHelper.Password);
-                driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
-                TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo);
-            }
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
             string id = TestHelper.GetLastSegmentFromUrl(driver_1);
 
             ChromeDriver driver_2 = GetNewChromeDriver();
 
-            if (!string.IsNullOrEmpty(TestHelper.UserId) && !string.IsNullOrEmpty(TestHelper.Password) && !string.IsNullOrEmpty(TestHelper.ApplyCaseNo))
-            {
-                await TestHelper.Login(driver_2, TestHelper.UserId, TestHelper.Password);
-                driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
-            }
+            await TestHelper.Login(driver_2, TestHelper.UserId!, TestHelper.Password!);
+            driver_2.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft/second-screen/{id}");
 
             WebDriverWait wait_driver_1 = new(driver_1, TimeSpan.FromSeconds(10));
             wait_driver_1.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
