@@ -5,6 +5,9 @@ using RestSharp;
 using SeleniumExtras.WaitHelpers;
 using System.Drawing;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System.Net;
+using OpenQA.Selenium.Chrome;
 
 namespace DomainStorm.Project.TWC.Tests;
 
@@ -47,6 +50,33 @@ public class TestHelper
             return _loginUrl;
         }
     }
+    private static string? _applyCaseNo;
+    public static string? ApplyCaseNo
+    {
+        get
+        {
+            _applyCaseNo ??= GetTestConfig().ApplyCaseNo;
+            return _applyCaseNo;
+        }
+    }
+    private static string? _userId;
+    public static string? UserId
+    {
+        get
+        {
+            _userId ??= GetTestConfig().UserId;
+            return _userId;
+        }
+    }
+    private static string? _password;
+    public static string? Password
+    {
+        get
+        {
+            _password ??= GetTestConfig().Password;
+            return _password;
+        }
+    }
     private static string? _accessToken;
     public static string? AccessToken
     {
@@ -59,11 +89,11 @@ public class TestHelper
     }
     public class TokenResponse
     {
-        public string Access_token { get; set; }
+        public string? Access_token { get; set; }
     }
     public static async Task<string> GetAccessToken()
     {
-        var client = new RestClient(TokenUrl);
+        var client = new RestClient(TokenUrl!);
         var request = new RestRequest();
 
         const string clientId = "bmuser";
@@ -78,10 +108,28 @@ public class TestHelper
         var response = await client.PostAsync<TokenResponse>(request);
         return response?.Access_token ?? throw new InvalidOperationException("Failed to get access token.");
     }
+    public static async Task<HttpStatusCode> CreateForm(string accessToken, string apiUrl, string jsonFilePath)
+    {
+        var client = new RestClient(apiUrl);
+        var request = new RestRequest();
+        request.AddHeader("Content-Type", "application/json");
+        request.AddHeader("Authorization", $"Bearer {accessToken}");
 
+        using var r = new StreamReader(jsonFilePath);
+        var json = await r.ReadToEndAsync();
+
+        var update = JsonConvert.DeserializeObject<WaterForm>(json);
+        update.applyCaseNo = ApplyCaseNo;
+        update.userCode = UserId;
+        var updatedJson = JsonConvert.SerializeObject(update);
+
+        request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
+
+        var response = await client.PostAsync(request);
+        return response.StatusCode;
+    }
     public static Task Login(IWebDriver webDriver, string userId, string password)
     {
-
         webDriver.Navigate().GoToUrl(LoginUrl);
         webDriver.Manage().Window.Size = new Size(1200, 800);
 
@@ -108,7 +156,6 @@ public class TestHelper
 
         return Task.CompletedTask;
     }
-
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
@@ -117,8 +164,7 @@ public class TestHelper
         var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
         var stormTable = stormDocumentListDetail.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-        var findElements = stormTable.GetShadowRoot()
-            .FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+        var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
         var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
 
@@ -127,28 +173,35 @@ public class TestHelper
 
         element!.Click();
     }
+    public static string GetLastSegmentFromUrl(ChromeDriver driver)
+    {
+        Thread.Sleep(1000);
+        string[] segments = driver.Url.Split('/');
+        string id = segments[^1];
+        return id;
+    }
 }
 
-public class Serialization
+public class WaterForm
 {
-    public string applyCaseNo { get; set; }
-    public string applyDate { get; set; }
-    public string operatingArea { get; set; }
-    public string waterNo { get; set; }
-    public string typeChange { get; set; }
-    public string userCode { get; set; }
-    public string deviceLocation { get; set; }
-    public string applicant { get; set; }
-    public string idNo { get; set; }
-    public string unino { get; set; }
-    public string telNo { get; set; }
-    public string mobileNo { get; set; }
-    public string pipeDiameter { get; set; }
-    public string waterType { get; set; }
-    public string scoreSheet { get; set; }
-    public string waterBuildLic { get; set; }
-    public string waterUseLic { get; set; }
-    public string billAddress { get; set; }
+    public string? applyCaseNo { get; set; }
+    public string? applyDate { get; set; }
+    public string? operatingArea { get; set; }
+    public string? waterNo { get; set; }
+    public string? typeChange { get; set; }
+    public string? userCode { get; set; }
+    public string? deviceLocation { get; set; }
+    public string? applicant { get; set; }
+    public string? idNo { get; set; }
+    public string? unino { get; set; }
+    public string? telNo { get; set; }
+    public string? mobileNo { get; set; }
+    public string? pipeDiameter { get; set; }
+    public string? waterType { get; set; }
+    public string? scoreSheet { get; set; }
+    public string? waterBuildLic { get; set; }
+    public string? waterUseLic { get; set; }
+    public string? billAddress { get; set; }
 }
 
 
@@ -161,5 +214,11 @@ public class TestConfig
     public string? LoginUrl { get; set; }
 
     public string? AccessToken { get; set; }
+
+    public string? ApplyCaseNo { get; set; }
+
+    public string? Password { get; set; }
+
+    public string? UserId { get; set; }
 }
 
