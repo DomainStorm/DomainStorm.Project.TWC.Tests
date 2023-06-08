@@ -120,9 +120,10 @@ namespace DomainStorm.Project.TWC.Tests
             Actions actions = new (driver_1);
             actions.MoveToElement(href).Click().Perform();
 
-            var stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
-            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            IWebElement stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
+            IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
+            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+
             var findElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='name']"));
             var element = findElement.SingleOrDefault(e => e.Text == "tpcweb_01_1_夾帶附件1.pdf");
             if (element != null)
@@ -287,13 +288,25 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            IReadOnlyList<IWebElement> stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
-            IWebElement stormTreeNodes = stormTreeNode[1];
+            IWebElement stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
+            IWebElement SecondstormTreeNode = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+            IWebElement href = SecondstormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
+
+            Actions actions = new(driver_1);
+            actions.MoveToElement(href).Click().Perform();
+
+            IWebElement stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
+            IWebElement linkElement = driver_1.FindElement(By.CssSelector("a[download='tpcweb_01_1_夾帶附件1.pdf']"));
+            string downloadValue = linkElement.GetAttribute("download");
+
+            That(downloadValue,Is.EqualTo("tpcweb_01_1_夾帶附件1.pdf"));
+
+            IReadOnlyList<IWebElement> stormTreeNode_1 = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
+            IWebElement stormTreeNodes = stormTreeNode_1[1];
             ISearchContext stormTreeRoot = stormTreeNodes.GetShadowRoot();
             IWebElement firstStormTreeNode = stormTreeRoot.FindElement(By.CssSelector("storm-tree-node:first-child"));
             IWebElement href_contract_1 = firstStormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
 
-            Actions actions = new(driver_1);
             actions.MoveToElement(href_contract_1).Click().Perform();
 
             IWebElement 消費性用水服務契約_driver_1 = driver_1.FindElement(By.Id("消費性用水服務契約"));
