@@ -8,10 +8,11 @@ using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
 {
-    public class TwcB100Tests
+    public class TwcC100Tests
     {
         private List<ChromeDriver> _chromeDriverList;
-        public TwcB100Tests()
+
+        public TwcC100Tests()
         {
         }
 
@@ -22,15 +23,17 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
+
         private ChromeDriver GetNewChromeDriver()
         {
-            ChromeDriver driver = new ();
+            ChromeDriver driver = new();
 
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             _chromeDriverList.Add(driver);
 
             return driver;
         }
+
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
@@ -39,10 +42,9 @@ namespace DomainStorm.Project.TWC.Tests
                 driver.Quit();
             }
         }
-
         [Test]
         [Order(0)]
-        public async Task TwcB100_01()
+        public async Task TwcC100_01()
         {
             //取得token
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
@@ -52,17 +54,17 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(1)]
-        public async Task TwcB100_02()
+        public async Task TwcC100_02()
         {
-            //呼叫bmRecoverApply/confirm
-            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken, $"{TestHelper.BaseUrl}/api/v1/bmRecoverApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-B100_bmRecoverApply.json"));
+            //呼叫bmDisableApply/confirm
+            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmDisableApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-C100_bmDisableApply.json"));
 
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
         [Test]
         [Order(2)]
-        public async Task TwcB100_03()
+        public async Task TwcC100_03()
         {
             //於數位簽名板driver_2中看到申請之表單內容
             ChromeDriver driver_1 = GetNewChromeDriver();
@@ -85,18 +87,17 @@ namespace DomainStorm.Project.TWC.Tests
             That(受理編號_driver_2.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             IWebElement 水號_driver_2 = driver_2.FindElement(By.CssSelector("[sti-water-no]"));
-            That(水號_driver_2.Text, Is.EqualTo("41101220266"));
+            That(水號_driver_2.Text, Is.EqualTo("41101633338"));
 
             IWebElement 受理日期_driver_2 = driver_2.FindElement(By.CssSelector("[sti-apply-date]"));
-            That(受理日期_driver_2.Text, Is.EqualTo("2023年04月10日"));
+            That(受理日期_driver_2.Text, Is.EqualTo("2023年06月03日"));
         }
-
 
         [Test]
         [Order(3)]
-        public async Task TwcB100_04()
+        public async Task TwcC100_04()
         {
-            //driver_2可看到身分證字號欄位出現A123456789
+            //driver_2中看到身分證字號欄位出現A123456789
             ChromeDriver driver_1 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
@@ -124,9 +125,9 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(4)]
-        public async Task TwcB100_05()
+        public async Task TwcC100_05()
         {
-            //driver_2可看到顯示■繳費
+            //driver_2可看到顯示■中結■繳費
             ChromeDriver driver_1 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
@@ -143,6 +144,12 @@ namespace DomainStorm.Project.TWC.Tests
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             driver_1.SwitchTo().Frame(0);
 
+            IWebElement 中結 = driver_1.FindElement(By.Id("中結"));
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 中結);
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 中結);
+
+            That(中結.GetAttribute("checked"), Is.EqualTo("true"));
+
             IWebElement 繳費 = driver_1.FindElement(By.Id("繳費"));
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 繳費);
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 繳費);
@@ -152,7 +159,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(5)]
-        public async Task TwcB100_06()
+        public async Task TwcC100_06()
         {
             //driver_2看到受理欄位有落章
             ChromeDriver driver_1 = GetNewChromeDriver();
@@ -191,10 +198,10 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(6)]
-        public async Task TwcB100_07()
+        public async Task TwcC100_07()
         {
             //driver_2中看到申請之表單內容滾動；driver_1看到■已詳閱貴公司消費性用水服務契約
-            await TwcB100_06();
+            await TwcC100_06();
 
             ChromeDriver driver_1 = _chromeDriverList[0];
             driver_1.SwitchTo().DefaultContent();
@@ -230,13 +237,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             That(消費性用水服務契約_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
         }
+    
 
         [Test]
         [Order(7)]
-        public async Task TwcB100_08()
+        public async Task TwcC100_08()
         {
             //driver_2中看到申請之表單內容滾動；driver_1看到■已詳閱公司個人資料保護法
-            await TwcB100_07();
+            await TwcC100_07();
 
             ChromeDriver driver_1 = _chromeDriverList[0];
             ChromeDriver driver_2 = _chromeDriverList[1];
@@ -273,10 +281,10 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(8)]
-        public async Task TwcB100_09()
+        public async Task TwcC100_09()
         {
             //driver_2中看到申請之表單內容滾動；driver_1看到■已詳閱貴公司營業章程
-            await TwcB100_08();
+            await TwcC100_08();
 
             ChromeDriver driver_1 = _chromeDriverList[0];
             ChromeDriver driver_2 = _chromeDriverList[1];
@@ -313,10 +321,10 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(9)]
-        public async Task TwcB100_10()
+        public async Task TwcC100_10()
         {
-            // driver_2表單畫面完整呈現簽名內容；driver_1同樣看到完整簽名內容及年月日時分秒資訊
-            await TwcB100_09();
+            //driver_2表單畫面完整呈現簽名內容；driver_1同樣看到完整簽名內容及年月日時分秒資訊
+            await TwcC100_09();
 
             ChromeDriver driver_1 = _chromeDriverList[0];
             ChromeDriver driver_2 = _chromeDriverList[1];
@@ -352,9 +360,9 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(10)]
-        public async Task TwcB100_11()
+        public async Task TwcC100_11()
         {
-            // driver_2中看到掃描拍照證件圖像
+            //driver_2中看到掃描拍照證件圖像
             ChromeDriver driver_1 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
@@ -399,20 +407,19 @@ namespace DomainStorm.Project.TWC.Tests
             That(圖片_driver_1_src, Is.EqualTo(圖片_driver_2_src));
         }
 
-
         //[Test]
         //[Order(11)]
-        //public async Task TwcB100_12()
+        //public async Task TwcC100_12()
         //{
         //    //driver_2中看到夾帶附件資訊
         //}
 
         [Test]
         [Order(12)]
-        public async Task TwcB100_13()
+        public async Task TwcC100_13()
         {
             //該申請案件進入未結案件中等待後續排程資料於結案後消失
-            await TwcB100_10();
+            await TwcC100_10();
             _chromeDriverList[1].Quit();
 
             ChromeDriver driver_1 = _chromeDriverList[0];
