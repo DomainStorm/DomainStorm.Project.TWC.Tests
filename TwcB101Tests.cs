@@ -60,7 +60,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcB101_02()
         {
             //呼叫bmRecoverApply/confirm
-            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken, $"{TestHelper.BaseUrl}/api/v1/bmRecoverApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-B101_bmRecoverApply.json"));
+            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmRecoverApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-B101_bmRecoverApply.json"));
 
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
@@ -254,13 +254,26 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            IReadOnlyList<IWebElement> stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
-            IWebElement stormTreeNodes = stormTreeNode[1];
+            IWebElement stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
+            IWebElement SecondstormTreeNode = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+            IWebElement href = SecondstormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
+
+            Actions actions = new(driver_1);
+            actions.MoveToElement(href).Click().Perform();
+
+            IWebElement stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
+            IWebElement linkElement = driver_1.FindElement(By.CssSelector("a[download='tpcweb_01_1_夾帶附件1.pdf']"));
+            string downloadValue = linkElement.GetAttribute("download");
+
+            That(downloadValue, Is.EqualTo("tpcweb_01_1_夾帶附件1.pdf"));
+
+            IWebElement stormTreeView_contract = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            IReadOnlyList<IWebElement> stormTreeNode_contract = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
+            IWebElement stormTreeNodes = stormTreeNode_contract[1];
             ISearchContext stormTreeRoot = stormTreeNodes.GetShadowRoot();
             IWebElement firstStormTreeNode = stormTreeRoot.FindElement(By.CssSelector("storm-tree-node:first-child"));
             IWebElement href_contract_1 = firstStormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
 
-            Actions actions = new(driver_1);
             actions.MoveToElement(href_contract_1).Click().Perform();
 
             IWebElement 消費性用水服務契約_driver_1 = driver_1.FindElement(By.Id("消費性用水服務契約"));
@@ -332,11 +345,11 @@ namespace DomainStorm.Project.TWC.Tests
             Actions actions = new(driver_1);
             actions.MoveToElement(href).Click().Perform();
 
-            //IWebElement divElement = driver_1.FindElement(By.CssSelector("div.list-group"));
-            //That(divElement.FindElements(By.CssSelector("a")).Count, Is.EqualTo(1), "該 <div> 元素不符合條件");
+            IWebElement divElement = driver_1.FindElement(By.CssSelector("div.list-group"));
+            That(divElement.FindElements(By.CssSelector("a")).Count, Is.EqualTo(1), "該 <div> 元素不符合條件");
 
-            //IWebElement linkElement = divElement.FindElement(By.CssSelector("a"));
-            //That(linkElement.Text, Is.EqualTo("tpcweb_01_1_夾帶附件2.pdf"), "該筆資料的名稱不符合預期");
+            IWebElement linkElement = divElement.FindElement(By.CssSelector("a"));
+            That(linkElement.Text, Is.EqualTo("tpcweb_01_1_夾帶附件2.pdf"), "該筆資料的名稱不符合預期");
         }
     }
 }

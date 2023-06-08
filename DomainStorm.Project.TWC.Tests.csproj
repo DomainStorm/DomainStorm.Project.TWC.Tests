@@ -44,6 +44,12 @@
 	  <None Update="appsettings.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Assets\tpcweb-E201_bmTransferApply_confirmbground.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\tpcweb-E201_bmTransferApply_confirmbground2.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Assets\tpcweb_01_1_ID_反面.jpg">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>

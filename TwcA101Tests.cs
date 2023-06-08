@@ -301,8 +301,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             That(downloadValue,Is.EqualTo("tpcweb_01_1_夾帶附件1.pdf"));
 
-            IReadOnlyList<IWebElement> stormTreeNode_1 = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
-            IWebElement stormTreeNodes = stormTreeNode_1[1];
+            IReadOnlyList<IWebElement> stormTreeNode_contract = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"));
+            IWebElement stormTreeNodes = stormTreeNode_contract[1];
             ISearchContext stormTreeRoot = stormTreeNodes.GetShadowRoot();
             IWebElement firstStormTreeNode = stormTreeRoot.FindElement(By.CssSelector("storm-tree-node:first-child"));
             IWebElement href_contract_1 = firstStormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
