@@ -2,7 +2,6 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
-using RestSharp;
 using SeleniumExtras.WaitHelpers;
 using System.Net;
 using static NUnit.Framework.Assert;
@@ -95,15 +94,44 @@ namespace DomainStorm.Project.TWC.Tests
         //[Order(3)]
         //public async Task TwcA101_04()
         //{
-        //driver_1可看到檔案上傳
+        //    // driver_1可看到檔案上傳
         //}
 
-        //[Test]
-        //[Order(4)]
-        //public async Task TwcA101_05()
-        //{
-        //driver_1看到夾帶附件視窗顯示有一筆附件清單資料
-        //}
+        [Test]
+        [Order(4)]
+        public async Task TwcA101_05()
+        {
+            //driver_1看到夾帶附件視窗顯示有一筆附件清單資料
+            ChromeDriver driver_1 = GetNewChromeDriver();
+
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.LoginUrl}/draft");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+
+            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
+            IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            IWebElement stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
+            IWebElement SecondstormTreeNode = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+            IWebElement href = SecondstormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
+
+            Actions actions = new (driver_1);
+            actions.MoveToElement(href).Click().Perform();
+
+            var stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
+            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var findElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='name']"));
+            var element = findElement.SingleOrDefault(e => e.Text == "tpcweb_01_1_夾帶附件1.pdf");
+            if (element != null)
+            {
+                string filename = element.Text;
+
+                That(filename, Is.EqualTo("tpcweb_01_1_夾帶附件1.pdf"));
+            }
+        }
 
         [Test]
         [Order(5)]

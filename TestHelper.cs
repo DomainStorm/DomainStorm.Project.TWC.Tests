@@ -130,7 +130,6 @@ public class TestHelper
     }
     public static Task Login(IWebDriver webDriver, string userId, string password)
     {
-
         webDriver.Navigate().GoToUrl(LoginUrl);
         webDriver.Manage().Window.Size = new Size(1200, 800);
 
