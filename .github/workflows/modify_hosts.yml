@@ -27,3 +27,6 @@ jobs:
           else
             echo "hosts 条目已存在：127.0.0.1 domain-storm"
           fi
+          
+          # 执行 ping domain-storm
+          ping -c 5 domain-storm       
