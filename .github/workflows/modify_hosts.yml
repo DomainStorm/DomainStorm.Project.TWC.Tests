@@ -1,0 +1,29 @@
+name: Modify Hosts
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  modify_hosts:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Modify Hosts
+        run: |
+          # 检查 hosts 文件是否已存在该条目
+          if ! grep -q "127.0.0.1 domain-storm" "/etc/hosts"; then
+            # 备份 hosts 文件
+            sudo cp "/etc/hosts" "/etc/hosts.bak"
+
+            # 添加新的 hosts 条目
+            echo "127.0.0.1 domain-storm" | sudo tee -a "/etc/hosts" > /dev/null
+
+            echo "已成功新增 hosts 条目：127.0.0.1 domain-storm"
+          else
+            echo "hosts 条目已存在：127.0.0.1 domain-storm"
+          fi
