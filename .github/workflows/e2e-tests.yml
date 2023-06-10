@@ -1,4 +1,4 @@
-name: Modify Hosts
+name: E2E Tests
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - '**'
 
 jobs:
-  modify_hosts:
+  e2e-tests:
     runs-on: ubuntu-latest
 
     steps:
