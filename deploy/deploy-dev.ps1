@@ -5,7 +5,7 @@ $env:OpenIDConnectOptions_Authority = "http://domain-storm:8000/openid"
 $env:SignalR_EndPoint = "http://domain-storm:8000/hubUrl"
 
 $env:MINIO_ROOT_USER = "admin"
-$env:MINIO_ROOT_USER = "adminadmin"
+$env:MINIO_ROOT_PASSWORD = "adminadmin"
 
 $env:LDAP_ORGANISATION = "Example Inc."
 $env:LDAP_DOMAIN = "example.org"
