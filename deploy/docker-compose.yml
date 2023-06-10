@@ -1,0 +1,864 @@
+version: '3.4'
+
+x-common-config: &common-env
+  TZ: Asia/Taipei
+
+x-gateway-config: &gateway-env
+  DomainStorm_Gateway__EndPoint: ${Api_Gateway_EndPoint}
+  DomainStorm_OpenIDConnectOptions__Authority: ${OpenIDConnectOptions_Authority}
+
+services:
+  minio:
+    image: minio/minio:RELEASE.2022-12-02T19-19-22Z.fips
+    container_name: minio
+    # ports:
+      # - 9000:9000
+      # - 9001:9001
+    environment:
+      <<: *common-env
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD} 
+    volumes:
+      - type: volume
+        source: minio-volume-data
+        target: /data
+      - type: volume
+        source: minio-volume-config
+        target: /root/.minio/     
+    command: server --console-address ':9001' /data
+    privileged: true
+    restart: on-failure
+    healthcheck:       
+      test: curl -f localhost:9001
+      interval: 10s
+      timeout: 10s
+      retries: 50     
+    networks:
+      - backend
+  minio-create-buckets:
+    image: minio/mc
+    container_name: minio-create-buckets
+    depends_on:
+      minio:
+          condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add myminio http://minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc mb myminio/data;
+      /usr/bin/mc policy download myminio/data;
+      exit 0;"
+    networks:
+      - backend
+  # elasticsearch:
+  #  image: docker.elastic.co/elasticsearch/elasticsearch:7.17.1
+  #  container_name: elasticsearch
+  #  ports:
+  #   - "9200:9200"
+  #   - "9300:9300"
+  #  volumes:
+  #   - type: volume
+  #     source: elasticsearch-volume-data
+  #     target: /usr/share/elasticsearch/data
+  #  environment:
+  #     <<: *common-env
+  #     discovery.type: single-node
+  #  healthcheck:
+  #     test: curl -f localhost:9200  
+  #     interval: 10s
+  #     timeout: 10s
+  #     retries: 50     
+  #  networks:
+  #   - backend
+  openldap:
+    image: osixia/openldap:1.5.0
+    container_name: openldap
+    environment:
+      <<: *common-env
+      LDAP_LOG_LEVEL: "256"
+      LDAP_ORGANISATION: ${LDAP_ORGANISATION}
+      LDAP_DOMAIN: ${LDAP_DOMAIN}
+      LDAP_BASE_DN: ""
+      LDAP_ADMIN_PASSWORD: ${LDAP_ADMIN_PASSWORD}
+      LDAP_CONFIG_PASSWORD: "config"
+      LDAP_READONLY_USER: "false"
+      #LDAP_READONLY_USER_USERNAME: "readonly"
+      #LDAP_READONLY_USER_PASSWORD: "readonly"
+      LDAP_RFC2307BIS_SCHEMA: "false"
+      LDAP_BACKEND: "mdb"
+      LDAP_TLS: "true"
+      LDAP_TLS_CRT_FILENAME: "ldap.crt"
+      LDAP_TLS_KEY_FILENAME: "ldap.key"
+      LDAP_TLS_DH_PARAM_FILENAME: "dhparam.pem"
+      LDAP_TLS_CA_CRT_FILENAME: "ca.crt"
+      LDAP_TLS_ENFORCE: "false"
+      LDAP_TLS_CIPHER_SUITE: "SECURE256:-VERS-SSL3.0"
+      LDAP_TLS_VERIFY_CLIENT: "demand"
+      LDAP_REPLICATION: "false"
+      #LDAP_REPLICATION_CONFIG_SYNCPROV: 'binddn="cn=admin,cn=config" bindmethod=simple credentials="$$LDAP_CONFIG_PASSWORD" searchbase="cn=config" type=refreshAndPersist retry="60 +" timeout=1 starttls=critical'
+      #LDAP_REPLICATION_DB_SYNCPROV: 'binddn="cn=admin,$$LDAP_BASE_DN" bindmethod=simple credentials="$$LDAP_ADMIN_PASSWORD" searchbase="$$LDAP_BASE_DN" type=refreshAndPersist interval=00:00:00:10 retry="60 +" timeout=1 starttls=critical'
+      #LDAP_REPLICATION_HOSTS: "#PYTHON2BASH:['ldap://ldap.example.org','ldap://ldap2.example.org']"
+      KEEP_EXISTING_CONFIG: "false"
+      LDAP_REMOVE_CONFIG_AFTER_SETUP: "true"
+      LDAP_SSL_HELPER_PREFIX: "ldap"
+    tty: true
+    stdin_open: true
+    volumes:
+      - type: volume
+        source: ldap-volume-data
+        target: /var/lib/ldap
+      - type: volume
+        source: ldap-volume-slapd
+        target: /etc/ldap/slapd.d
+    # ports:
+    #   - "389:389"
+    #   - "636:636"
+    # For replication to work correctly, domainname and hostname must be
+    # set correctly so that "hostname"."domainname" equates to the
+    # fully-qualified domain name for the host.
+    # domainname: "example.org"
+    hostname: "openldap"
+    healthcheck:
+      test: ldapsearch -x -H ldap://localhost -b ${LDAP_BASEDN} -D "cn=admin,${LDAP_BASEDN}" -w ${LDAP_ADMIN_PASSWORD}
+      interval: 10s
+      timeout: 10s
+      retries: 50      
+    networks:
+      - backend
+  phpldapadmin:
+    image: osixia/phpldapadmin:latest
+    container_name: phpldapadmin
+    environment:
+      <<: *common-env
+      PHPLDAPADMIN_LDAP_HOSTS: "openldap"
+      PHPLDAPADMIN_HTTPS: "false"
+    ports:
+      - "8099:80"
+    depends_on:      
+      openldap:
+        condition: service_healthy
+    networks:
+      - backend
+  mongo:
+    image: mongo:5.0.9
+    container_name: mongo
+    restart: on-failure
+    volumes:
+      - mongo-volume-data:/data/db
+    # ports:
+    #   - 27017:27017
+    environment:
+      <<: *common-env
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    healthcheck:       
+      test: mongo localhost:27017/test --quiet || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 50       
+    networks:
+      - backend
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: on-failure
+    ports:
+      - 8081:8081
+    environment:
+      <<: *common-env
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/
+    depends_on:
+      mongo:
+          condition: service_healthy
+    networks:
+      - backend
+  kong-database:
+    image: postgres:9.6
+    container_name: kong-database
+    # ports:
+    #   - 5432:5432
+    environment:
+      <<: *common-env
+      POSTGRES_USER: ${KONG_POSTGRES_USER}
+      POSTGRES_DB: ${KONG_POSTGRES_DB}
+      POSTGRES_PASSWORD: ${KONG_POSTGRES_PASSWORD}
+    restart: on-failure
+    volumes:
+      - "db-data-kong-postgres:/var/lib/postgresql/data"
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "${KONG_POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 10s
+      retries: 50       
+    networks:
+      - backend
+  kong-migrations:
+    image: kong:2.8.1-alpine
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-database
+      - KONG_PG_USER=${KONG_POSTGRES_USER}
+      - KONG_PG_PASSWORD=${KONG_POSTGRES_PASSWORD}
+      - KONG_CASSANDRA_CONTACT_POINTS=kong-database
+    command: kong migrations bootstrap
+    restart: on-failure:20
+    depends_on:
+      kong-database:
+          condition: service_healthy
+    links:
+      - kong-database    
+    networks:
+      - backend
+  kong-migrations-up:
+    image: kong:2.8.1-alpine
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-database
+      - KONG_PG_USER=${KONG_POSTGRES_USER}
+      - KONG_PG_PASSWORD=${KONG_POSTGRES_PASSWORD}
+      - KONG_CASSANDRA_CONTACT_POINTS=kong-database
+    command: kong migrations up && kong migrations finish
+    restart: on-failure:20
+    depends_on:
+      kong-database:
+          condition: service_healthy
+    links:
+      - kong-database    
+    networks:
+      - backend
+  kong:
+    image: kong:2.8.1-alpine
+    container_name: kong
+    environment:
+      - TZ=Asia/Taipei
+      - LC_CTYPE=en_US.UTF-8
+      - LC_ALL=en_US.UTF-8
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-database
+      - KONG_PG_USER=${KONG_POSTGRES_USER}
+      - KONG_PG_PASSWORD=${KONG_POSTGRES_PASSWORD}
+      - KONG_CASSANDRA_CONTACT_POINTS=kong-database
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001, 0.0.0.0:8444 ssl
+      - KONG_SSL=on
+      # - KONG_SSL_CERT=/ssl/server.crt
+      # - KONG_SSL_CERT_KEY=/ssl/server.key
+      - KONG_NGINX_PROXY_PROXY_BUFFER_SIZE=256k
+      - KONG_NGINX_PROXY_PROXY_BUFFERS=4 512k
+      - KONG_NGINX_PROXY_PROXY_BUSY_BUFFERS_SIZE=512k   
+      # - KONG_PLUGINS= bundled,url-rewrite  
+    # command: ["luarocks", "install", "kong-plugin-url-rewrite"]       
+    volumes:
+      - ./ssl:/ssl        
+    restart: on-failure
+    ports:
+      - 8000:8000
+      - 8443:8443
+      - 8001:8001
+      - 8444:8444
+    depends_on:
+      kong-database:
+          condition: service_healthy  
+      kong-migrations:
+          condition: service_started
+      kong-migrations-up:
+          condition: service_started    
+      domainstorm.project.twc.web:
+          condition: service_healthy         
+    healthcheck:       
+      test: ["CMD", "kong", "health"] 
+      interval: 10s
+      timeout: 10s
+      retries: 80 
+    networks:
+      - backend
+  konga:
+    image: pantsel/konga:0.14.9
+    container_name: konga
+    restart: on-failure
+    ports:
+      - 1337:1337
+    depends_on:
+      kong:
+          condition: service_healthy 
+      kong-database:
+          condition: service_healthy  
+    environment:
+      <<: *common-env
+      DB_ADAPTER: postgres
+      DB_HOST: kong-database
+      DB_USER: ${KONG_POSTGRES_USER}
+      DB_DATABASE: konga
+      DB_PASSWORD: ${KONG_POSTGRES_PASSWORD}
+    networks:
+      - backend
+  placement:
+    image: daprio/dapr:1.8.7-mariner
+    environment:
+      <<: *common-env    
+    container_name: placement
+    command: ["./placement", "-port", "50006"]
+    # ports:
+    #   - "50006:50006"
+    networks:
+      - backend
+  redis:
+    image: "redis:7.0.5-alpine3.17"
+    container_name: redis
+    # ports:
+    #   - "6380:6379"
+    environment:
+      <<: *common-env  
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 10s
+      timeout: 10s
+      retries: 50             
+    volumes:
+      - redis-volume-data:/data
+    networks:
+      - backend
+  zipkin:
+    image: "openzipkin/zipkin"
+    container_name: zipkin
+    environment:
+      <<: *common-env    
+    ports:
+      - "9411:9411"
+    networks:
+      - backend
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    container_name: zookeeper
+    environment:
+      <<: *common-env    
+    restart: on-failure
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    # ports:
+    #   - "2181:2181"
+    volumes:
+      - zookeeper-data:/opt/zookeeper-3.4.13/data
+      - zookeeper-conf:/opt/zookeeper-3.4.13/conf
+    networks:
+      - backend
+  kafka:
+    image: wurstmeister/kafka:2.13-2.8.1
+    container_name: kafka
+    restart: on-failure
+    ports:
+      - "9092:9092"
+    environment:
+      <<: *common-env
+      KAFKA_BROKER_ID: 1
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_CREATE_TOPICS: "sampletopic:1:1"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      #KAFKA_LOG_CLEANUP_POLICY: compact
+      #KAFKA_LOG_CLEANUP_ENABLE: "true"
+      KAFKA_LOG_DIRS: /data/kafka-data
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - kafka:/kafka
+      - kafka-data:/data/kafka-data
+    healthcheck:
+      test: nc -z localhost 9092 || exit -1
+      interval: 10s
+      timeout: 10s
+      retries: 50 
+    depends_on:
+      zookeeper:
+          condition: service_started       
+    networks:
+      - backend
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    ports:
+      - "8282:8080"
+    restart: on-failure
+    environment:
+      <<: *common-env
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    depends_on:
+      kafka:
+          condition: service_healthy   
+    networks:
+      - backend  
+  seq:
+    image: datalust/seq:latest
+    container_name: seq
+    restart: on-failure
+    environment:
+      <<: *common-env
+      ACCEPT_EULA: 'Y'
+    ports:
+      - "5342:80"
+      - "5341:5341"
+    volumes:
+      - seq-logs:/data
+    networks:
+      - backend
+  gotenberg:
+    image: thecodingmachine/gotenberg:7
+    container_name: gotenberg
+    restart: on-failure
+    environment:
+      <<: *common-env
+    #ports:
+    #  - "3010:3010"
+    depends_on:
+      redis:
+          condition: service_healthy
+      placement:
+          condition: service_started    
+    volumes:
+      - "./fonts/kaiu.ttf:/usr/local/share/fonts/kaiu.ttf"          
+    command:
+      - "gotenberg"
+      - "--log-level=debug"   
+      - "--api-timeout=120s"         
+    networks:
+      - backend
+  gotenberg-dapr:
+    image: "daprio/daprd:1.8.7-mariner"
+    environment:
+      <<: *common-env
+    command: ["./daprd",
+      "-app-id", "Gotenberg",
+      "-app-port", "3000",
+      "-dapr-http-port", "3500",
+      "-log-level", "debug",
+      "-placement-host-address", "placement:50006",
+      "-config", "/.dapr/config.yaml",
+      "-components-path", "/.dapr/components",
+      "-dapr-http-max-request-size", "200",
+      "-dapr-http-read-buffer-size", "100"]
+    volumes:
+      - "./.dapr/config.yaml:/.dapr/config.yaml"
+      - "./.dapr/components/:/.dapr/components"
+    depends_on:
+      - gotenberg
+    restart: on-failure  
+    network_mode: "service:gotenberg"      
+  ############################
+  # domainstorm.metadataapi service
+  ############################
+  # domainstorm.metadataapi:
+  #   image: ${DOCKER_REGISTRY-}yanshibainu/metadataapi:0.0.7
+  #   container_name: metadataapi   
+  #   environment:
+  #     <<: [*common-env, *gateway-env]
+  #     ASPNETCORE_URLS: http://+:80
+  #     DomainStorm_SqlDbOptions__ConnectionString: Server=${SQL_Server_EndPoint};Database=MetadataApiEventDb;User Id=${SQL_Server_User_Id};Password=${SQL_Server_Password};    
+  #   ports:
+  #     - "5101:80"
+  #     #- "5201:443"
+  #   depends_on:
+  #     domainstorm.jwtauthapi.openidprovider:
+  #         condition: service_healthy    
+  #     elasticsearch:
+  #         condition: service_healthy
+  #     redis:
+  #         condition: service_healthy
+  #     placement:
+  #         condition: service_started
+  #     kafka:  
+  #         condition: service_healthy  
+  #   # links:
+  #   #   - elasticsearch
+  #   #   - redis
+  #   #   - placement
+  #   restart: on-failure
+  #   healthcheck:       
+  #     test: curl -f http://localhost:80/healthz || exit
+  #     interval: 10s
+  #     timeout: 10s
+  #     retries: 50      
+  #   networks:
+  #     - backend
+  # domainstorm.metadataapi-dapr:
+  #   image: "daprio/daprd:1.8.7-mariner"
+  #   environment:
+  #     <<: *common-env    
+  #   command: ["./daprd",
+  #     "-app-id", "MetadataApi",
+  #     "-app-port", "80",
+  #     "-dapr-http-port", "3500",
+  #     "-log-level", "debug",
+  #     "-placement-host-address", "placement:50006",
+  #     "-config", "/.dapr/config.yaml",
+  #     "-components-path", "/.dapr/components",
+  #     "-dapr-http-max-request-size", "200",
+  #     "-dapr-http-read-buffer-size", "100"]
+  #   volumes:
+  #     - "./.dapr/config.yaml:/.dapr/config.yaml"
+  #     - "./.dapr/components/:/.dapr/components"
+  #   depends_on:
+  #     - domainstorm.metadataapi
+  #   restart: on-failure
+  #   network_mode: "service:domainstorm.metadataapi"
+  ############################
+  # domainstorm.multimediaapi service
+  ############################
+  domainstorm.multimediaapi:
+    image: ${DOCKER_REGISTRY-}yanshibainu/multimediaapi:${MultiMediaApi_Version}
+    container_name: multimediaapi
+    environment:
+      <<: [*common-env, *gateway-env]
+      ASPNETCORE_URLS: http://+:80
+      DomainStorm_AmazonS3Options__Endpoint: http://minio:9000
+      DomainStorm_AmazonS3Options__AccessKey: ${MINIO_ROOT_USER}
+      DomainStorm_AmazonS3Options__SecretKey: ${MINIO_ROOT_PASSWORD}    
+    # ports:
+    #   - "5301:80"
+      #- "5401:443"
+    depends_on:
+      domainstorm.jwtauthapi.openidprovider:
+          condition: service_healthy        
+      minio:
+          condition: service_healthy
+      redis:
+          condition: service_healthy
+      placement:
+          condition: service_started
+      kafka:  
+          condition: service_healthy           
+    restart: on-failure
+    healthcheck:       
+      test: curl -f http://localhost:80/healthz || exit
+      interval: 10s
+      timeout: 10s
+      retries: 50      
+    networks:
+      - backend
+  domainstorm.multimediaapi-dapr:
+    image: "daprio/daprd:1.8.7-mariner"
+    environment:
+      <<: *common-env    
+    command: ["./daprd",
+      "-app-id", "MultiMediaApi",
+      "-app-port", "80",
+      "-dapr-http-port", "3500",
+      "-log-level", "debug",
+      "-placement-host-address", "placement:50006",
+      "-config", "/.dapr/config.yaml",
+      "-components-path", "/.dapr/components",
+      "-dapr-http-max-request-size", "200",
+      "-dapr-http-read-buffer-size", "100"]
+    volumes:
+      - "./.dapr/config.yaml:/.dapr/config.yaml"
+      - "./.dapr/components/:/.dapr/components"
+    depends_on:
+      - domainstorm.multimediaapi
+    restart: on-failure
+    network_mode: "service:domainstorm.multimediaapi"
+  ############################
+  # domainstorm.jwtauthapi service
+  ############################
+  domainstorm.jwtauthapi:
+    image: ${DOCKER_REGISTRY-}yanshibainu/jwtauthapi:${JwtAuthApi_Version}
+    container_name: jwtauthapi
+    environment:
+      <<: [*common-env, *gateway-env]
+      ASPNETCORE_URLS: http://+:80
+      DomainStorm_MongoDbOptions__ConnectionString: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017
+      DomainStorm_MongoDbOptions__DatabaseName: JwtAuth
+      DomainStorm_SqlDbOptions__ConnectionString: Server=${SQL_Server_EndPoint};Database=JwtAuthEventDb;User Id=${SQL_Server_User_Id};Password=${SQL_Server_Password};
+      DomainStorm_LdapOptions__BaseDn: ${LDAP_BASEDN}
+      DomainStorm_LdapOptions__ManagerDn: cn=admin,${LDAP_BASEDN}
+      DomainStorm_LdapOptions__ManagerPassword: ${LDAP_ADMIN_PASSWORD}
+    ports:
+    #   - "8888:80"
+      #- "7777:443"
+      - "3500:3500"
+      #- "50001:50001"
+    # links:
+    #   - openldap
+    #   - domainstorm.jwtauthapi.openidprovider
+    #   - mongo
+    #   - redis
+    #   - placement
+    depends_on:
+      domainstorm.jwtauthapi.openidprovider:
+          condition: service_healthy
+      openldap:
+          condition: service_healthy
+      mongo:
+          condition: service_healthy
+      redis:
+          condition: service_healthy
+      placement:
+          condition: service_started
+      kafka:  
+          condition: service_healthy           
+    restart: on-failure
+    healthcheck:       
+      test: curl -f http://localhost:80/healthz || exit
+      interval: 10s
+      timeout: 10s
+      retries: 50      
+    networks:
+      - backend
+  domainstorm.jwtauthapi-dapr:
+    image: "daprio/daprd:1.8.7-mariner"
+    environment:
+      <<: *common-env    
+    command: ["./daprd",
+      "-app-id", "JwtAuthApi",
+      "-app-port", "80",
+      "-dapr-http-port", "3500",
+      "-log-level", "debug",
+      "-placement-host-address", "placement:50006",
+      "-config", "/.dapr/config.yaml",
+      "-components-path", "/.dapr/components",
+      "-dapr-http-max-request-size", "200",
+      "-dapr-http-read-buffer-size", "100"]
+    volumes:
+      - "./.dapr/config.yaml:/.dapr/config.yaml"
+      - "./.dapr/components/:/.dapr/components"
+    depends_on:
+      - domainstorm.jwtauthapi
+    restart: on-failure
+    network_mode: "service:domainstorm.jwtauthapi"
+
+  domainstorm.jwtauthapi.openidprovider:
+    image: ${DOCKER_REGISTRY-}yanshibainu/openidprovider:${OpenidProvider_Version}
+    container_name: openidconnect.com.tw
+    #hostname: openidconnect.com.tw
+    environment:
+      <<: [*common-env, *gateway-env]
+      ASPNETCORE_URLS: http://+:5050
+      DomainStorm_MongoDbOptions__ConnectionString: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017
+      DomainStorm_MongoDbOptions__DatabaseName: JwtAuth
+      DomainStorm_SqlServerOptions__ConnectionString: Server=${SQL_Server_EndPoint};Database=OpenIddict;User Id=${SQL_Server_User_Id};Password=${SQL_Server_Password};
+      DomainStorm_LdapOptions__BaseDn: ${LDAP_BASEDN}
+      DomainStorm_LdapOptions__ManagerDn: cn=admin,${LDAP_BASEDN}
+      DomainStorm_LdapOptions__ManagerPassword: ${LDAP_ADMIN_PASSWORD}   
+    # ports:
+    #   - "5050:5050"
+      #- "5051:5051"
+    depends_on:
+      #- domainstorm.project.twc.web
+      # sqlserver:
+      #     condition: service_healthy  
+      openldap:
+          condition: service_healthy
+      mongo:
+          condition: service_healthy
+      kafka:  
+          condition: service_healthy        
+    #links:
+    #  - sqlserver
+    #  - mongo
+    #  - eventstore
+    restart: on-failure
+    #network_mode: "service:domainstorm.project.twc.web"
+    # healthcheck:       
+    #   test: curl --fail http://localhost:5050 || exit 1
+    #   interval: 10s
+    #   timeout: 10s
+    #   retries: 50 
+    healthcheck:       
+      test: curl -f http://localhost:5050/healthz || exit
+      interval: 10s
+      timeout: 10s
+      retries: 50           
+    networks:
+      - backend
+
+  ############################
+  # domainstorm.project.twc.web service
+  ############################
+
+  domainstorm.project.twc.web:
+    image: ${DOCKER_REGISTRY-}yanshibainu/twcweb:${TwcWeb_Version}
+    container_name: twcweb
+    hostname: twcweb
+    # ports:
+    #   - "9002:80"
+    #   - "9003:443"
+    environment:
+      <<: [*common-env, *gateway-env]
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      DomainStorm_ENVIRONMENT: Staging
+      DomainStorm_SignalRHubUrl: ${SignalR_EndPoint}
+      DomainStorm_SqlDbOptions__ConnectionString: Server=${SQL_Server_EndPoint};Database=TWCWeb;User Id=${SQL_Server_User_Id};Password=${SQL_Server_Password};
+      Serilog__MinimumLevel__Default: Debug  
+    depends_on:
+      domainstorm.jwtauthapi.openidprovider:
+        condition: service_healthy
+      domainstorm.resourceapi:
+        condition: service_healthy  
+      redis:
+        condition: service_healthy 
+      placement:
+        condition: service_started 
+      kafka:  
+        condition: service_healthy         
+    # links:
+    #   - redis
+    #   - placement
+    volumes:
+      - type: volume
+        source: twcweb-volume-data
+        target: /app/.twc/
+      - ./ssl:/https:ro         
+    restart: on-failure
+    healthcheck:       
+      test: curl -f http://localhost:80/healthz || exit
+      interval: 10s
+      timeout: 10s
+      retries: 50     
+    networks:
+      - backend
+  domainstorm.project.twc.web-dapr:
+    image: "daprio/daprd:1.8.7-mariner"
+    environment:
+      <<: *common-env    
+    command: ["./daprd",
+      "-app-id", "TwcWeb",
+      "-app-port", "80",
+      "-dapr-http-port", "3500",
+      "-log-level", "debug",
+      "-placement-host-address", "placement:50006",
+      "-config", "/.dapr/config.yaml",
+      "-components-path", "/.dapr/components",
+      "-dapr-http-max-request-size", "200",
+      "-dapr-http-read-buffer-size", "100"]
+    volumes:
+      - "./.dapr/config.yaml:/.dapr/config.yaml"
+      - "./.dapr/components/:/.dapr/components"
+    depends_on:
+      - domainstorm.project.twc.web
+    restart: on-failure       
+    network_mode: "service:domainstorm.project.twc.web"
+  ############################
+  # domainstorm.resourceapi service
+  ############################
+  domainstorm.resourceapi:
+    image: ${DOCKER_REGISTRY-}yanshibainu/resourceapi:${ResourceApi_Version}
+    container_name: resourceapi
+    environment:
+      <<: [*common-env, *gateway-env]
+      ASPNETCORE_URLS: http://+:80
+      DomainStorm_MongoDbOptions__ConnectionString: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017
+      DomainStorm_MongoDbOptions__DatabaseName: Resource
+      DomainStorm_SqlDbOptions__ConnectionString: Server=${SQL_Server_EndPoint};Database=ResourceEventDb;User Id=${SQL_Server_User_Id};Password=${SQL_Server_Password};    
+    # ports:
+    #   - "5501:80"
+      #- "5601:443"
+    depends_on:
+      domainstorm.jwtauthapi.openidprovider:
+        condition: service_healthy       
+      mongo:
+        condition: service_healthy 
+      redis:
+        condition: service_healthy 
+      placement:
+        condition: service_started 
+      kafka:  
+        condition: service_healthy         
+    # links:
+    #   - mongo
+    #   - redis
+    #   - placement
+    restart: on-failure
+    healthcheck:       
+      test: curl -f http://localhost:80/healthz || exit
+      interval: 10s
+      timeout: 10s
+      retries: 50      
+    networks:
+      - backend
+      #- frontend
+  domainstorm.resourceapi-dapr:
+    image: "daprio/daprd:1.8.7-mariner"
+    environment:
+      <<: *common-env    
+    command: ["./daprd",
+      "-app-id", "ResourceApi",
+      "-app-port", "80",
+      "-log-level", "debug",
+      "-placement-host-address", "placement:50006",
+      "-config", "/.dapr/config.yaml",
+      "-components-path", "/.dapr/components",
+      "-dapr-http-max-request-size", "200",
+      "-dapr-http-read-buffer-size", "100"]
+    volumes:
+      - "./.dapr/config.yaml:/.dapr/config.yaml"
+      - "./.dapr/components/:/.dapr/components"
+    depends_on:
+      - domainstorm.resourceapi
+    restart: on-failure
+    network_mode: "service:domainstorm.resourceapi"
+  
+  ############################
+  # domainstorm.servicebus service
+  ############################
+
+  domainstorm.servicebus:
+    image: ${DOCKER_REGISTRY-}yanshibainu/servicebus:${ServiceBus_Version}
+    container_name: servicebus
+    environment:
+      <<: [*common-env, *gateway-env]
+      ASPNETCORE_URLS: http://+:80  
+    # ports:
+    #   - "5507:80"
+    #   - "5607:443"
+    depends_on:
+      domainstorm.jwtauthapi:
+        condition: service_healthy  
+    healthcheck:       
+      test: curl -f http://localhost:80/healthz || exit
+      interval: 10s
+      timeout: 10s
+      retries: 50           
+    networks:
+      - backend
+  domainstorm.servicebus-dapr:
+    image: "daprio/daprd:1.8.7-mariner"
+    environment:
+      <<: *common-env    
+    command: ["./daprd",
+      "-app-id", "ServiceBus",
+      "-app-port", "80",
+      "-log-level", "debug",
+      "-placement-host-address", "placement:50006",
+      "-config", "/.dapr/config.yaml",
+      "-components-path", "/.dapr/components",
+      "-dapr-http-max-request-size", "200",
+      "-dapr-http-read-buffer-size", "100"]
+    volumes:
+      - "./.dapr/config.yaml:/.dapr/config.yaml"
+      - "./.dapr/components/:/.dapr/components"
+    depends_on:
+      - domainstorm.servicebus
+    restart: on-failure     
+    network_mode: "service:domainstorm.servicebus"
+
+volumes:
+  db-data-kong-postgres:
+  minio-volume-data:
+  minio-volume-config:
+  mongo-volume-data:
+  redis-volume-data:
+  twcweb-volume-data:
+  seq-logs:
+  ldap-volume-data:
+  ldap-volume-slapd:
+  kafka-data:
+  kafka:
+  zookeeper-data:
+  zookeeper-conf:
+  # elasticsearch-volume-data:
+
+networks:
+  backend:
