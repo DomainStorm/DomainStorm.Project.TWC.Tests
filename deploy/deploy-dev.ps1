@@ -1,10 +1,8 @@
 ﻿Set-Location (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
-$COMPUTERNAME = $env:COMPUTERNAME
-
-$env:Api_Gateway_EndPoint = "https://$COMPUTERNAME:8443"
-$env:OpenIDConnectOptions_Authority = "http://$COMPUTERNAME:8000/openid"
-$env:SignalR_EndPoint = "http://$COMPUTERNAME:8000/hubUrl"
+$env:Api_Gateway_EndPoint = "https://$env:IP_ADDRESS:8443"
+$env:OpenIDConnectOptions_Authority = "http://$env:IP_ADDRESS:8000/openid"
+$env:SignalR_EndPoint = "http://$env:IP_ADDRESS:8000/hubUrl"
 
 $env:MINIO_ROOT_USER = "admin"
 $env:MINIO_ROOT_PASSWORD = "adminadmin"
@@ -32,5 +30,3 @@ $env:ServiceBus_Version = "0.0.4"
 docker compose -f docker-compose.yml -f docker-compose.metadataapi.yml -f docker-compose.dev.yml up -d
 
 ./deploy-seed-pipeline-dev.ps1
-
-"https://{$env:COMPUTERNAME}:8443"
