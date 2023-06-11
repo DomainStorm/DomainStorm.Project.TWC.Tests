@@ -14,7 +14,6 @@ jobs:
         uses: actions/checkout@v3
         
       - name: Get IP address
-        id: get-ip
         run: |
           IP_ADDRESS=$(ifconfig eth0 | grep 'inet ' | awk '{print $2}')
           echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
@@ -25,6 +24,9 @@ jobs:
             echo "TestConfig_Password=${{ secrets.TestConfig_Password }}"
             echo "TestConfig_BaseUrl=http://${{ env.IP_ADDRESS }}:8000" >> $GITHUB_ENV
             echo "TestConfig_TokenUrl=http://${{ env.IP_ADDRESS }}:8000/openid/connect/token" >> $GITHUB_ENV
+            echo "Api_Gateway_EndPoint=https://${{ env.IP_ADDRESS }}:8443" >> $GITHUB_ENV
+            echo "OpenIDConnectOptions_Authority=http://${{ env.IP_ADDRESS }}:8000/openid" >> $GITHUB_ENV
+            echo "SignalR_EndPoint=http://${{ env.IP_ADDRESS }}:8000/hubUrl" >> $GITHUB_ENV
 
             ping -c 5 ${{ env.IP_ADDRESS }}
           
