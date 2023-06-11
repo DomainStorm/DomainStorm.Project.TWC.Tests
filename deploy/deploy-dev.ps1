@@ -1,8 +1,8 @@
 ﻿Set-Location (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
-$env:Api_Gateway_EndPoint = "https://domain-storm:8443"
-$env:OpenIDConnectOptions_Authority = "http://domain-storm:8000/openid"
-$env:SignalR_EndPoint = "http://domain-storm:8000/hubUrl"
+$env:Api_Gateway_EndPoint = "https://$env:COMPUTERNAME:8443"
+$env:OpenIDConnectOptions_Authority = "http://$env:COMPUTERNAME:8000/openid"
+$env:SignalR_EndPoint = "http://$env:COMPUTERNAME:8000/hubUrl"
 
 $env:MINIO_ROOT_USER = "admin"
 $env:MINIO_ROOT_PASSWORD = "adminadmin"
