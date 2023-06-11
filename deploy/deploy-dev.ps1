@@ -45,7 +45,7 @@ while ($true) {
     foreach ($container in $containers) {
         $container_health = docker inspect --format='{{json .State.Health.Status}}' $container
 
-        if ($container_health -ne "\"healthy\"") {
+        if ($container_health -ne "healthy") {
             $all_containers_healthy = $false
             Write-Host "Container $container is not healthy"
             break
