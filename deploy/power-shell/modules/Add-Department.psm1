@@ -44,6 +44,8 @@
         } else {
             Write-Host $_ -ForegroundColor Red
         }
+
+        throw
     }  
 }
 
