@@ -12,17 +12,21 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+        
+      - name: Get IP address
+        id: get-ip
+        run: |
+          IP_ADDRESS=$(ifconfig eth0 | grep 'inet ' | awk '{print $2}')
+          echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
 
       - name: Set environment variables
         run: |
-            ipAddress=$(hostname -I | awk '{print $1}')
-            echo "IP_ADDRESS=$ipAddress" >> $GITHUB_ENV   
             echo "TestConfig_UserId=${{ secrets.TestConfig_UserId }}"
             echo "TestConfig_Password=${{ secrets.TestConfig_Password }}"
-            echo "TestConfig_BaseUrl=http://$$IP_ADDRESS:8000" >> $GITHUB_ENV
-            echo "TestConfig_TokenUrl=http://$$IP_ADDRESS:8000/openid/connect/token" >> $GITHUB_ENV
+            echo "TestConfig_BaseUrl=http://${{ env.IP_ADDRESS }}:8000" >> $GITHUB_ENV
+            echo "TestConfig_TokenUrl=http://${{ env.IP_ADDRESS }}:8000/openid/connect/token" >> $GITHUB_ENV
 
-            ping -c 5 $IP_ADDRESS
+            ping -c 5 ${{ env.IP_ADDRESS }}
           
       - name: Start containers
         run: pwsh -File deploy/deploy-dev.ps1    
