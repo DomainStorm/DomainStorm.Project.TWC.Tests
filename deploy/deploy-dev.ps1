@@ -33,7 +33,7 @@ $containers = @("multimediaapi", "metadataapi", "jwtauthapi", "openidprovider", 
 
 while ($true) {
     $current_time = Get-Date
-    $elapsed_time = ($current_time - $start_time).TotalSeconds
+    $elapsed_time = ($current_time - $start_time).TotalSeconds().ToString()
 
     if ($elapsed_time -ge $timeout) {
         Write-Host "Container health check timeout"
