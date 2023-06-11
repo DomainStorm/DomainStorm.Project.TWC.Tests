@@ -26,12 +26,14 @@ jobs:
         with:
           dotnet-version: 6.0.x
           
+      - name: Set environment variables
+        run: |
+          echo "TestConfig_BaseUrl=http://domain-storm:8000" >> $GITHUB_ENV
+          echo "TestConfig_TokenUrl=http://domain-storm:8000/openid/connect/token" >> $GITHUB_ENV
+          
       - name: Restore dependencies
         run: dotnet restore DomainStorm.Project.TWC.Tests.sln
       - name: Build
         run: dotnet build DomainStorm.Project.TWC.Tests.sln --no-restore
       - name: Test
-        run: |
-          $env:TestConfig_BaseUrl = "http://domain-storm:8000"
-          $env:TestConfig_TokenUrl = "http://domain-storm:8000/openid/connect/token"
-          dotnet test DomainStorm.Project.TWC.Tests.sln --no-build --verbosity normal
+        run: dotnet test DomainStorm.Project.TWC.Tests.sln --no-build --verbosity normal
