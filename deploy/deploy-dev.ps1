@@ -1,8 +1,8 @@
 ﻿Set-Location (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
-Write-Output $env:Api_Gateway_EndPoint
-Write-Output $env:OpenIDConnectOptions_Authority
-Write-Output $env:SignalR_EndPoint
+Write-Output Api_Gateway_EndPoint: $env:Api_Gateway_EndPoint
+Write-Output OpenIDConnectOptions_Authority: $env:OpenIDConnectOptions_Authority
+Write-Output SignalR_EndPoint: $env:SignalR_EndPoint
 
 $env:MINIO_ROOT_USER = "admin"
 $env:MINIO_ROOT_PASSWORD = "adminadmin"
