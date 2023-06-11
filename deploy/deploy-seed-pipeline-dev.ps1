@@ -17,18 +17,20 @@ Import-Module -Name ./power-shell/modules/Import-User -Force
 Import-Module -Name ./power-shell/modules/Import-Post -Force
 Import-Module -Name ./power-shell/modules/Import-PostRole -Force
 
+$location = Get-Location
+
 Write-Host "----- Import-Department process start -----" -ForegroundColor Blue
-Import-Department -FileFullPath ./import/department_dev.csv
+Import-Department -FileFullPath $location/import/department_dev.csv
 Write-Host "----- Import-Department process end -----" -ForegroundColor Blue
 
 Write-Host "----- Import-User process start -----" -ForegroundColor Blue
-Import-User -FileFullPath ./import/user_dev.csv
+Import-User -FileFullPath $location/import/user_dev.csv
 Write-Host "----- Import-User process end -----" -ForegroundColor Blue
 
 Write-Host "----- Import-Post process start -----" -ForegroundColor Blue
-Import-Post -FileFullPath ./import/post_dev.csv
+Import-Post -FileFullPath $location/import/post_dev.csv
 Write-Host "----- Import-Post process end -----" -ForegroundColor Blue
 
 Write-Host "----- Import-PostRole process start -----" -ForegroundColor Blue
-Import-PostRole -FileFullPath ./import/postrole_dev.csv
+Import-PostRole -FileFullPath $location/import/postrole_dev.csv
 Write-Host "----- Import-PostRole process end -----" -ForegroundColor Blue
