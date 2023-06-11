@@ -12,7 +12,7 @@
         scope = $scope
     }
     
-    $authUri = "http://localhost:5050/connect/token"
+    $authUri = "http://localhost:8000/openid/connect/token"
     
     $tokenResponse = Invoke-RestMethod -Uri $authUri -Method POST -Body $reqTokenBody -Headers $reqAuthHeader
     
