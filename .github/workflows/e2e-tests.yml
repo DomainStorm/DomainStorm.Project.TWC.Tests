@@ -15,13 +15,13 @@ jobs:
 
       - name: Set environment variables
         run: |
-          echo "HOST_NAME=$(hostname)" >> $GITHUB_ENV
+          echo "HOST_NAME=$HOSTNAME" >> $GITHUB_ENV
           echo "TestConfig_UserId=admin" >> $GITHUB_ENV
           echo "TestConfig_Password=adminadmin" >> $GITHUB_ENV  
           echo "TestConfig_BaseUrl=http://$HOST_NAME:8000" >> $GITHUB_ENV
           echo "TestConfig_TokenUrl=http://$HOST_NAME:8000/openid/connect/token" >> $GITHUB_ENV
    
-          ping -c 5 $HOST_NAME
+          ping -c 5 $HOSTNAME
           
       - name: Start containers
         run: pwsh -File deploy/deploy-dev.ps1    
