@@ -13,15 +13,27 @@
     }
     
     $authUri = "http://localhost:8000/openid/connect/token"
+
+
+    try {
+        $tokenResponse = Invoke-RestMethod -Uri $authUri -Method POST -Body $reqTokenBody -Headers $reqAuthHeader
     
-    $tokenResponse = Invoke-RestMethod -Uri $authUri -Method POST -Body $reqTokenBody -Headers $reqAuthHeader
+        $authHeader = @{
+            "Authorization" = "Bearer $($tokenResponse.access_token)"
+            "Content-type" = "application/json"
+        }
     
-    $authHeader = @{
-        "Authorization" = "Bearer $($tokenResponse.access_token)"
-        "Content-type" = "application/json"
+        $authHeader
     }
-    
-    $authHeader
+    catch {
+        if($_.ErrorDetails.Message) {
+            Write-Host $_.ErrorDetails.Message -ForegroundColor Red
+        } else {
+            Write-Host $_ -ForegroundColor Red
+        }
+
+        throw
+    }
 }
 
 Export-ModuleMember -Function Get-AuthHeader
