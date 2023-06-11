@@ -12,11 +12,6 @@ Import-Module -Name ./power-shell/modules/Add-Template -Force
 
 ./deploy-template.ps1
 
-./deploy-import-department.ps1
-./deploy-import-user.ps1
-./deploy-import-post.ps1
-./deploy-import-post-role.ps1
-
 Import-Module -Name ./power-shell/modules/Import-Department -Force
 Import-Module -Name ./power-shell/modules/Import-User -Force
 Import-Module -Name ./power-shell/modules/Import-Post -Force
