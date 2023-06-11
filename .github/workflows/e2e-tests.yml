@@ -13,10 +13,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Modify Hosts
+      - name: Set environment variables
         run: |
-          echo "127.0.0.1 domain-storm" | sudo tee -a "/etc/hosts" > /dev/null
-          ping -c 5 domain-storm     
+          echo "HOST_NAME=$(hostname)" >> $GITHUB_ENV
+          echo "TestConfig_UserId=admin" >> $GITHUB_ENV
+          echo "TestConfig_Password=adminadmin" >> $GITHUB_ENV  
+          echo "TestConfig_BaseUrl=http://$HOST_NAME:8000" >> $GITHUB_ENV
+          echo "TestConfig_TokenUrl=http://$HOST_NAME:8000/openid/connect/token" >> $GITHUB_ENV
           
       - name: Start containers
         run: pwsh -File deploy/deploy-dev.ps1    
@@ -25,13 +28,7 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-          
-      - name: Set environment variables
-        run: |
-          echo "TestConfig_UserId=admin" >> $GITHUB_ENV
-          echo "TestConfig_Password=adminadmin" >> $GITHUB_ENV  
-          echo "TestConfig_BaseUrl=http://domain-storm:8000" >> $GITHUB_ENV
-          echo "TestConfig_TokenUrl=http://domain-storm:8000/openid/connect/token" >> $GITHUB_ENV
+                    
           
       - name: Restore dependencies
         run: dotnet restore DomainStorm.Project.TWC.Tests.sln
