@@ -4,6 +4,10 @@ $env:Api_Gateway_EndPoint = "https://$env:IP_ADDRESS:8443"
 $env:OpenIDConnectOptions_Authority = "http://$env:IP_ADDRESS:8000/openid"
 $env:SignalR_EndPoint = "http://$env:IP_ADDRESS:8000/hubUrl"
 
+Write-Output $env:Api_Gateway_EndPoint
+Write-Output $env:OpenIDConnectOptions_Authority
+Write-Output $env:SignalR_EndPoint
+
 $env:MINIO_ROOT_USER = "admin"
 $env:MINIO_ROOT_PASSWORD = "adminadmin"
 
