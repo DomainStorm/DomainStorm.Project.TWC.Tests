@@ -26,7 +26,9 @@ namespace DomainStorm.Project.TWC.Tests
 
         private ChromeDriver GetNewChromeDriver()
         {
-            ChromeDriver driver = new();
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArgument("--no-sandbox");
+            ChromeDriver driver = new(chromeOptions);
 
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             _chromeDriverList.Add(driver);
