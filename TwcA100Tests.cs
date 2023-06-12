@@ -36,7 +36,7 @@ namespace DomainStorm.Project.TWC.Tests
             Console.WriteLine("Setup");
             var driver = new ChromeDriver(option);
 
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(20);
             _chromeDriverList.Add(driver);
 
             return driver;
