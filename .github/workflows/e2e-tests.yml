@@ -21,8 +21,6 @@ jobs:
       - name: Set environment variables
         run: |
             echo "TestConfig_ApplyCaseNo=12345678" >> $GITHUB_ENV
-            echo "TestConfig_UserId=${{ secrets.TestConfig_UserId }}" >> $GITHUB_ENV
-            echo "TestConfig_Password=${{ secrets.TestConfig_Password }}" >> $GITHUB_ENV
             echo "TestConfig_BaseUrl=http://${{ env.IP_ADDRESS }}:8000" >> $GITHUB_ENV
             echo "TestConfig_TokenUrl=http://${{ env.IP_ADDRESS }}:8000/openid/connect/token" >> $GITHUB_ENV
             echo "Api_Gateway_EndPoint=https://${{ env.IP_ADDRESS }}:8443" >> $GITHUB_ENV

@@ -16,7 +16,7 @@ public class TestHelper
     private static TestConfig GetTestConfig()
     {
         return new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", false, false)
+            .AddJsonFile("appsettings.json", false, true)
             .AddUserSecrets<TestHelper>()
             .AddEnvironmentVariables()
             .Build()
