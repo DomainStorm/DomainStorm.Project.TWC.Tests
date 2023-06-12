@@ -45,7 +45,7 @@ namespace DomainStorm.Project.TWC.Tests
 
 
         [Test]
-        [Order(1)]
+        [Order(0)]
         public async Task TwcA100_01()
         {
             //取得token
@@ -55,7 +55,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(2)]
+        [Order(1)]
         public async Task TwcA100_02()
         {
             //呼叫bmEnableApply/confirm
@@ -65,7 +65,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(3)]
+        [Order(2)]
         public async Task TwcA100_03()
         {
             //driver_2中看到申請之表單內容
@@ -97,7 +97,7 @@ namespace DomainStorm.Project.TWC.Tests
 
 
         [Test]
-        [Order(4)]
+        [Order(3)]
         public async Task TwcA100_04()
         {
             //driver_2中看到身分證字號欄位出現A123456789
@@ -127,7 +127,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(5)]
+        [Order(4)]
         public async Task TwcA100_05()
         {
             //driver_2看到受理欄位有落章
@@ -163,7 +163,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(6)]
+        [Order(5)]
         public async Task TwcA100_06()
         {
             //driver_2中勾選消費性用水服務契約
@@ -205,7 +205,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(7)]
+        [Order(5)]
         public async Task TwcA100_07()
         {
             //driver_2中勾選公司個人資料保護告知事項
@@ -245,7 +245,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(8)]
+        [Order(7)]
         public async Task TwcA100_08()
         {
             //driver_2中勾選公司營業章程
@@ -285,7 +285,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(9)]
+        [Order(8)]
         public async Task TwcA100_09()
         {
             //driver_2中表單畫面完整呈現簽名內容，並於driver_1中看到相容內容
@@ -325,7 +325,7 @@ namespace DomainStorm.Project.TWC.Tests
 
 
         [Test]
-        [Order(10)]
+        [Order(9)]
         public async Task TwcA100_10()
         {
             //driver_2中看到掃描拍照證件圖像
@@ -403,7 +403,7 @@ namespace DomainStorm.Project.TWC.Tests
         //}
 
         [Test]
-        [Order(12)]
+        [Order(11)]
         public async Task TwcA100_12()
         {
             //該申請案件進入未結案件中等待後續排程資料於結案後消失

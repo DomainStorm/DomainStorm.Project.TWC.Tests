@@ -33,6 +33,11 @@ jobs:
       - name: Start containers
         run: pwsh -File deploy/deploy-dev.ps1    
         
+      - name: Setup Chrome
+        uses: actions/setup-chrome@v1
+        with:
+          args: --no-sandbox        
+        
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
@@ -44,4 +49,4 @@ jobs:
       - name: Build
         run: dotnet build DomainStorm.Project.TWC.Tests.sln --no-restore
       - name: Test
-        run: dotnet test DomainStorm.Project.TWC.Tests.sln --no-build --verbosity normal
+        run: dotnet test DomainStorm.Project.TWC.Tests.sln --no-build --verbosity diagnostic
