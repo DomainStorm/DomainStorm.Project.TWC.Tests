@@ -31,8 +31,8 @@ jobs:
 
             ping -c 5 ${{ env.IP_ADDRESS }}
             
-    - name: Install Chrome
-      run: |
+      - name: Install Chrome
+        run: |
           sudo apt-get update
           sudo apt-get install -y wget curl unzip libgconf-2-4 libxss1 libappindicator1 libindicator7
 
@@ -41,10 +41,10 @@ jobs:
           echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable 
-    - name: Print Chrome Version
-      run: |
-        CHROME_VERSION=$(google-chrome-stable --version)
-        echo "Installed Chrome Version: $CHROME_VERSION"  
+      - name: Print Chrome Version
+        run: |
+          CHROME_VERSION=$(google-chrome-stable --version)
+          echo "Installed Chrome Version: $CHROME_VERSION"  
             
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
