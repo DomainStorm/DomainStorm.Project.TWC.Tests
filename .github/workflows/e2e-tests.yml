@@ -47,4 +47,4 @@ jobs:
       - name: Build
         run: dotnet build DomainStorm.Project.TWC.Tests.sln --no-restore
       - name: Test
-        run: dotnet test DomainStorm.Project.TWC.Tests.sln --no-build --verbosity diagnostic
+        run: dotnet test DomainStorm.Project.TWC.Tests.sln --no-build --verbosity normal
