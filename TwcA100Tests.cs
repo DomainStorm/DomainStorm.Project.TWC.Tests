@@ -4,6 +4,8 @@ using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Net;
+using WebDriverManager.DriverConfigs.Impl;
+using WebDriverManager;
 using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
@@ -26,9 +28,13 @@ namespace DomainStorm.Project.TWC.Tests
 
         private ChromeDriver GetNewChromeDriver()
         {
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArgument("--no-sandbox");
-            ChromeDriver driver = new(chromeOptions);
+            ChromeOptions option = new ChromeOptions();
+            option.AddArguments("start-maximized");
+            option.AddArguments("--disable-gpu");
+            option.AddArguments("--headless");
+            new DriverManager().SetUpDriver(new ChromeConfig());
+            Console.WriteLine("Setup");
+            var driver = new ChromeDriver(option);
 
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             _chromeDriverList.Add(driver);

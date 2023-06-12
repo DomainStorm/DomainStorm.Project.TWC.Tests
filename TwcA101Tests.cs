@@ -25,7 +25,10 @@ namespace DomainStorm.Project.TWC.Tests
         }
         private ChromeDriver GetNewChromeDriver()
         {
-            ChromeDriver driver = new();
+            ChromeOptions option = new ChromeOptions();
+            option.AddArguments("--headless");
+
+            ChromeDriver driver = new(option);
 
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             _chromeDriverList.Add(driver);
