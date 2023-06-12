@@ -34,9 +34,7 @@ jobs:
         run: pwsh -File deploy/deploy-dev.ps1    
         
       - name: Setup Chrome
-        uses: actions/setup-chrome@v1
-        with:
-          args: --no-sandbox        
+        uses: browser-actions/setup-chrome@v1   
         
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
