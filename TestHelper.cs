@@ -125,9 +125,8 @@ public class TestHelper
         update.applyCaseNo = ApplyCaseNo;
         update.userCode = UserId;
 
-        Console.WriteLine(json);
         var updatedJson = JsonConvert.SerializeObject(update);
-
+        Console.WriteLine(updatedJson);
         request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
 
         var response = await client.ExecuteAsync(request);
