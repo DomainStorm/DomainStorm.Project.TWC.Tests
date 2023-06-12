@@ -121,14 +121,11 @@ public class TestHelper
         using var r = new StreamReader(jsonFilePath);
         var json = await r.ReadToEndAsync();
 
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine(accessToken);
-        Console.WriteLine(json);
-        Console.ResetColor();
-
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
         update.applyCaseNo = ApplyCaseNo;
         update.userCode = UserId;
+
+        Console.WriteLine(json);
         var updatedJson = JsonConvert.SerializeObject(update);
 
         request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
@@ -136,12 +133,8 @@ public class TestHelper
         var response = await client.ExecuteAsync(request);
 
         if (response.ErrorException != null)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(response.Content);
-            Console.ResetColor();
-        }
-        
+
         return response.StatusCode;
     }
     public static Task Login(IWebDriver webDriver, string userId, string password)
