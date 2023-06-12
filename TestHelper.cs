@@ -111,7 +111,10 @@ public class TestHelper
     public static async Task<HttpStatusCode> CreateForm(string accessToken, string apiUrl, string jsonFilePath)
     {
         var client = new RestClient(apiUrl);
-        var request = new RestRequest();
+        var request = new RestRequest
+        {
+            Method = Method.Post
+        };
         request.AddHeader("Content-Type", "application/json");
         request.AddHeader("Authorization", $"Bearer {accessToken}");
 
@@ -125,7 +128,11 @@ public class TestHelper
 
         request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
 
-        var response = await client.PostAsync(request);
+        var response = await client.ExecuteAsync(request);
+
+        if (response.ErrorException != null)
+            Console.WriteLine(response.Content);
+        
         return response.StatusCode;
     }
     public static Task Login(IWebDriver webDriver, string userId, string password)
