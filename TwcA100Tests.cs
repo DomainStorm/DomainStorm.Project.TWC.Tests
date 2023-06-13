@@ -33,7 +33,7 @@ namespace DomainStorm.Project.TWC.Tests
             option.AddArguments("--disable-gpu");
             if(TestHelper.GetChromeConfig().Headless)
                 option.AddArguments("--headless");
-            //new DriverManager().SetUpDriver(new ChromeConfig());
+            new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
             var driver = new ChromeDriver(option);
 
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
