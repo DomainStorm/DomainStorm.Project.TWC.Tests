@@ -17,6 +17,7 @@ jobs:
         run: |
           IP_ADDRESS=$(ifconfig eth0 | grep 'inet ' | awk '{print $2}')
           echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
+          echo "IP_ADDRESS=localhost" >> $GITHUB_ENV
 
       - name: Set environment variables
         run: |
@@ -51,8 +52,8 @@ jobs:
           sudo apt-get install -y google-chrome-stable 
       - name: Print Chrome Version
         run: |
-          CHROME_VERSION=$(google-chrome-stable --version)
-          echo "Installed Chrome Version: $CHROME_VERSION"        
+        CHROME_VERSION=$(google-chrome-stable --version)
+        echo "Installed Chrome Version: $CHROME_VERSION"        
       - name: Seed Data
         run: pwsh -File deploy/deploy-seed-pipeline-dev.ps1         
       - name: Restore dependencies
