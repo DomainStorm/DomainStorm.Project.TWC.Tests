@@ -1,5 +1,14 @@
 ﻿Set-Location (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
+$env:Api_Gateway_EndPoint = "https://192.168.109.1:8443"
+$env:OpenIDConnectOptions_Authority = "http://192.168.109.1:8000/openid"
+$env:SignalR_EndPoint = "http://192.168.109.1:8000/hubUrl"
+$env:TestConfig_UserId = "admin"
+$env:TestConfig_Password = "adminadmin"
+$env:TestConfig_BaseUrl = "http://192.168.109.1:8000"
+$env:TestConfig_TokenUrl = "http://192.168.109.1:8000/openid/connect/token"
+
+
 Write-Output Api_Gateway_EndPoint: $env:Api_Gateway_EndPoint
 Write-Output OpenIDConnectOptions_Authority: $env:OpenIDConnectOptions_Authority
 Write-Output SignalR_EndPoint: $env:SignalR_EndPoint
@@ -28,5 +37,7 @@ $env:ResourceApi_Version = "0.1.1"
 $env:ServiceBus_Version = "0.0.4"
 
 docker compose -f docker-compose.yml -f docker-compose.metadataapi.yml -f docker-compose.dev.yml up -d
+
+Start-Sleep -Seconds 5
 
 ./deploy-seed-pipeline-dev.ps1

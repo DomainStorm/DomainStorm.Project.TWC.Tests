@@ -4,7 +4,7 @@
     )
     $authheader = Get-AuthHeader
     
-    $endPoint = "http://localhost:8000/resourceapi/api/template"
+    $endPoint = "http://localhost:3500/v1.0/invoke/ResourceApi/method/api/template"
 
     # $multipartContent = [System.Net.Http.MultipartFormDataContent]::new()
     # $multipartFile = $FileFullPath
