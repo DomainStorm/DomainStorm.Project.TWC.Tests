@@ -10,7 +10,7 @@ Import-Module -Name ./power-shell/modules/Add-Template -Force
 
 ./deploy-seed-kong.ps1
 
-./deploy-template.ps1
+#./deploy-template.ps1
 
 Import-Module -Name ./power-shell/modules/Import-Department -Force
 Import-Module -Name ./power-shell/modules/Import-User -Force
