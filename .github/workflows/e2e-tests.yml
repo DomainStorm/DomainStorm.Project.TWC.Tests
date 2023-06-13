@@ -51,8 +51,8 @@ jobs:
           sudo apt-get install -y google-chrome-stable 
       - name: Print Chrome Version
         run: |
-        CHROME_VERSION=$(google-chrome-stable --version)
-        echo "Installed Chrome Version: $CHROME_VERSION"        
+          CHROME_VERSION=$(google-chrome-stable --version)
+          echo "Installed Chrome Version: $CHROME_VERSION"        
       - name: Seed Data
         run: pwsh -File deploy/deploy-seed-pipeline-dev.ps1         
       - name: Restore dependencies
