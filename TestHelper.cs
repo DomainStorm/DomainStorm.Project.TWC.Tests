@@ -155,6 +155,10 @@ public class TestHelper
 
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
+        Console.WriteLine($"---------{LoginUrl}---------");
+        Console.WriteLine(webDriver.PageSource);
+        Console.WriteLine("--------------------");
+
         try
         {
             wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));

@@ -31,7 +31,6 @@ namespace DomainStorm.Project.TWC.Tests
             if (TestHelper.GetChromeConfig().Headless)
                 option.AddArguments("--headless");
             //new DriverManager().SetUpDriver(new ChromeConfig());
-            Console.WriteLine("Setup");
             var driver = new ChromeDriver(option);
 
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
