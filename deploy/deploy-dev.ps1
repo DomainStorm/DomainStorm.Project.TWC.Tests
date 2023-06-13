@@ -1,14 +1,5 @@
 ﻿Set-Location (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
-$env:Api_Gateway_EndPoint = "https://192.168.109.1:8443"
-$env:OpenIDConnectOptions_Authority = "http://192.168.109.1:8000/openid"
-$env:SignalR_EndPoint = "http://192.168.109.1:8000/hubUrl"
-$env:TestConfig_UserId = "admin"
-$env:TestConfig_Password = "adminadmin"
-$env:TestConfig_BaseUrl = "http://192.168.109.1:8000"
-$env:TestConfig_TokenUrl = "http://192.168.109.1:8000/openid/connect/token"
-
-
 Write-Output Api_Gateway_EndPoint: $env:Api_Gateway_EndPoint
 Write-Output OpenIDConnectOptions_Authority: $env:OpenIDConnectOptions_Authority
 Write-Output SignalR_EndPoint: $env:SignalR_EndPoint
