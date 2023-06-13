@@ -37,7 +37,3 @@ $env:ResourceApi_Version = "0.1.1"
 $env:ServiceBus_Version = "0.0.4"
 
 docker compose -f docker-compose.yml -f docker-compose.metadataapi.yml -f docker-compose.dev.yml up -d
-
-Start-Sleep -Seconds 5
-
-./deploy-seed-pipeline-dev.ps1

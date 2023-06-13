@@ -25,13 +25,20 @@ jobs:
             echo "TestConfig__Password=${{ secrets.TestConfig__Password }}" >> $GITHUB_ENV            
             echo "TestConfig__BaseUrl=http://${{ env.IP_ADDRESS }}:8000" >> $GITHUB_ENV
             echo "TestConfig__TokenUrl=http://${{ env.IP_ADDRESS }}:8000/openid/connect/token" >> $GITHUB_ENV
-            echo "TestConfig__LoginUrl=http://${{ env.IP_ADDRESS }}:8443" >> $GITHUB_ENV
             echo "Api_Gateway_EndPoint=https://${{ env.IP_ADDRESS }}:8443" >> $GITHUB_ENV
             echo "OpenIDConnectOptions_Authority=http://${{ env.IP_ADDRESS }}:8000/openid" >> $GITHUB_ENV
             echo "SignalR_EndPoint=http://${{ env.IP_ADDRESS }}:8000/hubUrl" >> $GITHUB_ENV
 
             ping -c 5 ${{ env.IP_ADDRESS }}
-            
+                  
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x            
+          
+      - name: Start containers
+        run: pwsh -File deploy/deploy-dev.ps1    
+        
       - name: Install Chrome
         run: |
           sudo apt-get update
@@ -44,16 +51,10 @@ jobs:
           sudo apt-get install -y google-chrome-stable 
       - name: Print Chrome Version
         run: |
-          CHROME_VERSION=$(google-chrome-stable --version)
-          echo "Installed Chrome Version: $CHROME_VERSION"  
-            
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x            
-          
-      - name: Start containers
-        run: pwsh -File deploy/deploy-dev.ps1           
+        CHROME_VERSION=$(google-chrome-stable --version)
+        echo "Installed Chrome Version: $CHROME_VERSION"        
+      - name: Seed Data
+        run: pwsh -File deploy/deploy-seed-pipeline-dev.ps1         
       - name: Restore dependencies
         run: dotnet restore DomainStorm.Project.TWC.Tests.sln
       - name: Build
