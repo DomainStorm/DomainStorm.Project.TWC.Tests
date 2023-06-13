@@ -161,7 +161,6 @@ public class TestHelper
         }
         catch
         {
-            var webElement = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#details-button")));
             var detailsButtonElements = webDriver.FindElements(By.CssSelector("#details-button"));
             if (detailsButtonElements.Count > 0)
             {
@@ -176,7 +175,8 @@ public class TestHelper
         var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
 
-        usernameElement.SendKeys(userId); passwordElement.SendKeys(password);
+        usernameElement.SendKeys(userId); 
+        passwordElement.SendKeys(password);
 
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
         button.Click();

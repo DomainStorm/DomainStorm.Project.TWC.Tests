@@ -17,7 +17,7 @@ jobs:
         run: |
           IP_ADDRESS=$(ifconfig eth0 | grep 'inet ' | awk '{print $2}')
           echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
-          echo "IP_ADDRESS=localhost" >> $GITHUB_ENV
+          echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
 
       - name: Set environment variables
         run: |
@@ -31,14 +31,17 @@ jobs:
             echo "SignalR_EndPoint=http://${{ env.IP_ADDRESS }}:8000/hubUrl" >> $GITHUB_ENV
 
             ping -c 5 ${{ env.IP_ADDRESS }}
-                  
+          
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x            
           
       - name: Start containers
-        run: pwsh -File deploy/deploy-dev.ps1    
+        run: pwsh -File deploy/deploy-dev.ps1
+        
+      - name: Display Container Env
+        run: docker exec resourceapi printenv
         
       - name: Install Chrome
         run: |
