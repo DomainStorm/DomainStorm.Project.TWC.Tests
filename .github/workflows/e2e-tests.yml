@@ -39,7 +39,7 @@ jobs:
           dotnet-version: 6.0.x            
           
       - name: Start containers
-        run: pwsh -File deploy/deploy-dev.ps1
+        run: pwsh -File deploy/deploy-e2e.ps1
         
       - name: Display Container Env
         run: docker exec resourceapi printenv
