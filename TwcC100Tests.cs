@@ -26,7 +26,14 @@ namespace DomainStorm.Project.TWC.Tests
 
         private ChromeDriver GetNewChromeDriver()
         {
-            ChromeDriver driver = new();
+            var option = new ChromeOptions();
+            option.AddArguments("start-maximized");
+            option.AddArguments("--disable-gpu");
+            if (TestHelper.GetChromeConfig().Headless)
+                option.AddArguments("--headless");
+            //new DriverManager().SetUpDriver(new ChromeConfig());
+            Console.WriteLine("Setup");
+            var driver = new ChromeDriver(option);
 
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
             _chromeDriverList.Add(driver);

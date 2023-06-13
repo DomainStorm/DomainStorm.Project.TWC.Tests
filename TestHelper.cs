@@ -87,6 +87,19 @@ public class TestHelper
         }
         set => _accessToken = value;
     }
+
+    public static ChromeConfig GetChromeConfig()
+    {
+        return new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", false, true)
+            .AddUserSecrets<TestHelper>()
+            .AddEnvironmentVariables()
+            .Build()
+            .GetSection("ChromeConfig")
+            .Get<ChromeConfig>();
+    }
+
+
     public class TokenResponse
     {
         public string? Access_token { get; set; }
@@ -139,19 +152,27 @@ public class TestHelper
     public static Task Login(IWebDriver webDriver, string userId, string password)
     {
         webDriver.Navigate().GoToUrl(LoginUrl);
-        webDriver.Manage().Window.Size = new Size(1200, 800);
 
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        var detailsButtonElements = webDriver.FindElements(By.CssSelector("#details-button"));
-        if (detailsButtonElements.Count > 0)
+
+        try
         {
-            var detailsButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#details-button")));
-            detailsButton.Click();
-
-            var proceedLink = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#proceed-link")));
-            proceedLink.Click();
+            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
         }
+        catch
+        {
+            var webElement = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#details-button")));
+            var detailsButtonElements = webDriver.FindElements(By.CssSelector("#details-button"));
+            if (detailsButtonElements.Count > 0)
+            {
+                var detailsButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#details-button")));
+                detailsButton.Click();
 
+                var proceedLink = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#proceed-link")));
+                proceedLink.Click();
+            }
+        }
+ 
         var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
 
@@ -170,7 +191,7 @@ public class TestHelper
 
         var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
         var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
-        var stormTable = stormDocumentListDetail.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+        var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
         var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
@@ -230,3 +251,7 @@ public class TestConfig
     public string? UserId { get; set; }
 }
 
+public class ChromeConfig
+{
+    public bool Headless { get; set; }
+}
