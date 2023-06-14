@@ -26,7 +26,7 @@ jobs:
             echo "TestConfig__Password=${{ secrets.TestConfig__Password }}" >> $GITHUB_ENV            
             echo "TestConfig__BaseUrl=http://${{ env.IP_ADDRESS }}:8000" >> $GITHUB_ENV
             echo "TestConfig__TokenUrl=http://${{ env.IP_ADDRESS }}:8000/openid/connect/token" >> $GITHUB_ENV
-            echo "TestConfig__LoginUrl=https://${{ env.IP_ADDRESS }}:9003/swagger/index.html" >> $GITHUB_ENV
+            echo "TestConfig__LoginUrl=https://${{ env.IP_ADDRESS }}:9003" >> $GITHUB_ENV
             echo "Api_Gateway_EndPoint=https://${{ env.IP_ADDRESS }}:8443" >> $GITHUB_ENV
             echo "OpenIDConnectOptions_Authority=http://${{ env.IP_ADDRESS }}:8000/openid" >> $GITHUB_ENV
             echo "SignalR_EndPoint=http://${{ env.IP_ADDRESS }}:8000/hubUrl" >> $GITHUB_ENV
