@@ -688,7 +688,7 @@ services:
     environment:
       <<: [*common-env, *gateway-env]
       ASPNETCORE_URLS: https://+:443;http://+:80
-      DomainStorm_ENVIRONMENT: Staging
+      #DomainStorm_ENVIRONMENT: Staging
       DomainStorm_SignalRHubUrl: ${SignalR_EndPoint}
       DomainStorm_SqlDbOptions__ConnectionString: Server=${SQL_Server_EndPoint};Database=TWCWeb;User Id=${SQL_Server_User_Id};Password=${SQL_Server_Password};
       Serilog__MinimumLevel__Default: Debug  
