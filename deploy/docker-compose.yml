@@ -682,9 +682,9 @@ services:
     image: ${DOCKER_REGISTRY-}yanshibainu/twcweb:${TwcWeb_Version}
     container_name: twcweb
     hostname: twcweb
-    # ports:
-    #   - "9002:80"
-    #   - "9003:443"
+    ports:
+       - "9002:80"
+       - "9003:443"
     environment:
       <<: [*common-env, *gateway-env]
       ASPNETCORE_URLS: https://+:443;http://+:80
