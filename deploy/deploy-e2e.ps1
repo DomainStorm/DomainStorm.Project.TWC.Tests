@@ -56,6 +56,7 @@ function WaitForHealthy {
     }
 }
 
+WaitForHealthy "resourceapi"
 WaitForHealthy "twcweb"
 WaitForHealthy "servicebus"
 WaitForHealthy "kong"
