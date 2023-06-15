@@ -60,7 +60,7 @@ jobs:
           echo "Installed Chrome Version: $CHROME_VERSION"     
 
       - name: Seed Data
-        run: pwsh -File deploy/deploy-seed-pipeline-dev.ps1
+        run: pwsh -File deploy/deploy-seed-pipeline-e2e.ps1
 
       - name: Curl 9002
         run: | 

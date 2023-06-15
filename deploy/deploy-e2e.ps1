@@ -23,11 +23,11 @@ $env:MetadataApi_Version = "0.0.8"
 $env:MultiMediaApi_Version = "0.0.5"
 $env:JwtAuthApi_Version = "0.2.8"
 $env:OpenidProvider_Version = "0.2.8"
-$env:TwcWeb_Version = "0.7.7"
+$env:TwcWeb_Version = "0.8.0"
 $env:ResourceApi_Version = "0.1.1"
 $env:ServiceBus_Version = "0.0.4"
 
-docker compose -f docker-compose.yml -f docker-compose.metadataapi.yml -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.yml -f docker-compose.metadataapi.yml -f docker-compose.e2e.yml up -d
 
 function WaitForHealthy {
     param (
