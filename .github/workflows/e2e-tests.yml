@@ -26,7 +26,7 @@ jobs:
             echo "TestConfig__Password=${{ secrets.TestConfig__Password }}" >> $GITHUB_ENV            
             echo "TestConfig__BaseUrl=http://127.0.0.1:8000" >> $GITHUB_ENV
             echo "TestConfig__TokenUrl=http://127.0.0.1:8000/openid/connect/token" >> $GITHUB_ENV
-            echo "TestConfig__LoginUrl=http://127.0.0.1:8888/swagger" >> $GITHUB_ENV
+            echo "TestConfig__LoginUrl=http://127.0.0.1:8000" >> $GITHUB_ENV
             echo "Api_Gateway_EndPoint=https://${{ env.IP_ADDRESS }}:8443" >> $GITHUB_ENV
             echo "OpenIDConnectOptions_Authority=http://${{ env.IP_ADDRESS }}:8000/openid" >> $GITHUB_ENV
             echo "SignalR_EndPoint=http://${{ env.IP_ADDRESS }}:8000/hubUrl" >> $GITHUB_ENV
@@ -82,7 +82,7 @@ jobs:
         
       - name: Curl 8888
         run: | 
-          curl -L -i http://127.0.0.1:8888/swagger/swagger/index.html
+          curl -L -i http://127.0.0.1:8888/swagger/index.html
           
       - name: Curl jwtauthapi
         run: | 
