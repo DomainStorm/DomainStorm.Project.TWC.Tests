@@ -26,7 +26,7 @@ jobs:
             echo "TestConfig__Password=${{ secrets.TestConfig__Password }}" >> $GITHUB_ENV            
             echo "TestConfig__BaseUrl=http://127.0.0.1:8000" >> $GITHUB_ENV
             echo "TestConfig__TokenUrl=http://127.0.0.1:8000/openid/connect/token" >> $GITHUB_ENV
-            echo "TestConfig__LoginUrl=https://127.0.0.1:8443" >> $GITHUB_ENV
+            echo "TestConfig__LoginUrl=http://127.0.0.1:8888/swagger" >> $GITHUB_ENV
             echo "Api_Gateway_EndPoint=https://${{ env.IP_ADDRESS }}:8443" >> $GITHUB_ENV
             echo "OpenIDConnectOptions_Authority=http://${{ env.IP_ADDRESS }}:8000/openid" >> $GITHUB_ENV
             echo "SignalR_EndPoint=http://${{ env.IP_ADDRESS }}:8000/hubUrl" >> $GITHUB_ENV
@@ -34,7 +34,7 @@ jobs:
             ping -c 5 ${{ env.IP_ADDRESS }}
           
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 6.0.x            
           
@@ -74,7 +74,11 @@ jobs:
       - name: Curl 8443
         run: | 
           curl -k https://127.0.0.1:8443
-                
+    
+      - name: Curl 8888
+        run: | 
+          curl http://127.0.0.1:8888/swagger
+    
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
