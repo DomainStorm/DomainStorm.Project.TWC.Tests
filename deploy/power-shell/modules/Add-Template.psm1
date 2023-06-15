@@ -51,7 +51,12 @@
             Write-Host $_ -ForegroundColor Red
         }
 
+        Write-Host $Error[0].Exception
+
+
         throw
+
+
     }  
 }
 
