@@ -64,11 +64,19 @@ jobs:
           docker logs twcweb
           curl http://127.0.0.1:9002
           
+      - name: Curl 8000
+        run: | 
+          curl http://127.0.0.1:8000
+          
+      - name: Curl 8443
+        run: | 
+          curl http://127.0.0.1:8443
+          
       - name: Seed Data
         run: pwsh -File deploy/deploy-seed-pipeline-dev.ps1         
       - name: Restore dependencies
-        run: dotnet restore DomainStorm.Project.TWC.Tests.sln
+        run: dotnet restore
       - name: Build
-        run: dotnet build DomainStorm.Project.TWC.Tests.sln --no-restore
+        run: dotnet build --no-restore
       - name: Test
-        run: dotnet test DomainStorm.Project.TWC.Tests.sln --no-build --verbosity normal
+        run: dotnet test --no-build --verbosity normal
