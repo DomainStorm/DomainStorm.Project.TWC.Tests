@@ -43,12 +43,7 @@ jobs:
         
       - name: Display Container Env
         run: docker exec resourceapi printenv
-        
-      - name: Curl 3500
-        run: | 
-          docker logs twcweb
-          curl http://localhost:3500/v1.0/invoke/ResourceApi/method/api/swagger
-        
+      
       - name: Install Chrome
         run: |
           sudo apt-get update

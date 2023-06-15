@@ -34,7 +34,7 @@
     Write-Host $FileFullPath -ForegroundColor Green
 
     try {
-        Invoke-RestMethod $endPoint -Method POST -Headers $authheader -ContentType "multipart/form-data; boundary=`"$boundary`"" -Body $bodyJsonBytes
+        Invoke-RestMethod $endPoint -Verbose -Method POST -Headers $authheader -ContentType "multipart/form-data; boundary=`"$boundary`"" -Body $bodyJsonBytes
     }
     catch {
         if($_.ErrorDetails.Message) {
