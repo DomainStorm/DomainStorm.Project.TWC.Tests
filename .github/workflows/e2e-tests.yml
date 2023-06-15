@@ -47,6 +47,9 @@ jobs:
       - name: Start containers
         run: pwsh -File deploy/deploy-e2e.ps1
         
+      - name: Seed Data
+        run: pwsh -File deploy/deploy-seed-pipeline-e2e.ps1        
+        
       - name: Display Container Env
         run: docker exec resourceapi printenv
       
@@ -64,9 +67,6 @@ jobs:
         run: |
           CHROME_VERSION=$(google-chrome-stable --version)
           echo "Installed Chrome Version: $CHROME_VERSION"     
-
-      - name: Seed Data
-        run: pwsh -File deploy/deploy-seed-pipeline-e2e.ps1
 
       - name: Curl 9002
         run: | 
