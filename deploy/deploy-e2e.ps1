@@ -28,3 +28,34 @@ $env:ResourceApi_Version = "0.1.1"
 $env:ServiceBus_Version = "0.0.4"
 
 docker compose -f docker-compose.yml -f docker-compose.metadataapi.yml -f docker-compose.dev.yml up -d
+
+function WaitForHealthy {
+    param (
+        [string]$containerName,
+        [int]$maxRetries = 10
+    )
+
+    $retries = 0
+
+    while ($retries -lt $maxRetries) {
+        $healthStatus = (docker inspect --format="{{.State.Health.Status}}" $containerName)
+
+        if ($healthStatus -eq "healthy") {
+            Write-Host "Container $containerName is healthy"
+            break
+        }
+
+        Write-Host "Waiting for container $containerName to be healthy..."
+        $retries++
+        Start-Sleep -Seconds 5
+    }
+
+    if ($retries -eq $maxRetries) {
+        Write-Host "Container $containerName did not become healthy within the specified time"
+        docker-compose stop app
+    }
+}
+
+WaitForHealthy "twcweb"
+WaitForHealthy "servicebus"
+

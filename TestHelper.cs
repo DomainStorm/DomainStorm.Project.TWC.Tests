@@ -156,8 +156,11 @@ public class TestHelper
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
         Console.WriteLine($"---------{LoginUrl}---------");
+
+        wait.Until((w) => w.Url.IndexOf("openid", StringComparison.Ordinal) >= 0);
+
+        Console.WriteLine($"---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);
-        Console.WriteLine("--------------------");
 
         try
         {
@@ -185,8 +188,7 @@ public class TestHelper
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
         button.Click();
 
-        Thread.Sleep(2000);
-
+        wait.Until((w) => w.Url == LoginUrl);
         return Task.CompletedTask;
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
