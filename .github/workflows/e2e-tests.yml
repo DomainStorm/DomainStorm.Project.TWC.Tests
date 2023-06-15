@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Copy certificate
-        run: cp ./deploy/ssl/dev.crt /usr/local/share/ca-certificates/
-    
-      - name: Update CA certificates
-        run: update-ca-certificates
-    
       - name: Checkout Repository
         uses: actions/checkout@v3
+        
+      - name: Copy certificate
+        run: cp deploy/ssl/dev.crt /usr/local/share/ca-certificates/
+    
+      - name: Update CA certificates
+        run: update-ca-certificates        
         
       - name: Get IP address
         run: |
