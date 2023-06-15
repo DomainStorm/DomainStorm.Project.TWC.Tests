@@ -65,15 +65,15 @@ jobs:
       - name: Curl 9002
         run: | 
           docker logs twcweb
-          curl http://127.0.0.1:9002
+          curl -L -i http://127.0.0.1:9002
           
       - name: Curl 8000
         run: | 
-          curl http://127.0.0.1:8000
+          curl -L -i http://127.0.0.1:8000
           
       - name: Curl 8443
         run: | 
-          curl -k https://127.0.0.1:8443
+          curl -k -L -i https://127.0.0.1:8443
     
       - name: Restore dependencies
         run: dotnet restore
@@ -82,10 +82,10 @@ jobs:
         
       - name: Curl 8888
         run: | 
-          curl http://127.0.0.1:8888/swagger/swagger/index.html
+          curl -L -i http://127.0.0.1:8888/swagger/swagger/index.html
           
       - name: Curl jwtauthapi
         run: | 
-          curl http://127.0.0.1:8000/jwtauthapi/swagger/index.html       
+          curl -L -i http://127.0.0.1:8000/jwtauthapi/swagger/index.html       
       - name: Test
         run: dotnet test --no-build --verbosity normal
