@@ -34,7 +34,15 @@
     Write-Host $FileFullPath -ForegroundColor Green
 
     try {
-        Invoke-RestMethod $endPoint -Verbose -Method POST -Headers $authheader -ContentType "multipart/form-data; boundary=`"$boundary`"" -Body $bodyJsonBytes
+        Invoke-RestMethod $endPoint -UseBasicParsing -Method POST -Headers $authheader -ContentType "multipart/form-data; boundary=`"$boundary`"" -Body $bodyJsonBytes
+
+        if ($response.StatusCode -eq 200) {
+            Write-Host "Request was successful"
+        } else {
+            Write-Host "Request failed with status code: $($response.StatusCode)"
+            Write-Host "Response body:"
+            $response.Content | Write-Host
+        }
     }
     catch {
         if($_.ErrorDetails.Message) {

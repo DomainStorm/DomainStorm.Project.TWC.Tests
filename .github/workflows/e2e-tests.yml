@@ -75,13 +75,17 @@ jobs:
         run: | 
           curl -k https://127.0.0.1:8443
     
-      - name: Curl 8888
-        run: | 
-          curl http://127.0.0.1:8888/swagger
-    
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
+        
+      - name: Curl 8888
+        run: | 
+          curl http://127.0.0.1:8888/swagger/swagger/index.html
+          
+      - name: Curl jwtauthapi
+        run: | 
+          curl http://127.0.0.1:8000/jwtauthapi/swagger/index.html       
       - name: Test
         run: dotnet test --no-build --verbosity normal
