@@ -59,6 +59,9 @@ jobs:
           CHROME_VERSION=$(google-chrome-stable --version)
           echo "Installed Chrome Version: $CHROME_VERSION"     
 
+      - name: Seed Data
+        run: pwsh -File deploy/deploy-seed-pipeline-dev.ps1
+
       - name: Curl 9002
         run: | 
           docker logs twcweb
@@ -71,9 +74,7 @@ jobs:
       - name: Curl 8443
         run: | 
           curl -k https://127.0.0.1:8443
-          
-      - name: Seed Data
-        run: pwsh -File deploy/deploy-seed-pipeline-dev.ps1         
+                
       - name: Restore dependencies
         run: dotnet restore
       - name: Build
