@@ -58,4 +58,6 @@ function WaitForHealthy {
 
 WaitForHealthy "twcweb"
 WaitForHealthy "servicebus"
+WaitForHealthy "kong"
+ 
 
