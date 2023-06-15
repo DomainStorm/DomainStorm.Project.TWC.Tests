@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Copy certificate
-        run: cp deploy/ssl/dev.crt /usr/local/share/ca-certificates/
+        run: cp ./deploy/ssl/dev.crt /usr/local/share/ca-certificates/
     
       - name: Update CA certificates
         run: update-ca-certificates
