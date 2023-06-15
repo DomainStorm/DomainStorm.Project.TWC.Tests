@@ -55,7 +55,9 @@ function WaitForHealthy {
         docker-compose stop app
     }
 }
-
+WaitForHealthy "openidconnect.com.tw"
+WaitForHealthy "metadataapi"
+WaitForHealthy "multimediaapi"
 WaitForHealthy "resourceapi"
 WaitForHealthy "twcweb"
 WaitForHealthy "servicebus"
