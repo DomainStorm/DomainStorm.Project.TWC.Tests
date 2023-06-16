@@ -46,13 +46,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-docker-
 
-      - name: Run Docker Compose
-        run: pwsh -File deploy/deploy-e2e.ps1
-        
-      - name: Seed Data
+      - name: Run Docker Compose and Seed
         run: | 
-          pwsh -File deploy/deploy-seed-pipeline-e2e.ps1    
-          #docker logs resourceapi
+            pwsh -File deploy/deploy-e2e.ps1
+            pwsh -File deploy/deploy-seed-pipeline-e2e.ps1    
                 
       #- name: Display Container Env
       #  run: docker exec resourceapi printenv
