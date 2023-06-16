@@ -642,8 +642,8 @@ services:
       DomainStorm_LdapOptions__BaseDn: ${LDAP_BASEDN}
       DomainStorm_LdapOptions__ManagerDn: cn=admin,${LDAP_BASEDN}
       DomainStorm_LdapOptions__ManagerPassword: ${LDAP_ADMIN_PASSWORD}   
-    # ports:
-    #   - "5050:5050"
+    ports:
+       - "5050:5050"
       #- "5051:5051"
     depends_on:
       #- domainstorm.project.twc.web
