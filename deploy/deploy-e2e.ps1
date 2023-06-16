@@ -23,7 +23,7 @@ $env:MetadataApi_Version = "0.0.8"
 $env:MultiMediaApi_Version = "0.0.5"
 $env:JwtAuthApi_Version = "0.2.8"
 $env:OpenidProvider_Version = "0.2.8"
-$env:TwcWeb_Version = "0.8.0"
+$env:TwcWeb_Version = "0.7.6"
 $env:ResourceApi_Version = "0.1.1"
 $env:ServiceBus_Version = "0.0.4"
 
