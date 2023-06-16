@@ -752,9 +752,9 @@ services:
       DomainStorm_MongoDbOptions__ConnectionString: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017
       DomainStorm_MongoDbOptions__DatabaseName: Resource
       DomainStorm_SqlDbOptions__ConnectionString: Server=${SQL_Server_EndPoint};Database=ResourceEventDb;User Id=${SQL_Server_User_Id};Password=${SQL_Server_Password};    
-    # ports:
-    #   - "5501:80"
-      #- "5601:443"
+    ports:
+       - "5501:80"
+       #- "5601:443"
     depends_on:
       domainstorm.jwtauthapi.openidprovider:
         condition: service_healthy       

@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainStorm.Project.TWC.Tests", "DomainStorm.Project.TWC.Tests.csproj", "{7E34E11A-B197-4D3D-AD1D-26D236B05910}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainStorm.Project.TWC.Tests", "DomainStorm.Project.TWC.Tests.csproj", "{7E34E11A-B197-4D3D-AD1D-26D236B05910}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "方案項目", "方案項目", "{12B2FB0C-7C28-40A9-BE34-904FD3278EEB}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\e2e-tests.yml = .github\workflows\e2e-tests.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
