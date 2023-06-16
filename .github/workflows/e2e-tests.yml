@@ -31,25 +31,14 @@ jobs:
             echo "TestConfig__Password=${{ secrets.TestConfig__Password }}" >> $GITHUB_ENV            
             echo "TestConfig__BaseUrl=http://localhost:8000" >> $GITHUB_ENV
             echo "TestConfig__TokenUrl=http://localhost:8000/openid/connect/token" >> $GITHUB_ENV
-            echo "TestConfig__LoginUrl=http://localhost:9002" >> $GITHUB_ENV
+            echo "TestConfig__LoginUrl=http://localhost:5050" >> $GITHUB_ENV
             echo "Api_Gateway_EndPoint=https://${{ env.IP_ADDRESS }}:8443" >> $GITHUB_ENV
             echo "OpenIDConnectOptions_Authority=http://${{ env.IP_ADDRESS }}:8000/openid" >> $GITHUB_ENV
             echo "SignalR_EndPoint=http://${{ env.IP_ADDRESS }}:8000/hubUrl" >> $GITHUB_ENV
 
             ping -c 5 ${{ env.IP_ADDRESS }}
-                
-      - name: Cache deploy dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./deploy/**/*.yml
-            ./deploy/**/*.ps1
-          key: ${{ runner.os }}-files-${{ hashFiles('./deploy/**/*.yml') }}-${{ hashFiles('./deploy/**/*.ps1') }}
-          restore-keys: |
-            ${{ runner.os }}-files-
 
       - name: Run Docker Compose and Seed
-        if: steps.cache.outputs.cache-hit != 'true'
         run: | 
             pwsh -File deploy/deploy-e2e.ps1
             pwsh -File deploy/deploy-seed-pipeline-e2e.ps1    
