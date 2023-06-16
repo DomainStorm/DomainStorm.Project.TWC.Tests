@@ -34,6 +34,9 @@ namespace DomainStorm.Project.TWC.Tests
             option.AddArgument("--enable-javascript");
             option.AddArgument("--allow-running-insecure-content");
             option.AddArgument("--ignore-urlfetcher-cert-requests");
+            option.AddArgument("--disable-web-security");
+            option.AddArgument("--ignore-certificate-errors");
+
             //option.AddArguments("--no-sandbox");
             if (TestHelper.GetChromeConfig().Headless)
                 option.AddArgument("--headless");

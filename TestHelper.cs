@@ -151,7 +151,8 @@ public class TestHelper
     }
     public static Task Login(IWebDriver webDriver, string userId, string password)
     {
-        webDriver.Navigate().GoToUrl(LoginUrl);
+        ((IJavaScriptExecutor)webDriver).ExecuteScript($"window.location.href = '{LoginUrl}';");
+        //webDriver.Navigate().GoToUrl(LoginUrl);
 
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
