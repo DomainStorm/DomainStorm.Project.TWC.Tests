@@ -82,6 +82,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
             driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+
             TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
             string id = TestHelper.GetLastSegmentFromUrl(driver_1);

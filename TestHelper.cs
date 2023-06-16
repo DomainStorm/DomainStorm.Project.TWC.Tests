@@ -176,7 +176,10 @@ public class TestHelper
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
+
+        Console.WriteLine($"---------{webDriver.Url}---------");
+        Console.WriteLine(webDriver.PageSource);
 
         var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
         var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
