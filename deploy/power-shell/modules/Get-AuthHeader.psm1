@@ -12,7 +12,7 @@
         scope = $scope
     }
     
-    $authUri = "http://localhost:8000/openid/connect/token"
+    $authUri = "http://localhost:5050/connect/token"
 
 
     try {
