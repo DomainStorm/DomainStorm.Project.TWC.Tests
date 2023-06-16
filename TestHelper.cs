@@ -158,7 +158,7 @@ public class TestHelper
         Console.WriteLine($"---------{LoginUrl}---------");
         Console.WriteLine(webDriver.PageSource);
 
-        wait.Until((w) => w.Url.IndexOf("openid", StringComparison.Ordinal) >= 0);
+        wait.Until((w) => w.Url.IndexOf("5050", StringComparison.Ordinal) >= 0);
 
         Console.WriteLine($"---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);
