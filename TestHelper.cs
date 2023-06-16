@@ -157,13 +157,13 @@ public class TestHelper
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
 
-        Console.WriteLine($"::group::---------{LoginUrl}---------");
+        Console.WriteLine($"::group::Login---------{LoginUrl}---------");
         Console.WriteLine($"---------{LoginUrl}---------");
         Console.WriteLine(webDriver.PageSource);
         Console.WriteLine("::endgroup::");
         wait.Until(ExpectedConditions.UrlContains("account"));
 
-        Console.WriteLine($"::group::---------{webDriver.Url}---------");
+        Console.WriteLine($"::group::Login---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);
         Console.WriteLine("::endgroup::");
 
@@ -175,11 +175,6 @@ public class TestHelper
 
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
         button.Click();
-        
-        Console.WriteLine($"::group::---------{webDriver.Url}---------");
-        Console.WriteLine(webDriver.PageSource);
-        Console.WriteLine("::endgroup::");
-
         var baseUrl = BaseUrl!.EndsWith("/") ? BaseUrl : BaseUrl + "/";
         wait.Until(ExpectedConditions.UrlToBe(baseUrl));
 
@@ -189,7 +184,7 @@ public class TestHelper
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
-        Console.WriteLine($"::group::---------{webDriver.Url}---------");
+        Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);
         Console.WriteLine("::endgroup::");
 
