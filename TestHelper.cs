@@ -176,6 +176,8 @@ public class TestHelper
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
         button.Click();
 
+        wait.Until(ExpectedConditions.UrlToBe(BaseUrl));
+
         return Task.CompletedTask;
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
