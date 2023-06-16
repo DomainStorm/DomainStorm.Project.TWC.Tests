@@ -175,8 +175,9 @@ public class TestHelper
 
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
         button.Click();
-        var baseUrl = BaseUrl!.EndsWith("/") ? BaseUrl : BaseUrl + "/";
-        wait.Until(ExpectedConditions.UrlToBe(baseUrl));
+
+        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
+        
 
         return Task.CompletedTask;
     }
