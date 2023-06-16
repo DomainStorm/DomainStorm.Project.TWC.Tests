@@ -10,8 +10,6 @@ Import-Module -Name ./power-shell/modules/Add-Template -Force
 
 ./deploy-seed-kong.ps1
 
-Start-Sleep -Seconds 5
-
 ./deploy-template.ps1
 
 Import-Module -Name ./power-shell/modules/Import-Department -Force

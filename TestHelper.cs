@@ -153,7 +153,7 @@ public class TestHelper
     {
         webDriver.Navigate().GoToUrl(LoginUrl);
 
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
         Console.WriteLine($"---------{LoginUrl}---------");
         Console.WriteLine(webDriver.PageSource);
