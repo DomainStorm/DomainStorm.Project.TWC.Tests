@@ -16,13 +16,11 @@
     # $fileContent.Headers.ContentDisposition = $fileHeader
     # $multipartContent.Add($fileContent)
 
-    Write-Host '11111111111111'
-
     $fileBytes = [System.IO.File]::ReadAllBytes($FileFullPath);
     $fileEnc = [System.Text.Encoding]::GetEncoding('UTF-8').GetString($fileBytes);
     $boundary = [System.Guid]::NewGuid().ToString(); 
     $LF = "`r`n";
-    Write-Host '22222222222222222'
+    
     $body = ( 
         "--$boundary",
         "Content-Disposition: form-data; name=`"file`"; filename=`"temp.html`"",
@@ -32,11 +30,10 @@
     ) -join $LF
 
     $bodyJsonBytes = [System.Text.Encoding]::UTF8.GetBytes($body)
-    Write-Host '3333333333333333333'
+
     Write-Host $FileFullPath -ForegroundColor Green
 
     try {
-        Write-Host '4444444444444'
         Invoke-RestMethod $endPoint -Method POST -Headers $authheader -ContentType "multipart/form-data; boundary=`"$boundary`"" -Body $bodyJsonBytes
     }
     catch {
@@ -48,6 +45,5 @@
 
         throw
     }  
-}
 
 Export-ModuleMember -Function Add-Template
