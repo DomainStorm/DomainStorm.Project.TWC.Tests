@@ -175,12 +175,14 @@ public class TestHelper
 
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
         button.Click();
-        
+
+        Thread.Sleep(5000);
         Console.WriteLine($"::group::---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);
         Console.WriteLine("::endgroup::");
 
-        wait.Until(ExpectedConditions.UrlContains(BaseUrl));
+        var baseUrl = BaseUrl!.EndsWith("/") ? BaseUrl : BaseUrl + "/";
+        wait.Until(ExpectedConditions.UrlToBe(baseUrl));
 
         return Task.CompletedTask;
     }
