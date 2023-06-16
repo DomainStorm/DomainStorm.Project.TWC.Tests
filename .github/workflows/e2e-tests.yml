@@ -31,7 +31,7 @@ jobs:
             echo "TestConfig__Password=${{ secrets.TestConfig__Password }}" >> $GITHUB_ENV            
             echo "TestConfig__BaseUrl=https://localhost:8443" >> $GITHUB_ENV
             echo "TestConfig__TokenUrl=http://localhost:8000/openid/connect/token" >> $GITHUB_ENV
-            echo "TestConfig__LoginUrl=https://localhost:8443" >> $GITHUB_ENV
+            echo "TestConfig__LoginUrl=http://127.0.0.1:9002" >> $GITHUB_ENV
             echo "Api_Gateway_EndPoint=https://${{ env.IP_ADDRESS }}:8443" >> $GITHUB_ENV
             echo "OpenIDConnectOptions_Authority=http://${{ env.IP_ADDRESS }}:8000/openid" >> $GITHUB_ENV
             echo "SignalR_EndPoint=http://${{ env.IP_ADDRESS }}:8000/hubUrl" >> $GITHUB_ENV
@@ -61,18 +61,22 @@ jobs:
           CHROME_VERSION=$(google-chrome-stable --version)
           echo "Installed Chrome Version: $CHROME_VERSION"     
 
-      #- name: Curl 9002
-      #  run: | 
-      #    docker logs twcweb
-      #    curl -L -i http://127.0.0.1:9002
+      - name: Curl 9002
+        run: | 
+          docker logs twcweb
+          curl -L -i http://127.0.0.1:9002
           
-      #- name: Curl 8000
-      #  run: | 
-      #    curl -L -i http://127.0.0.1:8000
+      - name: Curl 8000
+        run: | 
+          curl -L -i http://127.0.0.1:8000
           
-      #- name: Curl 8443
-      #  run: | 
-      #    curl -k -L -i https://127.0.0.1:8443
+      - name: Curl 8443
+        run: | 
+          curl -k -L -i https://127.0.0.1:8443
+
+      - name: logs twcweb
+        run: | 
+          docker logs twcweb
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -93,7 +97,3 @@ jobs:
       #    curl -L -i http://127.0.0.1:8000/jwtauthapi/swagger/index.html       
       - name: Test
         run: dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcA100Tests --no-build --verbosity normal
-
-      - name: logs twcweb
-        run: | 
-          docker logs twcweb
