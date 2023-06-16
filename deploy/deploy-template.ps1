@@ -5,9 +5,7 @@ Import-Module -Name ./power-shell/modules/Add-Template -Force
 
 Write-Host "----- Add-Template process start -----" -ForegroundColor Blue
 $location = Get-Location
-Write-Host "----- ddddddddddddddddddddddd -----" -ForegroundColor Blue
 Add-Template -FileFullPath $location/templates/啟用申請.html
-Write-Host "----- ccccccccccccccc -----" -ForegroundColor Blue
 Add-Template -FileFullPath $location/templates/復用申請.html
 Add-Template -FileFullPath $location/templates/過戶申請.html
 Add-Template -FileFullPath $location/templates/廢止申請.html

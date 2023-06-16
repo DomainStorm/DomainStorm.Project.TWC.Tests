@@ -158,28 +158,11 @@ public class TestHelper
         Console.WriteLine($"---------{LoginUrl}---------");
         Console.WriteLine(webDriver.PageSource);
 
-        wait.Until((w) => w.Url.IndexOf("5050", StringComparison.Ordinal) >= 0);
+        //wait.Until((w) => w.Url.IndexOf("5050", StringComparison.Ordinal) >= 0);
 
-        Console.WriteLine($"---------{webDriver.Url}---------");
-        Console.WriteLine(webDriver.PageSource);
+        //Console.WriteLine($"---------{webDriver.Url}---------");
+        //Console.WriteLine(webDriver.PageSource);
 
-        try
-        {
-            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
-        }
-        catch
-        {
-            var detailsButtonElements = webDriver.FindElements(By.CssSelector("#details-button"));
-            if (detailsButtonElements.Count > 0)
-            {
-                var detailsButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#details-button")));
-                detailsButton.Click();
-
-                var proceedLink = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#proceed-link")));
-                proceedLink.Click();
-            }
-        }
- 
         var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
 
@@ -189,7 +172,6 @@ public class TestHelper
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
         button.Click();
 
-        wait.Until((w) => w.Url == LoginUrl);
         return Task.CompletedTask;
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
