@@ -23,7 +23,6 @@ jobs:
         run: |
           IP_ADDRESS=$(ifconfig eth0 | grep 'inet ' | awk '{print $2}')
           echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
-          echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
 
       - name: Set environment variables
         run: |
@@ -49,8 +48,8 @@ jobs:
         
       - name: Seed Data
         run: | 
+          pwsh -File deploy/deploy-seed-pipeline-e2e.ps1    
           docker logs resourceapi
-          pwsh -File deploy/deploy-seed-pipeline-e2e.ps1       
                 
       - name: Display Container Env
         run: docker exec resourceapi printenv
