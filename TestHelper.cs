@@ -176,7 +176,7 @@ public class TestHelper
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(100));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
         Console.WriteLine($"---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);

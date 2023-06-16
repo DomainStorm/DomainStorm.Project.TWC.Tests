@@ -29,12 +29,14 @@ namespace DomainStorm.Project.TWC.Tests
         private ChromeDriver GetNewChromeDriver()
         {
             var option = new ChromeOptions();
-            option.AddArguments("start-maximized");
-            option.AddArguments("--disable-gpu");
-            option.AddArguments("--enable-javascript");
+            option.AddArgument("start-maximized");
+            option.AddArgument("--disable-gpu");
+            option.AddArgument("--enable-javascript");
+            option.AddArgument("--allow-running-insecure-content");
+            option.AddArgument("--ignore-urlfetcher-cert-requests");
             //option.AddArguments("--no-sandbox");
             if (TestHelper.GetChromeConfig().Headless)
-                option.AddArguments("--headless");
+                option.AddArgument("--headless");
             new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
             var driver = new ChromeDriver(option);
 
