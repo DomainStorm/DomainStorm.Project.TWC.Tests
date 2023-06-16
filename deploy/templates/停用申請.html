@@ -1,0 +1,715 @@
+<html lang="zh-Hant-TW"
+      template-key="停用申請"
+      template-name="停用申請"
+      template-description="停用申請自來水">
+<head>
+    <meta charset="utf-8" />
+    <title>停用申請</title>
+</head>
+<body>
+    <main>
+        <div data-class="Page">
+            <div data-class="PageHeader">
+                <h2>台灣自來水公司用戶用水設備各種異動服務申請書</h2>
+            </div>
+            <article data-class="ArticleBlock">
+                <section>
+                    <table class="not-border">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span>申請日期</span>
+                                    <span sti-apply-date sti-format="yyyy年MM月dd日"></span>
+                                </td>
+                                <td>
+                                    <span>受理號碼</span>
+                                    <span sti-apply-case-no></span>
+                                </td>
+                                <td class="text-right">
+                                    <span>水號</span>
+                                    <span sti-water-no></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="title width-18half">
+                                    <span>異動種類</span>
+                                </td>
+                                <td colspan="5">
+                                    <span>
+                                        <input type="checkbox" checked disabled>
+                                        <span sti-type-change-name></span>
+                                    </span>
+                                    <span id="過戶" class="d-none">
+                                        <input type="checkbox" checked disabled>
+                                        <span>過戶</span>
+                                    </span>
+                                    <span id="通訊地址變更" class="d-none">
+                                        <input type="checkbox" checked disabled>
+                                        <span>通訊地址變更</span>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title width-18half">
+                                    <span>裝置地點</span>
+                                </td>
+                                <td colspan="5">
+                                    <span id="裝置地點" sti-device-location></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title width-18half">
+                                    <span>申請人(新用戶)<br>(委託人)</span>
+                                </td>
+                                <td colspan="5">
+                                    <span sti-applicant></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title width-18half">
+                                    <span>身份證號碼<br>營利事業統一編號</span>
+                                </td>
+                                <td>
+                                    <span sti-id-no></span>
+                                    <br>
+                                    <span sti-uni-no></span>
+                                </td>
+                                <td class="title width-18half">
+                                    <span>電話１</span>
+                                </td>
+                                <td>
+                                    <span sti-tel-no></span>
+                                </td>
+                                <td class="title width-18half">
+                                    <span>電話２</span>
+                                </td>
+                                <td>
+                                    <span sti-mobile-no></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title width-18half">
+                                    <span>水表口徑</span>
+                                </td>
+                                <td>
+                                    <span sti-pipe-diameter></span>
+                                </td>
+                                <td class="title width-18half">
+                                    <span>用水種類</span>
+                                </td>
+                                <td>
+                                    <span sti-water-type></span>
+                                </td>
+
+                                <td class="title width-18half">
+                                    <span>總分表</span>
+                                </td>
+                                <td>
+                                    <span sti-score-sheet></span>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td class="title width-18half">
+                                    <span>
+                                        <input id="併案過戶" type="checkbox" disabled>
+                                        <span sti-together-tranfer id="併案過戶value" class="d-none"></span>
+                                        <span>併案過戶</span>
+                                    </span>
+                                </td>
+                                <td class="title width-18half">
+                                    <span>原用戶名</span>
+                                </td>
+                                <td colspan="5">
+                                    <span sti-house-use-name></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title width-18half">
+                                    <span>
+                                        <input id="併案變更通訊地址" type="checkbox" disabled>
+                                        <span sti-change-address id="併案變更通訊地址value" class="d-none"></span>
+                                        <span>併案變更<br>通訊地址</span>
+                                    </span>
+                                </td>
+                                <td class="title width-18half">
+                                    <span>帳單地址</span>
+                                </td>
+                                <td colspan="5">
+                                    <span sti-bill-address></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title width-18half">
+                                    <span>用戶聲明</span>
+                                </td>
+                                <td colspan="5">
+                                    <span class="bold">
+                                        無法取得前用戶簽章申請單獨過戶，倘前用戶於六個月內提供異議時，願自負責任，並由貴公司取消本申請案。<br>
+                                        <p class="text-right">此致 台灣自來水股份有限公司</p>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+                <section>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="title2 width-18half">
+                                    <span>申請人資訊</span>
+                                </td>
+                                <td class="title2 width-18half">
+                                    <span>地址</span>
+                                </td>
+                                <td colspan="3">
+                                    <span id="申請人資訊同上裝置地點">
+                                        <input id="申請人資訊同上裝置地點checkbox" type="checkbox">
+                                        同上裝置地點
+                                    </span>    
+                                    <br>
+                                    </span>
+                                    <span id="申請人資訊地址" data-class="InputSelectBlock" sti-applicant-info></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title2 width-18half">
+                                    <span>受託人資訊</span>
+                                </td>
+                                <td class="title2 width-18half">
+                                    <span>姓名</span>
+                                </td>
+                                <td colspan="3">
+                                    <span id="受託人資訊" data-class="InputSelectBlock" sti-trustee-info></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2" class="title2 width-18half">
+                                    <span>與申請人之關係</span>
+                                </td>
+                                <td rowspan="2" class="width-18half">
+                                    <span id="與申請人之關係" data-class="InputSelectBlock" sti-trustee-relationship></span>
+                                </td>
+                                <td class="title2 width-18half">
+                                    <span>身分證號碼</span>
+                                </td>
+                                <td>
+                                    <span id="身分證號碼" data-class="InputSelectBlock" sti-trustee-id-no></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title2 width-18half">
+                                    <span>聯絡電話</span>
+                                </td>
+                                <td>
+                                    <span id="聯絡電話" data-class="InputSelectBlock" sti-trustee-tel-no></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title2 width-18half">
+                                    <span>受託人地址</span>
+                                </td>
+                                <td colspan="3">
+                                    <span id="受託人地址" data-class="InputSelectBlock" sti-trustee-address></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title2 width-18half">
+                                    <span>自抄指針</span>
+                                </td>
+                                <td colspan="3">
+                                    <span id="自抄指針" data-class="InputSelectBlock" sti-self-report-indicator></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title2 width-18half">
+                                    <span>註記</span>
+                                </td>
+                                <td colspan="3">
+                                    <span id="註記" data-class="InputSelectBlock" sti-note></span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <section>
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <span class="red">受理</span>
+                                        <span class="ms-1">
+                                            <input id="中結" type="checkbox">
+                                            <span>中結</span>
+                                            <span id="中結value" class="d-none" data-class="InputSelectBlock" sti-end></span>
+                                        </span>
+                                        <span>
+                                            <input id="繳費" type="checkbox">
+                                            <span>繳費</span>
+                                            <span id="繳費value" class="d-none" data-class="InputSelectBlock" sti-pay></span>
+                                        </span>
+                                    </td>
+                                    <td class="title-sign">
+                                        <span>拆（裝）表</span>
+                                    </td>
+                                    <td class="title-sign">
+                                        <span>水表單位</span>
+                                    </td>
+
+                                    <td class="title-sign">
+                                        <span>歸檔</span>
+                                    </td>
+                                </tr>
+                                <tr class="h-100p font-monospace">
+                                    <td id="受理" class="width-16 hover-td">
+                                        <span>
+                                            <div class="accept-sign" id="accept-sign"></div>
+                                        </span>
+                                    </td>
+                                    <td class="width-16">
+                                        <p>
+                                            <span>工作人員代碼：</span>
+                                            <span sti-work-user-code></span>
+                                        </p>
+                                        <p>
+                                            <span>派工人員代碼：</span>
+                                            <span sti-dispatch-user-code></span>
+                                        </p>
+                                        <p>
+                                            <span>派工日期：</span>
+                                            <span sti-dispatch-date></span>
+                                        </p>
+                                    </td>
+                                    <td class="width-16">
+                                        <p>
+                                            <span>登載人員：</span>
+                                            <span sti-publish-user-name></span>
+                                        </p>
+                                        <p>
+                                            <span>登載日期：</span>
+                                            <span sti-publish-date></span>
+                                        </p>
+                                    </td>
+                                    <td class="width-16">
+                                        <p>
+                                            <span>結案人員代碼：</span>
+                                            <span sti-finish-user-code></span>
+                                        </p>
+                                        <p>
+                                            <span>結案日期：</span>
+                                            <span sti-finish-date></span>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </section>
+            </article>
+            <div class="accept-sign d-none">
+                <div class="sign" id="sign">
+                    <div class="sign-position">
+                        <span sti-post-title></span>
+                    </div>
+                    <div class="sign-name">
+                        <span sti-post-user-full-name></span>
+                    </div>
+                    <div class="sign-time">
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+            main {
+                font-size: 16px;
+                margin: auto;
+                position: relative;
+                text-align: justify;
+                /* width: 210mm; */
+            }
+    
+            table {
+                width: 100%;
+                border-spacing: 0px;
+            }
+    
+                table.not-border td {
+                    border: 0px;
+                }
+    
+            td {
+                border: 1px solid #00000a;
+                padding: 8px;
+            }
+    
+                td.title {
+                    background-color: #b3e5fc;
+                }
+    
+                td.title2 {
+                    background-color: #F5DF4D;
+                }
+    
+                td.title-sign {
+                    color: red;
+                }
+    
+            .h-100p {
+                height: 100px;
+            }
+    
+            .width-18half {
+                width: 18.5%;
+            }
+    
+            .width-16 {
+                width: 16%;
+            }
+    
+            .width-12 {
+                width: 12%;
+            }
+
+            .width-95 {
+                width: 95%;
+            }
+    
+            [data-class=Page] {
+                background-color: white;
+                overflow: hidden;
+                position: relative;
+                /* width: 210mm; */
+                width: 100%;
+            }
+    
+            [data-class=PageHeader] {
+                height: 20mm;
+                position: relative;
+                width: 100%;
+                text-align: center;
+            }
+    
+            [data-class=ArticleBlock] {
+                box-shadow: none;
+                min-height: 247mm;
+                width: 100%;
+            }
+    
+            .text-right {
+                text-align: right;
+            }
+    
+            .bold {
+                font-weight: bold;
+            }
+
+            .d-none {
+                display: none !important;
+            }
+
+            .red {
+                color: red;
+            }
+
+            .ms-1 {
+                margin-left: 1.25rem;
+            }
+
+            .font-xs {
+                font-size: x-small;
+            }
+
+            .font-monospace {
+                font-size: initial;
+                font-family: monospace;
+            }
+
+            input[type="radio"] {
+                width: 1.23em;
+                height: 1.23em;
+            }
+    
+            input[type="checkbox"] {
+                width: 1.23em;
+                height: 1.23em;
+            }
+    
+            input[type="checkbox"]:disabled:checked {
+                opacity: 0.8;
+                filter: invert(100%) brightness(3);
+            }
+
+            div.accept-sign {
+                display: flex;
+                justify-content: center; 
+                font-family: DFKai-SB, kaiu, 標楷體;font-family: DFKai-SB, kaiu, 標楷體;
+            }
+
+            div.sign {
+                border: solid;
+                border-width: 0.5mm;
+                color: red;
+                width: 36mm;
+                height: 10mm;
+                margin-right: 5px;
+            }
+
+            div.sign-position {
+                font-size: 9pt;
+                margin-top: 3px;
+                margin-left: 3px;
+            }
+
+            div.sign-name {
+                font-size: 13pt;
+                text-align: end;
+                margin-right: 5px;
+            }
+
+            div.sign-time {
+                font-size: 9pt;
+                text-align: end;
+                width: 36mm;
+                color: black;
+                margin-top: 2px;
+            }
+
+            div.sign:hover {
+                background-color:lightgray;
+            }
+
+            .hover-td {
+                background: #f8f8f8;
+                box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+                -webkit-transition: all 0.3s;
+                transition: all 0.3s;
+                margin: 10px 0px;
+            }
+
+            .hover-td:hover {
+                -webkit-transform: translateY(-20px);
+                -ms-transform: translateY(-20px);
+                transform: translateY(-20px);
+                box-shadow: 0 22px 43px rgba(0, 0, 0, 0.32);
+                cursor: pointer;
+                border-radius: 5px;
+            }
+
+            .hover-td:hover::before {
+                display: flex;
+                justify-content: center; 
+                font-size: 18px;
+                color: #337ab7;
+                content: '點選核章(右鍵取消)';
+                -webkit-animation: shine 0.5s alternate infinite;
+                animation: shine 0.5s alternate infinite;
+            }
+
+            @-webkit-keyframes shine {
+                from {
+                    text-shadow: 0 0 10px lightblue, 0 0 20px lightblue, 0 0 30px lightblue, 0 0 40px skyblue, 0 0 50px skyblue, 0 0 60px skyblue;
+                }
+                to {
+                    text-shadow: 0 0 5px lightblue, 0 0 10px lightblue, 0 0 15px lightblue, 0 0 20px skyblue, 0 0 25px skyblue, 0 0 30px skyblue;
+                }
+            }
+
+            article:has(.hover-td:hover) td:not(.hover-td){
+                opacity: 0.2;
+            }
+        </style>
+        <script type="text/javascript">
+            window.addEventListener('load', function() {
+                let togetherTransfer = document.getElementById('併案過戶value').innerText
+                let changeAddress = document.getElementById('併案變更通訊地址value').innerText
+                let end = document.getElementById('中結value').innerText
+                let pay = document.getElementById('繳費value').innerText
+                
+                if(compareValue(togetherTransfer)) {
+                    document.getElementById('併案過戶').checked = true
+                    document.getElementById('過戶').classList.remove('d-none')
+                }
+                if(compareValue(changeAddress)) {
+                    document.getElementById('併案變更通訊地址').checked = true
+                    document.getElementById('通訊地址變更').classList.remove('d-none')
+                }
+                if(compareValue(end)) {
+                    document.getElementById('中結').checked = true
+                }
+                if(compareValue(pay)) {
+                    document.getElementById('繳費').checked = true
+                }
+            });
+
+            function compareValue(value) {
+                return value == 'Y' || value == '1' || value == 'true'
+            }
+
+            function onCheckboxClick(name, targetEditor, getEditorByIdFunction){
+                let locationAddress = getEditorByIdFunction('裝置地點')._htmlElement
+                let applicantAddress = getEditorByIdFunction('申請人資訊input')._htmlElement
+
+                if(targetEditor._htmlElement.checked)
+                    applicantAddress.value = locationAddress.innerText
+                else
+                    applicantAddress.value = ''
+            }
+
+            async function onAcceptSignClick(name, targetEditor, getEditorByIdFunction){
+                let acceptSign = document.getElementById('accept-sign')
+                let signSeal = document.getElementById('sign')
+                let now =  await this.getDateTime()
+                signSeal.lastElementChild.firstElementChild.innerText = now.toLocaleString()
+
+                let signSealClone = document.getElementById('sign').cloneNode(true)
+                signSealClone.id = ''
+                signSealClone.addEventListener('contextmenu', e => {
+                    e.preventDefault()
+                    e.currentTarget.remove()
+                })
+
+                acceptSign.appendChild(signSealClone)
+            }
+
+            function onEndChange(name, targetEditor, getEditorByIdFunction){
+                let endCheckbox = document.getElementById('中結')
+                let endValue = document.getElementById('中結value')
+                let ev = new CustomEvent("endChange", {
+                    bubbles: true,
+                    detail: endCheckbox.checked
+                })
+
+                endValue.innerText = endCheckbox.checked
+                this.dispatchEvent(ev)
+            }
+
+            function onPayChange(name, targetEditor, getEditorByIdFunction){
+                let payCheckbox = document.getElementById('繳費')
+                let payValue = document.getElementById('繳費value')
+                let ev = new CustomEvent("payChange", {
+                    bubbles: true,
+                    detail: payCheckbox.checked
+                })
+
+                payValue.innerText = payCheckbox.checked
+                this.dispatchEvent(ev)
+            }
+
+            async function getDateTime() {
+                const dateApi = 'https://localhost:9003/api/datetime/now'
+                const res = await fetch(dateApi)
+                const json = await res.json()
+                const date = new Date(Date.parse(json))
+                return date
+            }
+        </script>
+        <script type="application/json" id="states">
+            {
+                "唯讀": {
+                    "iOverrides": [
+                        {
+                            "iOverride": "SetProperty",
+                            "target": "中結",
+                            "name": "disabled",
+                            "value": "disabled"
+                        },
+                        {
+                            "iOverride": "SetProperty",
+                            "target": "繳費",
+                            "name": "disabled",
+                            "value": "disabled"
+                        },
+                        {
+                            "iOverride": "RemoveClass",
+                            "target": "受理",
+                            "name": "hover-td"
+                        }
+                    ]
+                },
+                "分頁": {
+                    "iOverrides": [],
+                    "basedOn": "唯讀"
+                },
+                "編輯": {
+                    "iOverrides": [
+                        {
+                            "iOverride": "AddChild",
+                            "relativeTo": "申請人資訊地址",
+                            "target": "<input id='申請人資訊input' type='text' class='form-control width-95' placeholder='     縣市         鄉鎮市區        村里          路段(街)       巷弄      號      樓'>"
+                        },
+                        {
+                            "iOverride": "SetEventHandler",
+                            "target": "申請人資訊同上裝置地點checkbox",
+                            "name": "click",
+                            "handler": "onCheckboxClick"
+                        },
+                        {
+                            "iOverride": "RemoveClass",
+                            "target": "申請人資訊同上裝置地點",
+                            "name": "d-none"
+                        },
+                        {
+                            "iOverride": "AddChild",
+                            "relativeTo": "受託人資訊",
+                            "target": "<input type='text' class='form-control width-95'>"
+                        },
+                        {
+                            "iOverride": "AddChild",
+                            "relativeTo": "與申請人之關係",
+                            "target": "<input type='text' class='form-control width-95'>"
+                        },
+                        {
+                            "iOverride": "AddChild",
+                            "relativeTo": "身分證號碼",
+                            "target": "<input type='text' class='form-control width-95'>"
+                        },
+                        {
+                            "iOverride": "AddChild",
+                            "relativeTo": "聯絡電話",
+                            "target": "<input type='text' class='form-control width-95'>"
+                        },
+                        {
+                            "iOverride": "AddChild",
+                            "relativeTo": "受託人地址",
+                            "target": "<input type='text' class='form-control width-95' placeholder='     縣市         鄉鎮市區        村里          路段(街)       巷弄      號      樓'>"
+                        },
+                        {
+                            "iOverride": "AddChild",
+                            "relativeTo": "自抄指針",
+                            "target": "<input type='text' class='form-control width-95'>"
+                        },
+                        {
+                            "iOverride": "SetEventHandler",
+                            "target": "受理",
+                            "name": "click",
+                            "handler": "onAcceptSignClick"
+                        },
+                        {
+                            "iOverride": "SetEventHandler",
+                            "target": "中結",
+                            "name": "change",
+                            "handler": "onEndChange"
+                        },
+                        {
+                            "iOverride": "SetEventHandler",
+                            "target": "繳費",
+                            "name": "change",
+                            "handler": "onPayChange"
+                        },
+                        {
+                            "iOverride": "AddChild",
+                            "relativeTo": "註記",
+                            "target": "<input type='text' class='form-control width-95'>"
+                        }
+                    ]
+                }
+            }
+        </script>
+    </main>
+</body>
+</html>

@@ -1,0 +1,70 @@
+version: '3.4'
+
+x-common-config: &common-env
+  TZ: Asia/Taipei
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: sqlserver
+    hostname: sqlserver
+    environment:
+      <<: *common-env
+      SA_PASSWORD: Pass@word
+      ACCEPT_EULA: 'Y'
+    ports:
+      - "5434:1433"
+    volumes:
+      - type: volume
+        source: sqlserver-volume-data
+        target: /var/opt/mssql/data 
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "-PPass@word", "-Q", "select 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 50           
+    networks:
+      - backend
+  kong:
+    environment:
+      - KONG_SSL_CERT=/ssl/dev.crt
+      - KONG_SSL_CERT_KEY=/ssl/dev.key
+
+  domainstorm.metadataapi:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=MetadataApiEventDb;User Id=sa;Password=Pass@word;  
+  domainstorm.multimediaapi:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+  domainstorm.jwtauthapi:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=JwtAuthEventDb;User Id=sa;Password=Pass@word;  
+  domainstorm.jwtauthapi.openidprovider:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DomainStorm_SqlServerOptions__ConnectionString: Server=sqlserver;Database=OpenIddict;User Id=sa;Password=Pass@word;
+    depends_on:
+      sqlserver:
+          condition: service_healthy    
+  domainstorm.project.twc.web:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_Kestrel__Certificates__Default__Password: password
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/dev.pfx
+      DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=TWCWeb;User Id=sa;Password=Pass@word;
+      DomainStorm_PostInteropExe: "false"
+    depends_on:   
+      sqlserver:
+        condition: service_healthy            
+  domainstorm.resourceapi:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=ResourceEventDb;User Id=sa;Password=Pass@word;    
+  domainstorm.servicebus:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+
+volumes:
+  sqlserver-volume-data:      

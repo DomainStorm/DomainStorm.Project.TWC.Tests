@@ -1,0 +1,68 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: pubsub
+spec:
+  type: pubsub.kafka
+  version: v1
+  metadata:
+    # Kafka broker connection setting
+    - name: brokers
+      value: "kafka:9092"
+    #- name: consumerGroup
+    #  value: "group1"
+    #- name: clientID # Optional. Used as client tracing ID by Kafka brokers.
+    #  value: "ResourceApi"
+    - name: authType
+      value: "none"
+    - name: disableTls 
+      value: "true"
+    - name: initialOffset 
+      value: "oldest"
+    - name: consumeRetryEnabled 
+      value: "true"
+
+#metadata:
+#  name: pubsub
+#spec:
+#  type: pubsub.rabbitmq
+#  version: v1
+#  metadata:
+#  - name: host
+#    value: "amqp://admin:adminadmin@rabbitmq:5672"
+#  - name: durable
+#    value: true
+#  - name: deletedWhenUnused
+#    value: false
+#  - name: concurrencyMode
+#    value: single
+#  - name: autoAck
+#    value: false
+#  - name: deliveryMode
+#    value: "2"
+#  - name: requeueInFailure
+#    value: false
+#  - name: backOffPolicy
+#    value: exponential
+#  - name: backOffMaxRetries
+#    value: -1
+#  - name: exchangeKind
+#    value: fanout
+#  - name: publisherConfirm
+#    value: true
+    
+
+  
+
+#metadata:
+#  name: pubsub
+#spec:
+#  type: pubsub.redis
+#  version: v1
+#  metadata:
+#  - name: redisHost
+#    value: redis:6379
+#  - name: redisPassword
+#    value: ""
+#  - name: readTimeout
+#    value: "10s"

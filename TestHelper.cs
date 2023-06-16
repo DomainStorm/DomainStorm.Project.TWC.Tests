@@ -16,7 +16,7 @@ public class TestHelper
     private static TestConfig GetTestConfig()
     {
         return new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", false, false)
+            .AddJsonFile("appsettings.json", false, true)
             .AddUserSecrets<TestHelper>()
             .AddEnvironmentVariables()
             .Build()
@@ -87,6 +87,19 @@ public class TestHelper
         }
         set => _accessToken = value;
     }
+
+    public static ChromeConfig GetChromeConfig()
+    {
+        return new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", false, true)
+            .AddUserSecrets<TestHelper>()
+            .AddEnvironmentVariables()
+            .Build()
+            .GetSection("ChromeConfig")
+            .Get<ChromeConfig>();
+    }
+
+
     public class TokenResponse
     {
         public string? Access_token { get; set; }
@@ -111,7 +124,10 @@ public class TestHelper
     public static async Task<HttpStatusCode> CreateForm(string accessToken, string apiUrl, string jsonFilePath)
     {
         var client = new RestClient(apiUrl);
-        var request = new RestRequest();
+        var request = new RestRequest
+        {
+            Method = Method.Post
+        };
         request.AddHeader("Content-Type", "application/json");
         request.AddHeader("Authorization", $"Bearer {accessToken}");
 
@@ -121,38 +137,47 @@ public class TestHelper
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
         update.applyCaseNo = ApplyCaseNo;
         update.userCode = UserId;
-        var updatedJson = JsonConvert.SerializeObject(update);
 
+        var updatedJson = JsonConvert.SerializeObject(update);
+        Console.WriteLine(updatedJson);
         request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
 
-        var response = await client.PostAsync(request);
+        var response = await client.ExecuteAsync(request);
+
+        if (response.ErrorException != null)
+            Console.WriteLine(response.Content);
+
         return response.StatusCode;
     }
     public static Task Login(IWebDriver webDriver, string userId, string password)
     {
-        webDriver.Navigate().GoToUrl(LoginUrl);
-        webDriver.Manage().Window.Size = new Size(1200, 800);
+        ((IJavaScriptExecutor)webDriver).ExecuteScript($"window.location.href = '{LoginUrl}';");
+        //webDriver.Navigate().GoToUrl(LoginUrl);
 
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        var detailsButtonElements = webDriver.FindElements(By.CssSelector("#details-button"));
-        if (detailsButtonElements.Count > 0)
-        {
-            var detailsButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#details-button")));
-            detailsButton.Click();
 
-            var proceedLink = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#proceed-link")));
-            proceedLink.Click();
-        }
+
+        Console.WriteLine($"::group::Login---------{LoginUrl}---------");
+        Console.WriteLine($"---------{LoginUrl}---------");
+        Console.WriteLine(webDriver.PageSource);
+        Console.WriteLine("::endgroup::");
+        wait.Until(ExpectedConditions.UrlContains("account"));
+
+        Console.WriteLine($"::group::Login---------{webDriver.Url}---------");
+        Console.WriteLine(webDriver.PageSource);
+        Console.WriteLine("::endgroup::");
 
         var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
 
-        usernameElement.SendKeys(userId); passwordElement.SendKeys(password);
+        usernameElement.SendKeys(userId); 
+        passwordElement.SendKeys(password);
 
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
         button.Click();
 
-        Thread.Sleep(2000);
+        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
+        
 
         return Task.CompletedTask;
     }
@@ -160,9 +185,13 @@ public class TestHelper
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
+        Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
+        Console.WriteLine(webDriver.PageSource);
+        Console.WriteLine("::endgroup::");
+
         var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
         var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
-        var stormTable = stormDocumentListDetail.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+        var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
         var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
@@ -222,3 +251,7 @@ public class TestConfig
     public string? UserId { get; set; }
 }
 
+public class ChromeConfig
+{
+    public bool Headless { get; set; }
+}
