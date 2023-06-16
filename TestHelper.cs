@@ -158,10 +158,10 @@ public class TestHelper
         Console.WriteLine($"---------{LoginUrl}---------");
         Console.WriteLine(webDriver.PageSource);
 
-        //wait.Until((w) => w.Url.IndexOf("5050", StringComparison.Ordinal) >= 0);
+        wait.Until(ExpectedConditions.UrlContains("account"));
 
-        //Console.WriteLine($"---------{webDriver.Url}---------");
-        //Console.WriteLine(webDriver.PageSource);
+        Console.WriteLine($"---------{webDriver.Url}---------");
+        Console.WriteLine(webDriver.PageSource);
 
         var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
