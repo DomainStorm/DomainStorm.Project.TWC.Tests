@@ -156,13 +156,16 @@ public class TestHelper
 
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
+
+        Console.WriteLine($"::group::---------{LoginUrl}---------");
         Console.WriteLine($"---------{LoginUrl}---------");
         Console.WriteLine(webDriver.PageSource);
-
+        Console.WriteLine("::endgroup::");
         wait.Until(ExpectedConditions.UrlContains("account"));
 
-        Console.WriteLine($"---------{webDriver.Url}---------");
+        Console.WriteLine($"::group::---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);
+        Console.WriteLine("::endgroup::");
 
         var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
@@ -179,8 +182,9 @@ public class TestHelper
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
-        Console.WriteLine($"---------{webDriver.Url}---------");
+        Console.WriteLine($"::group::---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);
+        Console.WriteLine("::endgroup::");
 
         var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
         var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
