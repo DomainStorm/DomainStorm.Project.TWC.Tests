@@ -48,8 +48,10 @@ jobs:
         run: pwsh -File deploy/deploy-e2e.ps1
         
       - name: Seed Data
-        run: pwsh -File deploy/deploy-seed-pipeline-e2e.ps1        
-        
+        run: | 
+          docker logs resourceapi
+          pwsh -File deploy/deploy-seed-pipeline-e2e.ps1       
+                
       - name: Display Container Env
         run: docker exec resourceapi printenv
       
