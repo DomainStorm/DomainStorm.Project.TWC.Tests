@@ -38,7 +38,15 @@ jobs:
 
             ping -c 5 ${{ env.IP_ADDRESS }}
                 
-      - name: Start containers
+      - name: Cache Docker images
+        uses: actions/cache@v3
+        with:
+          path: /var/lib/docker
+          key: ${{ runner.os }}-docker-${{ hashFiles('**/docker-compose.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
+
+      - name: Run Docker Compose
         run: pwsh -File deploy/deploy-e2e.ps1
         
       - name: Seed Data
