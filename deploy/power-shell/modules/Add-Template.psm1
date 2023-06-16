@@ -45,5 +45,6 @@
 
         throw
     }  
+}
 
 Export-ModuleMember -Function Add-Template
