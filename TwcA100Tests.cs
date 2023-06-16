@@ -31,6 +31,7 @@ namespace DomainStorm.Project.TWC.Tests
             var option = new ChromeOptions();
             option.AddArguments("start-maximized");
             option.AddArguments("--disable-gpu");
+            option.AddArguments("--enable-javascript");
             //option.AddArguments("--no-sandbox");
             if (TestHelper.GetChromeConfig().Headless)
                 option.AddArguments("--headless");
@@ -38,6 +39,7 @@ namespace DomainStorm.Project.TWC.Tests
             var driver = new ChromeDriver(option);
 
             driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
             _chromeDriverList.Add(driver);
 
             return driver;
