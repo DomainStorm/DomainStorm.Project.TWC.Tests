@@ -3,8 +3,10 @@ name: E2E Tests
 on:
   push:
     branches:
+      - 'master'
+  pull_request:
+    branches:
       - '**'
-
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
@@ -27,8 +29,8 @@ jobs:
       - name: Set environment variables
         run: |
             echo "TestConfig__ApplyCaseNo=12345678" >> $GITHUB_ENV
-            echo "TestConfig__UserId=${{ secrets.TestConfig__UserId }}" >> $GITHUB_ENV
-            echo "TestConfig__Password=${{ secrets.TestConfig__Password }}" >> $GITHUB_ENV            
+            echo "TestConfig__UserId=0511" >> $GITHUB_ENV
+            echo "TestConfig__Password=password" >> $GITHUB_ENV            
             echo "TestConfig__BaseUrl=https://localhost:9003" >> $GITHUB_ENV
             echo "TestConfig__TokenUrl=http://localhost:8000/openid/connect/token" >> $GITHUB_ENV
             echo "TestConfig__LoginUrl=https://localhost:9003" >> $GITHUB_ENV
@@ -61,22 +63,22 @@ jobs:
           CHROME_VERSION=$(google-chrome-stable --version)
           echo "Installed Chrome Version: $CHROME_VERSION"     
 
-      - name: Curl 9002
-        run: | 
-          docker logs twcweb
-          curl -L -i http://127.0.0.1:9002
+      #- name: Curl 9002
+      #  run: | 
+      #    docker logs twcweb
+      #    curl -L -i http://127.0.0.1:9002
           
-      - name: Curl 8000
-        run: | 
-          curl -L -i http://127.0.0.1:8000
+      #- name: Curl 8000
+      #  run: | 
+      #    curl -L -i http://127.0.0.1:8000
           
-      - name: Curl 8443
-        run: | 
-          curl -k -L -i https://127.0.0.1:8443
+      #- name: Curl 8443
+      #  run: | 
+      #    curl -k -L -i https://127.0.0.1:8443
 
-      - name: logs twcweb
-        run: | 
-          docker logs twcweb
+      #- name: logs twcweb
+      #  run: | 
+      #    docker logs twcweb
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
