@@ -407,7 +407,7 @@ services:
     networks:
       - backend
   gotenberg:
-    image: thecodingmachine/gotenberg:7
+    image: thecodingmachine/gotenberg:7.7.2
     container_name: gotenberg
     restart: on-failure
     environment:
