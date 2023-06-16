@@ -73,6 +73,17 @@ jobs:
       #- name: Curl 8443
       #  run: | 
       #    curl -k -L -i https://127.0.0.1:8443
+
+      - name: Run PowerShell script
+        run: |
+          $url = "http://localhost:5050/Account/Login"
+          $data = @{
+              'Username' = $env:TestConfig__UserId
+              'Password' = $env:TestConfig__Password
+          }
+
+          $response = Invoke-WebRequest -Uri $url -Method POST -Form $data
+          Write-Output $response.Content
     
       - name: Setup .NET
         uses: actions/setup-dotnet@v3

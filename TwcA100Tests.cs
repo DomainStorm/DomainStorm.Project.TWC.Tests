@@ -31,7 +31,8 @@ namespace DomainStorm.Project.TWC.Tests
             var option = new ChromeOptions();
             option.AddArguments("start-maximized");
             option.AddArguments("--disable-gpu");
-            if(TestHelper.GetChromeConfig().Headless)
+            option.AddArguments("--no-sandbox");
+            if (TestHelper.GetChromeConfig().Headless)
                 option.AddArguments("--headless");
             new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
             var driver = new ChromeDriver(option);
