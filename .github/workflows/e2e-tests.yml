@@ -41,12 +41,15 @@ jobs:
       - name: Cache deploy dependencies
         uses: actions/cache@v3
         with:
-          path: ./deploy
-          key: ${{ runner.os }}-powershell-${{ hashFiles('./deploy/**') }}
+          path: |
+            ./deploy/**/*.yml
+            ./deploy/**/*.ps1
+          key: ${{ runner.os }}-files-${{ hashFiles('./deploy/**/*.yml') }}-${{ hashFiles('./deploy/**/*.ps1') }}
           restore-keys: |
-            ${{ runner.os }}-powershell-
+            ${{ runner.os }}-files-
 
       - name: Run Docker Compose and Seed
+        if: steps.cache.outputs.cache-hit != 'true'
         run: | 
             pwsh -File deploy/deploy-e2e.ps1
             pwsh -File deploy/deploy-seed-pipeline-e2e.ps1    
