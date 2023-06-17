@@ -1,8 +1,8 @@
 {
-"applyCaseNo": "118",
-"applyDate": "2023/04/10",
+"applyCaseNo": "取流水序號",
+"applyDate": "2023/06/03",
 "operatingArea": "41",
-"waterNo": "41101233338",
+"waterNo": "41881288118",
 "typeChange": "8",
 "userCode": "0511",
 "changeAddress": "Y",
@@ -11,7 +11,7 @@
 "applyEbill": "Y",
 "cancelSmsBill": "Y",
 "deviceLocation": "台中市西屯區逢甲路100號",
-"applicant": "馬批次過戶",
+"applicant": "馬單件過戶代送",
 "idNo": "A123456789",
 "uniNo": "23456789",
 "telNo": "0439123456",
@@ -19,7 +19,7 @@
 "pipeDiameter": "20",
 "waterType": "1 普通用水",
 "scoreSheet": "2 分表",
-"houseUseName": "原申請888",
+"houseUseName": "原申請8",
 "typeChReason": "過戶有異動原因要填寫8",
 "billAddress": "帳單地址8"
 }
