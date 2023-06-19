@@ -137,6 +137,7 @@ namespace DomainStorm.Project.TWC.Tests
             idNo_driver_1.SendKeys("A123456789");
 
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", idNo_driver_1);
+
             That(idNo_driver_2.GetAttribute("value"), Is.EqualTo("A123456789"));
         }
 

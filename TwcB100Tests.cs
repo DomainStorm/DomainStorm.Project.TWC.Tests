@@ -204,14 +204,14 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(6)]
-        public async Task TwcB100_07() // driver_2中看到申請之表單內容滾動；driver_1看到■已詳閱貴公司消費性用水服務契約
+        public async Task TwcB100_07() // driver_2中勾選消費性用水服務契約
         {
             await TwcB100_06();
 
             ChromeDriver driver_1 = _chromeDriverList[0];
-            driver_1.SwitchTo().DefaultContent();
-
             ChromeDriver driver_2 = _chromeDriverList[1];
+
+            driver_1.SwitchTo().DefaultContent();
             driver_2.SwitchTo().DefaultContent();
 
             WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
@@ -243,7 +243,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(7)]
-        public async Task TwcB100_08() // driver_2中看到申請之表單內容滾動；driver_1看到■已詳閱公司個人資料保護法
+        public async Task TwcB100_08() // driver_2中勾選公司個人資料保護告知事項
         {
             await TwcB100_07();
 
@@ -279,7 +279,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(8)]
-        public async Task TwcB100_09() // driver_2中看到申請之表單內容滾動；driver_1看到■已詳閱貴公司營業章程
+        public async Task TwcB100_09() // driver_2中勾選公司營業章程
         {
             await TwcB100_08();
 
@@ -315,7 +315,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(9)]
-        public async Task TwcB100_10() // driver_2表單畫面完整呈現簽名內容；driver_1同樣看到完整簽名內容及年月日時分秒資訊
+        public async Task TwcB100_10() // driver_2中表單畫面完整呈現簽名內容，並於driver_1中看到相容內容
         {
             await TwcB100_09();
 
