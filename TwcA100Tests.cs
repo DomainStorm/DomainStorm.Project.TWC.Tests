@@ -4,7 +4,6 @@ using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Net;
-using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager;
 using static NUnit.Framework.Assert;
 
@@ -172,8 +171,8 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理_driver_1);
             wait_driver_2.Until(ExpectedConditions.FrameToBeAvailableAndSwitchToIt(By.CssSelector("iframe")));
 
-            IReadOnlyList<IWebElement> 已受理 = driver_2.FindElements(By.CssSelector("[class='sign']"));
-            That(已受理, Is.Not.Empty, "未受理");
+            IReadOnlyList<IWebElement> signElement = driver_2.FindElements(By.CssSelector("[class='sign']"));
+            That(signElement, Is.Not.Empty, "未受理");
         }
 
         [Test]
