@@ -78,7 +78,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(2)]
-        public async Task TwcA101_03() // driver_1中看到申請之表單內容跳至夾帶附件區塊
+        public async Task TwcA101_03() // 看到申請之表單內容跳至夾帶附件區塊
         {
             ChromeDriver driver_1 = GetNewChromeDriver();
 
@@ -105,7 +105,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(3)]
-        public async Task TwcA101_04() // driver_1可看到檔案上傳
+        public async Task TwcA101_04() // 看到檔案上傳
         {
             ChromeDriver driver_1 = GetNewChromeDriver();
 
@@ -138,10 +138,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             lastHiddenInput.SendKeys(filePath);
 
-            //string twcweb_01_1_夾帶附件1 = @"D:\work\DomainStorm.Project.TWC.Tests\Assets\twcweb_01_1_夾帶附件1.pdf";
-
-            //lastHiddenInput.SendKeys(twcweb_01_1_夾帶附件1);
-
             IWebElement stormInputGroup = driver_1.FindElement(By.CssSelector("body storm-main-content main div div div div storm-card form storm-input-group"));
             string value = stormInputGroup.GetAttribute("value");
 
@@ -150,9 +146,8 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(4)]
-        public async Task TwcA101_05()
+        public async Task TwcA101_05() // 看到夾帶附件視窗顯示有一筆附件清單資料
         {
-            //driver_1看到夾帶附件視窗顯示有一筆附件清單資料
             ChromeDriver driver_1 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
@@ -200,9 +195,8 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(5)]
-        public async Task TwcA101_06()
+        public async Task TwcA101_06() // 看到■用印或代送件只需夾帶附件已打勾
         {
-            //driver_1中看到■用印或代送件只需夾帶附件已打勾
             ChromeDriver driver_1 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
@@ -229,9 +223,8 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(6)]
-        public async Task TwcA101_07()
+        public async Task TwcA101_07() // 系統跳出【受理】尚未核章
         {
-            //系統跳出【受理】尚未核章
             ChromeDriver driver_1 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
@@ -262,9 +255,8 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(7)]
-        public async Task TwcA101_08()
+        public async Task TwcA101_08() // 表單受理欄位中看到核章資訊
         {
-            //driver_1中表單受理欄位中看到核章資訊
             ChromeDriver driver_1 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
@@ -288,9 +280,8 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(8)]
-        public async Task TwcA101_09()
+        public async Task TwcA101_09() // 確認完成畫面進入未結案件中
         {
-            //確認完成畫面進入未結案件中
             await TwcA101_08();
 
             ChromeDriver driver_1 = _chromeDriverList[0];
@@ -357,9 +348,8 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(9)]
-        public async Task TwcA101_10()
+        public async Task TwcA101_10() // 看到夾帶附件區顯示該檔案。已勾選■已詳閱貴公司消費性用水服務契約、公司個人資料保護法、貴公司營業章程
         {
-            //driver_1中看到夾帶附件區塊顯示該夾帶檔案。已勾選■已詳閱貴公司消費性用水服務契約，已勾選■已詳閱公司個人資料保護法，已勾選■已詳閱貴公司營業章程
             ChromeDriver driver_1 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
