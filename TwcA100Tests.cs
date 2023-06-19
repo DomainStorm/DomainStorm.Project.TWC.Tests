@@ -400,14 +400,20 @@ namespace DomainStorm.Project.TWC.Tests
 
             IList<IWebElement> hiddenInputs = driver_1.FindElements(By.CssSelector("body > .dz-hidden-input"));
             IWebElement lastHiddenInput = hiddenInputs[^1];
-            string twcweb_01_1_夾帶附件1 = @"D:\work\DomainStorm.Project.TWC.Tests\Assets\twcweb_01_1_夾帶附件1.pdf";
-            lastHiddenInput.SendKeys(twcweb_01_1_夾帶附件1);
+
+            string twcweb_01_1_夾帶附件1 = "twcweb_01_1_夾帶附件1.pdf";
+            string 附件1Path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件1);
+
+            lastHiddenInput.SendKeys(附件1Path);
 
             hiddenInputs = driver_1.FindElements(By.CssSelector("body > .dz-hidden-input"));
 
             lastHiddenInput = hiddenInputs[^1];
-            string twcweb_01_1_夾帶附件2 = @"D:\work\DomainStorm.Project.TWC.Tests\Assets\twcweb_01_1_夾帶附件2.pdf";
-            lastHiddenInput.SendKeys(twcweb_01_1_夾帶附件2);
+
+            string twcweb_01_1_夾帶附件2 = "twcweb_01_1_夾帶附件2.pdf";
+            string 附件2Path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件2);
+
+            lastHiddenInput.SendKeys(附件2Path);
 
             IWebElement uploadButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             actions.MoveToElement(uploadButton).Click().Perform();
@@ -430,8 +436,7 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcA100_11();
 
             ChromeDriver driver_1 = _chromeDriverList[0];
-            ChromeDriver driver_2 = _chromeDriverList[1];
-            driver_2.Quit();
+            _chromeDriverList[1].Quit();
 
             WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -452,7 +457,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", confirmButton);
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", confirmButton);
 
-            string targetUrl = $"{TestHelper.LoginUrl}/unfinished";
+            string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             wait.Until(ExpectedConditions.UrlContains(targetUrl));
 
             IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
@@ -464,6 +469,8 @@ namespace DomainStorm.Project.TWC.Tests
             if (element != null)
             {
                 string applyCaseNo = element.Text;
+
+                That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
             }
         }
     }

@@ -318,9 +318,9 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement lastHiddenInput = hiddenInputs[^1];
 
             string twcweb_01_1_夾帶附件1 = "twcweb_01_1_夾帶附件1.pdf";
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件1);
+            string 附件1Path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件1);
 
-            lastHiddenInput.SendKeys(filePath);
+            lastHiddenInput.SendKeys(附件1Path);
 
             IWebElement uploadButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             actions.MoveToElement(uploadButton).Click().Perform();
