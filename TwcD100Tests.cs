@@ -97,14 +97,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver_2.SwitchTo().Frame(0);
 
-            IWebElement applyCaseNo_driver_2 = driver_2.FindElement(By.CssSelector("[sti-apply-case-no]"));
-            That(applyCaseNo_driver_2.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+            IWebElement applyCaseNo = driver_2.FindElement(By.CssSelector("[sti-apply-case-no]"));
+            That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
-            IWebElement waterNo_driver_2 = driver_2.FindElement(By.CssSelector("[sti-water-no]"));
-            That(waterNo_driver_2.Text, Is.EqualTo("41101233334"));
+            IWebElement waterNo = driver_2.FindElement(By.CssSelector("[sti-water-no]"));
+            That(waterNo.Text, Is.EqualTo("41101233334"));
 
-            IWebElement applyDate_driver_2 = driver_2.FindElement(By.CssSelector("[sti-apply-date]"));
-            That(applyDate_driver_2.Text, Is.EqualTo("2023年06月03日"));
+            IWebElement applyDate = driver_2.FindElement(By.CssSelector("[sti-apply-date]"));
+            That(applyDate.Text, Is.EqualTo("2023年06月03日"));
         }
 
         [Test]
