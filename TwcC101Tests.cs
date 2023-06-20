@@ -513,6 +513,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcC101_13() // PDF檔產製成功自動下載於下載區
         {
             await TwcC101_11();
+
             ChromeDriver driver_1 = _chromeDriverList[0];
 
             IWebElement stormMainContent = driver_1.FindElement(By.CssSelector("storm-main-content"));
