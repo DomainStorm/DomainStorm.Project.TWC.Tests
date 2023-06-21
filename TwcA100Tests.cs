@@ -123,8 +123,7 @@ namespace DomainStorm.Project.TWC.Tests
             ChromeDriver driver_2 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_2, TestHelper.UserId!, TestHelper.Password!);
-            driver_2.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-scre
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));en/{id}");
+            driver_2.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
             WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -132,13 +131,12 @@ namespace DomainStorm.Project.TWC.Tests
             driver_1.SwitchTo().Frame(0);
 
             IWebElement idNo_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input")));
-            IWebElement idNo_driver_2 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input")));
 
             idNo_driver_1.SendKeys("A123456789");
 
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", idNo_driver_1);
 
-            That(idNo_driver_2.GetAttribute("value"), Is.EqualTo("A123456789"));
+            That(idNo_driver_1.GetAttribute("value"), Is.EqualTo("A123456789"));
         }
 
         [Test]
