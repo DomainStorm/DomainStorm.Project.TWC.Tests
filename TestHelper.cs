@@ -3,7 +3,6 @@ using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using RestSharp;
 using SeleniumExtras.WaitHelpers;
-using System.Drawing;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net;
@@ -87,7 +86,6 @@ public class TestHelper
         }
         set => _accessToken = value;
     }
-
     public static ChromeConfig GetChromeConfig()
     {
         return new ConfigurationBuilder()
@@ -98,8 +96,6 @@ public class TestHelper
             .GetSection("ChromeConfig")
             .Get<ChromeConfig>();
     }
-
-
     public class TokenResponse
     {
         public string? Access_token { get; set; }
@@ -136,6 +132,8 @@ public class TestHelper
 
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
         update.applyCaseNo = ApplyCaseNo;
+        //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
+      
         update.userCode = UserId;
 
         var updatedJson = JsonConvert.SerializeObject(update);
@@ -155,7 +153,6 @@ public class TestHelper
         //webDriver.Navigate().GoToUrl(LoginUrl);
 
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-
 
         Console.WriteLine($"::group::Login---------{LoginUrl}---------");
         Console.WriteLine($"---------{LoginUrl}---------");
@@ -178,7 +175,6 @@ public class TestHelper
 
         wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
         
-
         return Task.CompletedTask;
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
@@ -210,7 +206,6 @@ public class TestHelper
         return id;
     }
 }
-
 public class WaterForm
 {
     public string? applyCaseNo { get; set; }
@@ -232,25 +227,16 @@ public class WaterForm
     public string? waterUseLic { get; set; }
     public string? billAddress { get; set; }
 }
-
-
 public class TestConfig
 {
     public string? BaseUrl { get; set; }
-
     public string? TokenUrl { get; set; }
-
     public string? LoginUrl { get; set; }
-
     public string? AccessToken { get; set; }
-
     public string? ApplyCaseNo { get; set; }
-
     public string? Password { get; set; }
-
     public string? UserId { get; set; }
 }
-
 public class ChromeConfig
 {
     public bool Headless { get; set; }
