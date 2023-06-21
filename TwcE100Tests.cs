@@ -510,16 +510,50 @@ namespace DomainStorm.Project.TWC.Tests
             That(spanText, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf,twcweb_01_1_夾帶附件2.pdf"));
         }
 
-        //[Test]
-        //[Order(14)]
-        //public async Task TwcE100_15() // 系統顯示[申請電子帳單需要填寫Email及聯絡電話]
-        //{
-        //    
-        //}
+        [Test]
+        [Order(14)]
+        public async Task TwcE100_15() // 系統顯示[申請電子帳單需要填寫Email及聯絡電話]
+        {
+            ChromeDriver driver_1 = GetNewChromeDriver();
+
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+
+            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
+            driver_1.SwitchTo().Frame(0);
+
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 受理);
+
+            driver_1.SwitchTo().DefaultContent();
+
+            IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            IWebElement stormTreeNodeFifth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
+            IWebElement hrefFinished = stormTreeNodeFifth.GetShadowRoot().FindElement(By.CssSelector("a[href='#finished']"));
+
+            Actions actions = new(driver_1);
+            actions.MoveToElement(hrefFinished).Click().Perform();
+
+            IWebElement 確認受理 = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 確認受理);
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 確認受理);
+
+            IWebElement outerContainer = driver_1.FindElement(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show"));
+            IWebElement innerContainer = outerContainer.FindElement(By.CssSelector("div.swal2-popup.swal2-modal.swal2-icon-warning.swal2-show"));
+
+            That(innerContainer.Displayed, Is.True);
+        }
 
         [Test]
         [Order(15)]
-        public async Task TwcE100_16() // 16.Email欄位內顯示aaa@bbb.ccc;聯絡電話欄位內顯示02-12345678
+        public async Task TwcE100_16() // driver_2中Email欄位內顯示aaa@bbb.ccc;聯絡電話欄位內顯示02-12345678
         {
             ChromeDriver driver_1 = GetNewChromeDriver();
 
