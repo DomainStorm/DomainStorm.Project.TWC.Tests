@@ -570,6 +570,23 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement downloadPDF = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", downloadPDF);
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", downloadPDF);
+
+            string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
+            string filePath = Path.Combine(downloadsFolderPath, "41104433664.pdf");
+
+            wait.Until(driver =>
+            {
+                if (File.Exists(filePath))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            });
+
+            That(File.Exists(filePath), Is.True);
         }
     }
 }
