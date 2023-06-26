@@ -786,17 +786,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver_1.SwitchTo().Frame(0);
 
-            //IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
-            //((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);;
-
-            //wait.Until(driver_1 =>
-            //{
-            //    IWebElement element = driver_1.FindElement(By.CssSelector("[sti-apply-email]"));
-            //    return element.GetAttribute("checked") == "true";
-            //});
-
-            //That(applyEmail.GetAttribute("checked"), Is.EqualTo("true"));
-
             IWebElement email_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email]")));
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", email_driver_1);
 
