@@ -186,6 +186,19 @@ namespace DomainStorm.Project.TWC.Tests
             WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
+            driver_1.SwitchTo().Frame(0);
+
+            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", applyEmail);
+
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 受理);
+
+            driver_1.SwitchTo().DefaultContent();
+
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             IWebElement stormTreeNodeFifth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
@@ -193,6 +206,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             Actions actions = new(driver_1);
             actions.MoveToElement(hrefFinished).Click().Perform();
+
+            IWebElement 用印或代送件只需夾帶附件 = driver_1.FindElement(By.Id("用印或代送件只需夾帶附件"));
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 用印或代送件只需夾帶附件);
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 用印或代送件只需夾帶附件);
 
             IWebElement 確認受理 = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
 
@@ -386,17 +403,14 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", applyEmail);
 
             IWebElement email_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", email_driver_1);
             email_driver_1.SendKeys("aaa@bbb.ccc");
-
-            Actions actions = new(driver_1);
-            actions.MoveToElement(applyEmail).Click().Perform();
+            email_driver_1.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
             IWebElement telNo_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", telNo_driver_1);
             telNo_driver_1.SendKeys("02-12345678");
-
-            actions.MoveToElement(applyEmail).Click().Perform();
+            telNo_driver_1.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
             IWebElement 中結 = driver_1.FindElement(By.Id("中結"));
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 中結);
@@ -417,6 +431,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
             IWebElement hrefFile = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
 
+            Actions actions = new(driver_1);
             actions.MoveToElement(hrefFile).Click().Perform();
 
             IWebElement buttonAddDocument = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
@@ -478,17 +493,6 @@ namespace DomainStorm.Project.TWC.Tests
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             driver_1.SwitchTo().Frame(0);
-
-            //IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
-            //((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);;
-
-            //wait.Until(driver_1 =>
-            //{
-            //    IWebElement element = driver_1.FindElement(By.CssSelector("[sti-apply-email]"));
-            //    return element.GetAttribute("checked") == "true";
-            //});
-
-            //That(applyEmail.GetAttribute("checked"), Is.EqualTo("true"));
 
             IWebElement email_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email]")));
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", email_driver_1);
