@@ -637,33 +637,34 @@ namespace DomainStorm.Project.TWC.Tests
             That(download, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
 
-        //[Test]
-        //[Order(15)]
-        //public async Task TwcG101_16() // 看到檢附證件欄位●撫卹令或撫卹金分領證書被選擇並有欄位內顯示值BBB 。看到超戶申請欄位顯示看到●否
-        //{
-        //    ChromeDriver driver_1 = GetNewChromeDriver();
+        [Test]
+        [Order(15)]
+        public async Task TwcG101_16() // 看到檢附證件欄位●撫卹令或撫卹金分領證書被選擇並有欄位內顯示值BBB 。看到超戶申請欄位顯示看到●否
+        {
+            ChromeDriver driver_1 = GetNewChromeDriver();
 
-        //    await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
-        //    driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
-        //    TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
+            driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
+            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
-        //    WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
-        //    wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-        //    driver_1.SwitchTo().Frame(0);
+            driver_1.SwitchTo().Frame(0);
 
-        //    IWebElement 撫卹 = driver_1.FindElement(By.Id("檢附證件group2"));
-        //    ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 撫卹);
-        //    ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 撫卹);
+            IWebElement stiIdentification = driver_1.FindElement(By.CssSelector("span[data-class='InputSelectBlock'][sti-identification]"));
 
-        //    That(撫卹.GetAttribute("checked"), Is.EqualTo("true"));
+            string spanText_Identification = stiIdentification.Text;
 
-        //    IWebElement identification = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-identification] > input")));
+            That(spanText_Identification, Is.EqualTo("BBB"));
 
-        //    string spanText_Identification = identification.Text;
+            IWebElement stiOverApply = driver_1.FindElement(By.CssSelector("span[data-class='MultiInputSelectBlockBlock'][sti-over-apply]"));
 
-        //    That(spanText_Identification, Is.EqualTo("BBB"));
-        //}
+            string spanText_stiOverApply = stiOverApply.Text;
+
+            That(spanText_stiOverApply, Is.EqualTo("否"));
+
+        }
 
         [Test]
         [Order(16)]
