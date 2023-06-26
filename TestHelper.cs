@@ -200,9 +200,14 @@ public class TestHelper
     }
     public static string GetLastSegmentFromUrl(ChromeDriver driver)
     {
-        Thread.Sleep(1000);
+        string initialUrl = driver.Url;
+
+        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        wait.Until(driver => driver.Url != initialUrl);
+
         string[] segments = driver.Url.Split('/');
         string id = segments[^1];
+
         return id;
     }
 }
