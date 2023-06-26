@@ -220,32 +220,21 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver_1.SwitchTo().Frame(0);
 
-            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", applyEmail);
-
             IWebElement email_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
             email_driver_1.SendKeys("aaa@bbb.ccc");
+            email_driver_1.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
-            Actions actions = new(driver_1);
-            actions.MoveToElement(applyEmail).Click().Perform();
-
-            email_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", email_driver_1);
+            IWebElement telNo_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
+            telNo_driver_1.SendKeys("02-12345678");
+            telNo_driver_1.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
             email_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
             That(email_driver_1.GetAttribute("value"), Is.EqualTo("aaa@bbb.ccc"));
 
-            //IWebElement telNo_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
-            //telNo_driver_1.SendKeys("02-12345678");
-
-            //actions.MoveToElement(applyEmail).Click().Perform();
-
-            //telNo_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
-            //((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", telNo_driver_1);
-
-            //telNo_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
-            //That(telNo_driver_1.GetAttribute("value"), Is.EqualTo("02-12345678"));
+            telNo_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
+            That(telNo_driver_1.GetAttribute("value"), Is.EqualTo("02-12345678"));
         }
 
         [Test]
