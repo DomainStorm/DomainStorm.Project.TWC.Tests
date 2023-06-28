@@ -189,6 +189,10 @@ public class TestHelper
         var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
         var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
+        var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
+        searchInput.SendKeys(applyCaseNo);
+        Thread.Sleep(1000);
+
         var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
         var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
