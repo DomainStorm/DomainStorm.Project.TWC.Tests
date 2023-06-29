@@ -130,16 +130,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver_1.SwitchTo().Frame(0);
 
-            IWebElement stiTrusteeIdNo_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input")));
-            stiTrusteeIdNo_driver_1.SendKeys("A123456789");
-            stiTrusteeIdNo_driver_1.SendKeys(Keys.Tab);
+            IWebElement idNo_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input")));
+            IWebElement idNo_driver_2 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input")));
 
-            driver_2.SwitchTo().Frame(0);
+            idNo_driver_1.SendKeys("A123456789");
 
-            IWebElement stiTrusteeIdNo_driver_2 = driver_2.FindElement(By.CssSelector("span[data-class='InputSelectBlock'][sti-trustee-id-no]"));
-            string spanText_stiTrusteeIdNo_driver_2 = stiTrusteeIdNo_driver_2.Text;
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", idNo_driver_1);
 
-            That(spanText_stiTrusteeIdNo_driver_2, Is.EqualTo("A123456789"));
+            That(idNo_driver_2.GetAttribute("value"), Is.EqualTo("A123456789"));
         }
 
         [Test]
