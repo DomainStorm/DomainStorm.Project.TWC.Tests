@@ -35,6 +35,9 @@ namespace DomainStorm.Project.TWC.Tests
             option.AddArgument("--ignore-urlfetcher-cert-requests");
             option.AddArgument("--disable-web-security");
             option.AddArgument("--ignore-certificate-errors");
+
+            string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
+            option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
             //option.AddArguments("--no-sandbox");
 
             if (TestHelper.GetChromeConfig().Headless)
