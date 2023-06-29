@@ -545,6 +545,8 @@ namespace DomainStorm.Project.TWC.Tests
             string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
             string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf");
 
+            Console.WriteLine(downloadsFolderPath);
+
             wait.Until(driver =>
             {
                 if (File.Exists(filePath))
