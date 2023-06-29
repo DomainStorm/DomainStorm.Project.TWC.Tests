@@ -36,7 +36,7 @@ namespace DomainStorm.Project.TWC.Tests
             option.AddArgument("--disable-web-security");
             option.AddArgument("--ignore-certificate-errors");
 
-            string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
+            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
             option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
             //option.AddArguments("--no-sandbox");
 
@@ -545,7 +545,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", downloadPDF);
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", downloadPDF);
 
-            string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
+            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
             string filePath = Path.Combine(downloadsFolderPath, "41188239939.pdf");
 
             wait.Until(driver =>
