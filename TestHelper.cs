@@ -131,9 +131,10 @@ public class TestHelper
         var json = await r.ReadToEndAsync();
 
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
-        update.applyCaseNo = ApplyCaseNo;
-        //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
-      
+
+        _applyCaseNo = DateTime.Now.ToString("u");
+        update.applyCaseNo = _applyCaseNo;
+
         update.userCode = UserId;
 
         var updatedJson = JsonConvert.SerializeObject(update);
@@ -179,6 +180,8 @@ public class TestHelper
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
+         applyCaseNo = _applyCaseNo;
+
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
         Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
