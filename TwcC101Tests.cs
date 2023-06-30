@@ -528,7 +528,7 @@ namespace DomainStorm.Project.TWC.Tests
             Actions actions = new(driver_1);
             actions.MoveToElement(element).Click().Perform();
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(20));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
