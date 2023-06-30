@@ -64,5 +64,8 @@ WaitForHealthy "multimediaapi"
 WaitForHealthy "resourceapi"
 WaitForHealthy "twcweb"
 WaitForHealthy "servicebus"
- 
+
+docker logs "metadataapi"
+docker logs "resourceapi"
+docker logs "multimediaapi"
 
