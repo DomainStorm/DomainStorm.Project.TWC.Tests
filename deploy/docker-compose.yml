@@ -254,7 +254,7 @@ services:
     # command: ["luarocks", "install", "kong-plugin-url-rewrite"]       
     volumes:
       - ./ssl:/ssl        
-    restart: on-failure
+    restart: always
     ports:
       - 8000:8000
       - 8443:8443
