@@ -21,9 +21,9 @@ $env:KONG_POSTGRES_PASSWORD = "adminadmin"
 
 $env:MetadataApi_Version = "0.0.8"
 $env:MultiMediaApi_Version = "0.0.5"
-$env:JwtAuthApi_Version = "0.2.9"
-$env:OpenidProvider_Version = "0.2.9"
-$env:TwcWeb_Version = "0.8.4"
+$env:JwtAuthApi_Version = "0.3.0"
+$env:OpenidProvider_Version = "0.3.0"
+$env:TwcWeb_Version = "0.7.6"
 $env:ResourceApi_Version = "0.1.1"
 $env:ServiceBus_Version = "0.0.4"
 
