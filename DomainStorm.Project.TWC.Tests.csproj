@@ -8,6 +8,7 @@
 		<IsPackable>false</IsPackable>
 
 		<UserSecretsId>84261cfa-57a8-413d-81ab-f6f07fc6e767</UserSecretsId>
+    <RunSettingsFilePath>$(MSBuildProjectDirectory)\.runsettings</RunSettingsFilePath>
 	</PropertyGroup>
 
 	<ItemGroup>
