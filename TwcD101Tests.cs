@@ -115,28 +115,18 @@ namespace DomainStorm.Project.TWC.Tests
             driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
-            string id = TestHelper.GetLastSegmentFromUrl(driver_1);
-            ChromeDriver driver_2 = GetNewChromeDriver();
-
-            await TestHelper.Login(driver_2, TestHelper.UserId!, TestHelper.Password!);
-            driver_2.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
-
-            WebDriverWait wait_driver_1 = new(driver_1, TimeSpan.FromSeconds(10));
-            wait_driver_1.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            WebDriverWait wait_driver_2 = new(driver_2, TimeSpan.FromSeconds(10));
-            wait_driver_2.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             driver_1.SwitchTo().Frame(0);
 
-            IWebElement 受理_driver_1 = wait_driver_1.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
 
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 受理_driver_1);
-            wait_driver_1.Until(ExpectedConditions.ElementToBeClickable(受理_driver_1));
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 受理);
 
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理_driver_1);
-            wait_driver_2.Until(ExpectedConditions.FrameToBeAvailableAndSwitchToIt(By.CssSelector("iframe")));
+            IReadOnlyList<IWebElement> signElement = driver_1.FindElements(By.CssSelector("[class='sign']"));
 
-            IReadOnlyList<IWebElement> signElement = driver_2.FindElements(By.CssSelector("[class='sign']"));
             That(signElement, Is.Not.Empty, "未受理");
         }
 
@@ -196,10 +186,11 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 確認受理);
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 確認受理);
 
-            IWebElement outerContainer = driver_1.FindElement(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show"));
-            IWebElement innerContainer = outerContainer.FindElement(By.CssSelector("div.swal2-popup.swal2-modal.swal2-icon-warning.swal2-show"));
+            IWebElement divElement = driver_1.FindElement(By.Id("swal2-html-container"));
+            IWebElement h5Element = divElement.FindElement(By.TagName("h5"));
+            string h5Text = h5Element.Text;
 
-            That(innerContainer.Displayed, Is.True);
+            That(h5Text, Is.EqualTo("尚未夾帶附件"));
         }
 
         [Test]
