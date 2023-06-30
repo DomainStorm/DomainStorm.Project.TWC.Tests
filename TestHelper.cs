@@ -131,9 +131,12 @@ public class TestHelper
         var json = await r.ReadToEndAsync();
 
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
-        update.applyCaseNo = ApplyCaseNo;
-        //update.applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
-      
+
+        _applyCaseNo = DateTime.Now.ToString("u"); //自動產生並使用
+        update.applyCaseNo = _applyCaseNo;
+
+        //update.applyCaseNo = ApplyCaseNo; //指定並使用
+
         update.userCode = UserId;
 
         var updatedJson = JsonConvert.SerializeObject(update);
@@ -179,6 +182,10 @@ public class TestHelper
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
+        applyCaseNo = _applyCaseNo; //自動產生並使用
+
+        //applyCaseNo = ApplyCaseNo; //指定並使用
+
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
         Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
@@ -188,6 +195,10 @@ public class TestHelper
         var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
         var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
         var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+
+        var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
+        searchInput.SendKeys(applyCaseNo);
+        Thread.Sleep(1000);
 
         var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
@@ -200,9 +211,14 @@ public class TestHelper
     }
     public static string GetLastSegmentFromUrl(ChromeDriver driver)
     {
-        Thread.Sleep(1000);
+        string initialUrl = driver.Url;
+
+        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        wait.Until(driver => driver.Url != initialUrl);
+
         string[] segments = driver.Url.Split('/');
         string id = segments[^1];
+
         return id;
     }
 }

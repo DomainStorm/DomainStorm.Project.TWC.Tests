@@ -123,8 +123,7 @@ namespace DomainStorm.Project.TWC.Tests
             ChromeDriver driver_2 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_2, TestHelper.UserId!, TestHelper.Password!);
-            driver_2.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-scre
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));en/{id}");
+            driver_2.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
             WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -157,20 +156,17 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(driver_2, TestHelper.UserId!, TestHelper.Password!);
             driver_2.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
-            WebDriverWait wait_driver_1 = new(driver_1, TimeSpan.FromSeconds(10));
-            wait_driver_1.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            WebDriverWait wait_driver_2 = new(driver_2, TimeSpan.FromSeconds(10));
-            wait_driver_2.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             driver_1.SwitchTo().Frame(0);
 
-            IWebElement 受理_driver_1 = wait_driver_1.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
-
+            IWebElement 受理_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 受理_driver_1);
-            wait_driver_1.Until(ExpectedConditions.ElementToBeClickable(受理_driver_1));
-
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理_driver_1);
-            wait_driver_2.Until(ExpectedConditions.FrameToBeAvailableAndSwitchToIt(By.CssSelector("iframe")));
+            wait.Until(ExpectedConditions.ElementToBeClickable(受理_driver_1));
+            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 受理_driver_1);
+           
+            driver_2.SwitchTo().Frame(0);
 
             IReadOnlyList<IWebElement> signElement = driver_2.FindElements(By.CssSelector("[class='sign']"));
             That(signElement, Is.Not.Empty, "未受理");
@@ -296,10 +292,7 @@ namespace DomainStorm.Project.TWC.Tests
             ChromeDriver driver_1 = _chromeDriverList[0];
             ChromeDriver driver_2 = _chromeDriverList[1];
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            IWebElement stormVerticalNavigation = driver_1.FindElement(By.CssSelector("storm-vertical-navigation"));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             IWebElement stormTreeNodeThird = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[2];
             IWebElement hrefSignature = stormTreeNodeThird.GetShadowRoot().FindElement(By.CssSelector("a[href='#signature']"));
@@ -336,16 +329,13 @@ namespace DomainStorm.Project.TWC.Tests
             driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
             string id = TestHelper.GetLastSegmentFromUrl(driver_1);
             ChromeDriver driver_2 = GetNewChromeDriver();
 
             await TestHelper.Login(driver_2, TestHelper.UserId!, TestHelper.Password!);
             driver_2.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
-            IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            IWebElement stormVerticalNavigation = driver_1.FindElement(By.CssSelector("storm-vertical-navigation"));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             IWebElement stormTreeNodeFourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
             IWebElement stormTreeNodeFirst = stormTreeNodeFourth.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
@@ -382,17 +372,14 @@ namespace DomainStorm.Project.TWC.Tests
             driver_1.SwitchTo().DefaultContent();
             driver_2.SwitchTo().DefaultContent();
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            IWebElement stormVerticalNavigation = driver_1.FindElement(By.CssSelector("storm-vertical-navigation"));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             IWebElement stormTreeNodeFourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
             IWebElement stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
             IWebElement hrefFile = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
 
             Actions actions = new(driver_1);
-            actions.MoveToElement(hrefFile).Click().Perform();
+            actions.MoveToElement(hrefFile).Click(hrefFile).Perform();
 
             IWebElement buttonAddDocument = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", buttonAddDocument);
@@ -416,6 +403,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             lastHiddenInput.SendKeys(附件2Path);
 
+            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
             IWebElement uploadButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             actions.MoveToElement(uploadButton).Click().Perform();
 
@@ -423,9 +413,9 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
             IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
-            var spanElement = element.FindElement(By.CssSelector("span"));
-            string spanText = spanElement.Text;
+            IWebElement fileName = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
+            IWebElement spanName = fileName.FindElement(By.CssSelector("span"));
+            string spanText = spanName.Text;
 
             That(spanText, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf,twcweb_01_1_夾帶附件2.pdf"));
         }
@@ -439,10 +429,7 @@ namespace DomainStorm.Project.TWC.Tests
             ChromeDriver driver_1 = _chromeDriverList[0];
             _chromeDriverList[1].Quit();
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            IWebElement stormVerticalNavigation = driver_1.FindElement(By.CssSelector("storm-vertical-navigation"));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             IWebElement stormTreeNodeFifth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
             IWebElement hrefFinished = stormTreeNodeFifth.GetShadowRoot().FindElement(By.CssSelector("a[href='#finished']"));
@@ -457,6 +444,9 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement confirmButton = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", confirmButton);
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", confirmButton);
+
+            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             wait.Until(ExpectedConditions.UrlContains(targetUrl));

@@ -34,6 +34,9 @@ namespace DomainStorm.Project.TWC.Tests
             option.AddArgument("--ignore-urlfetcher-cert-requests");
             option.AddArgument("--disable-web-security");
             option.AddArgument("--ignore-certificate-errors");
+
+            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
             //option.AddArguments("--no-sandbox");
 
             if (TestHelper.GetChromeConfig().Headless)
@@ -525,7 +528,7 @@ namespace DomainStorm.Project.TWC.Tests
             Actions actions = new(driver_1);
             actions.MoveToElement(element).Click().Perform();
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(20));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
@@ -539,7 +542,22 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", downloadPDF);
             ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", downloadPDF);
 
+            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf"); 
 
+            wait.Until(driver =>
+            {
+                if (File.Exists(filePath))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            });
+
+            That(File.Exists(filePath), Is.True);
         }
     }
 }
