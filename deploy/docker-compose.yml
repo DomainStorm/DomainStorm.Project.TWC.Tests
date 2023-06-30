@@ -267,7 +267,7 @@ services:
           condition: service_started
       kong-migrations-up:
           condition: service_started    
-     domainstorm.project.twc.web:
+      domainstorm.project.twc.web:
           condition: service_healthy         
     healthcheck:       
       test: ["CMD", "kong", "health"] 
