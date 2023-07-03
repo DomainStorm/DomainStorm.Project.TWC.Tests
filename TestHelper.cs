@@ -132,10 +132,10 @@ public class TestHelper
 
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
 
-        //_applyCaseNo = DateTime.Now.ToString("u"); //自動產生並使用
-        //update.applyCaseNo = _applyCaseNo;
+        _applyCaseNo = DateTime.Now.ToString("u"); //自動產生並使用
+        update.applyCaseNo = _applyCaseNo;
 
-        update.applyCaseNo = ApplyCaseNo; //指定並使用
+        //update.applyCaseNo = ApplyCaseNo; //指定並使用
 
         update.userCode = UserId;
 
@@ -182,7 +182,7 @@ public class TestHelper
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
-        //applyCaseNo = _applyCaseNo; //自動產生並使用
+        applyCaseNo = _applyCaseNo; //自動產生並使用
 
         //applyCaseNo = ApplyCaseNo; //指定並使用
 
