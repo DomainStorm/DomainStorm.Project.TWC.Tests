@@ -215,17 +215,14 @@ namespace DomainStorm.Project.TWC.Tests
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            driver.SwitchTo().Window(driver.WindowHandles[0]);
-            driver.SwitchTo().Frame(0);
+            IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            IWebElement stormTreeNodeSecond = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+            IWebElement stormTreeNodeFirst = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
+            IWebElement hrefContract_1 = stormTreeNodeFirst.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            wait.Until(ExpectedConditions.ElementToBeClickable(受理));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
-
-            driver.SwitchTo().DefaultContent();
-
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
+            Actions actions = new(driver);
+            actions.MoveToElement(hrefContract_1).Click().Perform();
 
             IWebElement 消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
@@ -245,7 +242,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(5)]
+        [Order(6)]
         public async Task TwcA100_07() // driver_2中勾選公司個人資料保護告知事項，driver_1看到■已詳閱
         {
             ChromeDriver driver = GetNewChromeDriver();
@@ -263,21 +260,14 @@ namespace DomainStorm.Project.TWC.Tests
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            driver.SwitchTo().Window(driver.WindowHandles[0]);
-            driver.SwitchTo().Frame(0);
+            IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            IWebElement stormTreeNodeSecond = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+            IWebElement stormTreeNodeSecondUnderSecond = stormTreeNodeSecond.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+            IWebElement hrefContract_2 = stormTreeNodeSecondUnderSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_2']"));
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            wait.Until(ExpectedConditions.ElementToBeClickable(受理));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
-
-            driver.SwitchTo().DefaultContent();
-
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
-
-            IWebElement 消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
+            Actions actions = new(driver);
+            actions.MoveToElement(hrefContract_2).Click().Perform();
 
             IWebElement 公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
@@ -291,8 +281,8 @@ namespace DomainStorm.Project.TWC.Tests
                 ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
                 return 公司個人資料保護告知事項.GetAttribute("checked") == "true";
             });
-
             公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
+
             That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
@@ -315,25 +305,14 @@ namespace DomainStorm.Project.TWC.Tests
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            driver.SwitchTo().Window(driver.WindowHandles[0]);
-            driver.SwitchTo().Frame(0);
+            IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            IWebElement stormTreeNodeSecond = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+            IWebElement stormTreeNodeThird = stormTreeNodeSecond.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[2];
+            IWebElement hrefContract_3 = stormTreeNodeThird.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_3']"));
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            wait.Until(ExpectedConditions.ElementToBeClickable(受理));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
-
-            driver.SwitchTo().DefaultContent();
-
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
-
-            IWebElement 消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
-
-            IWebElement 公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
+            Actions actions = new(driver);
+            actions.MoveToElement(hrefContract_3).Click().Perform();
 
             IWebElement 公司營業章程 = driver.FindElement(By.Id("公司營業章程"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
@@ -347,8 +326,8 @@ namespace DomainStorm.Project.TWC.Tests
                 ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
                 return 公司營業章程.GetAttribute("checked") == "true";
             });
-
             公司營業章程 = driver.FindElement(By.Id("公司營業章程"));
+
             That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
@@ -460,6 +439,7 @@ namespace DomainStorm.Project.TWC.Tests
             string src_driver_1 = imgElement.GetAttribute("src");
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
+            driver.SwitchTo().DefaultContent();
 
             hrefCredential = driver.FindElement(By.CssSelector("storm-vertical-navigation"))
             .GetShadowRoot()
