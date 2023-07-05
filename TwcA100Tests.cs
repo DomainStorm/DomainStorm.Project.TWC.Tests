@@ -476,7 +476,7 @@ namespace DomainStorm.Project.TWC.Tests
             //.FindElement(By.CssSelector("storm-tree-node"))
             //.GetShadowRoot()
             //.FindElement(By.CssSelector("a[href='#credential']"));
-            //actions.MoveToElement(掃描拍照).Click().Perform();
+            //actions.MoveToElement(掃描拍照).Click().Perform()
 
             imgElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone-container img")));
             string src_driver_2 = imgElement.GetAttribute("src");
