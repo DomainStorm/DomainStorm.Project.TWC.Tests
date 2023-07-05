@@ -139,7 +139,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             idNo.SendKeys("A123456789");
             idNo.SendKeys(Keys.Tab);
-            Thread.Sleep(500); //等待頁面同步
+            Thread.Sleep(1000); //等待頁面同步
 
             //Console.WriteLine("Waiting for focus out...");
 
