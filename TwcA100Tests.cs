@@ -467,7 +467,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
 
-            掃描拍照 = driver.FindElement(By.CssSelector("storm-vertical-navigation"))
+            掃描拍照 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")))
             .GetShadowRoot()
             .FindElement(By.CssSelector("storm-tree-view"))
             .GetShadowRoot()
