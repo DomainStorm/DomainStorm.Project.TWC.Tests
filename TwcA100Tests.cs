@@ -550,16 +550,16 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
 
-            hrefFile = driver.FindElement(By.CssSelector("storm-vertical-navigation"))
-            .GetShadowRoot()
-            .FindElement(By.CssSelector("storm-tree-view"))
-            .GetShadowRoot()
-            .FindElements(By.CssSelector("storm-tree-node"))[3]
-            .GetShadowRoot()
-            .FindElements(By.CssSelector("storm-tree-node"))[1]
-            .GetShadowRoot()
-            .FindElement(By.CssSelector("a[href='#file']"));
-            actions.MoveToElement(hrefFile).Click().Perform();
+            //hrefFile = driver.FindElement(By.CssSelector("storm-vertical-navigation"))
+            //.GetShadowRoot()
+            //.FindElement(By.CssSelector("storm-tree-view"))
+            //.GetShadowRoot()
+            //.FindElements(By.CssSelector("storm-tree-node"))[3]
+            //.GetShadowRoot()
+            //.FindElements(By.CssSelector("storm-tree-node"))[1]
+            //.GetShadowRoot()
+            //.FindElement(By.CssSelector("a[href='#file']"));
+            //actions.MoveToElement(hrefFile).Click().Perform();
 
             stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
             IWebElement stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
