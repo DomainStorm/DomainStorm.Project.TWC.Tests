@@ -467,16 +467,16 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
 
-            掃描拍照 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")))
-            .GetShadowRoot()
-            .FindElement(By.CssSelector("storm-tree-view"))
-            .GetShadowRoot()
-            .FindElements(By.CssSelector("storm-tree-node"))[3]
-            .GetShadowRoot()
-            .FindElement(By.CssSelector("storm-tree-node"))
-            .GetShadowRoot()
-            .FindElement(By.CssSelector("a[href='#credential']"));
-            actions.MoveToElement(掃描拍照).Click().Perform();
+            //掃描拍照 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")))
+            //.GetShadowRoot()
+            //.FindElement(By.CssSelector("storm-tree-view"))
+            //.GetShadowRoot()
+            //.FindElements(By.CssSelector("storm-tree-node"))[3]
+            //.GetShadowRoot()
+            //.FindElement(By.CssSelector("storm-tree-node"))
+            //.GetShadowRoot()
+            //.FindElement(By.CssSelector("a[href='#credential']"));
+            //actions.MoveToElement(掃描拍照).Click().Perform();
 
             imgElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone-container img")));
             string src_driver_2 = imgElement.GetAttribute("src");
