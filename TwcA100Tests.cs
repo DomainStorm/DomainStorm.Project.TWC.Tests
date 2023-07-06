@@ -130,9 +130,11 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
             driver.SwitchTo().Window(driver.WindowHandles[0]);
-            driver.SwitchTo().Frame(0);
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
+            driver.SwitchTo().Frame(0);
 
             IWebElement idNo = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[sti-trustee-id-no] > input")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", idNo);
@@ -140,7 +142,19 @@ namespace DomainStorm.Project.TWC.Tests
 
             idNo.SendKeys("A123456789");
             idNo.SendKeys(Keys.Tab);
-            Thread.Sleep(500); //等待頁面同步
+
+            driver.SwitchTo().DefaultContent();
+
+            IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
+            IWebElement innerContainer = itemContainer.FindElement(By.CssSelector("div.position-fixed.translate-middle-y"));
+            IWebElement pElement = innerContainer.FindElement(By.CssSelector("p.d-none"));
+            string text = string.Empty;
+
+            while (text != "同步完成")
+            {
+                text = ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", pElement) as string;
+            }
+            //Thread.Sleep(500); //等待頁面同步
 
             //Console.WriteLine("Waiting for focus out...");
 
@@ -151,13 +165,18 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            idNo = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[data-class='InputSelectBlock'][sti-trustee-id-no='']")));
+            idNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[data-class='InputSelectBlock'][sti-trustee-id-no]")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", idNo);
 
             string actualValue = idNo.Text;
 
+            //while (string.IsNullOrEmpty(actualValue))
+            //{
+
+            //    actualValue = idNo.Text;
+            //}
+
             That(actualValue, Is.EqualTo("A123456789"));
-            Console.WriteLine($"{actualValue}");
         }
 
         [Test]
