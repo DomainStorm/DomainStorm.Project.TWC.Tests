@@ -84,23 +84,23 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(2)]
         public async Task TwcF101_03() // 顯示臨櫃人員核章職稱姓名等資訊
         {
-            ChromeDriver driver_1 = GetNewChromeDriver();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
-            driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            driver_1.SwitchTo().Frame(0);
+            driver.SwitchTo().Frame(0);
 
             IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
 
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 受理);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
 
-            IReadOnlyList<IWebElement> signElement = driver_1.FindElements(By.CssSelector("[class='sign']"));
+            IReadOnlyList<IWebElement> signElement = driver.FindElements(By.CssSelector("[class='sign']"));
 
             That(signElement, Is.Not.Empty, "未受理");
         }
@@ -109,13 +109,13 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(3)]
         public async Task TwcF101_04() // 看到■用印或代送件只需夾帶附件已打勾
         {
-            ChromeDriver driver_1 = GetNewChromeDriver();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
-            driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -123,12 +123,12 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTreeNodeFifth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
             IWebElement hrefFinished = stormTreeNodeFifth.GetShadowRoot().FindElement(By.CssSelector("a[href='#finished']"));
 
-            Actions actions = new(driver_1);
+            Actions actions = new(driver);
             actions.MoveToElement(hrefFinished).Click().Perform();
 
-            IWebElement 用印或代送件只需夾帶附件 = driver_1.FindElement(By.Id("用印或代送件只需夾帶附件"));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 用印或代送件只需夾帶附件);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 用印或代送件只需夾帶附件);
+            IWebElement 用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 用印或代送件只需夾帶附件);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 用印或代送件只需夾帶附件);
 
             That(用印或代送件只需夾帶附件.GetAttribute("checked"), Is.EqualTo("true"));
         }
@@ -137,38 +137,38 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(4)]
         public async Task TwcF101_05() // 系統跳出【尚未夾帶附件】訊息
         {
-            ChromeDriver driver_1 = GetNewChromeDriver();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
-            driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            driver_1.SwitchTo().Frame(0);
+            driver.SwitchTo().Frame(0);
 
             IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
 
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 受理);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
 
-            driver_1.SwitchTo().DefaultContent();
+            driver.SwitchTo().DefaultContent();
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             IWebElement stormTreeNodeFifth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
             IWebElement hrefFinished = stormTreeNodeFifth.GetShadowRoot().FindElement(By.CssSelector("a[href='#finished']"));
 
-            Actions actions = new(driver_1);
+            Actions actions = new(driver);
             actions.MoveToElement(hrefFinished).Click().Perform();
 
-            IWebElement 確認受理 = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+            IWebElement 確認受理 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
 
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 確認受理);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 確認受理);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 確認受理);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 確認受理);
 
-            IWebElement outerContainer = driver_1.FindElement(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show"));
+            IWebElement outerContainer = driver.FindElement(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show"));
             IWebElement innerContainer = outerContainer.FindElement(By.CssSelector("div.swal2-popup.swal2-modal.swal2-icon-warning.swal2-show"));
 
             That(innerContainer.Displayed, Is.True);
@@ -178,13 +178,13 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(5)]
         public async Task TwcF101_06() // 看到申請之表單內容跳至夾帶附件區塊
         {
-            ChromeDriver driver_1 = GetNewChromeDriver();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
-            driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -193,7 +193,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
             IWebElement hrefFile = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
 
-            Actions actions = new(driver_1);
+            Actions actions = new(driver);
             actions.MoveToElement(hrefFile).Click().Perform();
 
             IWebElement container = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card#file")));
@@ -205,13 +205,13 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(6)]
         public async Task TwcF101_07() //  看到檔案上傳
         {
-            ChromeDriver driver_1 = GetNewChromeDriver();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
-            driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -220,15 +220,15 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
             IWebElement hrefFile = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
 
-            Actions actions = new(driver_1);
+            Actions actions = new(driver);
             actions.MoveToElement(hrefFile).Click().Perform();
 
-            IWebElement 新增文件 = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 新增文件);
+            IWebElement 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 新增文件);
             Thread.Sleep(1000);
 
-            IList<IWebElement> hiddenInputs = driver_1.FindElements(By.CssSelector("body > .dz-hidden-input"));
+            IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             IWebElement lastHiddenInput = hiddenInputs[^1];
 
             string twcweb_01_1_夾帶附件1 = "twcweb_01_1_夾帶附件1.pdf";
@@ -236,7 +236,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             lastHiddenInput.SendKeys(filePath);
 
-            IWebElement stormInputGroup = driver_1.FindElement(By.CssSelector("body storm-main-content main div div div div storm-card form storm-input-group"));
+            IWebElement stormInputGroup = driver.FindElement(By.CssSelector("body storm-main-content main div div div div storm-card form storm-input-group"));
             string value = stormInputGroup.GetAttribute("value");
 
             That(value, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
@@ -246,13 +246,13 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(7)]
         public async Task TwcF101_08() // 看到夾帶附件視窗顯示有一筆附件清單資料，檔名為twcweb_01_1_夾帶附件1.pdf
         {
-            ChromeDriver driver_1 = GetNewChromeDriver();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
-            driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -261,15 +261,15 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
             IWebElement hrefFile = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
 
-            Actions actions = new(driver_1);
+            Actions actions = new(driver);
             actions.MoveToElement(hrefFile).Click().Perform();
 
-            IWebElement 新增文件 = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 新增文件);
+            IWebElement 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 新增文件);
             Thread.Sleep(1000);
 
-            IList<IWebElement> hiddenInputs = driver_1.FindElements(By.CssSelector("body > .dz-hidden-input"));
+            IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             IWebElement lastHiddenInput = hiddenInputs[^1];
 
             string twcweb_01_1_夾帶附件1 = "twcweb_01_1_夾帶附件1.pdf";
@@ -295,23 +295,23 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(8)]
         public async Task TwcF101_09() // 確認完成畫面進入未結案件中
         {
-            ChromeDriver driver_1 = GetNewChromeDriver();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
-            driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            driver_1.SwitchTo().Frame(0);
+            driver.SwitchTo().Frame(0);
 
             IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
 
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 受理);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
 
-            driver_1.SwitchTo().DefaultContent();
+            driver.SwitchTo().DefaultContent();
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
@@ -319,15 +319,15 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
             IWebElement hrefFile = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
 
-            Actions actions = new(driver_1);
+            Actions actions = new(driver);
             actions.MoveToElement(hrefFile).Click().Perform();
 
-            IWebElement 新增文件 = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 新增文件);
+            IWebElement 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 新增文件);
             Thread.Sleep(1000);
 
-            IList<IWebElement> hiddenInputs = driver_1.FindElements(By.CssSelector("body > .dz-hidden-input"));
+            IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             IWebElement lastHiddenInput = hiddenInputs[^1];
 
             string twcweb_01_1_夾帶附件1 = "twcweb_01_1_夾帶附件1.pdf";
@@ -343,13 +343,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(hrefFinished).Click().Perform();
 
-            IWebElement 用印或代送件只需夾帶附件 = driver_1.FindElement(By.Id("用印或代送件只需夾帶附件"));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 用印或代送件只需夾帶附件);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 用印或代送件只需夾帶附件);
+            IWebElement 用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 用印或代送件只需夾帶附件);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 用印或代送件只需夾帶附件);
 
-            IWebElement 確認受理 = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 確認受理);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 確認受理);
+            IWebElement 確認受理 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 確認受理);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 確認受理);
 
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             wait.Until(ExpectedConditions.UrlContains(targetUrl));
@@ -372,13 +372,13 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(9)]
         public async Task TwcF101_10() // 看到夾帶附件區顯示該檔案。已勾選■已詳閱貴公司消費性用水服務契約、公司個人資料保護法、貴公司營業章程
         {
-            ChromeDriver driver_1 = GetNewChromeDriver();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
-            driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
-            TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -392,10 +392,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement hrefFile = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
 
-            Actions actions = new(driver_1);
+            Actions actions = new(driver);
             actions.MoveToElement(hrefFile).Click().Perform();
 
-            IWebElement linkElement = driver_1.FindElement(By.CssSelector("a[download='twcweb_01_1_夾帶附件1.pdf']"));
+            IWebElement linkElement = driver.FindElement(By.CssSelector("a[download='twcweb_01_1_夾帶附件1.pdf']"));
             string download = linkElement.GetAttribute("download");
 
             That(download, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
@@ -404,69 +404,77 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(hrefContract_1).Click().Perform();
 
-            IWebElement 消費性用水服務契約_driver_1 = driver_1.FindElement(By.Id("消費性用水服務契約"));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約_driver_1);
+            IWebElement 消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
 
-            wait.Until(driver_1 =>
+            wait.Until(driver =>
             {
-                IWebElement element = driver_1.FindElement(By.Id("消費性用水服務契約"));
+                IWebElement element = driver.FindElement(By.Id("消費性用水服務契約"));
                 return element.GetAttribute("checked") == "true";
             });
 
-            That(消費性用水服務契約_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
+            That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
 
             IWebElement hrefContract_2 = stormTreeNodeSecondUnderSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_2']"));
 
             actions.MoveToElement(hrefContract_2).Click().Perform();
 
-            IWebElement 公司個人資料保護告知事項_driver_1 = driver_1.FindElement(By.Id("公司個人資料保護告知事項"));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項_driver_1);
+            IWebElement 公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
 
-            wait.Until(driver_1 =>
+            wait.Until(driver =>
             {
-                IWebElement element = driver_1.FindElement(By.Id("公司個人資料保護告知事項"));
+                IWebElement element = driver.FindElement(By.Id("公司個人資料保護告知事項"));
                 return element.GetAttribute("checked") == "true";
             });
 
-            That(公司個人資料保護告知事項_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
+            That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
 
             IWebElement hrefContract_3 = stormTreeNodeThird.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_3']"));
 
             actions.MoveToElement(hrefContract_3).Click().Perform();
 
-            IWebElement 公司營業章程_driver_1 = driver_1.FindElement(By.Id("公司營業章程"));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程_driver_1);
+            IWebElement 公司營業章程 = driver.FindElement(By.Id("公司營業章程"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
 
-            wait.Until(driver_1 =>
+            wait.Until(driver =>
             {
-                IWebElement element = driver_1.FindElement(By.Id("公司營業章程"));
+                IWebElement element = driver.FindElement(By.Id("公司營業章程"));
                 return element.GetAttribute("checked") == "true";
             });
 
-            That(公司營業章程_driver_1.GetAttribute("checked"), Is.EqualTo("true"));
+            That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
         [Order(10)]
         public async Task TwcF101_11() // 查詢出來該件，列在下方
         {
-            ChromeDriver driver_1 = GetNewChromeDriver();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
-            driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            IWebElement stormMainContent = driver_1.FindElement(By.CssSelector("storm-main-content"));
+            IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            IWebElement divFirst = stormCard.FindElement(By.CssSelector("div.row"));
+            IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
+            IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            inputElement.Click();
+
+            IWebElement spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
+            spanElement.Click();
+
             IWebElement divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
-            IWebElement stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
-            IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
+            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
+            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
 
             inputElement.SendKeys(TestHelper.ApplyCaseNo);
 
             IWebElement divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
             IWebElement buttonSubmitSearch = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
 
-            Actions actions = new(driver_1);
+            Actions actions = new(driver);
             actions.MoveToElement(buttonSubmitSearch).Click().Perform();
 
             IWebElement stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
@@ -474,7 +482,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            var spanElement = element.FindElement(By.CssSelector("span"));
+            spanElement = element.FindElement(By.CssSelector("span"));
             string spanText = spanElement.Text;
 
             That(spanText, Is.EqualTo(TestHelper.ApplyCaseNo));
@@ -486,18 +494,18 @@ namespace DomainStorm.Project.TWC.Tests
         {
             await TwcF101_11();
 
-            ChromeDriver driver_1 = _chromeDriverList[0];
+            ChromeDriver driver = _chromeDriverList[0];
 
-            IWebElement stormMainContent = driver_1.FindElement(By.CssSelector("storm-main-content"));
+            IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             IWebElement stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
             IWebElement stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
             IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
-            Actions actions = new(driver_1);
+            Actions actions = new(driver);
             actions.MoveToElement(element).Click().Perform();
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
@@ -508,7 +516,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(hrefFile).Click().Perform();
 
-            IWebElement linkElement = driver_1.FindElement(By.CssSelector("a[download='twcweb_01_1_夾帶附件1.pdf']"));
+            IWebElement linkElement = driver.FindElement(By.CssSelector("a[download='twcweb_01_1_夾帶附件1.pdf']"));
             string downloadValue = linkElement.GetAttribute("download");
 
             That(downloadValue, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
@@ -520,18 +528,18 @@ namespace DomainStorm.Project.TWC.Tests
         {
             await TwcF101_11();
 
-            ChromeDriver driver_1 = _chromeDriverList[0];
+            ChromeDriver driver = _chromeDriverList[0];
 
-            IWebElement stormMainContent = driver_1.FindElement(By.CssSelector("storm-main-content"));
+            IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             IWebElement stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
             IWebElement stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
             IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
-            Actions actions = new(driver_1);
+            Actions actions = new(driver);
             actions.MoveToElement(element).Click().Perform();
 
-            WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
@@ -541,9 +549,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(hrefFile).Click().Perform();
 
-            IWebElement downloadPDF = driver_1.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", downloadPDF);
-            ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", downloadPDF);
+            IWebElement downloadPDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", downloadPDF);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", downloadPDF);
 
             string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
             string filePath = Path.Combine(downloadsFolderPath, "41188239939.pdf");

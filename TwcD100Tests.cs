@@ -136,7 +136,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             idNo.SendKeys("A123456789");
             idNo.SendKeys(Keys.Tab);
-            Thread.Sleep(1000); //等待頁面同步
+            Thread.Sleep(500); //等待頁面同步
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
@@ -175,7 +175,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             stiNote.SendKeys("備註內容");
             stiNote.SendKeys(Keys.Tab);
-            Thread.Sleep(1000); //等待頁面同步
+            Thread.Sleep(500); //等待頁面同步
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
@@ -610,12 +610,18 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
             IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
             IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", stormTable);
 
-            IWebElement fileName = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
-            IWebElement spanName = fileName.FindElement(By.CssSelector("span"));
-            spanText = spanName.Text;
+            IWebElement fileName1 = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody > tr:nth-child(1) > td[data-field='name']"));
+            IWebElement spanName1 = fileName1.FindElement(By.CssSelector("span"));
+            string spanText1 = spanName1.Text;
 
-            That(spanText, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf,twcweb_01_1_夾帶附件2.pdf"));
+            IWebElement fileName2 = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody > tr:nth-child(2) > td[data-field='name']"));
+            IWebElement spanName2 = fileName2.FindElement(By.CssSelector("span"));
+            string spanText2 = spanName2.Text;
+
+            That(spanText1, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(spanText2, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
         }
 
         [Test]
@@ -632,7 +638,7 @@ namespace DomainStorm.Project.TWC.Tests
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             driver.SwitchTo().Frame(0);
-
+            
             IWebElement stiNote = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-note] > input")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", stiNote);
 

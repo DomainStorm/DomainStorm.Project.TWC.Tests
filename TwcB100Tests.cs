@@ -177,7 +177,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 繳費 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("繳費")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 繳費);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 繳費);
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
@@ -237,9 +237,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             string id = TestHelper.GetLastSegmentFromUrl(driver);
 
+            Actions actions = new(driver);
+
             ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+
+            driver.SwitchTo().Window(driver.WindowHandles[0]);
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -248,12 +252,16 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             IWebElement stormTreeNodeSecond = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
             IWebElement stormTreeNodeFirst = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
-            IWebElement hrefContract_1 = stormTreeNodeFirst.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
+            IWebElement 消費性用水服務契約 = stormTreeNodeFirst.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
 
-            Actions actions = new(driver);
-            actions.MoveToElement(hrefContract_1).Click().Perform();
+            actions.MoveToElement(消費性用水服務契約).Click().Perform();
 
-            IWebElement 消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
+            消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
+
+            driver.SwitchTo().Window(driver.WindowHandles[1]);
+
+            消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
 
@@ -269,6 +277,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
         }
+        
+    
 
         [Test]
         [Order(7)]
@@ -282,9 +292,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             string id = TestHelper.GetLastSegmentFromUrl(driver);
 
+            Actions actions = new(driver);
+
             ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+
+            driver.SwitchTo().Window(driver.WindowHandles[0]);
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -293,12 +307,16 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             IWebElement stormTreeNodeSecond = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
             IWebElement stormTreeNodeSecondUnderSecond = stormTreeNodeSecond.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            IWebElement hrefContract_2 = stormTreeNodeSecondUnderSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_2']"));
+            IWebElement 公司個人資料保護告知事項 = stormTreeNodeSecondUnderSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_2']"));
 
-            Actions actions = new(driver);
-            actions.MoveToElement(hrefContract_2).Click().Perform();
+            actions.MoveToElement(公司個人資料保護告知事項).Click().Perform();
 
-            IWebElement 公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
+            公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
+
+            driver.SwitchTo().Window(driver.WindowHandles[1]);
+
+            公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
 
@@ -327,9 +345,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             string id = TestHelper.GetLastSegmentFromUrl(driver);
 
+            Actions actions = new(driver);
+
             ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+
+            driver.SwitchTo().Window(driver.WindowHandles[0]);
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -338,12 +360,16 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             IWebElement stormTreeNodeSecond = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
             IWebElement stormTreeNodeThird = stormTreeNodeSecond.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[2];
-            IWebElement hrefContract_3 = stormTreeNodeThird.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_3']"));
+            IWebElement 公司營業章程 = stormTreeNodeThird.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_3']"));
 
-            Actions actions = new(driver);
-            actions.MoveToElement(hrefContract_3).Click().Perform();
+            actions.MoveToElement(公司營業章程).Click().Perform();
 
-            IWebElement 公司營業章程 = driver.FindElement(By.Id("公司營業章程"));
+            公司營業章程 = driver.FindElement(By.Id("公司營業章程"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
+
+            driver.SwitchTo().Window(driver.WindowHandles[1]);
+
+            公司營業章程 = driver.FindElement(By.Id("公司營業章程"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 公司營業章程);
 
@@ -360,7 +386,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
-        [Test]
+            [Test]
         [Order(9)]
         public async Task TwcB100_10() // driver_2中表單畫面完整呈現簽名內容，並於driver中看到相容內容
         {
@@ -468,17 +494,6 @@ namespace DomainStorm.Project.TWC.Tests
             string src_driver_1 = imgElement.GetAttribute("src");
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
-
-            hrefCredential = driver.FindElement(By.CssSelector("storm-vertical-navigation"))
-            .GetShadowRoot()
-            .FindElement(By.CssSelector("storm-tree-view"))
-            .GetShadowRoot()
-            .FindElements(By.CssSelector("storm-tree-node"))[3]
-            .GetShadowRoot()
-            .FindElement(By.CssSelector("storm-tree-node"))
-            .GetShadowRoot()
-            .FindElement(By.CssSelector("a[href='#credential']"));
-            actions.MoveToElement(hrefCredential).Click().Perform();
 
             imgElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone-container img")));
             string src_driver_2 = imgElement.GetAttribute("src");
