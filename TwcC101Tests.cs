@@ -5,6 +5,7 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System;
 using System.Net;
+using System.Reflection.Emit;
 using WebDriverManager;
 using static NUnit.Framework.Assert;
 
@@ -478,9 +479,17 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement stormMainContent = driver_1.FindElement(By.CssSelector("storm-main-content"));
             IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            IWebElement divFirst = stormCard.FindElement(By.CssSelector("div.row"));
+            IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
+            IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            inputElement.Click();
+
+            IWebElement spanElement = driver_1.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
+            spanElement.Click();
+
             IWebElement divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
-            IWebElement stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
-            IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
+            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
+            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
 
             inputElement.SendKeys(TestHelper.ApplyCaseNo);
 
@@ -495,7 +504,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            var spanElement = element.FindElement(By.CssSelector("span"));
+            spanElement = element.FindElement(By.CssSelector("span"));
             string spanText = spanElement.Text;
 
             That(spanText, Is.EqualTo(TestHelper.ApplyCaseNo));
