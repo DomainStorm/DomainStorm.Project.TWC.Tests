@@ -400,7 +400,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
-            [Test]
+        [Test]
         [Order(9)]
         public async Task TwcB100_10() // driver_2中表單畫面完整呈現簽名內容，並於driver中看到相容內容
         {
@@ -636,15 +636,6 @@ namespace DomainStorm.Project.TWC.Tests
             string 附件1Path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件1);
 
             lastHiddenInput.SendKeys(附件1Path);
-
-            hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
-
-            lastHiddenInput = hiddenInputs[^1];
-
-            string twcweb_01_1_夾帶附件2 = "twcweb_01_1_夾帶附件2.pdf";
-            string 附件2Path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件2);
-
-            lastHiddenInput.SendKeys(附件2Path);
 
             IWebElement 上傳 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             actions.MoveToElement(上傳).Perform();
