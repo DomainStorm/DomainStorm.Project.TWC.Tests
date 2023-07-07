@@ -261,13 +261,18 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(上傳).Perform();
             上傳.Click();
 
+            Console.WriteLine($"::group::");
+            Console.WriteLine(driver.PageSource);
+    
             IWebElement 用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
-            actions.MoveToElement(用印或代送件只需夾帶附件).Perform();
+            actions.MoveToElement(用印或代送件只需夾帶附件, -用印或代送件只需夾帶附件.Size.Width, -用印或代送件只需夾帶附件.Size.Height).Perform();
             用印或代送件只需夾帶附件.Click();
-
+           
             IWebElement 確認受理 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-            actions.MoveToElement(確認受理).Perform();
+            actions.MoveToElement(確認受理, -確認受理.Size.Width, -確認受理.Size.Height).Perform();
             確認受理.Click();
+
+            Console.WriteLine("::endgroup::");
 
             IWebElement divElement = driver.FindElement(By.Id("swal2-html-container"));
             IWebElement h5Element = divElement.FindElement(By.TagName("h5"));
