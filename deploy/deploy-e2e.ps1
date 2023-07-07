@@ -23,7 +23,9 @@ $env:MetadataApi_Version = "0.0.9"
 $env:MultiMediaApi_Version = "0.0.6"
 $env:JwtAuthApi_Version = "0.3.0"
 $env:OpenidProvider_Version = "0.3.0"
+
 $env:TwcWeb_Version = "0.8.8"
+
 $env:ResourceApi_Version = "0.1.1"
 $env:ServiceBus_Version = "0.0.4"
 
@@ -52,15 +54,16 @@ function WaitForHealthy {
 
     if ($retries -eq $maxRetries) {
         Write-Host "Container $containerName did not become healthy within the specified time"
-        docker-compose stop app
+		docker logs $containerName
+        docker-compose stop $containerName
     }
 }
+WaitForHealthy "kong"
+WaitForHealthy "elasticsearch"
 WaitForHealthy "openidconnect.com.tw"
 WaitForHealthy "metadataapi"
 WaitForHealthy "multimediaapi"
 WaitForHealthy "resourceapi"
 WaitForHealthy "twcweb"
 WaitForHealthy "servicebus"
-WaitForHealthy "kong"
- 
 
