@@ -190,6 +190,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
             var spanElement = element.FindElement(By.CssSelector("span"));
+            wait.Until(ExpectedConditions.TextToBePresentInElement(spanElement, string.Empty));
+
             string 文件名稱 = spanElement.Text;
 
             That(文件名稱, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));

@@ -132,10 +132,9 @@ public class TestHelper
 
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
 
-        _applyCaseNo = DateTime.Now.ToString("u"); //自動產生並使用
-        update.applyCaseNo = _applyCaseNo;
+        _applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-        //update.applyCaseNo = ApplyCaseNo; //指定並使用
+        update.applyCaseNo = _applyCaseNo;
 
         update.userCode = UserId;
 
@@ -182,9 +181,7 @@ public class TestHelper
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
-        applyCaseNo = _applyCaseNo; //自動產生並使用
-
-        //applyCaseNo = ApplyCaseNo; //指定並使用
+        applyCaseNo = _applyCaseNo;
 
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
@@ -198,7 +195,7 @@ public class TestHelper
 
         var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
         searchInput.SendKeys(applyCaseNo);
-        Thread.Sleep(1000);
+        Thread.Sleep(500);
 
         var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 

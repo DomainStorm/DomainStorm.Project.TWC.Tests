@@ -153,11 +153,14 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 上傳 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             actions.MoveToElement(上傳).Perform();
             上傳.Click();
-            Thread.Sleep(500);
 
             IWebElement stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
             IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
             IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+
+            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
+            var spanElement = element.FindElement(By.CssSelector("span"));
+            wait.Until(ExpectedConditions.TextToBePresentInElement(spanElement, string.Empty));
 
             IWebElement table = stormTable.GetShadowRoot().FindElement(By.CssSelector("table"));
             IWebElement tbody = table.FindElement(By.CssSelector("tbody"));
@@ -174,8 +177,8 @@ namespace DomainStorm.Project.TWC.Tests
             確認刪除.Click();
             Thread.Sleep(500);
 
-            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
-            var spanElement = element.FindElement(By.CssSelector("span"));
+            element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
+            spanElement = element.FindElement(By.CssSelector("span"));
             string 文件名稱 = spanElement.Text;
 
             That(文件名稱, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
