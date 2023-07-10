@@ -222,7 +222,6 @@ namespace DomainStorm.Project.TWC.Tests
             {
                 Console.WriteLine("該元素不具有'checked'屬性");
             }
-
         }
 
         [Test]
@@ -398,7 +397,8 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTreeNodeThird = stormTreeNodeSecond.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[2];
             IWebElement 公司營業章程 = stormTreeNodeThird.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_3']"));
 
-            actions.MoveToElement(公司營業章程).Click().Perform();
+            actions.MoveToElement(公司營業章程).Click();
+            
 
             公司營業章程 = driver.FindElement(By.Id("公司營業章程"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);

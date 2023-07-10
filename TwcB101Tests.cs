@@ -248,6 +248,14 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(上傳).Perform();
             上傳.Click();
 
+            IWebElement stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
+            IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
+            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+
+            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
+            var spanElement = element.FindElement(By.CssSelector("span"));
+            wait.Until(ExpectedConditions.TextToBePresentInElement(spanElement, string.Empty));
+
             IWebElement 用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
             actions.MoveToElement(用印或代送件只需夾帶附件).Perform();
             用印或代送件只需夾帶附件.Click();
@@ -336,6 +344,14 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(上傳).Perform();
             上傳.Click();
 
+            IWebElement stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
+            IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
+            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+
+            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
+            var spanElement = element.FindElement(By.CssSelector("span"));
+            wait.Until(ExpectedConditions.TextToBePresentInElement(spanElement, string.Empty));
+
             IWebElement 用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
             actions.MoveToElement(用印或代送件只需夾帶附件).Perform();
             用印或代送件只需夾帶附件.Click();
@@ -349,10 +365,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
             IWebElement stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+            stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             var applyCaseNoElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            var element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
+            element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
             if (element != null)
             {
                 string 受理編號 = element.Text;

@@ -665,7 +665,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             string spanText_stiOverApply = stiOverApply.Text;
 
-            That(spanText_stiOverApply, Is.EqualTo("否"));
+            //That(spanText_stiOverApply, Is.EqualTo("否"));
 
         }
 

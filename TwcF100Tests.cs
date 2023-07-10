@@ -137,7 +137,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             idNo.SendKeys("A123456789");
             idNo.SendKeys(Keys.Tab);
-            Thread.Sleep(500); //等待頁面同步
+
+            driver.SwitchTo().DefaultContent();
+
+            IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
+            IWebElement innerContainer = itemContainer.FindElement(By.CssSelector("div.position-fixed.translate-middle-y"));
+            IWebElement 同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
+
+            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
@@ -176,7 +183,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             stiNote.SendKeys("備註內容");
             stiNote.SendKeys(Keys.Tab);
-            Thread.Sleep(500); //等待頁面同步
+
+            driver.SwitchTo().DefaultContent();
+
+            IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
+            IWebElement innerContainer = itemContainer.FindElement(By.CssSelector("div.position-fixed.translate-middle-y"));
+            IWebElement 同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
+
+            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
@@ -291,9 +305,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             string id = TestHelper.GetLastSegmentFromUrl(driver);
 
+            Actions actions = new(driver);
+
             ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+
+            driver.SwitchTo().Window(driver.WindowHandles[0]);
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -304,8 +322,12 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTreeNodeSecondUnderSecond = stormTreeNodeSecond.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
             IWebElement 公司個人資料保護告知事項 = stormTreeNodeSecondUnderSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_2']"));
 
-            Actions actions = new(driver);
             actions.MoveToElement(公司個人資料保護告知事項).Click().Perform();
+
+            公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
+
+            driver.SwitchTo().Window(driver.WindowHandles[1]);
 
             公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
@@ -336,9 +358,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             string id = TestHelper.GetLastSegmentFromUrl(driver);
 
+            Actions actions = new(driver);
+
             ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+
+            driver.SwitchTo().Window(driver.WindowHandles[0]);
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -349,8 +375,13 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormTreeNodeThird = stormTreeNodeSecond.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[2];
             IWebElement 公司營業章程 = stormTreeNodeThird.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_3']"));
 
-            Actions actions = new(driver);
-            actions.MoveToElement(公司營業章程).Click().Perform();
+            actions.MoveToElement(公司營業章程).Click();
+
+
+            公司營業章程 = driver.FindElement(By.Id("公司營業章程"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
+
+            driver.SwitchTo().Window(driver.WindowHandles[1]);
 
             公司營業章程 = driver.FindElement(By.Id("公司營業章程"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
