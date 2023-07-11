@@ -647,12 +647,11 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", downloadPDF);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", downloadPDF);
 
-            Console.WriteLine($"::group::");
-            Console.WriteLine(driver.PageSource);
-
             string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+
+            Console.WriteLine("downloadsFolderPath: " + downloadsFolderPath);
             string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf");
-            Console.WriteLine("::endgroup::");
+
             wait.Until(driver =>
             {
                 if (File.Exists(filePath))

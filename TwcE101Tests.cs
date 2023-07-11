@@ -472,17 +472,17 @@ namespace DomainStorm.Project.TWC.Tests
             wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
-            var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+            //var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
+            //var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
+            //var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
-            var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
-            searchInput.SendKeys(TestHelper.ApplyCaseNo);
-            Thread.Sleep(500);
+            //var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
+            //searchInput.SendKeys(TestHelper.ApplyCaseNo);
+            //Thread.Sleep(500);
 
             IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
-            stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+            IWebElement stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
+            IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
             var element = findElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
