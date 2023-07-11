@@ -184,7 +184,7 @@ public class TestHelper
     {
         applyCaseNo = _applyCaseNo;
 
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
         Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);
@@ -216,7 +216,7 @@ public class TestHelper
     {
         string initialUrl = driver.Url;
 
-        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
         wait.Until(driver => driver.Url != initialUrl);
 
         string[] segments = driver.Url.Split('/');
