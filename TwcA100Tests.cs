@@ -194,6 +194,14 @@ namespace DomainStorm.Project.TWC.Tests
             wait.Until(ExpectedConditions.ElementToBeClickable(受理));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
 
+            driver.SwitchTo().DefaultContent();
+
+            IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
+            IWebElement innerContainer = itemContainer.FindElement(By.CssSelector("div.position-fixed.translate-middle-y"));
+            IWebElement 同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
+
+            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
+
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
