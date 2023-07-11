@@ -538,17 +538,39 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcC101_12() // 確認附件有twcweb_01_1_夾帶附件1.pdf
         {
-            await TwcC101_11();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            ChromeDriver driver = _chromeDriverList[0];
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
             IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            IWebElement divFirst = stormCard.FindElement(By.CssSelector("div.row"));
+            IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
+            IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            inputElement.Click();
+
+            IWebElement spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
+            spanElement.Click();
+
+            IWebElement divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
+            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
+            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
+
+            inputElement.SendKeys(TestHelper.ApplyCaseNo);
+
+            IWebElement divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
+            IWebElement 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+
+            Actions actions = new(driver);
+            actions.MoveToElement(查詢).Click().Perform();
+
+            stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             IWebElement stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
             IWebElement stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
             IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
-            Actions actions = new(driver);
             actions.MoveToElement(element).Click().Perform();
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
@@ -572,17 +594,39 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcC101_13() // PDF檔產製成功自動下載於下載區
         {
-            await TwcC101_11();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            ChromeDriver driver = _chromeDriverList[0];
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
             IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            IWebElement divFirst = stormCard.FindElement(By.CssSelector("div.row"));
+            IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
+            IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            inputElement.Click();
+
+            IWebElement spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
+            spanElement.Click();
+
+            IWebElement divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
+            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
+            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
+
+            inputElement.SendKeys(TestHelper.ApplyCaseNo);
+
+            IWebElement divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
+            IWebElement 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+
+            Actions actions = new(driver);
+            actions.MoveToElement(查詢).Click().Perform();
+
+            stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             IWebElement stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
             IWebElement stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
             IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
-            Actions actions = new(driver);
             actions.MoveToElement(element).Click().Perform();
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
@@ -594,10 +638,6 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 夾帶附件 = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
 
             actions.MoveToElement(夾帶附件).Click().Perform();
-
-            Console.WriteLine($"::group::");
-            Console.WriteLine(driver.PageSource);
-
 
             IWebElement downloadPDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", downloadPDF);
@@ -619,8 +659,6 @@ namespace DomainStorm.Project.TWC.Tests
             });
 
             That(File.Exists(filePath), Is.True);
-
-            Console.WriteLine("::endgroup::");
         }
     }
 }
