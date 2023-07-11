@@ -130,7 +130,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement idNo = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[sti-trustee-id-no] > input")));
+            IWebElement idNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", idNo);
 
             idNo.SendKeys("A123456789");
@@ -147,12 +147,12 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            idNo = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[data-class='InputSelectBlock'][sti-trustee-id-no='']")));
+            idNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[data-class='InputSelectBlock'][sti-trustee-id-no='']")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", idNo);
 
-            string actualValue = idNo.Text;
+            string 身分證號碼 = idNo.Text;
 
-            That(actualValue, Is.EqualTo("A123456789"));
+            That(身分證號碼, Is.EqualTo("A123456789"));
         }
 
         [Test]

@@ -633,7 +633,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(element).Click().Perform();
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(30));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
@@ -643,15 +643,16 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(夾帶附件).Click().Perform();
 
-            IWebElement downloadPDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", downloadPDF);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", downloadPDF);
+            IWebElement 下載PDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 下載PDF);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 下載PDF);
 
             string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-
             Console.WriteLine("downloadsFolderPath: " + downloadsFolderPath);
+
             string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf");
             Console.WriteLine("filePath: " + filePath);
+
             wait.Until(driver =>
             {
                 if (File.Exists(filePath))
