@@ -644,12 +644,17 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 下載PDF);
 
             string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            if (!Directory.Exists(downloadsFolderPath))
+            {
+                Directory.CreateDirectory(downloadsFolderPath);
+            }
+
             Console.WriteLine("downloadsFolderPath: " + downloadsFolderPath);
 
             string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf");
             Console.WriteLine("filePath: " + filePath);
 
-            string[] files = Directory.GetFiles(downloadsFolderPath);
+            string[] files = Directory.GetFiles(downloadsFolderPath);   
             foreach (string file in files)
             {
                 string fileName = Path.GetFileName(file);
