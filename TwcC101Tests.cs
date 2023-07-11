@@ -643,28 +643,12 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", downloadPDF);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", downloadPDF);
 
-            //string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            //string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf");
-
-            //wait.Until(driver =>
-            //{
-            //    if (File.Exists(filePath))
-            //    {
-            //        return true;
-            //    }
-            //    else
-            //    {
-            //        return false;
-            //    }
-            //});
-
-            //That(File.Exists(filePath), Is.True);
             string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf");
 
             wait.Until(driver =>
             {
-                string[] files = Directory.GetFiles(downloadsFolderPath);
-                if (files.Length > 0)
+                if (File.Exists(filePath))
                 {
                     return true;
                 }
@@ -674,7 +658,7 @@ namespace DomainStorm.Project.TWC.Tests
                 }
             });
 
-            That(Directory.GetFiles(downloadsFolderPath).Length > 0, Is.True);
+            That(File.Exists(filePath), Is.True);
         }
     }
 }
