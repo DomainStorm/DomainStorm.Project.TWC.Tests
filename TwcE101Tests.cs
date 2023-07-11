@@ -398,7 +398,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             driver.SwitchTo().Frame(0);
@@ -442,7 +442,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 新增文件);
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             IWebElement lastHiddenInput = hiddenInputs[^1];
@@ -471,9 +471,17 @@ namespace DomainStorm.Project.TWC.Tests
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             wait.Until(ExpectedConditions.UrlContains(targetUrl));
 
+            var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
+            var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
+            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+
+            var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
+            searchInput.SendKeys(TestHelper.ApplyCaseNo);
+            Thread.Sleep(500);
+
             IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
-            IWebElement stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+            stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
+            stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
             var element = findElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);

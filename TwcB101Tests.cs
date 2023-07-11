@@ -162,20 +162,25 @@ namespace DomainStorm.Project.TWC.Tests
             var spanElement = element.FindElement(By.CssSelector("span"));
             wait.Until(ExpectedConditions.TextToBePresentInElement(spanElement, string.Empty));
 
-            IWebElement table = stormTable.GetShadowRoot().FindElement(By.CssSelector("table"));
-            IWebElement tbody = table.FindElement(By.CssSelector("tbody"));
-            IWebElement thirdTd = tbody.FindElements(By.CssSelector("td"))[2];
-
+            IWebElement thirdTd = stormTable.GetShadowRoot().FindElement(By.CssSelector("table tbody td:nth-child(3)"));
             IWebElement stormTableToolbar = thirdTd.FindElement(By.CssSelector("storm-table-toolbar"));
             IWebElement stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
             IWebElement 刪除 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
   
-            actions.MoveToElement(刪除).Perform();
-            刪除.Click();
+            actions.MoveToElement(刪除).Click().Perform();
 
             IWebElement 確認刪除 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.swal2-confirm.swal2-styled.swal2-default-outline")));
             確認刪除.Click();
-            Thread.Sleep(500);
+
+            wait.Until(driver =>
+            {
+                IWebElement stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
+                IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
+                IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                IWebElement tbody = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody"));
+                var trElements = tbody.FindElements(By.CssSelector("tr"));
+                return trElements.Count == 1;
+            });
 
             element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
             spanElement = element.FindElement(By.CssSelector("span"));
@@ -365,6 +370,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             wait.Until(ExpectedConditions.UrlContains(targetUrl));
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
             IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
             IWebElement stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));

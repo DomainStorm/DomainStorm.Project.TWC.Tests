@@ -389,7 +389,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             string targetUrl = $"{TestHelper.LoginUrl}/unfinished";
             wait.Until(ExpectedConditions.UrlContains(targetUrl));
-
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
             IWebElement card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
             IWebElement stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net;
 using OpenQA.Selenium.Chrome;
+using AngleSharp.Dom;
 
 namespace DomainStorm.Project.TWC.Tests;
 
@@ -195,8 +196,13 @@ public class TestHelper
 
         var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
         searchInput.SendKeys(applyCaseNo);
-        Thread.Sleep(500);
 
+        wait.Until(driver =>
+        {
+            var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+            var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
+            return element != null && !string.IsNullOrEmpty(element.Text);
+        });
         var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
         var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
