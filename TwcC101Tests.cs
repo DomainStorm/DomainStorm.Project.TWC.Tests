@@ -651,7 +651,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             Console.WriteLine("downloadsFolderPath: " + downloadsFolderPath);
             string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf");
-
+            Console.WriteLine("filePath: " + filePath);
             wait.Until(driver =>
             {
                 if (File.Exists(filePath))
