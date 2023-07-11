@@ -203,14 +203,13 @@ public class TestHelper
             var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
             return element != null && !string.IsNullOrEmpty(element.Text);
         });
+
         var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
         var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
 
         var action = new Actions(webDriver);
-        action.MoveToElement(element).Perform();
-
-        element!.Click();
+        action.MoveToElement(element).Click().Perform();
     }
     public static string GetLastSegmentFromUrl(ChromeDriver driver)
     {
