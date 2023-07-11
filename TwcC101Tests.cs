@@ -395,7 +395,11 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 確認受理);
 
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
+            Console.WriteLine($"::group::");
+            Console.WriteLine(driver.PageSource);
+
             wait.Until(ExpectedConditions.UrlContains(targetUrl));
+            Console.WriteLine("::endgroup::");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
             IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
