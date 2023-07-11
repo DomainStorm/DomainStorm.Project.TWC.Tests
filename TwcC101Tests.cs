@@ -639,10 +639,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(夾帶附件).Click().Perform();
 
-            IWebElement 下載PDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 下載PDF);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 下載PDF);
-
             string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
             if (!Directory.Exists(downloadsFolderPath))
             {
@@ -650,6 +646,10 @@ namespace DomainStorm.Project.TWC.Tests
             }
 
             Console.WriteLine("downloadsFolderPath: " + downloadsFolderPath);
+
+            IWebElement 下載PDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 下載PDF);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 下載PDF);
 
             string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf");
             Console.WriteLine("filePath: " + filePath);
