@@ -395,11 +395,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 確認受理);
 
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
-            Console.WriteLine($"::group::");
-            Console.WriteLine(driver.PageSource);
-
             wait.Until(ExpectedConditions.UrlContains(targetUrl));
-            Console.WriteLine("::endgroup::");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
             IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
@@ -633,7 +629,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(element).Click().Perform();
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(30));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
@@ -652,6 +648,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf");
             Console.WriteLine("filePath: " + filePath);
+
+            string[] files = Directory.GetFiles(downloadsFolderPath);
+            foreach (string file in files)
+            {
+                string fileName = Path.GetFileName(file);
+                Console.WriteLine("File name: " + fileName);
+            }
 
             wait.Until(driver =>
             {
