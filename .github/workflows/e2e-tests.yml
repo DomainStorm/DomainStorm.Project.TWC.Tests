@@ -99,6 +99,7 @@ jobs:
       #    curl -L -i http://127.0.0.1:8000/jwtauthapi/swagger/index.html       
       - name: Test
         #run: dotnet test --no-build --verbosity normal
-        run: dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcC101Tests --no-build --verbosity normal
-        env:
-          download.default_directory: /usr/hana
+        #run: dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcC101Tests --no-build --verbosity normal
+        run: |
+          export download.default_directory=/usr/hana
+          dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcC101Tests --no-build --verbosity normal

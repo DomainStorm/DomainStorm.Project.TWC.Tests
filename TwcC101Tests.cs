@@ -41,7 +41,7 @@ namespace DomainStorm.Project.TWC.Tests
             //}
             //option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
 
-            string downloadsFolderPath = "/usr/hana";
+            string downloadsFolderPath = Path.Combine("usr", "hana");
             if (!Directory.Exists(downloadsFolderPath))
             {
                 Directory.CreateDirectory(downloadsFolderPath);
@@ -648,9 +648,10 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 夾帶附件 = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
 
             actions.MoveToElement(夾帶附件).Click().Perform();
-  
+
             //string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            string downloadsFolderPath = "/usr/hana";
+            string downloadsFolderPath = Path.Combine("usr", "hana");
+
             Console.WriteLine("downloadsFolderPath: " + downloadsFolderPath);
 
             IWebElement 下載PDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
