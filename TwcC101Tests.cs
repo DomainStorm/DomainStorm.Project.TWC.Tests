@@ -11,6 +11,7 @@ namespace DomainStorm.Project.TWC.Tests
 {
     public class TwcC101Tests
     {
+        private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         private List<ChromeDriver> _chromeDriverList;
         public TwcC101Tests()
         {
@@ -33,23 +34,7 @@ namespace DomainStorm.Project.TWC.Tests
             option.AddArgument("--ignore-urlfetcher-cert-requests");
             option.AddArgument("--disable-web-security");
             option.AddArgument("--ignore-certificate-errors");
-
-            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            //string downloadsFolderPath = "C:\\Temp";
-            //Environment.SetEnvironmentVariable("downloadsFolderPath", downloadsFolderPath);
-            if (!Directory.Exists(downloadsFolderPath))
-            {
-                Directory.CreateDirectory(downloadsFolderPath);
-            }
-            option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
-
-            //string downloadsFolderPath = Path.Combine("usr", "hana");
-            //if (!Directory.Exists(downloadsFolderPath))
-            //{
-            //    Directory.CreateDirectory(downloadsFolderPath);
-            //}
-            //option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
-
+            option.AddUserProfilePreference("download.default_directory", _downloadDirectory);
             //option.AddArguments("--no-sandbox");
 
             if (TestHelper.GetChromeConfig().Headless)
@@ -641,7 +626,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(element).Click().Perform();
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(600));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(60));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
@@ -651,30 +636,27 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(夾帶附件).Click().Perform();
 
-            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            //string downloadsFolderPath = "C:\\Temp";
-            //Environment.SetEnvironmentVariable("downloadsFolderPath", downloadsFolderPath);
-
-            Console.WriteLine("downloadsFolderPath: " + downloadsFolderPath);
 
             IWebElement 下載PDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 下載PDF);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 下載PDF);
 
-            string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf");
-            //Console.WriteLine("filePath: " + filePath);
+            string filePath = Path.Combine(_downloadDirectory, "41101699338.pdf");
 
-            string[] files = Directory.GetFiles(downloadsFolderPath);
-            foreach (string file in files)
+            That(Directory.Exists(_downloadDirectory), Is.True);
+
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+
+            foreach (var fn in Directory.GetFiles(_downloadDirectory))
             {
-                string fileName = Path.GetFileName(file);
-                Console.WriteLine("File name: " + fileName);
+                Console.WriteLine($"-----filename: {fn}-----");
             }
 
-            wait.Until(driver =>
-            {
-                return File.Exists(filePath);
-            });
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
+            Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
+
+            wait.Until(webDriver => File.Exists(filePath));
 
             That(File.Exists(filePath), Is.True);
         }
