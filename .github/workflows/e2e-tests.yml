@@ -37,7 +37,6 @@ jobs:
             echo "Api_Gateway_EndPoint=https://${{ env.IP_ADDRESS }}:8443" >> $GITHUB_ENV
             echo "OpenIDConnectOptions_Authority=http://${{ env.IP_ADDRESS }}:8000/openid" >> $GITHUB_ENV
             echo "SignalR_EndPoint=http://${{ env.IP_ADDRESS }}:8000/hubUrl" >> $GITHUB_ENV
-            echo "downloadsFolderPath=$(mktemp -d)" >> $GITHUB_ENV
             ping -c 5 ${{ env.IP_ADDRESS }}
 
       - name: Run Docker Compose and Seed
