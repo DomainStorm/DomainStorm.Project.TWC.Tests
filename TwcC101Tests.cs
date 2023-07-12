@@ -636,6 +636,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(夾帶附件).Click().Perform();
 
+            if (!Directory.Exists(_downloadDirectory))
+            {
+                Directory.CreateDirectory(_downloadDirectory);
+            }
 
             IWebElement 下載PDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 下載PDF);
