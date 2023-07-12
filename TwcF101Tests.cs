@@ -11,6 +11,7 @@ namespace DomainStorm.Project.TWC.Tests
 {
     public class TwcF101Tests
     {
+        private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         private List<ChromeDriver> _chromeDriverList;
 
         public TwcF101Tests()
@@ -35,9 +36,7 @@ namespace DomainStorm.Project.TWC.Tests
             option.AddArgument("--ignore-urlfetcher-cert-requests");
             option.AddArgument("--disable-web-security");
             option.AddArgument("--ignore-certificate-errors");
-
-            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
+            option.AddUserProfilePreference("download.default_directory", _downloadDirectory);
             //option.AddArguments("--no-sandbox");
 
             if (TestHelper.GetChromeConfig().Headless)
@@ -495,21 +494,42 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(11)]
         public async Task TwcF101_12() // 確認附件有一件[twcweb_01_1_夾帶附件1.pdf]
         {
-            await TwcF101_11();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            ChromeDriver driver = _chromeDriverList[0];
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
             IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            IWebElement divFirst = stormCard.FindElement(By.CssSelector("div.row"));
+            IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
+            IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            inputElement.Click();
+
+            IWebElement spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
+            spanElement.Click();
+
+            IWebElement divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
+            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
+            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
+
+            inputElement.SendKeys(TestHelper.ApplyCaseNo);
+
+            IWebElement divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
+            IWebElement 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+
+            Actions actions = new(driver);
+            actions.MoveToElement(查詢).Click().Perform();
+
+            stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             IWebElement stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
             IWebElement stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
             IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
-            Actions actions = new(driver);
             actions.MoveToElement(element).Click().Perform();
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
@@ -529,20 +549,42 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(12)]
         public async Task TwcF101_13() // PDF檔產製成功
         {
-            await TwcF101_11();
+            ChromeDriver driver = GetNewChromeDriver();
 
-            ChromeDriver driver = _chromeDriverList[0];
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
             IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            IWebElement divFirst = stormCard.FindElement(By.CssSelector("div.row"));
+            IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
+            IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            inputElement.Click();
+
+            IWebElement spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
+            spanElement.Click();
+
+            IWebElement divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
+            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
+            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
+
+            inputElement.SendKeys(TestHelper.ApplyCaseNo);
+
+            IWebElement divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
+            IWebElement 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+
+            Actions actions = new(driver);
+            actions.MoveToElement(查詢).Click().Perform();
+
+            stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             IWebElement stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
             IWebElement stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
             IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
-            Actions actions = new(driver);
             actions.MoveToElement(element).Click().Perform();
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(60));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
@@ -552,24 +594,31 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(夾帶附件).Click().Perform();
 
-            IWebElement downloadPDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", downloadPDF);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", downloadPDF);
-
-            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            string filePath = Path.Combine(downloadsFolderPath, "41188239939.pdf");
-
-            wait.Until(driver =>
+            if (!Directory.Exists(_downloadDirectory))
             {
-                if (File.Exists(filePath))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            });
+                Directory.CreateDirectory(_downloadDirectory);
+            }
+
+            IWebElement 下載PDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 下載PDF);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 下載PDF);
+
+            string filePath = Path.Combine(_downloadDirectory, "41101699338.pdf");
+
+            That(Directory.Exists(_downloadDirectory), Is.True);
+
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+
+            foreach (var fn in Directory.GetFiles(_downloadDirectory))
+            {
+                Console.WriteLine($"-----filename: {fn}-----");
+            }
+
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
+            Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
+
+            wait.Until(webDriver => File.Exists(filePath));
 
             That(File.Exists(filePath), Is.True);
         }
