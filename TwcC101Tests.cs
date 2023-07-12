@@ -3,9 +3,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System;
 using System.Net;
-using System.Reflection.Emit;
 using WebDriverManager;
 using static NUnit.Framework.Assert;
 
@@ -36,7 +34,12 @@ namespace DomainStorm.Project.TWC.Tests
             option.AddArgument("--disable-web-security");
             option.AddArgument("--ignore-certificate-errors");
 
-            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            string downloadsFolderPath = "/usr/hana";
+            //string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            if (!Directory.Exists(downloadsFolderPath))
+            {
+                Directory.CreateDirectory(downloadsFolderPath);
+            }
             option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
             //option.AddArguments("--no-sandbox");
 
@@ -639,17 +642,18 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(夾帶附件).Click().Perform();
 
+            string downloadsFolderPath = "/usr/hana";
+            //string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            Console.WriteLine("downloadsFolderPath: " + downloadsFolderPath);
+
             IWebElement 下載PDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 下載PDF);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 下載PDF);
 
-            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Downloads");
-            Console.WriteLine("downloadsFolderPath: " + downloadsFolderPath);
-
             string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf");
             Console.WriteLine("filePath: " + filePath);
 
-            string[] files = Directory.GetFiles(downloadsFolderPath);   
+            string[] files = Directory.GetFiles(downloadsFolderPath);
             foreach (string file in files)
             {
                 string fileName = Path.GetFileName(file);
