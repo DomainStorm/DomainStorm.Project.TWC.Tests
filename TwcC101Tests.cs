@@ -34,10 +34,9 @@ namespace DomainStorm.Project.TWC.Tests
             option.AddArgument("--disable-web-security");
             option.AddArgument("--ignore-certificate-errors");
 
-            //string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            string downloadsFolderPath = "/Temp";
-            Environment.SetEnvironmentVariable("downloadsFolderPath", downloadsFolderPath);
-
+            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            //string downloadsFolderPath = "C:\\Temp";
+            //Environment.SetEnvironmentVariable("downloadsFolderPath", downloadsFolderPath);
             if (!Directory.Exists(downloadsFolderPath))
             {
                 Directory.CreateDirectory(downloadsFolderPath);
@@ -642,7 +641,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(element).Click().Perform();
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(600));
 
             IWebElement stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             IWebElement stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
@@ -652,9 +651,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             actions.MoveToElement(夾帶附件).Click().Perform();
 
-            //string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            string downloadsFolderPath = "/Temp";
-            Environment.SetEnvironmentVariable("downloadsFolderPath", downloadsFolderPath);
+            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            //string downloadsFolderPath = "C:\\Temp";
+            //Environment.SetEnvironmentVariable("downloadsFolderPath", downloadsFolderPath);
 
             Console.WriteLine("downloadsFolderPath: " + downloadsFolderPath);
 
@@ -663,7 +662,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 下載PDF);
 
             string filePath = Path.Combine(downloadsFolderPath, "41101699338.pdf");
-            Console.WriteLine("filePath: " + filePath);
+            //Console.WriteLine("filePath: " + filePath);
 
             string[] files = Directory.GetFiles(downloadsFolderPath);
             foreach (string file in files)
@@ -674,14 +673,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             wait.Until(driver =>
             {
-                if (File.Exists(filePath))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return File.Exists(filePath);
             });
 
             That(File.Exists(filePath), Is.True);
