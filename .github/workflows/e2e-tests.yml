@@ -100,3 +100,5 @@ jobs:
       - name: Test
         #run: dotnet test --no-build --verbosity normal
         run: dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcC101Tests --no-build --verbosity normal
+        env:
+          download.default_directory: /usr/hana

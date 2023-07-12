@@ -34,12 +34,20 @@ namespace DomainStorm.Project.TWC.Tests
             option.AddArgument("--disable-web-security");
             option.AddArgument("--ignore-certificate-errors");
 
-            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            //string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            //if (!Directory.Exists(downloadsFolderPath))
+            //{
+            //    Directory.CreateDirectory(downloadsFolderPath);
+            //}
+            //option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
+
+            string downloadsFolderPath = "/usr/hana";
             if (!Directory.Exists(downloadsFolderPath))
             {
                 Directory.CreateDirectory(downloadsFolderPath);
             }
             option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
+
             //option.AddArguments("--no-sandbox");
 
             if (TestHelper.GetChromeConfig().Headless)
@@ -640,8 +648,9 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 夾帶附件 = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
 
             actions.MoveToElement(夾帶附件).Click().Perform();
-
-            string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+  
+            //string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            string downloadsFolderPath = "/usr/hana";
             Console.WriteLine("downloadsFolderPath: " + downloadsFolderPath);
 
             IWebElement 下載PDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
