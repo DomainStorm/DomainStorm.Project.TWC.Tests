@@ -35,7 +35,7 @@ namespace DomainStorm.Project.TWC.Tests
             option.AddArgument("--ignore-certificate-errors");
 
             //string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            string downloadsFolderPath = "C:\\Temp";
+            string downloadsFolderPath = "/Temp";
             Environment.SetEnvironmentVariable("downloadsFolderPath", downloadsFolderPath);
 
             if (!Directory.Exists(downloadsFolderPath))
@@ -653,7 +653,7 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(夾帶附件).Click().Perform();
 
             //string downloadsFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            string downloadsFolderPath = "C:\\Temp";
+            string downloadsFolderPath = "/Temp";
             Environment.SetEnvironmentVariable("downloadsFolderPath", downloadsFolderPath);
 
             Console.WriteLine("downloadsFolderPath: " + downloadsFolderPath);
