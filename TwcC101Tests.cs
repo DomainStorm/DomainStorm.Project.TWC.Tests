@@ -401,8 +401,23 @@ namespace DomainStorm.Project.TWC.Tests
 
             var applyCaseNoElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
             element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
-            if (element != null)
+            //if (element != null)
+            //{
+            //    string applyCaseNo = element.Text;
+
+            //    That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
+            //}
+            try
             {
+                if (element != null)
+                {
+                    string applyCaseNo = element.Text;
+                    That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
+                }
+            }
+            catch (StaleElementReferenceException)
+            {
+                element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
                 string applyCaseNo = element.Text;
 
                 That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
