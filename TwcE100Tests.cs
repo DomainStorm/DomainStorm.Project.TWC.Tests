@@ -929,7 +929,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
             var spanElement = element.FindElement(By.CssSelector("span"));
-            wait.Until(ExpectedConditions.TextToBePresentInElement(spanElement, string.Empty));
+            wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
             IWebElement 用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
             actions.MoveToElement(用印或代送件只需夾帶附件).Perform();
