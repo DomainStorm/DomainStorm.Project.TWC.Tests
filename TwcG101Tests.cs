@@ -513,6 +513,14 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 上傳 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             actions.MoveToElement(上傳).Click().Perform();
 
+            IWebElement stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
+            IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
+            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+
+            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
+            var spanElement = element.FindElement(By.CssSelector("span"));
+            wait.Until(ExpectedConditions.TextToBePresentInElement(spanElement, string.Empty));
+
             IWebElement stormTreeNodeFifth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
             IWebElement 受理登記 = stormTreeNodeFifth.GetShadowRoot().FindElement(By.CssSelector("a[href='#finished']"));
 
@@ -532,12 +540,21 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
             IWebElement stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+            stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
-            var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            var element = findElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
-            if (element != null)
+            var applyCaseNoElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+            element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
+            try
             {
+                if (element != null)
+                {
+                    string applyCaseNo = element.Text;
+                    That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
+                }
+            }
+            catch (StaleElementReferenceException)
+            {
+                element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
                 string applyCaseNo = element.Text;
 
                 That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
