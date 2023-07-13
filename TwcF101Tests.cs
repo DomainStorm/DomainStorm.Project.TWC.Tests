@@ -374,8 +374,8 @@ namespace DomainStorm.Project.TWC.Tests
             {
                 try
                 {
-                    string applyCaseNo = element.Text;
-                    That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
+                    string 受理編號 = element.Text;
+                    That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
                     return true;
                 }
                 catch (StaleElementReferenceException)

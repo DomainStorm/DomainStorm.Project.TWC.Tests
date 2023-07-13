@@ -378,12 +378,19 @@ namespace DomainStorm.Project.TWC.Tests
 
             var applyCaseNoElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
             element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
-            if (element != null)
+            wait.Until(driver =>
             {
-                string 受理編號 = element.Text;
-
-                That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
-            }
+                try
+                {
+                    string 受理編號 = element.Text;
+                    That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
+                    return true;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return false;
+                }
+            });
         }
 
         [Test]
