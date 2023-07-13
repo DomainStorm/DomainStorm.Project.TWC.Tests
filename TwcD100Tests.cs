@@ -738,6 +738,8 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(上傳).Perform();
             上傳.Click();
 
+            Thread.Sleep(500);
+
             IWebElement stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
             IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
             IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
