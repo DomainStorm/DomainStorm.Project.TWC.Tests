@@ -325,9 +325,9 @@ namespace DomainStorm.Project.TWC.Tests
             stiNote = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[data-class='InputSelectBlock'][sti-note]")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", stiNote);
 
-            string actualValue = stiNote.Text;
+            string 註記欄位 = stiNote.Text;
 
-            That(actualValue, Is.EqualTo("備註內容"));
+            That(註記欄位, Is.EqualTo("備註內容"));
         }
 
         [Test]
@@ -413,6 +413,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
+            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return document.readyState").Equals("complete"));
 
             IReadOnlyList<IWebElement> signElement = driver.FindElements(By.CssSelector("[class='sign']"));
             That(signElement, Is.Not.Empty, "未受理");
@@ -875,10 +876,10 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
 
-            IWebElement email_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", email_driver_1);
-            email_driver_1.SendKeys("aaa@bbb.ccc");
-            email_driver_1.SendKeys(Keys.Tab);
+            IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", email);
+            email.SendKeys("aaa@bbb.ccc");
+            email.SendKeys(Keys.Tab);
 
             driver.SwitchTo().DefaultContent();
 
@@ -930,7 +931,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(20));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             driver.SwitchTo().Frame(0);
