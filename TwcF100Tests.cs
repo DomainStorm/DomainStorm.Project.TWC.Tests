@@ -710,10 +710,19 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
             stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
-            var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            element = findElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
-            if (element != null)
+            var applyCaseNoElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+            element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
+            try
             {
+                if (element != null)
+                {
+                    string applyCaseNo = element.Text;
+                    That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
+                }
+            }
+            catch (StaleElementReferenceException)
+            {
+                element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
                 string applyCaseNo = element.Text;
 
                 That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));

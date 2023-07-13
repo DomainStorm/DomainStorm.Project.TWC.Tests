@@ -655,26 +655,31 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 確認受理 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
             actions.MoveToElement(確認受理).Perform();
             確認受理.Click();
-
-            Console.WriteLine($"::group::");
-            Console.WriteLine(driver.PageSource);
-            
+      
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
-            Console.WriteLine("::endgroup::");
 
             IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
             IWebElement stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
             stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
-            var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            element = findElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
-            if (element != null)
+            var applyCaseNoElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+            element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
+            try
             {
-                string 受理編號 = element.Text;
+                if (element != null)
+                {
+                    string applyCaseNo = element.Text;
+                    That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
+                }
+            }
+            catch (StaleElementReferenceException)
+            {
+                element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
+                string applyCaseNo = element.Text;
 
-                That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
+                That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
             }
         }
     }

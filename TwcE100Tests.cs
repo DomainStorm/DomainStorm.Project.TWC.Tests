@@ -919,13 +919,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             lastHiddenInput.SendKeys(附件2Path);
 
-            IWebElement uploadButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-            actions.MoveToElement(uploadButton).Click().Perform();
-
-            IWebElement stormTreeNodeFifth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
-            IWebElement 受理登記 = stormTreeNodeFifth.GetShadowRoot().FindElement(By.CssSelector("a[href='#finished']"));
-
-            actions.MoveToElement(受理登記).Click().Perform();
+            IWebElement 上傳 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
+            actions.MoveToElement(上傳).Perform();
+            上傳.Click();
 
             IWebElement stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
             IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
@@ -936,12 +932,12 @@ namespace DomainStorm.Project.TWC.Tests
             wait.Until(ExpectedConditions.TextToBePresentInElement(spanElement, string.Empty));
 
             IWebElement 用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 用印或代送件只需夾帶附件);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 用印或代送件只需夾帶附件);
+            actions.MoveToElement(用印或代送件只需夾帶附件).Perform();
+            用印或代送件只需夾帶附件.Click();
 
             IWebElement 確認受理 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 確認受理);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 確認受理);
+            actions.MoveToElement(確認受理).Perform();
+            確認受理.Click();
 
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             wait.Until(ExpectedConditions.UrlContains(targetUrl));
@@ -951,10 +947,19 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
             stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
-            var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            element = findElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
-            if (element != null)
+            var applyCaseNoElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+            element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
+            try
             {
+                if (element != null)
+                {
+                    string applyCaseNo = element.Text;
+                    That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
+                }
+            }
+            catch (StaleElementReferenceException)
+            {
+                element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
                 string applyCaseNo = element.Text;
 
                 That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));

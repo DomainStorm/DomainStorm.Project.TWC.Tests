@@ -704,25 +704,22 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
             stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
-            IReadOnlyList<IWebElement> findElements = null;
+            var applyCaseNoElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+            element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
             try
             {
-                findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+                if (element != null)
+                {
+                    string applyCaseNo = element.Text;
+                    That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
+                }
             }
             catch (StaleElementReferenceException)
             {
-                findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            }
+                element = applyCaseNoElement.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
+                string applyCaseNo = element.Text;
 
-            element = findElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
-
-            //var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            //element = findElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
-            if (element != null)
-            {
-                string 受理編號 = element.Text;
-
-                That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
+                That(applyCaseNo, Is.EqualTo(TestHelper.ApplyCaseNo));
             }
         }
     }
