@@ -920,8 +920,7 @@ namespace DomainStorm.Project.TWC.Tests
             lastHiddenInput.SendKeys(附件2Path);
 
             IWebElement 上傳 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-            actions.MoveToElement(上傳).Perform();
-            上傳.Click();
+            actions.MoveToElement(上傳).Click().Perform();
 
             IWebElement stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
             IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
