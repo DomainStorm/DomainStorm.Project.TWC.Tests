@@ -377,9 +377,9 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
             IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
-            var spanElement = element.FindElement(By.CssSelector("span"));
-            wait.Until(ExpectedConditions.TextToBePresentInElement(spanElement, string.Empty));
+            IWebElement element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
+            IWebElement spanElement = element.FindElement(By.CssSelector("span"));
+            wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
             string spanText = spanElement.Text;
 
@@ -457,9 +457,9 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
             IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
-            var spanElement = element.FindElement(By.CssSelector("span"));
-            wait.Until(ExpectedConditions.TextToBePresentInElement(spanElement, string.Empty));
+            IWebElement element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
+            IWebElement spanElement = element.FindElement(By.CssSelector("span"));
+            wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
             IWebElement stormTreeNodeFifth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
             IWebElement 受理登記 = stormTreeNodeFifth.GetShadowRoot().FindElement(By.CssSelector("a[href='#finished']"));
