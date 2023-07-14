@@ -793,10 +793,10 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
 
-            IWebElement email_driver_1 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", email_driver_1);
-            email_driver_1.SendKeys("aaa@bbb.ccc");
-            email_driver_1.SendKeys(Keys.Tab);
+            IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", email);
+            email.SendKeys("aaa@bbb.ccc");
+            email.SendKeys(Keys.Tab);
 
             driver.SwitchTo().DefaultContent();
 

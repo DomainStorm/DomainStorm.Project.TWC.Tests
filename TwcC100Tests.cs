@@ -696,9 +696,16 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(確認受理).Perform();
             確認受理.Click();
 
+            Console.WriteLine($"::group::---------{driver.Url}---------");
+            Console.WriteLine(driver.PageSource);
+            Console.WriteLine("::endgroup::");
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
+
+            Console.WriteLine($"::group::---------{driver.Url}---------");
+            Console.WriteLine(driver.PageSource);
+            Console.WriteLine("::endgroup::");
 
             IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
             IWebElement stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
