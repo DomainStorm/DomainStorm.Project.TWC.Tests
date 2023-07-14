@@ -14,8 +14,7 @@ namespace DomainStorm.Project.TWC.Tests
     {
         private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         private List<ChromeDriver> _chromeDriverList;
-
-        public TwcF101Tests()
+        public TwcC101Tests()
         {
         }
 
@@ -26,7 +25,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
-
         private ChromeDriver GetNewChromeDriver()
         {
             var option = new ChromeOptions();
