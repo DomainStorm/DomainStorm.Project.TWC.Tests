@@ -28,7 +28,7 @@ jobs:
 
       - name: Set environment variables
         run: |
-            echo "TestConfig__ApplyCaseNo=12345678" >> $GITHUB_ENV
+            #echo "TestConfig__ApplyCaseNo=12345678" >> $GITHUB_ENV
             echo "TestConfig__UserId=${{ secrets.TestConfig__UserId }}" >> $GITHUB_ENV
             echo "TestConfig__Password=${{ secrets.TestConfig__Password }}" >> $GITHUB_ENV              
             echo "TestConfig__BaseUrl=https://localhost:9003" >> $GITHUB_ENV
