@@ -833,7 +833,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 下載PDF);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 下載PDF);
 
-            string filePath = Path.Combine(_downloadDirectory, "41101699338.pdf");
+            string filePath = Path.Combine(_downloadDirectory, "41105536610.pdf");
 
             That(Directory.Exists(_downloadDirectory), Is.True);
 
