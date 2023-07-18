@@ -132,10 +132,9 @@ public class TestHelper
 
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
 
-        _applyCaseNo = DateTime.Now.ToString("u"); //自動產生並使用
-        update.applyCaseNo = _applyCaseNo;
+        _applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-        //update.applyCaseNo = ApplyCaseNo; //指定並使用
+        update.applyCaseNo = _applyCaseNo;
 
         update.userCode = UserId;
 
@@ -182,11 +181,9 @@ public class TestHelper
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
-        applyCaseNo = _applyCaseNo; //自動產生並使用
+        applyCaseNo = _applyCaseNo;
 
-        //applyCaseNo = ApplyCaseNo; //指定並使用
-
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
         Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);
@@ -198,22 +195,26 @@ public class TestHelper
 
         var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
         searchInput.SendKeys(applyCaseNo);
-        Thread.Sleep(1000);
+
+        wait.Until(driver =>
+        {
+            var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+            var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
+            return element != null && !string.IsNullOrEmpty(element.Text);
+        });
 
         var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
         var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
 
         var action = new Actions(webDriver);
-        action.MoveToElement(element).Perform();
-
-        element!.Click();
+        action.MoveToElement(element).Click().Perform();
     }
     public static string GetLastSegmentFromUrl(ChromeDriver driver)
     {
         string initialUrl = driver.Url;
 
-        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
         wait.Until(driver => driver.Url != initialUrl);
 
         string[] segments = driver.Url.Split('/');

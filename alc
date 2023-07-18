@@ -1,0 +1,63 @@
+[33m11e6471[m[33m ([m[1;36mHEAD -> [m[1;32mcreate_test[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/create_test[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: checkout: moving from master to create_test
+[33mab1fc48[m[33m ([m[1;32mmaster[m[33m)[m HEAD@{1}: checkout: moving from create_test to master
+[33m11e6471[m[33m ([m[1;36mHEAD -> [m[1;32mcreate_test[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/create_test[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{2}: pull --progress -v --no-rebase origin master: Merge made by the 'ort' strategy.
+[33m0ad4ae5[m HEAD@{3}: commit: test
+[33mb85f3b6[m HEAD@{4}: commit: 版本更新
+[33meb15f50[m HEAD@{5}: commit: 自動或手動受理編號
+[33mac7994a[m HEAD@{6}: commit: Test
+[33m8e40efe[m HEAD@{7}: commit: 網頁結構更改
+[33mf9f0e4d[m HEAD@{8}: commit: 路徑改為不同作業系統皆可使用
+[33m8541cfc[m HEAD@{9}: commit: 加上console
+[33m6c59c08[m HEAD@{10}: commit: 修改測試的穩定性
+[33mbd28bf2[m HEAD@{11}: commit: 隨著時間產生ApplyCaseNo並且在後續中使用
+[33me224f83[m HEAD@{12}: commit: 新增參數，指定headless下的預設下載位置
+[33m3b3a556[m HEAD@{13}: checkout: moving from master to create_test
+[33mab1fc48[m[33m ([m[1;32mmaster[m[33m)[m HEAD@{14}: pull --progress -v --no-rebase origin: Fast-forward
+[33m9a6c817[m[33m ([m[1;31morigin/create_new_test[m[33m)[m HEAD@{15}: checkout: moving from create_test to master
+[33m3b3a556[m HEAD@{16}: commit: ClickRow 新增搜索
+[33m2b79321[m HEAD@{17}: commit: 檢查
+[33mae8a99f[m HEAD@{18}: pull --progress -v --no-rebase origin master: Merge made by the 'ort' strategy.
+[33m5570f4e[m HEAD@{19}: commit: 重構
+[33m67c2000[m HEAD@{20}: commit: 重構
+[33m3921864[m HEAD@{21}: commit: 已修復不小心拖曳到
+[33m1fe83d0[m HEAD@{22}: commit: 檢查下載是否成功都已完成
+[33m32656a0[m HEAD@{23}: commit: 將Thread.Sleep方法，改為等待URL發生變化後，表示頁面加載完成，再去擷取網址
+[33m449d32e[m HEAD@{24}: commit: 扣除系統BUG的部分只剩下PDF尚未檢查下載是否成功
+[33m898ee29[m HEAD@{25}: commit: 已完成
+[33m2f68310[m HEAD@{26}: commit: 使提示視窗只剩下申請電子帳單的部分
+[33me126ec6[m HEAD@{27}: commit: 多餘的刪除
+[33m3c2c448[m HEAD@{28}: Branch: renamed refs/heads/create_new_test to refs/heads/create_test
+[33m3c2c448[m HEAD@{30}: commit: 已完成
+[33m356225c[m HEAD@{31}: commit: Create TwcE100_15
+[33mb4049fe[m HEAD@{32}: commit: TwcF101_13 尚未寫完，目前人工看到下載成功
+[33m0f884aa[m HEAD@{33}: commit: 已完成
+[33m40a1acc[m HEAD@{34}: commit: TwcE101_08 尚未完成
+[33me4f5415[m HEAD@{35}: commit: 已完成
+[33mbd892c1[m HEAD@{36}: commit: 除錯
+[33m13843d2[m HEAD@{37}: commit: headless true
+[33mc4e8874[m HEAD@{38}: commit: 已完成
+[33ma13a33f[m HEAD@{39}: commit: 刪除冗贅的命名
+[33me41320d[m HEAD@{40}: commit: 刪除冗贅的命名
+[33mdfe463b[m HEAD@{41}: commit: 刪除冗贅的命名
+[33m0c326d4[m HEAD@{42}: commit: 刪除冗贅的命名
+[33m7b94945[m HEAD@{43}: commit: 剩 檢查是否成功下載於下載區
+[33m9608485[m HEAD@{44}: commit: 重構
+[33mc3991a2[m HEAD@{45}: commit: 背景模式關閉
+[33md062421[m HEAD@{46}: commit: update
+[33mced3a7c[m HEAD@{47}: commit: 已完成
+[33m2bc76d6[m HEAD@{48}: commit: update
+[33mf7ed0d2[m HEAD@{49}: commit: C101_13()還沒檢查是否正確下載，手動測試已有看到下載成功
+[33m2469fd9[m HEAD@{50}: commit: 重構
+[33m24029fc[m HEAD@{51}: commit: 重構
+[33me6885d5[m HEAD@{52}: commit: 重構
+[33m484fac3[m HEAD@{53}: commit: 重構
+[33mcae14fd[m HEAD@{54}: commit (amend): 重構
+[33m9070c9c[m HEAD@{55}: commit (amend): 重構
+[33m5fe20d8[m HEAD@{56}: commit: 重構
+[33m1736ed3[m HEAD@{57}: commit: 重構
+[33mcd96319[m HEAD@{58}: commit: 加入新json
+[33mf50ec3c[m HEAD@{59}: commit: 新增必要檔案
+[33mc6d725b[m HEAD@{60}: commit: 改為更新時複製
+[33m9bcca92[m HEAD@{61}: commit: 更正檔名 tpc -> twc
+[33m9a6c817[m[33m ([m[1;31morigin/create_new_test[m[33m)[m HEAD@{62}: checkout: moving from master to create_new_test
+[33m9a6c817[m[33m ([m[1;31morigin/create_new_test[m[33m)[m HEAD@{63}: clone: from https://github.com/DomainStorm/DomainStorm.Project.TWC.Tests.git
