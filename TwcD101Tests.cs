@@ -506,6 +506,11 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
 
+            IWebElement monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
+            SelectElement selectMonth = new SelectElement(monthDropdown);
+            Thread.Sleep(750);
+            selectMonth.SelectByText("June");
+
             IWebElement spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
             spanElement.Click();
 
@@ -547,6 +552,11 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
+
+            IWebElement monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
+            SelectElement selectMonth = new SelectElement(monthDropdown);
+            Thread.Sleep(750);
+            selectMonth.SelectByText("June");
 
             IWebElement spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
             spanElement.Click();
@@ -602,6 +612,11 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
+
+            IWebElement monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
+            SelectElement selectMonth = new SelectElement(monthDropdown);
+            Thread.Sleep(750);
+            selectMonth.SelectByText("June");
 
             IWebElement spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
             spanElement.Click();
