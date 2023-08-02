@@ -24,7 +24,7 @@ $env:MultiMediaApi_Version = "0.0.6"
 $env:JwtAuthApi_Version = "0.3.0"
 $env:OpenidProvider_Version = "0.3.0"
 
-$env:TwcWeb_Version = "0.8.9"
+$env:TwcWeb_Version = "0.8.8"
 
 $env:ResourceApi_Version = "0.1.1"
 $env:ServiceBus_Version = "0.0.4"
