@@ -4,6 +4,7 @@ using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Net;
 using WebDriverManager;
 using static NUnit.Framework.Assert;
@@ -177,17 +178,27 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
+            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
+
+            driver.SwitchTo().DefaultContent();
+
+            IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
+            IWebElement innerContainer = itemContainer.FindElement(By.CssSelector("div.position-fixed.translate-middle-y"));
+            IWebElement 同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
+
+            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
+            applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
 
-            //That(applyEmail.GetAttribute("checked"), Is.EqualTo(null)); //系統bug，尚未修復
+            bool isChecked = applyEmail.Selected;
+
+            That(isChecked, Is.True);
         }
 
         [Test]
@@ -215,7 +226,9 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 撫卹);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 撫卹);
 
-            That(撫卹.GetAttribute("checked"), Is.EqualTo("true"));
+            bool isChecked = 撫卹.Selected;
+
+            That(isChecked, Is.True);
 
             IWebElement identification = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-identification] > input")));
             identification.SendKeys("BBB");
@@ -265,24 +278,25 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 否 = driver.FindElement(By.Id("超戶申請group2"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 否);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 否);
+            否.SendKeys(Keys.Tab);
 
-            //driver.SwitchTo().DefaultContent();
+            driver.SwitchTo().DefaultContent();
 
-            //IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
-            //IWebElement innerContainer = itemContainer.FindElement(By.CssSelector("div.position-fixed.translate-middle-y"));
-            //IWebElement 同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
+            IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
+            IWebElement innerContainer = itemContainer.FindElement(By.CssSelector("div.position-fixed.translate-middle-y"));
+            IWebElement 同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
 
-            //wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
+            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
 
-            //driver.SwitchTo().Window(driver.WindowHandles[1]);
-            //driver.SwitchTo().Frame(0);
+            driver.SwitchTo().Window(driver.WindowHandles[1]);
+            driver.SwitchTo().Frame(0);
 
-            //IWebElement stiOverApply = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[data-class='MultiInputSelectBlockBlock'][sti-over-apply]")));
-            //((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", stiOverApply);
+            IWebElement stiOverApply = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[data-class='MultiInputSelectBlockBlock'][sti-over-apply]")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", stiOverApply);
 
-            //string actualValue = stiOverApply.Text;
+            string actualValue = stiOverApply.Text;
 
-            //That(actualValue, Is.EqualTo("否"));
+            That(actualValue, Is.EqualTo("否"));
         }
 
         [Test]
@@ -804,7 +818,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
+            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
 
@@ -854,10 +868,11 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 確認受理);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 確認受理);
 
-            //IWebElement outerContainer = driver.FindElement(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show"));
-            //IWebElement innerContainer = outerContainer.FindElement(By.CssSelector("div.swal2-popup.swal2-modal.swal2-icon-warning.swal2-show"));
+            IWebElement outerContainer = driver.FindElement(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show"));
+            IWebElement innerContainer = outerContainer.FindElement(By.CssSelector("div.swal2-popup.swal2-modal.swal2-icon-warning.swal2-show"));
+            string hintText = innerContainer.Text;
 
-            //That(innerContainer.Displayed, Is.True);
+            That(hintText, Is.EqualTo("【聯絡電話】未填寫\r\n【Email】未填寫或格式不正確\r\n確定"));
         }
 
         [Test]
@@ -883,7 +898,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
+            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
 
@@ -903,7 +918,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            IWebElement stiEmailElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[data-class='InputSelectBlock'][sti-email]")));
+            IWebElement stiEmailElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email]")));
             string spanText_Email = stiEmailElement.Text;
 
             That(spanText_Email, Is.EqualTo("aaa@bbb.ccc"));
@@ -926,7 +941,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            IWebElement stiTelNoElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[data-class='InputSelectBlock'][sti-email-tel-no]")));
+            IWebElement stiTelNoElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no]")));
             string spanText_TelNo = stiTelNoElement.Text;
 
             That(spanText_TelNo, Is.EqualTo("02-12345678"));
@@ -947,7 +962,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
+            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
 
@@ -1142,54 +1157,54 @@ namespace DomainStorm.Project.TWC.Tests
             That(spanText_TelNo, Is.EqualTo("02-12345678"));
         }
 
-        //[Test]
-        //[Order(22)]
-        //public async Task TwcG100_23() // 檢附證件欄位看到●撫卹令或撫卹金分領證書被選擇並有欄位內顯示值BBB
-        //{
-        //    ChromeDriver driver_1 = GetNewChromeDriver();
+        [Test]
+        [Order(22)]
+        public async Task TwcG100_23() // 檢附證件欄位看到●撫卹令或撫卹金分領證書被選擇並有欄位內顯示值BBB
+        {
+            ChromeDriver driver = GetNewChromeDriver();
 
-        //    await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
-        //    driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
-        //    TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-        //    WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
-        //    wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-        //    driver_1.SwitchTo().Frame(0);
+            driver.SwitchTo().Frame(0);
 
-        //    IWebElement 撫卹 = driver_1.FindElement(By.Id("檢附證件group2"));
-        //    ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 撫卹);
-        //    ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 撫卹);
+            IWebElement 撫卹 = driver.FindElement(By.Id("檢附證件radio"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 撫卹);
+            string spanText = 撫卹.Text;
 
-        //    That(撫卹.GetAttribute("checked"), Is.EqualTo("true"));
+            That(spanText, Is.EqualTo("撫卹令或撫卹金分領證書"));
 
-        //    IWebElement identification = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-identification] > input")));
+            IWebElement identification = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-identification]")));
 
-        //    string spanText_Identification = identification.Text;
+            string spanText_Identification = identification.Text;
 
-        //    That(spanText_Identification, Is.EqualTo("BBB"));
-        //}
+            That(spanText_Identification, Is.EqualTo("BBB"));
+        }
 
-        //[Test]
-        //[Order(23)]
-        //public async Task TwcG100_24() // 超戶申請欄位看到●否
-        //{
-        //    ChromeDriver driver_1 = GetNewChromeDriver();
+        [Test]
+        [Order(23)]
+        public async Task TwcG100_24() // 超戶申請欄位看到●否
+        {
+            ChromeDriver driver = GetNewChromeDriver();
 
-        //    await TestHelper.Login(driver_1, TestHelper.UserId!, TestHelper.Password!);
-        //    driver_1.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
-        //    TestHelper.ClickRow(driver_1, TestHelper.ApplyCaseNo!);
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-        //    WebDriverWait wait = new(driver_1, TimeSpan.FromSeconds(10));
-        //    wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-        //    driver_1.SwitchTo().Frame(0);
+            driver.SwitchTo().Frame(0);
 
-        //    IWebElement 否 = driver_1.FindElement(By.Id("超戶申請radio"));
-        //    ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].scrollIntoView(true);", 否);
-        //    ((IJavaScriptExecutor)driver_1).ExecuteScript("arguments[0].click();", 否);
+            IWebElement 否 = driver.FindElement(By.Id("超戶申請radio"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 否);
+            string spanText = 否.Text;
 
-        //    That(否.GetAttribute("checked"), Is.EqualTo("true"));
-        //}
+            That(spanText, Is.EqualTo("否"));
+        }
     }
 }

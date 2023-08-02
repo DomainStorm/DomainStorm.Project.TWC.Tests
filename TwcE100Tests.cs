@@ -766,6 +766,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement outerContainer = driver.FindElement(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show"));
             IWebElement innerContainer = outerContainer.FindElement(By.CssSelector("div.swal2-popup.swal2-modal.swal2-icon-warning.swal2-show"));
             string hintText = innerContainer.Text; 
+
             That(hintText,Is.EqualTo("【聯絡電話】未填寫\r\n【Email】未填寫或格式不正確\r\n確定"));
         }
 
