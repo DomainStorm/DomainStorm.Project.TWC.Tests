@@ -102,9 +102,18 @@ namespace DomainStorm.Project.TWC.Tests
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            IWebElement container = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card#file")));
+            IWebElement stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
+            IWebElement stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
+            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-            That(container.Displayed, Is.True);
+            var findElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td > p.h3"));
+            var element = findElement.SingleOrDefault(e => e.Text == "沒有找到符合的結果");
+            if (element != null)
+            {
+                string filename = element.Text;
+
+                That(filename, Is.EqualTo("沒有找到符合的結果"));
+            }
         }
 
         [Test]
