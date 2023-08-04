@@ -198,6 +198,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
+            Thread.Sleep(500);
 
             IWebElement monthDropdown = wait.Until(ExpectedConditions.ElementIsVisible(By.ClassName("flatpickr-monthDropdown-months")));
             SelectElement selectMonth = new(monthDropdown);
