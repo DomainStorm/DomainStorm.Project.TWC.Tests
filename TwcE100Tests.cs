@@ -181,6 +181,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
+            applyEmail.SendKeys(Keys.Tab);
 
             driver.SwitchTo().DefaultContent();
 
@@ -804,6 +805,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
+            Thread.Sleep(500);
 
             IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
             email.SendKeys("aaa@bbb.ccc");

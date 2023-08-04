@@ -901,9 +901,9 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
+            Thread.Sleep(500);
 
             IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", email);
             email.SendKeys("aaa@bbb.ccc");
             email.SendKeys(Keys.Tab);
 
@@ -930,6 +930,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", telNo);
             telNo.SendKeys("02-12345678");
             telNo.SendKeys(Keys.Tab);
+
             driver.SwitchTo().DefaultContent();
 
             itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
@@ -937,7 +938,6 @@ namespace DomainStorm.Project.TWC.Tests
             同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
 
             wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
-
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
@@ -969,7 +969,6 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
             email.SendKeys("aaa@bbb.ccc");
             email.SendKeys(Keys.Tab);
-            Thread.Sleep(500);
 
             IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
             telNo.SendKeys("02-12345678");
@@ -979,32 +978,31 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 撫卹 = driver.FindElement(By.Id("檢附證件group2"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 撫卹);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 撫卹);
+            Thread.Sleep(500);
 
             IWebElement identification = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-identification] > input")));
-
             identification.SendKeys("BBB");
             identification.SendKeys(Keys.Tab);
-            Thread.Sleep(500);
 
             IWebElement 否 = driver.FindElement(By.Id("超戶申請group2"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 否);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 否);
+            Thread.Sleep(500);
 
             IWebElement stiNote = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-note] > input")));
 
             stiNote.SendKeys("備註內容");
             stiNote.SendKeys(Keys.Tab);
-            Thread.Sleep(500);
 
             IWebElement 繳費 = driver.FindElement(By.Id("繳費"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 繳費);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 繳費);
+            Thread.Sleep(500);
 
             IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
 
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             wait.Until(ExpectedConditions.ElementToBeClickable(受理));
-
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理);
 
             driver.SwitchTo().DefaultContent();
@@ -1139,6 +1137,13 @@ namespace DomainStorm.Project.TWC.Tests
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             driver.SwitchTo().Frame(0);
+
+            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
+
+            bool isChecked = applyEmail.Selected;
+
+            That(isChecked, Is.True);
 
             IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email]")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", email);
