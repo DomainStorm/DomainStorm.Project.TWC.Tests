@@ -131,19 +131,15 @@ namespace DomainStorm.Project.TWC.Tests
 
                 string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
                 wait.Until(ExpectedConditions.UrlContains(targetUrl));
-                TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
-
-                IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
-                IWebElement stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-                stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-
-                ReadOnlyCollection<IWebElement> applyCaseNoElements = wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
-                element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
-
-                string 受理編號 = element.Text;
-
-                That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
             }
+            IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            IWebElement stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
+            IWebElement stormtable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+            IWebElement pageInfo = stormtable.GetShadowRoot().FindElement(By.CssSelector("div.table-pageInfo"));
+            string pageInfoText = pageInfo.Text;
+
+            That(pageInfoText, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
         }
 
         [Test]
@@ -223,6 +219,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement span = stormPagination.GetShadowRoot().FindElement(By.CssSelector("span.material-icons"));
             Actions actions = new(driver);
             actions.MoveToElement(span).Click().Perform();
+            Thread.Sleep(500);
 
             stormMainContent = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-main-content")));
             stormCard = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
@@ -276,6 +273,7 @@ namespace DomainStorm.Project.TWC.Tests
             Thread.Sleep(500);
 
             actions.MoveToElement(span).Click().Perform();
+            Thread.Sleep(500);
 
             stormMainContent = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-main-content")));
             stormCard = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
