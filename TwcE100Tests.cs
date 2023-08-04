@@ -189,15 +189,12 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement innerContainer = itemContainer.FindElement(By.CssSelector("div.position-fixed.translate-middle-y"));
             IWebElement 同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
 
-            string 同步狀態文字 = ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string;
-
-            Console.WriteLine($"同步狀態：{同步狀態文字}");
-
-            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
-
-            同步狀態文字 = ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string;
-
-            Console.WriteLine($"同步狀態：{同步狀態文字}");
+            //lambda一行可省略{}，{}內也省略return
+            wait.Until(driver =>
+            {
+                Console.WriteLine(driver.PageSource);
+                return ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成";
+            });
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
