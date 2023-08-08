@@ -294,7 +294,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 上傳 = driver.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 上傳);
             上傳.Click();
-            Thread.Sleep(1000);
+            Thread.Sleep(1500);
 
             stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
             IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
