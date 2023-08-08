@@ -3,7 +3,6 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System.Collections.ObjectModel;
 using System.Net;
 using WebDriverManager;
 using static NUnit.Framework.Assert;
@@ -66,7 +65,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
 
-            for (int i =0 ; i < 15 ; i++)
+            for (int i = 0; i < 15; i++)
             {
                 TestHelper.AccessToken = await TestHelper.GetAccessToken();
 
@@ -161,7 +160,7 @@ namespace DomainStorm.Project.TWC.Tests
             inputElement.Click();
 
             IWebElement monthDropdown = wait.Until(ExpectedConditions.ElementIsVisible(By.ClassName("flatpickr-monthDropdown-months")));
-            SelectElement selectMonth = new (monthDropdown);
+            SelectElement selectMonth = new(monthDropdown);
             selectMonth.SelectByValue("2");
 
             IWebElement spanElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[aria-label='March 6, 2023']")));
@@ -169,7 +168,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
             IWebElement 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-            
+
             查詢.Click();
 
             stormCard = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
@@ -178,9 +177,9 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-pageInfo"));
             string pageInfoText = pageInfo.Text;
 
-            That(pageInfoText,Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
+            That(pageInfoText, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
         }
-        
+
         [Test]
         [Order(2)]
         public async Task TwcS101_03() // 顯示清單畫面切換為5筆，下方顯示第 11 至 5 筆，共 15 筆。
