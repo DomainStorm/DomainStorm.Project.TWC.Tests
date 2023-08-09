@@ -296,7 +296,7 @@ namespace DomainStorm.Project.TWC.Tests
             上傳.Click();
             Thread.Sleep(1000);
 
-            stormCard = driver.FindElement(By.CssSelector("storm-card"));
+            stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
             IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
             IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
