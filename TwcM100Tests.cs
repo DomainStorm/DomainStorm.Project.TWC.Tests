@@ -295,6 +295,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 上傳);
             上傳.Click();
             Thread.Sleep(1000);
+
             
             IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
