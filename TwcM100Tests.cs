@@ -295,15 +295,13 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 上傳);
             上傳.Click();
             Thread.Sleep(1000);
-
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
             
             IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
             IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
             IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-            IWebElement element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
+            IWebElement element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
             IWebElement spanElement = element.FindElement(By.CssSelector("span"));
             wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
