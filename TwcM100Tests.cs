@@ -305,7 +305,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             That(文件名稱, Is.EqualTo(台水官網圖));
         }
-
+        
         [Test]
         [Order(7)]
         public async Task TwcM100_08() // 畫面顯示該圖內容後視窗按關閉
