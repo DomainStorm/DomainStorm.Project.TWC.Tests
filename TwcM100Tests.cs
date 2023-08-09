@@ -291,7 +291,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 上傳 = driver.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 上傳);
             上傳.Click();
-            Thread.Sleep(5000);
+            Thread.Sleep(3000);
 
             stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
             IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
@@ -417,8 +417,11 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
             IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-            IWebElement element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
+            IWebElement secondRow = wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr"))[1]);
+            IWebElement element = secondRow.FindElement(By.CssSelector("td[data-field='name']"));
             IWebElement spanElement = element.FindElement(By.CssSelector("span"));
+            //IWebElement element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
+            //IWebElement spanElement = element.FindElement(By.CssSelector("span"));
             wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
             string 文件名稱 = spanElement.Text;
@@ -448,15 +451,9 @@ namespace DomainStorm.Project.TWC.Tests
             觀看.Click();
 
             IWebElement divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
-            IWebElement div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
-            IWebElement videoElement = div_divElement.FindElement(By.TagName("video"));
-
-            if (videoElement != null)
-            {
-                div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
-                IWebElement 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
-                關閉.Click();
-            }
+            IWebElement div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
+            IWebElement 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
+            關閉.Click();
         }
     }
 }
