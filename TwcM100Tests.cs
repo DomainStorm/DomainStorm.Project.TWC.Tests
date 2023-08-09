@@ -444,16 +444,23 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
             IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
             IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            IWebElement td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
+            IWebElement secondRow = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr"))[1];
+            IWebElement td = secondRow.FindElement(By.CssSelector("td.text-start.align-middle.action"));
             IWebElement stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
             IWebElement stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
             IWebElement 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
             觀看.Click();
 
             IWebElement divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
-            IWebElement div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
-            IWebElement 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
-            關閉.Click();
+            IWebElement div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
+            IWebElement videoElement = div_divElement.FindElement(By.TagName("video"));
+
+            if (videoElement != null)
+            {
+                div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
+                IWebElement 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
+                關閉.Click();
+            }
         }
     }
 }
