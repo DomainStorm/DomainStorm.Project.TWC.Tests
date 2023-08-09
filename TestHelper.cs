@@ -136,7 +136,7 @@ public class TestHelper
 
         update.applyCaseNo = _applyCaseNo;
 
-        update.userCode = UserId;
+        //update.userCode = UserId;
 
         var updatedJson = JsonConvert.SerializeObject(update);
         Console.WriteLine(updatedJson);
