@@ -420,8 +420,6 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement secondRow = wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr"))[1]);
             IWebElement element = secondRow.FindElement(By.CssSelector("td[data-field='name']"));
             IWebElement spanElement = element.FindElement(By.CssSelector("span"));
-            //IWebElement element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
-            //IWebElement spanElement = element.FindElement(By.CssSelector("span"));
             wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
             string 文件名稱 = spanElement.Text;
