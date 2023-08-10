@@ -203,11 +203,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
-                
-            申請電子帳單勾選 = driver.FindElement(By.Id("申請電子帳單勾選"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 申請電子帳單勾選);
 
-            That(申請電子帳單勾選.GetAttribute("checked"), Is.EqualTo("true"));
+            IWebElement 申請電子帳單勾選value = driver.FindElement(By.Id("申請電子帳單勾選value"));
+            string spanGetAttribute = 申請電子帳單勾選value.GetAttribute("textContent");
+
+            That(spanGetAttribute, Is.EqualTo("true"));
         }
 
         [Test]
