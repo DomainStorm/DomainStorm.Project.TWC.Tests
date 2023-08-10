@@ -178,9 +178,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             
-            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
+            IWebElement 申請電子帳單勾選 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 申請電子帳單勾選);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 申請電子帳單勾選);
             //applyEmail.SendKeys(Keys.Tab);
 
             IWebElement 中結 = driver.FindElement(By.Id("中結"));
@@ -196,19 +196,17 @@ namespace DomainStorm.Project.TWC.Tests
             //lambda一行可省略{}，{}內也省略return
             wait.Until(driver =>
             {
-                Console.WriteLine(driver.PageSource);
+                //Console.WriteLine(driver.PageSource);
                 return ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成";
             });
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
+                
+            申請電子帳單勾選 = driver.FindElement(By.Id("申請電子帳單勾選"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 申請電子帳單勾選);
 
-            applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
-
-            bool isChecked = applyEmail.Selected;
-
-            That(isChecked, Is.True);
+            That(申請電子帳單勾選.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
