@@ -187,6 +187,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 中結);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 中結);
 
+            Thread.Sleep(1000);
             driver.SwitchTo().DefaultContent();
 
             IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
