@@ -181,11 +181,11 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 申請電子帳單勾選 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 申請電子帳單勾選);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 申請電子帳單勾選);
-            //applyEmail.SendKeys(Keys.Tab);
+            申請電子帳單勾選.SendKeys(Keys.Tab);
 
             IWebElement 中結 = driver.FindElement(By.Id("中結"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 中結);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 中結);
+            中結.Click();
+            中結.SendKeys(Keys.Tab);
 
             Thread.Sleep(1000);
             driver.SwitchTo().DefaultContent();
