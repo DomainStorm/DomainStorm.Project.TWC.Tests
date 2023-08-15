@@ -112,7 +112,7 @@ public class TestHelper
         request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
 
         request.AddParameter("grant_type", "client_credentials");
-        request.AddParameter("scope", "template_read post_read");
+        request.AddParameter("scope", "template_read post_read serialNumber_write dublinCore_write");
 
         var response = await client.PostAsync<TokenResponse>(request);
         return response?.Access_token ?? throw new InvalidOperationException("Failed to get access token.");
