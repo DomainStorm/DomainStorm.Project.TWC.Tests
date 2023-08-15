@@ -508,7 +508,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email]")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", email);
 
-            var stiEmailElement = driver.FindElement(By.CssSelector("span[data-class='InputSelectBlock'][sti-email='']"));
+            IWebElement stiEmailElement = driver.FindElement(By.CssSelector("span[data-class='InputSelectBlock'][sti-email='']"));
             string spanText_Email = stiEmailElement.Text;
 
             That(spanText_Email, Is.EqualTo("aaa@bbb.ccc"));
