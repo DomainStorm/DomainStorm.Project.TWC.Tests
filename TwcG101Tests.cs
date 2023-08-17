@@ -140,7 +140,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
+            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
 
@@ -240,7 +240,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
+            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
 
@@ -270,8 +270,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement outerContainer = driver.FindElement(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show"));
             IWebElement innerContainer = outerContainer.FindElement(By.CssSelector("div.swal2-popup.swal2-modal.swal2-icon-warning.swal2-show"));
-
-            That(innerContainer.Displayed, Is.True);
+            string hintText = innerContainer.Text;
+            That(hintText,Is.EqualTo("尚未夾帶附件\r\n確定"));
         }
 
         [Test]
@@ -447,12 +447,12 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(60));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
+            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
 
@@ -694,6 +694,11 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
 
+            IWebElement monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
+            SelectElement selectMonth = new SelectElement(monthDropdown);
+            Thread.Sleep(750);
+            selectMonth.SelectByText("June");
+
             IWebElement spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
             spanElement.Click();
 
@@ -735,6 +740,11 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
+
+            IWebElement monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
+            SelectElement selectMonth = new SelectElement(monthDropdown);
+            Thread.Sleep(750);
+            selectMonth.SelectByText("June");
 
             IWebElement spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
             spanElement.Click();
@@ -790,6 +800,11 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
+
+            IWebElement monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
+            SelectElement selectMonth = new SelectElement(monthDropdown);
+            Thread.Sleep(750);
+            selectMonth.SelectByText("June");
 
             IWebElement spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
             spanElement.Click();

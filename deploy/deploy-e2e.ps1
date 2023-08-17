@@ -19,14 +19,14 @@ $env:KONG_POSTGRES_USER = "admin"
 $env:KONG_POSTGRES_DB = "kong"
 $env:KONG_POSTGRES_PASSWORD = "adminadmin"
 
-$env:MetadataApi_Version = "0.0.9"
+$env:MetadataApi_Version = "1.1.1"
 $env:MultiMediaApi_Version = "0.0.6"
-$env:JwtAuthApi_Version = "0.3.0"
-$env:OpenidProvider_Version = "0.3.0"
+$env:JwtAuthApi_Version = "0.3.1"
+$env:OpenidProvider_Version = "0.3.1"
 
-$env:TwcWeb_Version = "0.8.8"
+$env:TwcWeb_Version = "0.9.0"
 
-$env:ResourceApi_Version = "0.1.1"
+$env:ResourceApi_Version = "0.1.3"
 $env:ServiceBus_Version = "0.0.4"
 
 docker compose -f docker-compose.yml -f docker-compose.metadataapi.yml -f docker-compose.e2e.yml up -d
