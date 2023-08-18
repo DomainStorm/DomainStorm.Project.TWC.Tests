@@ -201,13 +201,8 @@ namespace DomainStorm.Project.TWC.Tests
                 return ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成";
             });
 
-            Thread.Sleep(5000);
-
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
-            Console.WriteLine($"::group::");
-            Console.WriteLine(driver.PageSource);
-            Console.WriteLine("::endgroup::");
             IWebElement 申請電子帳單勾選value = driver.FindElement(By.Id("申請電子帳單勾選value"));
             string spanGetAttribute = 申請電子帳單勾選value.GetAttribute("textContent");
 
