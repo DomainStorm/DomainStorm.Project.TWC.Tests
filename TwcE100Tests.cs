@@ -771,7 +771,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement innerContainer = outerContainer.FindElement(By.CssSelector("div.swal2-popup.swal2-modal.swal2-icon-warning.swal2-show"));
             string hintText = innerContainer.Text; 
 
-            That(hintText,Is.EqualTo("【聯絡電話】未填寫\r\n【Email】未填寫或不正確\r\n確定"));
+            That(hintText,Is.EqualTo("【聯絡電話】未填寫\n【Email】未填寫或不正確\n確定"));
         }
 
         [Test]
