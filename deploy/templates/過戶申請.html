@@ -177,7 +177,8 @@
                             <tr>
                                 <td class="title2 width-18half">
                                     <span>
-                                        <input id="申請電子帳單勾選" type="checkbox" sti-apply-email>
+                                        <input id="申請電子帳單勾選" type="checkbox">
+                                        <span id="申請電子帳單勾選value" class="d-none" sti-apply-email></span>
                                         <span>申請電子帳單</span>
                                     </span>
                                 </td>
@@ -210,7 +211,7 @@
                             </tr>
                             <tr>
                                 <td class="title2 width-18half">
-                                    <span>申請人資訊</span>
+                                    <span>申請人(委託人)</span>
                                 </td>
                                 <td class="title2 width-18half">
                                     <span>地址</span>
@@ -226,7 +227,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="title2 width-18half">
+                                <td rowspan="4" class="title2 width-18half">
                                     <span>受託人資訊</span>
                                 </td>
                                 <td class="title2 width-18half">
@@ -260,7 +261,7 @@
                             </tr>
                             <tr>
                                 <td class="title2 width-18half">
-                                    <span>受託人地址</span>
+                                    <span>地址</span>
                                 </td>
                                 <td colspan="5">
                                     <span id="受託人地址" data-class="InputSelectBlock" sti-trustee-address></span>
@@ -543,6 +544,7 @@
                 let applyEbill = document.getElementById('申請電子帳單value').innerText
                 let cancelSmsBill = document.getElementById('取消簡訊帳單value').innerText
                 let end = document.getElementById('中結value').innerText
+                let applyEmail = document.getElementById('申請電子帳單勾選value').innerText
 
                 if(compareValue(changeAddress)) {
                     document.getElementById('併案變更通訊地址').checked = true
@@ -562,6 +564,9 @@
                 }
                 if(compareValue(end)) {
                     document.getElementById('中結').checked = true
+                }
+                if(compareValue(applyEmail)) {
+                    document.getElementById('申請電子帳單勾選').checked = true
                 }
             });
 
@@ -605,6 +610,19 @@
 
                 endValue.innerText = endCheckbox.checked
                 this.dispatchEvent(ev)
+            }
+
+            function onApplyEmailChange(name, targetEditor, getEditorByIdFunction){
+                let applyEmailCheckbox = document.getElementById('申請電子帳單勾選')
+                let applyEmailValue = document.getElementById('申請電子帳單勾選value')
+
+                applyEmailValue.innerText = applyEmailCheckbox.checked
+
+                if (applyEmailCheckbox.checked) {
+                    applyEmailCheckbox.setAttribute('checked', '')
+                }else{
+                    applyEmailCheckbox.removeAttribute('checked')
+                }
             }
 
             async function getDateTime() {
@@ -721,6 +739,12 @@
                             "iOverride": "AddChild",
                             "relativeTo": "註記",
                             "target": "<input type='text' class='form-control width-95'>"
+                        },
+                        {
+                            "iOverride": "SetEventHandler",
+                            "target": "申請電子帳單勾選",
+                            "name": "change",
+                            "handler": "onApplyEmailChange"
                         }
                     ]
                 }
