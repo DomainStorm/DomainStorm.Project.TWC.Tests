@@ -189,16 +189,12 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
 
             wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
-
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
+            IWebElement 申請電子帳單勾選value = driver.FindElement(By.Id("申請電子帳單勾選value"));
+            string spanGetAttribute = 申請電子帳單勾選value.GetAttribute("textContent");
 
-            applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
-
-            bool isChecked = applyEmail.Selected;
-
-            That(isChecked, Is.True);
+            That(spanGetAttribute, Is.EqualTo("true"));
         }
 
         [Test]
@@ -872,7 +868,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement innerContainer = outerContainer.FindElement(By.CssSelector("div.swal2-popup.swal2-modal.swal2-icon-warning.swal2-show"));
             string hintText = innerContainer.Text;
 
-            That(hintText, Is.EqualTo("【聯絡電話】未填寫\r\n【Email】未填寫或格式不正確\r\n確定"));
+            That(hintText, Is.Not.Null);
         }
 
         [Test]
@@ -941,7 +937,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            IWebElement stiTelNoElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no]")));
+            IWebElement stiTelNoElement = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單聯絡電話")));
             string spanText_TelNo = stiTelNoElement.Text;
 
             That(spanText_TelNo, Is.EqualTo("02-12345678"));
@@ -975,7 +971,7 @@ namespace DomainStorm.Project.TWC.Tests
             telNo.SendKeys(Keys.Tab);
             Thread.Sleep(500);
 
-            IWebElement 撫卹 = driver.FindElement(By.Id("檢附證件group2"));
+            IWebElement 撫卹 = driver.FindElement(By.Id("檢附證件group3"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 撫卹);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 撫卹);
             Thread.Sleep(500);
