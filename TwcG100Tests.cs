@@ -965,6 +965,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
             email.SendKeys("aaa@bbb.ccc");
             email.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
             IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
             telNo.SendKeys("02-12345678");
@@ -979,21 +980,20 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement identification = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-identification] > input")));
             identification.SendKeys("BBB");
             identification.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
             IWebElement 否 = driver.FindElement(By.Id("超戶申請group2"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 否);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 否);
-            Thread.Sleep(500);
 
             IWebElement stiNote = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-note] > input")));
-
             stiNote.SendKeys("備註內容");
             stiNote.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
             IWebElement 繳費 = driver.FindElement(By.Id("繳費"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 繳費);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 繳費);
-            Thread.Sleep(500);
 
             IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
 
@@ -1068,7 +1068,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             ReadOnlyCollection<IWebElement> applyCaseNoElements = wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
             element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
-
             string 受理編號 = element.Text;
 
             That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
