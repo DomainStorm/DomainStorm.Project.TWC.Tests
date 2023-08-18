@@ -183,11 +183,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 申請電子帳單勾選);
             申請電子帳單勾選.SendKeys(Keys.Tab);
 
-            IWebElement 中結 = driver.FindElement(By.Id("中結"));
-            中結.Click();
-            中結.SendKeys(Keys.Tab);
-
-            Thread.Sleep(1000);
+            Thread.Sleep(500);
             driver.SwitchTo().DefaultContent();
 
             IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
@@ -833,6 +829,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", telNo);
             telNo.SendKeys("02-12345678");
             telNo.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
             driver.SwitchTo().DefaultContent();
 
