@@ -157,58 +157,57 @@ namespace DomainStorm.Project.TWC.Tests
             That(身分證號碼, Is.EqualTo("A123456789"));
         }
 
-        //[Test]
-        //[Order(4)]
-        //public async Task TwcE100_05() // 看到■申請電子帳單 
-        //{
-        //    ChromeDriver driver = GetNewChromeDriver();
+        [Test]
+        [Order(4)]
+        public async Task TwcE100_05() // 看到■申請電子帳單 
+        {
+            ChromeDriver driver = GetNewChromeDriver();
 
-        //    await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
-        //    driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-        //    TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
+            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-        //    string id = TestHelper.GetLastSegmentFromUrl(driver);
+            string id = TestHelper.GetLastSegmentFromUrl(driver);
 
-        //    ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-        //    driver.SwitchTo().Window(driver.WindowHandles[1]);
-        //    driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+            ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
+            driver.SwitchTo().Window(driver.WindowHandles[1]);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
-        //    driver.SwitchTo().Window(driver.WindowHandles[0]);
-        //    driver.SwitchTo().Frame(0);
+            driver.SwitchTo().Window(driver.WindowHandles[0]);
+            driver.SwitchTo().Frame(0);
 
-        //    WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            
-        //    IWebElement 申請電子帳單勾選 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
-        //    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 申請電子帳單勾選);
-        //    ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 申請電子帳單勾選);
-        //    申請電子帳單勾選.SendKeys(Keys.Tab);
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-        //    IWebElement 中結 = driver.FindElement(By.Id("中結"));
-        //    中結.Click();
-        //    中結.SendKeys(Keys.Tab);
+            IWebElement 申請電子帳單勾選 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 申請電子帳單勾選);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 申請電子帳單勾選);
+            申請電子帳單勾選.SendKeys(Keys.Tab);
 
-        //    Thread.Sleep(1000);
-        //    driver.SwitchTo().DefaultContent();
+            IWebElement 中結 = driver.FindElement(By.Id("中結"));
+            中結.Click();
+            中結.SendKeys(Keys.Tab);
 
-        //    IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
-        //    IWebElement innerContainer = itemContainer.FindElement(By.CssSelector("div.position-fixed.translate-middle-y"));
-        //    IWebElement 同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
+            Thread.Sleep(1000);
+            driver.SwitchTo().DefaultContent();
 
-        //    //lambda一行可省略{}，{}內也省略return
-        //    wait.Until(driver =>
-        //    {
-        //        //Console.WriteLine(driver.PageSource);
-        //        return ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成";
-        //    });
+            IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
+            IWebElement innerContainer = itemContainer.FindElement(By.CssSelector("div.position-fixed.translate-middle-y"));
+            IWebElement 同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
 
-        //    driver.SwitchTo().Window(driver.WindowHandles[1]);
-        //    driver.SwitchTo().Frame(0);
+            //lambda一行可省略{}，{}內也省略return
+            wait.Until(driver =>
+            {
+                //Console.WriteLine(driver.PageSource);
+                return ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成";
+            });
 
-        //    IWebElement 申請電子帳單勾選value = driver.FindElement(By.Id("申請電子帳單勾選value"));
-        //    string spanGetAttribute = 申請電子帳單勾選value.GetAttribute("textContent");
+            driver.SwitchTo().Window(driver.WindowHandles[1]);
+            driver.SwitchTo().Frame(0);
+            IWebElement 申請電子帳單勾選value = driver.FindElement(By.Id("申請電子帳單勾選value"));
+            string spanGetAttribute = 申請電子帳單勾選value.GetAttribute("textContent");
 
-        //    That(spanGetAttribute, Is.EqualTo("true"));
-        //}
+            That(spanGetAttribute, Is.EqualTo("true"));
+        }
 
         [Test]
         [Order(5)]

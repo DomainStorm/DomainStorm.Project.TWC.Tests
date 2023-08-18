@@ -216,7 +216,8 @@
                             <tr>
                                 <td class="title2 width-18half">
                                     <span>
-                                        <input id="申請電子帳單勾選" type="checkbox" sti-apply-email>
+                                        <input id="申請電子帳單勾選" type="checkbox">
+                                        <span id="申請電子帳單勾選value" class="d-none" sti-apply-email></span>
                                         <span>申請電子帳單</span>
                                     </span>
                                 </td>
@@ -260,7 +261,7 @@
                             </tr>
                             <tr>
                                 <td class="title2 width-18half">
-                                    <span id="戶口名簿戶口名簿字號radio" data-class="MultiInputSelectBlockBlock"></span>
+                                    <span>戶口名簿-戶口名簿字號</span>
                                 </td>
                                 <td colspan="5">
                                     <span id="戶口名簿戶口名簿字號" data-class="InputSelectBlock" sti-household-certificate-no></span>
@@ -268,7 +269,7 @@
                             </tr>
                             <tr>
                                 <td class="title2 width-18half">
-                                    <span>申請人資訊</span>
+                                    <span>申請人(委託人)</span>
                                 </td>
                                 <td class="title2 width-18half">
                                     <span>地址</span>
@@ -284,7 +285,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="title2 width-18half">
+                                <td rowspan="4" class="title2 width-18half">
                                     <span>受託人資訊</span>
                                 </td>
                                 <td class="title2 width-18half">
@@ -318,7 +319,7 @@
                             </tr>
                             <tr>
                                 <td class="title2 width-18half">
-                                    <span>受託人地址</span>
+                                    <span>地址</span>
                                 </td>
                                 <td colspan="5">
                                     <span id="受託人地址" data-class="InputSelectBlock" sti-trustee-address></span>
@@ -329,7 +330,7 @@
                                     <span>超戶申請</span>
                                 </td>
                                 <td colspan="5">
-                                    <span id="超戶申請radio" data-class="MultiInputSelectBlockBlock" sti-over-apply></span>
+                                    <span id="超戶申請radio" data-class="MultiInputSelectBlockBlock" sti-over-apply>否</span>
                                 </td>
                             </tr>
                             <tr>
@@ -598,6 +599,7 @@
                 let togetherTransfer = document.getElementById('併案過戶value').innerText
                 let changeAddress = document.getElementById('併案變更通訊地址value').innerText
                 let pay = document.getElementById('繳費value').innerText
+                let applyEmail = document.getElementById('申請電子帳單勾選value').innerText
                 
                 if(compareValue(togetherTransfer)) {
                     document.getElementById('併案過戶').checked = true
@@ -609,6 +611,9 @@
                 }
                 if(compareValue(pay)) {
                     document.getElementById('繳費').checked = true
+                }
+                if(compareValue(applyEmail)) {
+                    document.getElementById('申請電子帳單勾選').checked = true
                 }
             });
 
@@ -652,6 +657,19 @@
 
                 payValue.innerText = payCheckbox.checked
                 this.dispatchEvent(ev);
+            }
+
+            function onApplyEmailChange(name, targetEditor, getEditorByIdFunction){
+                let applyEmailCheckbox = document.getElementById('申請電子帳單勾選')
+                let applyEmailValue = document.getElementById('申請電子帳單勾選value')
+
+                applyEmailValue.innerText = applyEmailCheckbox.checked
+
+                if (applyEmailCheckbox.checked) {
+                    applyEmailCheckbox.setAttribute('checked', '')
+                }else{
+                    applyEmailCheckbox.removeAttribute('checked')
+                }
             }
 
             async function getDateTime() {
@@ -760,12 +778,12 @@
                         {
                             "iOverride": "AddChild",
                             "relativeTo": "檢附證件radio",
-                            "target": "<input id='檢附證件group1' type='radio' name='檢附證件group' class='form-control' value='現役軍人眷屬身分證字號' checked>"
+                            "target": "<input id='檢附證件group1' type='radio' name='檢附證件group' class='form-control' value=''>"
                         },
                         {
                             "iOverride": "AddChild",
                             "relativeTo": "檢附證件radio",
-                            "target": "<label for='檢附證件group1'>現役軍人眷屬身分證字號</label>"
+                            "target": "<label for='檢附證件group1'>無</label>"
                         },
                         {
                             "iOverride": "AddChild",
@@ -775,17 +793,32 @@
                         {
                             "iOverride": "AddChild",
                             "relativeTo": "檢附證件radio",
-                            "target": "<input id='檢附證件group2' type='radio' name='檢附證件group' class='form-control' value='撫卹令或撫卹金分領證書'>"
+                            "target": "<input id='檢附證件group2' type='radio' name='檢附證件group' class='form-control' value='現役軍人眷屬身分證字號'>"
                         },
                         {
                             "iOverride": "AddChild",
                             "relativeTo": "檢附證件radio",
-                            "target": "<label for='檢附證件group2'>撫卹令或撫卹金分領證書</label>"
+                            "target": "<label for='檢附證件group2'>現役軍人眷屬身分證字號</label>"
+                        },
+                        {
+                            "iOverride": "AddChild",
+                            "relativeTo": "檢附證件radio",
+                            "target": "<br>"
+                        },
+                        {
+                            "iOverride": "AddChild",
+                            "relativeTo": "檢附證件radio",
+                            "target": "<input id='檢附證件group3' type='radio' name='檢附證件group' class='form-control' value='撫卹令或撫卹金分領證書'>"
+                        },
+                        {
+                            "iOverride": "AddChild",
+                            "relativeTo": "檢附證件radio",
+                            "target": "<label for='檢附證件group3'>撫卹令或撫卹金分領證書</label>"
                         },
                         {
                             "iOverride": "AddChild",
                             "relativeTo": "超戶申請radio",
-                            "target": "<input id='超戶申請group1' type='radio' name='超戶申請group' class='form-control' value='是' checked>"
+                            "target": "<input id='超戶申請group1' type='radio' name='超戶申請group' class='form-control' value='是'>"
                         },
                         {
                             "iOverride": "AddChild",
@@ -803,16 +836,6 @@
                             "target": "<label for='超戶申請group2'>否</label>"
                         },
                         {
-                            "iOverride": "AddChild",
-                            "relativeTo": "戶口名簿戶口名簿字號radio",
-                            "target": "<input id='戶口名簿戶口名簿字號group1' type='radio' name='戶口名簿戶口名簿字號group' class='form-control' value='戶口名簿-戶口名簿字號' checked>"
-                        },
-                        {
-                            "iOverride": "AddChild",
-                            "relativeTo": "戶口名簿戶口名簿字號radio",
-                            "target": "<label for='戶口名簿戶口名簿字號group1'>戶口名簿-戶口名簿字號</label>"
-                        },
-                        {
                             "iOverride": "SetEventHandler",
                             "target": "受理",
                             "name": "click",
@@ -828,6 +851,12 @@
                             "iOverride": "AddChild",
                             "relativeTo": "註記",
                             "target": "<input type='text' class='form-control width-95'>"
+                        },
+                        {
+                            "iOverride": "SetEventHandler",
+                            "target": "申請電子帳單勾選",
+                            "name": "change",
+                            "handler": "onApplyEmailChange"
                         }
                     ]
                 }
