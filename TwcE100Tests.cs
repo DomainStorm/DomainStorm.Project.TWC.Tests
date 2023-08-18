@@ -205,7 +205,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
-
+            Console.WriteLine($"::group::");
+            Console.WriteLine(driver.PageSource);
+            Console.WriteLine("::endgroup::");
             IWebElement 申請電子帳單勾選value = driver.FindElement(By.Id("申請電子帳單勾選value"));
             string spanGetAttribute = 申請電子帳單勾選value.GetAttribute("textContent");
 
