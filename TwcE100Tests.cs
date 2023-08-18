@@ -817,7 +817,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            IWebElement stiEmailElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email]")));
+            IWebElement stiEmailElement = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單Email")));
             string spanText_Email = stiEmailElement.Text;
 
             That(spanText_Email, Is.EqualTo("aaa@bbb.ccc"));
