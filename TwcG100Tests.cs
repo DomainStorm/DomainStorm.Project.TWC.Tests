@@ -963,29 +963,37 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
 
-            IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
-            email.SendKeys("aaa@bbb.ccc");
-            Thread.Sleep(1000);
+            IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單Email")));
+            IWebElement emailInput = email.FindElement(By.TagName("input"));
+            emailInput.SendKeys("aaa@bbb.ccc");
+            emailInput.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
-            IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
-            telNo.SendKeys("02-12345678");
-            Thread.Sleep(1000);
+            IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單聯絡電話")));
+            IWebElement telNoInput = telNo.FindElement(By.TagName("input"));
+            telNoInput.SendKeys("02-12345678");
+            telNoInput.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
             IWebElement 撫卹 = driver.FindElement(By.Id("檢附證件group3"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 撫卹);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 撫卹);
 
-            IWebElement identification = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-identification] > input")));
-            identification.SendKeys("BBB");
-            Thread.Sleep(1000);
+            IWebElement 檢附證件 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("檢附證件")));
+            IWebElement 檢附證件Input = 檢附證件.FindElement(By.TagName("input"));
+            檢附證件Input.SendKeys("BBB");
+            檢附證件Input.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
             IWebElement 否 = driver.FindElement(By.Id("超戶申請group2"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 否);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 否);
 
-            IWebElement stiNote = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-note] > input")));
-            stiNote.SendKeys("備註內容");
-            Thread.Sleep(1000);
+            IWebElement 註記 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("註記")));
+            IWebElement 註記Input = 註記.FindElement(By.TagName("input"));
+            註記Input.SendKeys("備註內容");
+            註記Input.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
             IWebElement 繳費 = driver.FindElement(By.Id("繳費"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 繳費);
