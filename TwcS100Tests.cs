@@ -453,7 +453,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
-            Thread.Sleep(1000);
+            Thread.Sleep(1500);
 
             IWebElement monthDropdown = wait.Until(ExpectedConditions.ElementIsVisible(By.ClassName("flatpickr-monthDropdown-months")));
             SelectElement selectMonth = new(monthDropdown);
@@ -466,6 +466,16 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
 
             查詢.Click();
+
+            IWebElement stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
+            IWebElement stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
+            IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+
+            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+            spanElement = element.FindElement(By.CssSelector("span"));
+            string spanText = spanElement.Text;
+
+            That(spanText,Is.Not.Null);
         }
     }
 }
