@@ -897,11 +897,11 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
-            Thread.Sleep(500);
 
             IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
             email.SendKeys("aaa@bbb.ccc");
             email.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
             driver.SwitchTo().DefaultContent();
 
@@ -926,6 +926,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", telNo);
             telNo.SendKeys("02-12345678");
             telNo.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
             driver.SwitchTo().DefaultContent();
 
@@ -964,12 +965,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
             email.SendKeys("aaa@bbb.ccc");
-            email.SendKeys(Keys.Tab);
             Thread.Sleep(500);
 
             IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
             telNo.SendKeys("02-12345678");
-            telNo.SendKeys(Keys.Tab);
             Thread.Sleep(500);
 
             IWebElement 撫卹 = driver.FindElement(By.Id("檢附證件group3"));
