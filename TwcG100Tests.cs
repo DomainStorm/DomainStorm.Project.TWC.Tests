@@ -965,10 +965,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
             email.SendKeys("aaa@bbb.ccc");
+            Thread.Sleep(1000);
 
             IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
             telNo.SendKeys("02-12345678");
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
 
             IWebElement 撫卹 = driver.FindElement(By.Id("檢附證件group3"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 撫卹);
@@ -976,6 +977,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement identification = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-identification] > input")));
             identification.SendKeys("BBB");
+            Thread.Sleep(1000);
 
             IWebElement 否 = driver.FindElement(By.Id("超戶申請group2"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 否);
@@ -983,7 +985,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement stiNote = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-note] > input")));
             stiNote.SendKeys("備註內容");
-            Thread.Sleep(500);
+            Thread.Sleep(1000);
 
             IWebElement 繳費 = driver.FindElement(By.Id("繳費"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 繳費);
