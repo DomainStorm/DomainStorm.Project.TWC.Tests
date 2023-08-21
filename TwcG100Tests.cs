@@ -954,7 +954,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(60));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(20));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             driver.SwitchTo().Frame(0);
@@ -965,7 +965,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
             email.SendKeys("aaa@bbb.ccc");
-            Thread.Sleep(500);
 
             IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
             telNo.SendKeys("02-12345678");
@@ -974,12 +973,9 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 撫卹 = driver.FindElement(By.Id("檢附證件group3"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 撫卹);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 撫卹);
-            Thread.Sleep(500);
 
             IWebElement identification = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-identification] > input")));
             identification.SendKeys("BBB");
-            identification.SendKeys(Keys.Tab);
-            Thread.Sleep(500);
 
             IWebElement 否 = driver.FindElement(By.Id("超戶申請group2"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 否);
@@ -987,7 +983,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement stiNote = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-note] > input")));
             stiNote.SendKeys("備註內容");
-            stiNote.SendKeys(Keys.Tab);
             Thread.Sleep(500);
 
             IWebElement 繳費 = driver.FindElement(By.Id("繳費"));
