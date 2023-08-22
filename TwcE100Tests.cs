@@ -132,29 +132,31 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement identityNumber = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", identityNumber);
+            IWebElement 身分證號碼 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("身分證號碼")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", 身分證號碼);
+            IWebElement 身分證號碼Input = 身分證號碼.FindElement(By.TagName("input"));
 
-            identityNumber.SendKeys("A123456789");
-            identityNumber.SendKeys(Keys.Tab);
+            身分證號碼Input.SendKeys("A123456789");
+            身分證號碼Input.SendKeys(Keys.Tab);
 
             driver.SwitchTo().DefaultContent();
 
             IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
             IWebElement innerContainer = itemContainer.FindElement(By.CssSelector("div.position-fixed.translate-middle-y"));
-            IWebElement 同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
+            IWebElement pElement = innerContainer.FindElement(By.CssSelector("p.d-none"));
+            string text = string.Empty;
 
-            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
+            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", pElement) as string == "同步完成");
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            identityNumber = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[data-class='InputSelectBlock'][sti-trustee-id-no]")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", identityNumber);
+            身分證號碼 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("身分證號碼")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", 身分證號碼);
 
-            string 身分證號碼 = identityNumber.Text;
+            string identityNumber = 身分證號碼.Text;
 
-            That(身分證號碼, Is.EqualTo("A123456789"));
+            That(identityNumber, Is.EqualTo("A123456789"));
         }
 
         [Test]
@@ -226,11 +228,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement stiNote = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-note] > input")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", stiNote);
+            IWebElement 註記 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("註記")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", 註記);
+            IWebElement 註記Input = 註記.FindElement(By.TagName("Input"));
 
-            stiNote.SendKeys("備註內容");
-            stiNote.SendKeys(Keys.Tab);
+            註記Input.SendKeys("備註內容");
+            註記Input.SendKeys(Keys.Tab);
 
             driver.SwitchTo().DefaultContent();
 
@@ -243,12 +246,12 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            stiNote = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[data-class='InputSelectBlock'][sti-note]")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", stiNote);
+            註記 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("註記")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", 註記);
 
-            string 註記欄位 = stiNote.Text;
+            string stiNote = 註記.Text;
 
-            That(註記欄位, Is.EqualTo("備註內容"));
+            That(stiNote, Is.EqualTo("備註內容"));
         }
 
         [Test]
@@ -315,7 +318,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[0]);
             driver.SwitchTo().Frame(0);
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             wait.Until(ExpectedConditions.ElementToBeClickable(受理));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
@@ -323,7 +326,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             wait.Until(driver =>
             {
@@ -524,7 +527,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             wait.Until(ExpectedConditions.ElementToBeClickable(受理));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
@@ -720,7 +723,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
 
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
@@ -802,9 +805,10 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
             Thread.Sleep(500);
 
-            IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
-            email.SendKeys("aaa@bbb.ccc");
-            email.SendKeys(Keys.Tab);
+            IWebElement 電子帳單Email = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單Email")));
+            IWebElement 電子帳單EmailInput = 電子帳單Email.FindElement(By.TagName("Input"));
+            電子帳單EmailInput.SendKeys("aaa@bbb.ccc");
+            電子帳單EmailInput.SendKeys(Keys.Tab);
 
             driver.SwitchTo().DefaultContent();
 
@@ -817,18 +821,19 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            IWebElement stiEmailElement = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單Email")));
-            string spanText_Email = stiEmailElement.Text;
+            電子帳單Email = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單Email")));
+            string stiEmail = 電子帳單Email.Text;
 
-            That(spanText_Email, Is.EqualTo("aaa@bbb.ccc"));
+            That(stiEmail, Is.EqualTo("aaa@bbb.ccc"));
 
             driver.SwitchTo().Window(driver.WindowHandles[0]);
             driver.SwitchTo().Frame(0);
 
-            IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", telNo);
-            telNo.SendKeys("02-12345678");
-            telNo.SendKeys(Keys.Tab);
+            IWebElement 電子帳單聯絡電話 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單聯絡電話")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 電子帳單聯絡電話);
+            IWebElement 電子帳單聯絡電話Input = 電子帳單聯絡電話.FindElement(By.TagName("Input"));
+            電子帳單聯絡電話Input.SendKeys("02-12345678");
+            電子帳單聯絡電話Input.SendKeys(Keys.Tab);
             Thread.Sleep(500);
 
             driver.SwitchTo().DefaultContent();
@@ -841,10 +846,10 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            IWebElement stiTelNoElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no]")));
-            string spanText_TelNo = stiTelNoElement.Text;
+            電子帳單聯絡電話 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單聯絡電話")));
+            string stiEmailTelNo = 電子帳單聯絡電話.Text;
 
-            That(spanText_TelNo, Is.EqualTo("02-12345678"));
+            That(stiEmailTelNo, Is.EqualTo("02-12345678"));
         }
 
         [Test]
@@ -862,33 +867,36 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
-
-            IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", email);
-            email.SendKeys("aaa@bbb.ccc");
-            email.SendKeys(Keys.Tab);
+            IWebElement 申請電子帳單勾選 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 申請電子帳單勾選);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 申請電子帳單勾選);
             Thread.Sleep(500);
 
-            IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", telNo);
-            telNo.SendKeys("02-12345678");
-            telNo.SendKeys(Keys.Tab);
+            IWebElement 電子帳單Email = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單Email")));
+            IWebElement 電子帳單EmailInput = 電子帳單Email.FindElement(By.TagName("Input"));
+            電子帳單EmailInput.SendKeys("aaa@bbb.ccc");
+            電子帳單EmailInput.SendKeys(Keys.Tab);
             Thread.Sleep(500);
 
-            IWebElement stiNote = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-note] > input")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiNote);
-            stiNote.SendKeys("備註內容");
-            stiNote.SendKeys(Keys.Tab);
+            IWebElement 電子帳單聯絡電話 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單聯絡電話")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 電子帳單聯絡電話);
+            IWebElement 電子帳單聯絡電話Input = 電子帳單聯絡電話.FindElement(By.TagName("Input"));
+            電子帳單聯絡電話Input.SendKeys("02-12345678");
+            電子帳單聯絡電話Input.SendKeys(Keys.Tab);
             Thread.Sleep(500);
 
-            IWebElement 中結 = driver.FindElement(By.Id("中結"));
+            IWebElement 註記 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("註記")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", 註記);
+            IWebElement 註記Input = 註記.FindElement(By.TagName("Input"));
+            註記Input.SendKeys("備註內容");
+            註記Input.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
+
+            IWebElement 中結 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("中結")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 中結);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 中結);
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
 
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             wait.Until(ExpectedConditions.ElementToBeClickable(受理));
@@ -978,13 +986,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement stiNote = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[data-class='InputSelectBlock'][sti-note]")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiNote);
+            IWebElement 註記 = wait.Until(ExpectedConditions.ElementExists(By.Id("註記")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 註記);
 
-            var stiNoteElement = driver.FindElement(By.CssSelector("span[data-class='InputSelectBlock'][sti-note]"));
-            string spanText = stiNoteElement.Text;
+            string stiNote = 註記.Text;
 
-            That(spanText, Is.EqualTo("備註內容"));
+            That(stiNote, Is.EqualTo("備註內容"));
         }
 
         [Test]
@@ -1024,21 +1031,19 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email]")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", email);
+            IWebElement 電子帳單Email = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單Email")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 電子帳單Email);
 
-            IWebElement stiEmailElement = driver.FindElement(By.CssSelector("span[data-class='InputSelectBlock'][sti-email='']"));
-            string spanText_Email = stiEmailElement.Text;
+            string stiEmail = 電子帳單Email.Text;
 
-            That(spanText_Email, Is.EqualTo("aaa@bbb.ccc"));
+            That(stiEmail, Is.EqualTo("aaa@bbb.ccc"));
 
-            IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no]")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", telNo);
+            IWebElement 電子帳單聯絡電話 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單聯絡電話")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 電子帳單聯絡電話);
 
-            IWebElement stiTelNoElement = driver.FindElement(By.CssSelector("span[data-class='InputSelectBlock'][sti-email-tel-no='']"));
-            string spanText_TelNo = stiTelNoElement.Text;
+            string stiTelNo = 電子帳單聯絡電話.Text;
 
-            That(spanText_TelNo, Is.EqualTo("02-12345678"));
+            That(stiTelNo, Is.EqualTo("02-12345678"));
         }
     }
 }

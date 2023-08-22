@@ -114,7 +114,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
 
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             wait.Until(ExpectedConditions.ElementToBeClickable(受理));
@@ -140,11 +140,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
+            IWebElement 申請電子帳單勾選 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 申請電子帳單勾選);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 申請電子帳單勾選);
 
-            That(applyEmail.GetAttribute("checked"), Is.EqualTo("true"));
+            That(申請電子帳單勾選.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
@@ -239,21 +239,31 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
-            email.SendKeys("aaa@bbb.ccc");
-            email.SendKeys(Keys.Tab);
+            IWebElement 申請電子帳單勾選 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 申請電子帳單勾選);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 申請電子帳單勾選);
             Thread.Sleep(500);
 
-            IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
-            telNo.SendKeys("02-12345678");
-            telNo.SendKeys(Keys.Tab);
+            IWebElement 電子帳單Email = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單Email")));
+            IWebElement 電子帳單EmailInput = 電子帳單Email.FindElement(By.TagName("Input"));
+            電子帳單EmailInput.SendKeys("aaa@bbb.ccc");
+            電子帳單EmailInput.SendKeys(Keys.Tab);
             Thread.Sleep(500);
 
-            email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
-            That(email.GetAttribute("value"), Is.EqualTo("aaa@bbb.ccc"));
+            IWebElement 電子帳單聯絡電話 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單聯絡電話")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 電子帳單聯絡電話);
+            IWebElement 電子帳單聯絡電話Input = 電子帳單聯絡電話.FindElement(By.TagName("Input"));
+            電子帳單聯絡電話Input.SendKeys("02-12345678");
+            電子帳單聯絡電話Input.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
 
-            telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
-            That(telNo.GetAttribute("value"), Is.EqualTo("02-12345678"));
+            電子帳單EmailInput = 電子帳單Email.FindElement(By.TagName("Input"));
+
+            That(電子帳單EmailInput.GetAttribute("value"), Is.EqualTo("aaa@bbb.ccc"));
+
+            電子帳單聯絡電話Input = 電子帳單聯絡電話.FindElement(By.TagName("Input"));
+
+            That(電子帳單聯絡電話Input.GetAttribute("value"), Is.EqualTo("02-12345678"));
         }
 
         [Test]
@@ -402,25 +412,29 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement applyEmail = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-email]")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", applyEmail);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", applyEmail);
-
-            IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
-            email.SendKeys("aaa@bbb.ccc");
-            email.SendKeys(Keys.Tab);
+            IWebElement 申請電子帳單勾選 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 申請電子帳單勾選);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 申請電子帳單勾選);
             Thread.Sleep(500);
 
-            IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
-            telNo.SendKeys("02-12345678");
-            telNo.SendKeys(Keys.Tab);
+            IWebElement 電子帳單Email = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單Email")));
+            IWebElement 電子帳單EmailInput = 電子帳單Email.FindElement(By.TagName("Input"));
+            電子帳單EmailInput.SendKeys("aaa@bbb.ccc");
+            電子帳單EmailInput.SendKeys(Keys.Tab);
+            Thread.Sleep(500);
+
+            IWebElement 電子帳單聯絡電話 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單聯絡電話")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 電子帳單聯絡電話);
+            IWebElement 電子帳單聯絡電話Input = 電子帳單聯絡電話.FindElement(By.TagName("Input"));
+            電子帳單聯絡電話Input.SendKeys("02-12345678");
+            電子帳單聯絡電話Input.SendKeys(Keys.Tab);
             Thread.Sleep(500);
 
             IWebElement 中結 = driver.FindElement(By.Id("中結"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 中結);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 中結);
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
 
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             wait.Until(ExpectedConditions.ElementToBeClickable(受理));
@@ -505,21 +519,19 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement email = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email]")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", email);
+            IWebElement 電子帳單Email = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單Email")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 電子帳單Email);
 
-            IWebElement stiEmailElement = driver.FindElement(By.CssSelector("span[data-class='InputSelectBlock'][sti-email='']"));
-            string spanText_Email = stiEmailElement.Text;
+            string stiEmail = 電子帳單Email.Text;
 
-            That(spanText_Email, Is.EqualTo("aaa@bbb.ccc"));
+            That(stiEmail, Is.EqualTo("aaa@bbb.ccc"));
 
-            IWebElement telNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no]")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", telNo);
+            IWebElement 電子帳單聯絡電話 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("電子帳單聯絡電話")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 電子帳單聯絡電話);
 
-            var stiTelNoElement = driver.FindElement(By.CssSelector("span[data-class='InputSelectBlock'][sti-email-tel-no='']"));
-            string spanText_TelNo = stiTelNoElement.Text;
+            string stiTelNo = 電子帳單聯絡電話.Text;
 
-            That(spanText_TelNo, Is.EqualTo("02-12345678"));
+            That(stiTelNo, Is.EqualTo("02-12345678"));
 
             driver.SwitchTo().DefaultContent();
 
