@@ -291,7 +291,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement h5Element = divElement.FindElement(By.TagName("h5"));
             string 提示訊息 = h5Element.Text;
 
-            That(提示訊息, Is.EqualTo("【受理】尚未核章"));
+            That(提示訊息, Is.EqualTo("【受理】未核章"));
         }
 
         [Test]
