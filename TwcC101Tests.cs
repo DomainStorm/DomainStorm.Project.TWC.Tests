@@ -505,7 +505,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             IWebElement monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
-            Thread.Sleep(750);
+            Thread.Sleep(1000);
             selectMonth.SelectByText("June");
 
             IWebElement spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
