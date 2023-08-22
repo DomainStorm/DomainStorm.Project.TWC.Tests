@@ -132,29 +132,31 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement idNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", idNo);
+            IWebElement 身分證號碼 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("身分證號碼")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", 身分證號碼);
+            IWebElement 身分證號碼Input = 身分證號碼.FindElement(By.TagName("input"));
 
-            idNo.SendKeys("A123456789");
-            idNo.SendKeys(Keys.Tab);
+            身分證號碼Input.SendKeys("A123456789");
+            身分證號碼Input.SendKeys(Keys.Tab);
 
             driver.SwitchTo().DefaultContent();
 
             IWebElement itemContainer = driver.FindElement(By.CssSelector("div.container-fluid.py-4.position-relative"));
             IWebElement innerContainer = itemContainer.FindElement(By.CssSelector("div.position-fixed.translate-middle-y"));
-            IWebElement 同步狀態 = innerContainer.FindElement(By.CssSelector("p.d-none"));
+            IWebElement pElement = innerContainer.FindElement(By.CssSelector("p.d-none"));
+            string text = string.Empty;
 
-            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
+            wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", pElement) as string == "同步完成");
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            idNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[data-class='InputSelectBlock'][sti-trustee-id-no='']")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", idNo);
+            身分證號碼 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("身分證號碼")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", 身分證號碼);
 
-            string actualValue = idNo.Text;
+            string identityNumber = 身分證號碼.Text;
 
-            That(actualValue, Is.EqualTo("A123456789"));
+            That(identityNumber, Is.EqualTo("A123456789"));
         }
 
         [Test]
@@ -178,11 +180,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement stiNote = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-note] > input")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", stiNote);
+            IWebElement 註記 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("註記")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", 註記);
+            IWebElement 註記Input = 註記.FindElement(By.TagName("Input"));
 
-            stiNote.SendKeys("備註內容");
-            stiNote.SendKeys(Keys.Tab);
+            註記Input.SendKeys("備註內容");
+            註記Input.SendKeys(Keys.Tab);
 
             driver.SwitchTo().DefaultContent();
 
@@ -195,12 +198,12 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            stiNote = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[data-class='InputSelectBlock'][sti-note]")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", stiNote);
+            註記 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("註記")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", 註記);
 
-            string actualValue = stiNote.Text;
+            string stiNote = 註記.Text;
 
-            That(actualValue, Is.EqualTo("備註內容"));
+            That(stiNote, Is.EqualTo("備註內容"));
         }
 
         [Test]
@@ -301,7 +304,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[0]);
             driver.SwitchTo().Frame(0);
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             wait.Until(ExpectedConditions.ElementToBeClickable(受理));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
@@ -511,7 +514,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             wait.Until(ExpectedConditions.ElementToBeClickable(受理));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
@@ -718,7 +721,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 中結);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 中結);
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             wait.Until(ExpectedConditions.ElementToBeClickable(受理));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
@@ -798,13 +801,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement stiNote = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[data-class='InputSelectBlock'][sti-note]")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiNote);
+            IWebElement 註記 = wait.Until(ExpectedConditions.ElementExists(By.Id("註記")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 註記);
 
-            var stiNoteElement = driver.FindElement(By.CssSelector("span[data-class='InputSelectBlock'][sti-note]"));
-            string spanText = stiNoteElement.Text;
+            string stiNote = 註記.Text;
 
-            That(spanText, Is.EqualTo("備註內容"));
+            That(stiNote, Is.EqualTo("備註內容"));
         }
 
         [Test]
