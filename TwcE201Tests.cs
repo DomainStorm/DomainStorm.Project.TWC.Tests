@@ -93,23 +93,23 @@ namespace DomainStorm.Project.TWC.Tests
         {
             ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/batch");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            IWebElement card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
-            IWebElement stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
-            IWebElement stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+            var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
+            var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
+            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
-            IWebElement searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
+            var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
             searchInput.SendKeys(TestHelper.ApplyCaseNo!);
 
-            IWebElement CheckAll = stormTable.GetShadowRoot().FindElement(By.CssSelector("input[aria-label='Check All']"));
+            var CheckAll = stormTable.GetShadowRoot().FindElement(By.CssSelector("input[aria-label='Check All']"));
             CheckAll.Click();
             Thread.Sleep(500);
 
-            IWebElement stormToolbar = stormDocumentListDetail.FindElement(By.CssSelector("storm-toolbar"));
-            IWebElement stormButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-button button"));
+            var stormToolbar = stormDocumentListDetail.FindElement(By.CssSelector("storm-toolbar"));
+            var stormButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-button button"));
             That(stormButton, Is.Not.Null, "不存在");
         }
 
@@ -119,7 +119,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/batch");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
@@ -188,7 +188,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/batch");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
