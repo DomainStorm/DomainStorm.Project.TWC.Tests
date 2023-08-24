@@ -84,7 +84,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
@@ -99,16 +99,16 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement spanName_ApplyCaseNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));;
-            string 受理編號 = spanName_ApplyCaseNo.Text;
+            IWebElement stiApplyCaseNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));;
+            string 受理編號 = stiApplyCaseNo.Text;
             That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
 
-            IWebElement spanName_WaterNo = driver.FindElement(By.CssSelector("[sti-water-no]"));
-            string 水號 = spanName_WaterNo.Text;
+            IWebElement stiWaterNo = driver.FindElement(By.CssSelector("[sti-water-no]"));
+            string 水號 = stiWaterNo.Text;
             That(水號, Is.EqualTo("41101202191"));
 
-            IWebElement spanName_ApplyDate = driver.FindElement(By.CssSelector("[sti-apply-date]"));
-            string 申請日期 = spanName_ApplyDate.Text;
+            IWebElement stiApplyDate = driver.FindElement(By.CssSelector("[sti-apply-date]"));
+            string 申請日期 = stiApplyDate.Text;
             That(申請日期, Is.EqualTo("2023年03月06日"));
         }
 
@@ -119,7 +119,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
@@ -136,13 +136,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement 身分證號碼 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("身分證號碼")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", 身分證號碼);
-            IWebElement 身分證號碼Input = 身分證號碼.FindElement(By.TagName("input"));
+            IWebElement stiTrusteeIdNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("sti-trustee-id-no")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", stiTrusteeIdNo);
+            IWebElement stiTrusteeIdNoInput = stiTrusteeIdNo.FindElement(By.TagName("input"));
             //((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].addEventListener('focusout', function() { window.focusOutDetected = true; });", idNo);
 
-            身分證號碼Input.SendKeys("A123456789");
-            身分證號碼Input.SendKeys(Keys.Tab);
+            stiTrusteeIdNoInput.SendKeys("A123456789");
+            stiTrusteeIdNoInput.SendKeys(Keys.Tab);
 
             driver.SwitchTo().DefaultContent();
 
@@ -161,12 +161,12 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
-            身分證號碼 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("身分證號碼")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", 身分證號碼);
+            stiTrusteeIdNo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("sti-trustee-id-no")));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", stiTrusteeIdNo);
 
-            string identityNumber = 身分證號碼.Text;
+            string 身分證號碼 = stiTrusteeIdNo.Text;
 
-            That(identityNumber, Is.EqualTo("A123456789"));
+            That(身分證號碼, Is.EqualTo("A123456789"));
         }
 
         [Test]
