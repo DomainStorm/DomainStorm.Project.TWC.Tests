@@ -58,15 +58,15 @@ public class TestHelper
             return _applyCaseNo;
         }
     }
-    private static string? _userId;
-    public static string? UserId
-    {
-        get
-        {
-            _userId ??= GetTestConfig().UserId;
-            return _userId;
-        }
-    }
+    //private static string? _userId;
+    //public static string? UserId
+    //{
+    //    get
+    //    {
+    //        _userId ??= GetTestConfig().UserId;
+    //        return _userId;
+    //    }
+    //}
     private static string? _password;
     public static string? Password
     {
