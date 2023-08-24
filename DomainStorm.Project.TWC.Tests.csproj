@@ -118,6 +118,12 @@
 	  <None Update="Assets\twcweb-G101_bmMilitaryApply.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
+	  <None Update="Assets\twcweb-RA001_bmTransferApply.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\twcweb-RA002_bmTransferApply.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	  <None Update="Assets\twcweb-S100_bmTransferApply.json">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>

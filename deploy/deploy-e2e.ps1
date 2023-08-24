@@ -23,11 +23,9 @@ $env:MetadataApi_Version = "1.1.1"
 $env:MultiMediaApi_Version = "0.0.6"
 $env:JwtAuthApi_Version = "0.3.1"
 $env:OpenidProvider_Version = "0.3.1"
-
-$env:TwcWeb_Version = "0.9.2"
-
+$env:TwcWeb_Version = "0.9.3"
 $env:ResourceApi_Version = "0.1.3"
-$env:ServiceBus_Version = "0.0.4"
+$env:ServiceBus_Version = "0.0.5"
 
 docker compose -f docker-compose.yml -f docker-compose.metadataapi.yml -f docker-compose.e2e.yml up -d
 
