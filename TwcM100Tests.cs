@@ -411,14 +411,14 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement 上傳 = driver.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 上傳);
             上傳.Click();
-            Thread.Sleep(3000);
+            Thread.Sleep(1500);
 
             stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
             IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
             IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-            IWebElement secondRow = wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr"))[1]);
-            IWebElement element = secondRow.FindElement(By.CssSelector("td[data-field='name']"));
+            //IWebElement secondRow = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr")));
+            IWebElement element = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name']"));
             IWebElement spanElement = element.FindElement(By.CssSelector("span"));
             wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
@@ -442,8 +442,8 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
             IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
             IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            IWebElement secondRow = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr"))[1];
-            IWebElement td = secondRow.FindElement(By.CssSelector("td.text-start.align-middle.action"));
+            IWebElement row = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr"));
+            IWebElement td = row.FindElement(By.CssSelector("td.text-start.align-middle.action"));
             IWebElement stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
             IWebElement stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
             IWebElement 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
