@@ -201,7 +201,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(4)]
-        public async Task TwcB101_05() // 看到■用印或代送件只需夾帶附件已打勾
+        public async Task TwcB101_05() // 看到■用印及代送件只需夾帶附件或掃描拍照方式夾帶已打勾
         {
             ChromeDriver driver = GetNewChromeDriver();
 

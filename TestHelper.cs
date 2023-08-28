@@ -252,7 +252,7 @@ public class TestConfig
     public string? AccessToken { get; set; }
     public string? ApplyCaseNo { get; set; }
     public string? Password { get; set; }
-    public string? UserId { get; set; }
+    //public string? UserId { get; set; }
 }
 public class ChromeConfig
 {
