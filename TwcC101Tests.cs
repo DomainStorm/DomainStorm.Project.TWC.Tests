@@ -316,7 +316,7 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(受理登記).Click().Perform();
 
             var stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[5];
-            var imgElement = stormCard.FindElement(By.TagName("img"));
+            var imgElement = stormCard.FindElement(By.CssSelector("img"));
 
             That(imgElement, Is.Not.Null);
 
