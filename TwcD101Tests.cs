@@ -418,13 +418,14 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
+            Thread.Sleep(500);
 
             var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
             selectMonth.SelectByText("March");
 
-            var span = driver.FindElement(By.CssSelector("span[aria-label='March 2, 2023']"));
-            span.Click();
+            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='March 2, 2023']"));
+            spanElement.Click();
 
             var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
             stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
@@ -443,7 +444,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            var spanElement = element.FindElement(By.CssSelector("span"));
+            spanElement = element.FindElement(By.CssSelector("span"));
             string spanText = spanElement.Text;
 
             That(spanText, Is.EqualTo(TestHelper.ApplyCaseNo));
@@ -498,13 +499,14 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
+            Thread.Sleep(500);
 
             var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
             selectMonth.SelectByText("March");
 
-            var span = driver.FindElement(By.CssSelector("span[aria-label='March 4, 2023']"));
-            span.Click();
+            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='March 4, 2023']"));
+            spanElement.Click();
 
             var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
             stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
