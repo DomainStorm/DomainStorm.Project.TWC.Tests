@@ -453,13 +453,12 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             IWebElement inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
-            Thread.Sleep(1500);
 
-            IWebElement monthDropdown = wait.Until(ExpectedConditions.ElementIsVisible(By.ClassName("flatpickr-monthDropdown-months")));
-            SelectElement selectMonth = new(monthDropdown);
-            selectMonth.SelectByValue("2");
+            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
+            SelectElement selectMonth = new SelectElement(monthDropdown);
+            selectMonth.SelectByText("March");
 
-            IWebElement spanElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[aria-label='March 6, 2023']")));
+            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='March 4, 2023']"));
             spanElement.Click();
 
             IWebElement divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
