@@ -381,6 +381,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroup = div.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
+            Thread.Sleep(500);
 
             var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
@@ -462,6 +463,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
+            Thread.Sleep(500);
 
             var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
