@@ -418,14 +418,13 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
-            Thread.Sleep(1000);
 
             var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
-            selectMonth.SelectByText("June");
+            selectMonth.SelectByText("March");
 
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
-            spanElement.Click();
+            var span = driver.FindElement(By.CssSelector("span[aria-label='March 2, 2023']"));
+            span.Click();
 
             var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
             stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
@@ -444,7 +443,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            spanElement = element.FindElement(By.CssSelector("span"));
+            var spanElement = element.FindElement(By.CssSelector("span"));
             string spanText = spanElement.Text;
 
             That(spanText, Is.EqualTo(TestHelper.ApplyCaseNo));
@@ -457,55 +456,29 @@ namespace DomainStorm.Project.TWC.Tests
             ChromeDriver driver = GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
-
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
-            var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
-            var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            inputElement.Click();
-            Thread.Sleep(1000);
-
-            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
-            SelectElement selectMonth = new SelectElement(monthDropdown);
-            selectMonth.SelectByText("June");
-
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
-            spanElement.Click();
-
-            var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
-            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
-            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
-
-            inputElement.SendKeys(TestHelper.ApplyCaseNo);
-
-            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
-            var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-
-            Actions actions = new(driver);
-            actions.MoveToElement(查詢).Click().Perform();
-
-            stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
-            var stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-
-            actions.MoveToElement(element).Click().Perform();
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
+            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var stormTreeNodeFourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
+            var stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+            var stormTreeNodeFirst = stormTreeNode.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
+            var stormTreeNodeSecondUnderSecond = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
+            var stormTreeNodeThird = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[2];
+
             var stormTreeNode_Fisrt = stormTreeNodeFourth.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
             var 受理登記 = stormTreeNode_Fisrt.GetShadowRoot().FindElement(By.CssSelector("a[href='#credential']"));
 
+            Actions actions = new(driver);
             actions.MoveToElement(受理登記).Click().Perform();
 
-            stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[5];
-            var imgElement = stormCard.FindElement(By.TagName("img"));
+            var stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[5];
+            var imgElement = stormCard.FindElement(By.CssSelector("img"));
 
             That(imgElement, Is.Not.Null);
         }
@@ -525,14 +498,13 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
-            Thread.Sleep(1000);
 
             var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
-            selectMonth.SelectByText("June");
+            selectMonth.SelectByText("March");
 
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
-            spanElement.Click();
+            var span = driver.FindElement(By.CssSelector("span[aria-label='March 4, 2023']"));
+            span.Click();
 
             var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
             stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
