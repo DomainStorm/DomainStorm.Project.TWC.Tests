@@ -377,8 +377,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
-            var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
+            var div = stormCard.FindElement(By.CssSelector("div.row"));
+            var stormInputGroup = div.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
 
