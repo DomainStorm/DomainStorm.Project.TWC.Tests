@@ -381,10 +381,10 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroup = div.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
+            Thread.Sleep(1000);
 
             var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
-            Thread.Sleep(1500);
             selectMonth.SelectByText("June");
 
             var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
@@ -429,10 +429,10 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
+            Thread.Sleep(1000);
 
             var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
-            Thread.Sleep(1500);
             selectMonth.SelectByText("June");
 
             var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
@@ -490,10 +490,10 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
+            Thread.Sleep(1000);
 
             var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
-            Thread.Sleep(1500);
             selectMonth.SelectByText("June");
 
             var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
