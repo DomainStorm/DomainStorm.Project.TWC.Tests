@@ -58,15 +58,15 @@ public class TestHelper
             return _applyCaseNo;
         }
     }
-    private static string? _userId;
-    public static string? UserId
-    {
-        get
-        {
-            _userId ??= GetTestConfig().UserId;
-            return _userId;
-        }
-    }
+    //private static string? _userId;
+    //public static string? UserId
+    //{
+    //    get
+    //    {
+    //        _userId ??= GetTestConfig().UserId;
+    //        return _userId;
+    //    }
+    //}
     private static string? _password;
     public static string? Password
     {
@@ -252,7 +252,7 @@ public class TestConfig
     public string? AccessToken { get; set; }
     public string? ApplyCaseNo { get; set; }
     public string? Password { get; set; }
-    public string? UserId { get; set; }
+    //public string? UserId { get; set; }
 }
 public class ChromeConfig
 {

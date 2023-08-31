@@ -63,7 +63,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
 
             for (int i = 0; i < 15; i++)
             {
@@ -147,7 +147,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
@@ -186,7 +186,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
@@ -237,7 +237,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             ChromeDriver driver = GetNewChromeDriver();
 
-            await TestHelper.Login(driver, TestHelper.UserId!, TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));

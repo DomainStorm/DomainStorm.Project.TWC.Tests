@@ -97,7 +97,7 @@ jobs:
       #  run: | 
       #    curl -L -i http://127.0.0.1:8000/jwtauthapi/swagger/index.html       
       - name: Test
-        #run: dotnet test --no-build --verbosity normal
-        run: dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcE100Tests --no-build --verbosity normal
+        # run: dotnet test --no-build --verbosity normal
+        run: dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcD101Tests --no-build --verbosity normal
 
           
