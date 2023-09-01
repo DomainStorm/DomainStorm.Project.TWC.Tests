@@ -153,7 +153,9 @@ namespace DomainStorm.Project.TWC.Tests
             var logout = driver.FindElement(By.CssSelector("a[href='./logout']"));
             logout.Click();
 
-            var 登入 = driver.FindElement(By.CssSelector("button"));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+
+            var 登入 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
             That(登入, Is.Not.Null);
         }
 
