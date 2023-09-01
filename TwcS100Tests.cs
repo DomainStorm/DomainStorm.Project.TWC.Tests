@@ -482,7 +482,6 @@ namespace DomainStorm.Project.TWC.Tests
             foreach (var dataRow in dataRows)
             {
                 var userNames = dataRow.FindElement(By.CssSelector("td[data-field='userName'] > span"));
-
                 string userName = userNames.Text;
 
                 if (userName == "張博文")
@@ -493,26 +492,12 @@ namespace DomainStorm.Project.TWC.Tests
                 {
                     謝德威 = true;
                 }
-
                 if (張博文 && 謝德威)
                 {
                     break;
                 }
             }
-
             That(張博文 || 謝德威, Is.True);
-
-            //var firstTrElement = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='userName']"));
-            //spanElement = firstTrElement.FindElement(By.CssSelector("span"));
-            //string spanText = spanElement.Text;
-
-            //That(spanText,Is.EqualTo("張博文"));
-
-            //var secondTrElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr"))[1];
-            //var span = secondTrElement.FindElement(By.CssSelector("td[data-field='userName'] > span"));
-            //spanText = span.Text;
-
-            //That(spanText, Is.EqualTo("謝德威"));
         }
     }
 }
