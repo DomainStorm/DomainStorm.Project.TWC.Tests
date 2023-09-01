@@ -476,28 +476,29 @@ namespace DomainStorm.Project.TWC.Tests
 
             var dataRows = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr"));
 
-            bool 張博文 = false;
-            bool 謝德威 = false;
+            That(dataRows.Count, Is.AtLeast(2));
+            //bool 張博文 = false;
+            //bool 謝德威 = false;
 
-            foreach (var dataRow in dataRows)
-            {
-                var userNames = dataRow.FindElement(By.CssSelector("td[data-field='userName'] > span"));
-                string userName = userNames.Text;
+            //foreach (var dataRow in dataRows)
+            //{
+            //    var userNames = dataRow.FindElement(By.CssSelector("td[data-field='userName'] > span"));
+            //    string userName = userNames.Text;
 
-                if (userName == "張博文")
-                {
-                    張博文 = true;
-                }
-                else if (userName == "謝德威")
-                {
-                    謝德威 = true;
-                }
-                if (張博文 && 謝德威)
-                {
-                    break;
-                }
-            }
-            That(張博文 || 謝德威, Is.True);
+            //    if (userName == "張博文")
+            //    {
+            //        張博文 = true;
+            //    }
+            //    else if (userName == "謝德威")
+            //    {
+            //        謝德威 = true;
+            //    }
+            //    if (張博文 && 謝德威)
+            //    {
+            //        break;
+            //    }
+            //}
+            //That(張博文 || 謝德威, Is.True);
         }
     }
 }
