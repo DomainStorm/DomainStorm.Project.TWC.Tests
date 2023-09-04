@@ -477,6 +477,7 @@ namespace DomainStorm.Project.TWC.Tests
             var dataRows = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr"));
 
             bool 張博文 = false;
+
             bool 謝德威 = false;
 
             foreach (var dataRow in dataRows)
