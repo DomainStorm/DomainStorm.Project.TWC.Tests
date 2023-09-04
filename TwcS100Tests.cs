@@ -497,6 +497,7 @@ namespace DomainStorm.Project.TWC.Tests
                     break;
                 }
             }
+
             That(張博文, Is.True);
             That(謝德威, Is.True);
         }
