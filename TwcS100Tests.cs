@@ -470,10 +470,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             查詢.Click();
 
+            Console.WriteLine(driver.PageSource);
+
             var stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
             var stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
             var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-
             var dataRows = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr"));
 
             bool 張博文存在 = dataRows.Any(dataRow =>
@@ -482,7 +483,6 @@ namespace DomainStorm.Project.TWC.Tests
                 string userName = userNames.Text;
                 return userName == "張博文";
             });
-
             That(張博文存在, Is.True);
 
             bool 謝德威存在 = dataRows.Any(dataRow =>
@@ -491,7 +491,6 @@ namespace DomainStorm.Project.TWC.Tests
                 string userName = userNames.Text;
                 return userName == "謝德威";
             });
-
             That(謝德威存在, Is.True);
         }
     }

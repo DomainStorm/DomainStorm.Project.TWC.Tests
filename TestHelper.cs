@@ -104,7 +104,6 @@ public class TestHelper
     {
         var client = new RestClient(TokenUrl!);
         var request = new RestRequest();
-
         const string clientId = "bmuser";
         const string clientSecret = "4xW8KpkKkeFc";
         var encodedData = Convert.ToBase64String(System.Text.Encoding.GetEncoding("UTF-8").GetBytes(clientId + ":" + clientSecret));
@@ -129,11 +128,9 @@ public class TestHelper
 
         using var r = new StreamReader(jsonFilePath);
         var json = await r.ReadToEndAsync();
-
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
 
         _applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
-
         update.applyCaseNo = _applyCaseNo;
 
         //update.userCode = UserId;
@@ -204,7 +201,6 @@ public class TestHelper
         });
 
         var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-
         var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
 
         var action = new Actions(webDriver);
