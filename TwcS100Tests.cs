@@ -462,7 +462,7 @@ namespace DomainStorm.Project.TWC.Tests
             SelectElement selectMonth = new SelectElement(monthDropdown);
             selectMonth.SelectByText("March");
 
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='March 1, 2023']"));
+            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='March 4, 2023']"));
             spanElement.Click();
 
             var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
@@ -476,29 +476,23 @@ namespace DomainStorm.Project.TWC.Tests
 
             var dataRows = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr"));
 
-            bool 張博文 = false;
-            bool 謝德威 = false;
-
-            foreach (var dataRow in dataRows)
+            bool 張博文存在 = dataRows.Any(dataRow =>
             {
                 var userNames = dataRow.FindElement(By.CssSelector("td[data-field='userName'] > span"));
                 string userName = userNames.Text;
+                return userName == "張博文";
+            });
 
-                if (userName == "張博文")
-                {
-                    張博文 = true;
-                }
-                else if (userName == "謝德威")
-                {
-                    謝德威 = true;
-                }
-                if (張博文 && 謝德威)
-                {
-                    break;
-                }
-            }
-            That(張博文, Is.True);
-            That(謝德威, Is.True);
+            That(張博文存在, Is.True);
+
+            bool 謝德威存在 = dataRows.Any(dataRow =>
+            {
+                var userNames = dataRow.FindElement(By.CssSelector("td[data-field='userName'] > span"));
+                string userName = userNames.Text;
+                return userName == "謝德威";
+            });
+
+            That(謝德威存在, Is.True);
         }
     }
 }
