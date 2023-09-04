@@ -462,7 +462,7 @@ namespace DomainStorm.Project.TWC.Tests
             SelectElement selectMonth = new SelectElement(monthDropdown);
             selectMonth.SelectByText("March");
 
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='March 3, 2023']"));
+            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='March 5, 2023']"));
             spanElement.Click();
 
             var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
@@ -476,7 +476,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             var dataRows = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr"));
 
-            //That(dataRows.Count, Is.AtLeast(2));
             bool 張博文 = false;
             bool 謝德威 = false;
 
@@ -498,7 +497,8 @@ namespace DomainStorm.Project.TWC.Tests
                     break;
                 }
             }
-            That(張博文 || 謝德威, Is.True);
+            That(張博文, Is.True);
+            That(謝德威, Is.True);
         }
     }
 }
