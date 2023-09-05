@@ -177,8 +177,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
-
-
         [Test]
         [Order(4)]
         public async Task TwcS100_05() // 看到申請之表單內容跳至夾帶附件區塊
@@ -470,7 +468,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             查詢.Click();
 
+            Console.WriteLine("::group::");
             Console.WriteLine(driver.PageSource);
+            Console.WriteLine("::endgroup::");
 
             var stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
             var stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
