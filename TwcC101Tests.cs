@@ -117,10 +117,10 @@ namespace DomainStorm.Project.TWC.Tests
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNodeFifth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
-            var 受理登記 = stormTreeNodeFifth.GetShadowRoot().FindElement(By.CssSelector("a[href='#finished']"));
+            var fifthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5)"));
+            var 受理登記 = fifthStormTreeNode.FindElement(By.CssSelector("a[href='#finished']"));
 
             Actions actions = new(driver);
             actions.MoveToElement(受理登記).Click().Perform();
@@ -157,8 +157,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNode_Fifth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
-            var 受理登記 = stormTreeNode_Fifth.GetShadowRoot().FindElement(By.CssSelector("a[href='#finished']"));
+            var fifthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5)"));
+            var 受理登記 = fifthStormTreeNode.FindElement(By.CssSelector("a[href='#finished']"));
+
             actions.MoveToElement(受理登記).Click().Perform();
 
             var 用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
@@ -191,9 +192,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNode_Fourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
-            var stormTreeNode = stormTreeNode_Fourth.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
-            var 掃描拍照 = stormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#credential']"));
+            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
+            var stormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("storm-tree-node"));
+            var 掃描拍照 = stormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
 
             Actions actions = new(driver);
             actions.MoveToElement(掃描拍照).Click().Perform();
@@ -232,9 +233,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNode_Fourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
-            var stormTreeNode = stormTreeNode_Fourth.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
-            var 掃描拍照 = stormTreeNode.GetShadowRoot().FindElement(By.CssSelector("a[href='#credential']"));
+            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
+            var stormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("storm-tree-node"));
+            var 掃描拍照 = stormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
 
             Actions actions = new(driver);
             actions.MoveToElement(掃描拍照).Click().Perform();
@@ -257,8 +258,8 @@ namespace DomainStorm.Project.TWC.Tests
                 return null;
             });
 
-            var stormTreeNodeFifth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
-            var 受理登記 = stormTreeNodeFifth.GetShadowRoot().FindElement(By.CssSelector("a[href='#finished']"));
+            var fifthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5)"));
+            var 受理登記 = fifthStormTreeNode.FindElement(By.CssSelector("a[href='#finished']"));
 
             actions.MoveToElement(受理登記).Click().Perform();
 
@@ -302,26 +303,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNodeFourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
-            var stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            var stormTreeNodeFirst = stormTreeNode.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
-            var stormTreeNodeSecondUnderSecond = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            var stormTreeNodeThird = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[2];
-
-            var stormTreeNode_Fisrt = stormTreeNodeFourth.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
-            var 受理登記 = stormTreeNode_Fisrt.GetShadowRoot().FindElement(By.CssSelector("a[href='#credential']"));
+            var secondStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(2)"));
+            var firstStormTreeNode = secondStormTreeNode.FindElement(By.CssSelector("storm-tree-node"));
+            var 消費性用水服務契約 = firstStormTreeNode.FindElement(By.CssSelector("a[href='#contract_1']"));
 
             Actions actions = new(driver);
-            actions.MoveToElement(受理登記).Click().Perform();
-
-            var stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[5];
-            var imgElement = stormCard.FindElement(By.CssSelector("img"));
-
-            That(imgElement, Is.Not.Null);
-
-            var 消費性用水服務契約 = stormTreeNodeFirst.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_1']"));
-
             actions.MoveToElement(消費性用水服務契約).Click().Perform();
 
             消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
@@ -335,22 +321,25 @@ namespace DomainStorm.Project.TWC.Tests
 
             That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var 公司個人資料保護告知事項 = stormTreeNodeSecondUnderSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_2']"));
+            secondStormTreeNode = secondStormTreeNode.FindElement(By.CssSelector("storm-tree-node:nth-child(2)"));
+            var 公司個人資料保護告知事項 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#contract_2']"));
 
             actions.MoveToElement(公司個人資料保護告知事項).Click().Perform();
 
-            公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司個人資料保護告知事項);
+            消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
 
             wait.Until(driver =>
             {
-                var 公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
-                return 公司個人資料保護告知事項.GetAttribute("checked") == "true";
+                var 消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
+                return 消費性用水服務契約.GetAttribute("checked") == "true";
             });
 
-            That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
+            That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var 公司營業章程 = stormTreeNodeThird.GetShadowRoot().FindElement(By.CssSelector("a[href='#contract_3']"));
+            secondStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(2)"));
+            var thirdStormTreeNode = secondStormTreeNode.FindElement(By.CssSelector("storm-tree-node:nth-child(3)"));
+            var 公司營業章程 = thirdStormTreeNode.FindElement(By.CssSelector("a[href='#contract_3']"));
 
             actions.MoveToElement(公司營業章程).Click().Perform();
 
@@ -364,6 +353,17 @@ namespace DomainStorm.Project.TWC.Tests
             });
 
             That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
+
+            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
+            var stormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("storm-tree-node"));
+            var 掃描拍照 = stormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
+
+            actions.MoveToElement(掃描拍照).Click().Perform();
+
+            var stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[5];
+            var imgElement = stormCard.FindElement(By.CssSelector("img"));
+
+            That(imgElement, Is.Not.Null);
         }
 
         [Test]
@@ -428,18 +428,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNodeFourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
-            var stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            var stormTreeNode = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            var stormTreeNodeFirst = stormTreeNode.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
-            var stormTreeNodeSecondUnderSecond = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            var stormTreeNodeThird = stormTreeNode.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[2];
-
-            var stormTreeNode_Fisrt = stormTreeNodeFourth.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node"));
-            var 受理登記 = stormTreeNode_Fisrt.GetShadowRoot().FindElement(By.CssSelector("a[href='#credential']"));
+            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
+            var stormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("storm-tree-node"));
+            var 掃描拍照 = stormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
 
             Actions actions = new(driver);
-            actions.MoveToElement(受理登記).Click().Perform();
+            actions.MoveToElement(掃描拍照).Click().Perform();
 
             var stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[5];
             var imgElement = stormCard.FindElement(By.CssSelector("img"));
@@ -459,8 +453,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
-            var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
+            var div = stormCard.FindElement(By.CssSelector("div.row"));
+            var stormInputGroup = div.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
             Thread.Sleep(500);
@@ -469,8 +463,8 @@ namespace DomainStorm.Project.TWC.Tests
             SelectElement selectMonth = new SelectElement(monthDropdown);
             selectMonth.SelectByText("March");
 
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='March 3, 2023']"));
-            spanElement.Click();
+            var span = driver.FindElement(By.CssSelector("span[aria-label='March 6, 2023']"));
+            span.Click();
 
             var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
             stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
@@ -494,11 +488,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(60));
 
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNodeFourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
-            var stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            var 夾帶附件 = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
+            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
+            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
+            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
 
             actions.MoveToElement(夾帶附件).Click().Perform();
 

@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Net;
@@ -195,6 +196,48 @@ namespace DomainStorm.Project.TWC.Tests
 
             var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
             searchInput.SendKeys(TestHelper.ApplyCaseNo!);
+
+            var CheckAll = stormTable.GetShadowRoot().FindElement(By.CssSelector("input[aria-label='Check All']"));
+            CheckAll.Click();
+            Thread.Sleep(500);
+
+            var stormToolbar = stormDocumentListDetail.FindElement(By.CssSelector("storm-toolbar"));
+            var stormButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-button button"));
+            stormButton.Click();
+
+            var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
+            新增文件.Click();
+            Thread.Sleep(500);
+
+            IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
+            var lastHiddenInput = hiddenInputs[^1];
+
+            string twcweb_01_1_夾帶附件1 = "twcweb_01_1_夾帶附件1.pdf";
+            string 附件1Path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件1);
+
+            lastHiddenInput.SendKeys(附件1Path);
+
+            hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
+
+            lastHiddenInput = hiddenInputs[^1];
+
+            string twcweb_01_1_夾帶附件2 = "twcweb_01_1_夾帶附件2.pdf";
+            string 附件2Path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件2);
+
+            lastHiddenInput.SendKeys(附件2Path);
+
+            var 上傳 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
+            上傳.Click();
+
+            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
+            stormCard = stormDocumentListDetail.FindElement(By.CssSelector("storm-card"));
+            stormCard = stormCard.FindElement(By.CssSelector("storm-card"));
+            var 確認夾帶 = stormCard.FindElement(By.CssSelector("button.btn.bg-gradient-info"));
+
+            Actions actions = new Actions(driver);
+            actions.MoveToElement(確認夾帶).Click().Perform();
 
             var attached = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='attached']"));
             var icon = attached.FindElement(By.CssSelector("i"));
