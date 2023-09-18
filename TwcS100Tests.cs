@@ -84,11 +84,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().DefaultContent();
 
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNodeFourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
-            var stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            var 夾帶附件 = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
+            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
+            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
+            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
 
             Actions actions = new(driver);
             actions.MoveToElement(夾帶附件).Click().Perform();
@@ -189,9 +189,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNodeFourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
-            var stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            var 夾帶附件 = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
+            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
+            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
+            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
 
             Actions actions = new(driver);
             actions.MoveToElement(夾帶附件).Click().Perform();
@@ -228,9 +228,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNodeFourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
-            var stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            var 夾帶附件 = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
+            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
+            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
+            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
 
             Actions actions = new(driver);
             actions.MoveToElement(夾帶附件).Click().Perform();
@@ -267,11 +267,11 @@ namespace DomainStorm.Project.TWC.Tests
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNodeFourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
-            var stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            var 夾帶附件 = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
+            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
+            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
+            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
 
             Actions actions = new(driver);
             actions.MoveToElement(夾帶附件).Click().Perform();
@@ -344,10 +344,10 @@ namespace DomainStorm.Project.TWC.Tests
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNodeFifth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[4];
-            var 受理登記 = stormTreeNodeFifth.GetShadowRoot().FindElement(By.CssSelector("a[href='#finished']"));
+            var fifthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5)"));
+            var 受理登記 = fifthStormTreeNode.FindElement(By.CssSelector("a[href='#finished']"));
 
             Actions actions = new(driver);
             actions.MoveToElement(受理登記).Click().Perform();
@@ -381,11 +381,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().DefaultContent();
 
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var stormTreeNodeFourth = stormTreeView.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[3];
-            var stormTreeNodeSecond = stormTreeNodeFourth.GetShadowRoot().FindElements(By.CssSelector("storm-tree-node"))[1];
-            var 夾帶附件 = stormTreeNodeSecond.GetShadowRoot().FindElement(By.CssSelector("a[href='#file']"));
+            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
+            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
+            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
 
             Actions actions = new(driver);
             actions.MoveToElement(夾帶附件).Click().Perform();
@@ -460,7 +460,7 @@ namespace DomainStorm.Project.TWC.Tests
             SelectElement selectMonth = new SelectElement(monthDropdown);
             selectMonth.SelectByText("March");
 
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='March 4, 2023']"));
+            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='March 6, 2023']"));
             spanElement.Click();
 
             var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
@@ -468,30 +468,35 @@ namespace DomainStorm.Project.TWC.Tests
 
             查詢.Click();
 
-            Console.WriteLine("::group::");
-            Console.WriteLine(driver.PageSource);
-            Console.WriteLine("::endgroup::");
-
-            var stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
-            var stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
+            var secondStormCard = stormMainContent.FindElement(By.CssSelector("storm-card:nth-child(2)"));
+            var stormDocumentListDetail = secondStormCard.FindElement(By.CssSelector("storm-document-list-detail"));
             var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-            var dataRows = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr"));
+            var tbodyElement = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody"));
+            var trElements = tbodyElement.FindElements(By.CssSelector("tr"));
 
-            bool 張博文存在 = dataRows.Any(dataRow =>
-            {
-                var userNames = dataRow.FindElement(By.CssSelector("td[data-field='userName'] > span"));
-                string userName = userNames.Text;
-                return userName == "張博文";
-            });
-            That(張博文存在, Is.True);
+            bool 張博文Found = false;
+            bool 謝德威Found = false;
 
-            bool 謝德威存在 = dataRows.Any(dataRow =>
+            foreach (var trElement in trElements)
             {
-                var userNames = dataRow.FindElement(By.CssSelector("td[data-field='userName'] > span"));
-                string userName = userNames.Text;
-                return userName == "謝德威";
-            });
-            That(謝德威存在, Is.True);
+                var userNameElement = trElement.FindElement(By.CssSelector("td[data-field='userName'] > storm-table-cell > span"));
+                string userNameText = userNameElement.Text;
+
+                if (userNameText == "張博文")
+                {
+                    張博文Found = true;
+                }
+                else if (userNameText == "謝德威")
+                {
+                    謝德威Found = true;
+                }
+                if (張博文Found && 謝德威Found == true)
+                {
+                    
+                    break;
+                }
+            }
+            That(張博文Found && 謝德威Found, Is.True);
         }
     }
 }
