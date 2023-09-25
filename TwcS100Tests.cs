@@ -473,11 +473,10 @@ namespace DomainStorm.Project.TWC.Tests
             var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            inputElement.Click();
+            Actions actions = new(driver);
+            actions.MoveToElement(inputElement).Click().Perform();
 
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft.open")));
-
-            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
+            var monthDropdown = wait.Until(ExpectedConditions.ElementIsVisible(By.ClassName("flatpickr-monthDropdown-months")));
             SelectElement selectMonth = new SelectElement(monthDropdown);
             selectMonth.SelectByText("March");
 
@@ -488,10 +487,12 @@ namespace DomainStorm.Project.TWC.Tests
             var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
 
             查詢.Click();
-
             var secondStormCard = stormMainContent.FindElement(By.CssSelector("storm-card:nth-child(2)"));
             var stormDocumentListDetail = secondStormCard.FindElement(By.CssSelector("storm-document-list-detail"));
             var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+
+            wait.Until(_ => stormTable.GetShadowRoot().FindElements(By.CssSelector("tr")).Any());
+
             var tbodyElement = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody"));
             var trElements = tbodyElement.FindElements(By.CssSelector("tr"));
 
@@ -513,7 +514,7 @@ namespace DomainStorm.Project.TWC.Tests
                 }
                 if (張博文Found && 謝德威Found == true)
                 {
-                    
+
                     break;
                 }
             }
