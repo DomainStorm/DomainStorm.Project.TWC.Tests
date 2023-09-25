@@ -31,6 +31,16 @@ public class TestHelper
             return _baseUrl;
         }
     }
+    private static string? _IpUrl;
+    public static string? IpUrl
+    {
+        get
+        {
+            _IpUrl ??= GetTestConfig().IpUrl;
+            return _IpUrl;
+        }
+    }
+
     private static string? _tokenUrl;
     public static string? TokenUrl
     {
@@ -243,6 +253,7 @@ public class WaterForm
 public class TestConfig
 {
     public string? BaseUrl { get; set; }
+    public string? IpUrl { get; set; }
     public string? TokenUrl { get; set; }
     public string? LoginUrl { get; set; }
     public string? AccessToken { get; set; }

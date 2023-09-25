@@ -1,9 +1,11 @@
-﻿using OpenQA.Selenium;
+﻿using AngleSharp.Dom;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Net;
 using WebDriverManager;
 using static NUnit.Framework.Assert;
@@ -505,8 +507,55 @@ namespace DomainStorm.Project.TWC.Tests
             ChromeDriver driver = GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
+            driver.Navigate().GoToUrl($@"{TestHelper.IpUrl}/report/RA001");
+
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(20));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            Thread.Sleep(1000);
+
+            driver.SwitchTo().Frame(0);
+
+            var stormCard = driver.FindElement(By.CssSelector("storm-card"));
+            var divRow = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
+            var divFirst = divRow.FindElement(By.CssSelector("div.col.col-sm.mt-3.mt-sm-0"));
+            var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
+            var 受理日期起 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+
+            Actions actions = new Actions(driver);
+            actions.MoveToElement(受理日期起).Click().Perform();
+            Thread.Sleep(500);
+
+            var divCalendar = driver.FindElement(By.CssSelector("div.flatpickr-calendar"));
+            var divCurrentMonth = divCalendar.FindElement(By.CssSelector("div.flatpickr-current-month"));
+            var select = divCurrentMonth.FindElement(By.CssSelector("select"));
+
+            SelectElement selectFirst = new SelectElement(select);
+            selectFirst.SelectByText("March");
+
+            var divInnerContainer = driver.FindElement(By.CssSelector("div.flatpickr-innerContainer"));
+            var divDays = divInnerContainer.FindElement(By.CssSelector("div.flatpickr-days"));
+            var current = divDays.FindElement(By.CssSelector("span[aria-label='March 3, 2023']"));
+            actions.MoveToElement(current).Click().Perform();
+
+            stormCard = driver.FindElement(By.CssSelector("storm-card"));
+            var divSecond = stormCard.FindElement(By.CssSelector("div.col.col-sm.mt-3.mt-sm-0:nth-child(2)"));
+            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
+            var 受理日期迄 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+
+            actions.MoveToElement(受理日期迄).Click().Perform();
+            Thread.Sleep(500);
+
+            divCalendar = driver.FindElement(By.CssSelector("div.flatpickr-calendar"));
+            divCurrentMonth = divCalendar.FindElement(By.CssSelector("div.flatpickr-current-month"));
+            select = divCurrentMonth.FindElement(By.CssSelector("select"));
+
+            SelectElement selectSecond = new SelectElement(select);
+            selectSecond.SelectByText("April");
+
+            divInnerContainer = driver.FindElement(By.CssSelector("div.flatpickr-innerContainer"));
+            divDays = divInnerContainer.FindElement(By.CssSelector("div.flatpickr-days"));
+            current = divDays.FindElement(By.CssSelector("span[aria-label='April 5, 2023']"));
+            actions.MoveToElement(current).Click().Perform();
 
 
         }
