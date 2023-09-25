@@ -178,8 +178,6 @@ public class TestHelper
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
-        applyCaseNo = _applyCaseNo;
-
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
         Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
@@ -193,15 +191,16 @@ public class TestHelper
         var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
         searchInput.SendKeys(applyCaseNo);
 
-        wait.Until(driver =>
+        IWebElement? element = null;
+
+        wait.Until(_ =>
         {
             var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
-            return element != null && !string.IsNullOrEmpty(element.Text);
+            element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
+
+            return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
         });
 
-        var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-        var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
 
         var action = new Actions(webDriver);
         action.MoveToElement(element).Click().Perform();
