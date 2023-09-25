@@ -600,6 +600,9 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+
             var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
             var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
@@ -607,12 +610,13 @@ namespace DomainStorm.Project.TWC.Tests
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
 
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft.open")));
+
             var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
-            Thread.Sleep(750);
             selectMonth.SelectByText("June");
 
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
+            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 6, 2023']"));
             spanElement.Click();
 
             var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
@@ -646,6 +650,9 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+
             var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
             var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
@@ -653,12 +660,13 @@ namespace DomainStorm.Project.TWC.Tests
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
 
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft.open")));
+
             var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
-            Thread.Sleep(750);
             selectMonth.SelectByText("June");
 
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 3, 2023']"));
+            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 6, 2023']"));
             spanElement.Click();
 
             var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
@@ -680,8 +688,6 @@ namespace DomainStorm.Project.TWC.Tests
             var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
 
             actions.MoveToElement(element).Click().Perform();
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
             var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
