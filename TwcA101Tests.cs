@@ -138,7 +138,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
             actions.MoveToElement(新增文件).Perform();
             新增文件.Click();
-            Thread.Sleep(500);
+
+            wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             var lastHiddenInput = hiddenInputs[^1];
@@ -179,7 +180,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
             actions.MoveToElement(新增文件).Perform();
             新增文件.Click();
-            Thread.Sleep(500);
+
+            wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             var lastHiddenInput = hiddenInputs[^1];
@@ -259,7 +261,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
             actions.MoveToElement(新增文件).Perform();
             新增文件.Click();
-            Thread.Sleep(500);
+
+            wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             var lastHiddenInput = hiddenInputs[^1];
@@ -353,7 +356,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
             actions.MoveToElement(新增文件).Perform();
             新增文件.Click();
-            Thread.Sleep(500);
+
+            wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             var lastHiddenInput = hiddenInputs[^1];

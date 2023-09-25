@@ -3,6 +3,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
+using System;
 using System.Net;
 using WebDriverManager;
 using static NUnit.Framework.Assert;
@@ -121,6 +122,8 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/batch");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            Actions actions = new(driver);
+
             var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
             var stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
             var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
@@ -137,8 +140,10 @@ namespace DomainStorm.Project.TWC.Tests
             stormButton.Click();
 
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
+            actions.MoveToElement(新增文件).Perform();
             新增文件.Click();
-            Thread.Sleep(500);
+
+            wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             var lastHiddenInput = hiddenInputs[^1];
@@ -190,6 +195,8 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/batch");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            Actions actions = new(driver);
+
             var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
             var stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
             var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
@@ -206,8 +213,10 @@ namespace DomainStorm.Project.TWC.Tests
             stormButton.Click();
 
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
+            actions.MoveToElement(新增文件).Perform();
             新增文件.Click();
-            Thread.Sleep(500);
+
+            wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             var lastHiddenInput = hiddenInputs[^1];
@@ -236,7 +245,6 @@ namespace DomainStorm.Project.TWC.Tests
             stormCard = stormCard.FindElement(By.CssSelector("storm-card"));
             var 確認夾帶 = stormCard.FindElement(By.CssSelector("button.btn.bg-gradient-info"));
 
-            Actions actions = new Actions(driver);
             actions.MoveToElement(確認夾帶).Click().Perform();
 
             var attached = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='attached']"));

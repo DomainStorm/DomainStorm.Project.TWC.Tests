@@ -243,7 +243,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
             actions.MoveToElement(新增文件).Perform();
             新增文件.Click();
-            Thread.Sleep(500);
+
+            wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             var lastHiddenInput = hiddenInputs[^1];
@@ -284,7 +285,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
             actions.MoveToElement(新增文件).Perform();
             新增文件.Click();
-            Thread.Sleep(500);
+
+            wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             var lastHiddenInput = hiddenInputs[^1];
@@ -504,6 +506,30 @@ namespace DomainStorm.Project.TWC.Tests
                 }
             }
             That(張博文Found && 謝德威Found, Is.True);
+        }
+
+        [Test]
+        [Order(11)]
+        public async Task TwcS100_12() //顯示草屯營運所業務股
+        {
+            ChromeDriver driver = GetNewChromeDriver();
+
+            await TestHelper.Login(driver, "4e03", TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+
+
+        }
+
+        [Test]
+        [Order(12)]
+        public async Task TwcS100_13() //因不同站所，故查詢不到任何資料
+        {
+            ChromeDriver driver = GetNewChromeDriver();
+
+            await TestHelper.Login(driver, "4e03", TestHelper.Password!);
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
+
+
         }
     }
 }

@@ -325,9 +325,10 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(夾帶附件).Click().Perform();
 
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 新增文件);
-            Thread.Sleep(500);
+            actions.MoveToElement(新增文件).Perform();
+            新增文件.Click();
+
+            wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             var lastHiddenInput = hiddenInputs[^1];
@@ -369,9 +370,10 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(夾帶附件).Click().Perform();
 
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 新增文件);
-            Thread.Sleep(1000);
+            actions.MoveToElement(新增文件).Perform();
+            新增文件.Click();
+
+            wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             var lastHiddenInput = hiddenInputs[^1];
@@ -453,9 +455,10 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(夾帶附件).Click().Perform();
 
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 新增文件);
-            Thread.Sleep(500);
+            actions.MoveToElement(新增文件).Perform();
+            新增文件.Click();
+
+            wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
             var lastHiddenInput = hiddenInputs[^1];
