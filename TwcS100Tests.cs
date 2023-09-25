@@ -243,6 +243,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
             actions.MoveToElement(新增文件).Perform();
             新增文件.Click();
+            //Thread.Sleep(500);
+            wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
@@ -254,10 +256,16 @@ namespace DomainStorm.Project.TWC.Tests
 
             lastHiddenInput.SendKeys(filePath);
 
-            var stormInputGroup = driver.FindElement(By.CssSelector("body storm-main-content main div div div div storm-card form storm-input-group"));
-            string 文件名稱 = stormInputGroup.GetAttribute("value");
+            IWebElement? stormInputGroup = null;
 
-            That(文件名稱, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            wait.Until(_ =>
+            {
+                stormInputGroup = driver.FindElement(By.CssSelector("body storm-main-content main div div div div storm-card form storm-input-group"));
+                return stormInputGroup.GetAttribute("value") == "twcweb_01_1_夾帶附件1.pdf";
+            });
+
+
+            That(stormInputGroup?.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
 
         [Test]
@@ -401,7 +409,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
             actions.MoveToElement(新增文件).Perform();
             新增文件.Click();
-            //Thread.Sleep(500);
+
             wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
@@ -456,6 +464,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             await TestHelper.Login(driver, "tw491", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
+
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
 
             var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
