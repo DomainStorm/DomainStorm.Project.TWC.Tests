@@ -474,7 +474,8 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             inputElement.Click();
-            Thread.Sleep(500);
+
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft.open")));
 
             var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
@@ -528,7 +529,12 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(driver, "4e03", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
 
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.dropdown")));
 
+            var 身分 = driver.FindElement(By.CssSelector("storm-dropdown .nav-link-text"));
+            string text = 身分.Text;
+            That(text, Is.EqualTo("草屯營運所業務股 - 業務員"));
         }
 
         [Test]
@@ -540,7 +546,39 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(driver, "4e03", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
 
+            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
+            var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
+            var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            inputElement.Click();
+
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft.open")));
+
+            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
+            SelectElement selectMonth = new SelectElement(monthDropdown);
+            selectMonth.SelectByText("March");
+
+            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='March 6, 2023']"));
+            spanElement.Click();
+
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+
+            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
+            var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+
+            查詢.Click();
+
+            stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            var secondStormCard = stormMainContent.FindElement(By.CssSelector("storm-card:nth-child(2)"));
+            var stormDocumentListDetail = secondStormCard.FindElement(By.CssSelector("storm-document-list-detail"));
+            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+            var text = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive.border table tbody tr td p")).Text;
+
+            That(text, Is.EqualTo("沒有找到符合的結果"));      
         }
     }
 }
