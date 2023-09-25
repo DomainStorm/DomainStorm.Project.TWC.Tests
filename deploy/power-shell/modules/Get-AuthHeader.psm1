@@ -13,8 +13,7 @@
     }
     
     $authUri = "http://localhost:5050/connect/token"
-
-
+    
     try {
         $tokenResponse = Invoke-RestMethod -Uri $authUri -Method POST -Body $reqTokenBody -Headers $reqAuthHeader
     
