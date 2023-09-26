@@ -1,11 +1,9 @@
-﻿using AngleSharp.Dom;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.Net;
 using WebDriverManager;
 using static NUnit.Framework.Assert;

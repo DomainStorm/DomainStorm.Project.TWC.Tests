@@ -262,7 +262,6 @@ namespace DomainStorm.Project.TWC.Tests
                 return stormInputGroup.GetAttribute("value") == "twcweb_01_1_夾帶附件1.pdf";
             });
 
-
             That(stormInputGroup?.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
 
@@ -514,7 +513,8 @@ namespace DomainStorm.Project.TWC.Tests
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
             wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
 
-            var spanElement = driver.FindElement(By.CssSelector("ul > li > storm-dropdown > div > a > div > span"));
+            var stormSidenav = driver.FindElement(By.CssSelector("storm-sidenav"));
+            var spanElement = stormSidenav.FindElement(By.CssSelector("ul > li > storm-dropdown > div > a > div > span"));
             string spanText = spanElement.GetAttribute("innerText");
 
             That(spanText, Is.EqualTo("草屯營運所業務股 - 業務員"));
