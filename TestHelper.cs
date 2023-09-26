@@ -7,11 +7,36 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net;
 using OpenQA.Selenium.Chrome;
+using WebDriverManager;
 
 namespace DomainStorm.Project.TWC.Tests;
 
 public class TestHelper
 {
+    public static ChromeDriver GetNewChromeDriver()
+    {
+        var option = new ChromeOptions();
+        option.AddArgument("start-maximized");
+        option.AddArgument("--disable-gpu");
+        option.AddArgument("--enable-javascript");
+        option.AddArgument("--allow-running-insecure-content");
+        option.AddArgument("--ignore-urlfetcher-cert-requests");
+        option.AddArgument("--disable-web-security");
+        option.AddArgument("--ignore-certificate-errors");
+        //option.AddArguments("--no-sandbox");
+
+        if (GetChromeConfig().Headless)
+            option.AddArgument("--headless");
+
+        new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
+        var driver = new ChromeDriver(option);
+
+        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+        driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
+
+        return driver;
+    }
+
     private static TestConfig GetTestConfig()
     {
         return new ConfigurationBuilder()
