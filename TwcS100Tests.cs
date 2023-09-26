@@ -561,7 +561,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
             var text = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive.border table tbody tr td p")).Text;
 
-            That(text, Is.EqualTo("沒有找到符合的結果"));      
+            That(text, Is.EqualTo("沒有找到符合的結果"));
         }
     }
 }
