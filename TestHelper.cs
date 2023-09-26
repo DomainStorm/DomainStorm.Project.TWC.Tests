@@ -1,3 +1,4 @@
+using System.Data.SqlClient;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
@@ -6,7 +7,10 @@ using SeleniumExtras.WaitHelpers;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net;
+using Dapper;
 using OpenQA.Selenium.Chrome;
+using System.Net.Http;
+using System.Reflection;
 
 namespace DomainStorm.Project.TWC.Tests;
 
@@ -226,6 +230,32 @@ public class TestHelper
         string id = segments[^1];
 
         return id;
+    }
+
+    public static async Task CleanDb()
+    {
+        var client = new RestClient();
+        var request = new RestRequest("http://localhost:9200/dublincore", Method.Delete);
+        client.Execute(request);
+
+        request.Method = Method.Put;
+        client.Execute(request);
+
+        await using var cn = new SqlConnection("Server=localhost,5434;Database=TWCWeb;User Id=sa;Password=Pass@word");
+        cn.Query("delete MainFile");
+        cn.Query("delete WaterRegisterChangeForm");
+        cn.Query("delete WaterRegisterLog");
+        cn.Query("delete AttachmentFile");
+        cn.Query("delete FormAttachment");
+        cn.Query("delete Form");
+        cn.Query("delete MediaFile");
+        cn.Query("delete PlayList");
+        cn.Query("delete PlayListItem");
+        cn.Query("delete Question");
+        cn.Query("delete QuestionOption");
+        cn.Query("delete Questionnaire");
+        cn.Query("delete QuestionnaireForm");
+        cn.Query("delete QuestionnaireFormAnswer");
     }
 }
 public class WaterForm
