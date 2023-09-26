@@ -464,59 +464,42 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            var 查詢 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
 
             var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
             var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+
             Actions actions = new(driver);
             actions.MoveToElement(inputElement).Click().Perform();
-
-            var monthDropdown = wait.Until(ExpectedConditions.ElementIsVisible(By.ClassName("flatpickr-monthDropdown-months")));
+            var calendar = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(".flatpickr-calendar.open")));
+            var monthDropdown = calendar.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
             SelectElement selectMonth = new SelectElement(monthDropdown);
             selectMonth.SelectByText("March");
 
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='March 6, 2023']"));
-            spanElement.Click();
+            var spanElement = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("span[aria-label='March 6, 2023']")));
+            actions.MoveToElement(spanElement).Click().Perform();
 
-            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
-            var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+            actions.MoveToElement(查詢).Click().Perform();
 
-            查詢.Click();
             var secondStormCard = stormMainContent.FindElement(By.CssSelector("storm-card:nth-child(2)"));
             var stormDocumentListDetail = secondStormCard.FindElement(By.CssSelector("storm-document-list-detail"));
             var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
-            wait.Until(_ => stormTable.GetShadowRoot().FindElements(By.CssSelector("tr")).Any());
+            IEnumerable<IWebElement>? matchElements = null;
 
-            var tbodyElement = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody"));
-            var trElements = tbodyElement.FindElements(By.CssSelector("tr"));
-
-            bool 張博文Found = false;
-            bool 謝德威Found = false;
-
-            foreach (var trElement in trElements)
+            wait.Until(webDriver =>
             {
-                var userNameElement = trElement.FindElement(By.CssSelector("td[data-field='userName'] > storm-table-cell > span"));
-                string userNameText = userNameElement.Text;
+                var userNameSpanElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='userName'] > storm-table-cell > span"));
 
-                if (userNameText == "張博文")
-                {
-                    張博文Found = true;
-                }
-                else if (userNameText == "謝德威")
-                {
-                    謝德威Found = true;
-                }
-                if (張博文Found && 謝德威Found == true)
-                {
+                matchElements = userNameSpanElements.Where(s => s.GetAttribute("innerHTML") is "張博文" or "謝德威");
+                //Console.WriteLine(stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody")).GetAttribute("innerHTML"));
+                return matchElements.Count() >= 2;
+            });
 
-                    break;
-                }
-            }
-            That(張博文Found && 謝德威Found, Is.True);
+            That(matchElements!.Count(), Is.GreaterThanOrEqualTo(2));
         }
 
         [Test]
@@ -526,14 +509,22 @@ namespace DomainStorm.Project.TWC.Tests
             ChromeDriver driver = GetNewChromeDriver();
 
             await TestHelper.Login(driver, "4e03", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.dropdown")));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
 
-            var 身分 = driver.FindElement(By.CssSelector("storm-dropdown .nav-link-text"));
-            string text = 身分.Text;
-            That(text, Is.EqualTo("草屯營運所業務股 - 業務員"));
+            var spanElement = driver.FindElement(By.CssSelector("ul > li > storm-dropdown > div > a > div > span"));
+            string spanText = spanElement.GetAttribute("innerText");
+
+            That(spanText, Is.EqualTo("草屯營運所業務股 - 業務員"));
+
+            //WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
+            //wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-dropdown > div > a > span")));
+
+            //var 身分 = driver.FindElement(By.CssSelector("storm-dropdown.nav-link-text"));
+            //string text = 身分.Text;
+            //That(text, Is.EqualTo("草屯營運所業務股 - 業務員"));
         }
 
         [Test]
