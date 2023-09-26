@@ -65,7 +65,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            IWebElement mediaLibrary = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
+            var mediaLibrary = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
 
             That(mediaLibrary, Is.Not.Null, "媒體庫未找到");
         }
@@ -81,39 +81,39 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            IWebElement 新增文字 = stormCard.FindElement(By.CssSelector(".btn-primary:last-child"));
+            var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
+            var 新增文字 = stormCard.FindElement(By.CssSelector(".btn-primary:last-child"));
             新增文字.Click();
 
-            IWebElement stormInputGroup = driver.FindElement(By.CssSelector("storm-input-group[label='名稱']"));
-            IWebElement 名稱 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var stormInputGroup = driver.FindElement(By.CssSelector("storm-input-group[label='名稱']"));
+            var 名稱 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             名稱.SendKeys("宣導文字");
 
             stormInputGroup = driver.FindElement(By.CssSelector("storm-input-group[label='說明']"));
-            IWebElement 說明 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var 說明 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             說明.SendKeys("宣導說明");
 
             stormInputGroup = driver.FindElement(By.CssSelector("storm-input-group[label='播放秒數']"));
-            IWebElement 播放秒數 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var 播放秒數 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             播放秒數.SendKeys("10");
 
-            IWebElement stormTextEditor = driver.FindElement(By.CssSelector("storm-text-editor"));
-            IWebElement 文字 = stormTextEditor.GetShadowRoot().FindElement(By.CssSelector(".ql-editor"));
+            var stormTextEditor = driver.FindElement(By.CssSelector("storm-text-editor"));
+            var 文字 = stormTextEditor.GetShadowRoot().FindElement(By.CssSelector(".ql-editor"));
             文字.SendKeys("跑馬燈內容");
             文字.SendKeys(Keys.Tab);
 
             stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            IWebElement 新增 = stormCard.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+            var 新增 = stormCard.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
             新增.Click();
             Thread.Sleep(500);
 
-            IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-            IWebElement element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
-            IWebElement spanElement = element.FindElement(By.CssSelector("span"));
+            var element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
+            var spanElement = element.FindElement(By.CssSelector("span"));
             wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
             string spanText = spanElement.Text;
@@ -131,23 +131,23 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            IWebElement td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            IWebElement stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            IWebElement stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
-            IWebElement 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
+            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
+            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
+            var stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
+            var 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
             觀看.Click();
 
-            IWebElement divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
-            IWebElement div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
+            var divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
+            var div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
             string innerText = div_divElement.Text;
             That(innerText, Is.EqualTo("跑馬燈內容"));
 
             div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
-            IWebElement 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
+            var 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
             關閉.Click();
         }
 
@@ -162,33 +162,33 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            IWebElement td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            IWebElement stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            IWebElement stormButton = stormTableToolbar.FindElements(By.CssSelector("storm-button"))[1];
-            IWebElement stormToolTip = stormButton.FindElement(By.CssSelector("storm-tooltip"));
-            IWebElement 修改 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
+            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
+            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
+            var stormButton = stormTableToolbar.FindElements(By.CssSelector("storm-button"))[1];
+            var stormToolTip = stormButton.FindElement(By.CssSelector("storm-tooltip"));
+            var 修改 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
             修改.Click();
 
-            IWebElement stormTextEditor = driver.FindElement(By.CssSelector("storm-text-editor"));
-            IWebElement 文字 = stormTextEditor.GetShadowRoot().FindElement(By.CssSelector(".ql-editor"));
+            var stormTextEditor = driver.FindElement(By.CssSelector("storm-text-editor"));
+            var 文字 = stormTextEditor.GetShadowRoot().FindElement(By.CssSelector(".ql-editor"));
             文字.Clear();
             文字.SendKeys("應該是宣導的內容文字");
             文字.SendKeys(Keys.Tab);
 
             stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            IWebElement 更新 = stormCard.FindElement(By.CssSelector("button.btn.bg-gradient-info"));
+            var 更新 = stormCard.FindElement(By.CssSelector("button.btn.bg-gradient-info"));
             更新.Click();
             Thread.Sleep(500);
 
             stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
             stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
             stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            IWebElement element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
-            IWebElement spanElement = element.FindElement(By.CssSelector("span"));
+            var element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
+            var spanElement = element.FindElement(By.CssSelector("span"));
             wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
             string spanText = spanElement.Text;
@@ -206,24 +206,24 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            IWebElement td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            IWebElement stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            IWebElement stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
-            IWebElement 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
+            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
+            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
+            var stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
+            var 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
             觀看.Click();
             Thread.Sleep(500);
 
-            IWebElement divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
-            IWebElement div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
+            var divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
+            var div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
             string innerText = div_divElement.Text;
             That(innerText, Is.EqualTo("應該是宣導的內容文字"));
 
             div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
-            IWebElement 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
+            var 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
             關閉.Click();
         }
 
@@ -238,19 +238,19 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            IWebElement td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            IWebElement stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            IWebElement stormButton = stormTableToolbar.FindElements(By.CssSelector("storm-button"))[2];
-            IWebElement stormToolTip = stormButton.FindElement(By.CssSelector("storm-tooltip"));
-            IWebElement 刪除 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
+            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
+            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
+            var stormButton = stormTableToolbar.FindElements(By.CssSelector("storm-button"))[2];
+            var stormToolTip = stormButton.FindElement(By.CssSelector("storm-tooltip"));
+            var 刪除 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
             刪除.Click();
 
-            IWebElement divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
-            IWebElement div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
+            var divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
+            var div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
             刪除 = div_divElement.FindElement(By.CssSelector("button.swal2-confirm"));
             刪除.Click();
 
@@ -275,30 +275,30 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            IWebElement 新增檔案 = stormCard.FindElement(By.CssSelector(".btn-primary:first-child"));
+            var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
+            var 新增檔案 = stormCard.FindElement(By.CssSelector(".btn-primary:first-child"));
             新增檔案.Click();
             Thread.Sleep(500);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
-            IWebElement lastHiddenInput = hiddenInputs[^1];
+            var lastHiddenInput = hiddenInputs[^1];
 
             string 台水官網圖 = "台水官網圖.png";
             string 台水官網圖Path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", 台水官網圖);
 
             lastHiddenInput.SendKeys(台水官網圖Path);
 
-            IWebElement 上傳 = driver.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']"));
+            var 上傳 = driver.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 上傳);
             上傳.Click();
             Thread.Sleep(3000);
 
             stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-            IWebElement element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
-            IWebElement spanElement = element.FindElement(By.CssSelector("span"));
+            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
+            var spanElement = element.FindElement(By.CssSelector("span"));
             wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
             string 文件名稱 = spanElement.Text;
@@ -317,24 +317,24 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            IWebElement td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            IWebElement stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            IWebElement stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
-            IWebElement 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
+            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
+            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
+            var stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
+            var 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
             觀看.Click();
 
-            IWebElement divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
-            IWebElement div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
-            IWebElement imgElement = div_divElement.FindElement(By.TagName("img"));
+            var divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
+            var div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
+            var imgElement = div_divElement.FindElement(By.TagName("img"));
 
             if (imgElement != null)
             {
                 div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
-                IWebElement 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
+                var 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
                 關閉.Click();
             }
         }
@@ -350,34 +350,34 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            IWebElement td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            IWebElement stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            IWebElement stormButton = stormTableToolbar.FindElements(By.CssSelector("storm-button"))[1];
-            IWebElement stormToolTip = stormButton.FindElement(By.CssSelector("storm-tooltip"));
-            IWebElement 修改 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
+            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
+            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
+            var stormButton = stormTableToolbar.FindElements(By.CssSelector("storm-button"))[1];
+            var stormToolTip = stormButton.FindElement(By.CssSelector("storm-tooltip"));
+            var 修改 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
             修改.Click();
             Thread.Sleep(500);
 
-            IWebElement stormInputGroup = driver.FindElement(By.CssSelector("storm-input-group[label='說明']"));
-            IWebElement 說明 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var stormInputGroup = driver.FindElement(By.CssSelector("storm-input-group[label='說明']"));
+            var 說明 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             說明.Clear();
             說明.SendKeys("描述圖示說明");
             說明.SendKeys(Keys.Tab);
 
             stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            IWebElement 更新 = stormCard.FindElement(By.CssSelector("button.btn.bg-gradient-info"));
+            var 更新 = stormCard.FindElement(By.CssSelector("button.btn.bg-gradient-info"));
             更新.Click();
             Thread.Sleep(500);
 
             stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
             stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
             stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            IWebElement element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='description']")));
-            IWebElement spanElement = element.FindElement(By.CssSelector("span"));
+            var element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='description']")));
+            var spanElement = element.FindElement(By.CssSelector("span"));
             wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
             string spanText = spanElement.Text;
@@ -395,31 +395,31 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            IWebElement 新增檔案 = stormCard.FindElement(By.CssSelector(".btn-primary:first-child"));
+            var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
+            var 新增檔案 = stormCard.FindElement(By.CssSelector(".btn-primary:first-child"));
             新增檔案.Click();
             Thread.Sleep(500);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
-            IWebElement lastHiddenInput = hiddenInputs[^1];
+            var lastHiddenInput = hiddenInputs[^1];
 
             string testmedia = "testmedia.mp4";
             string testmediaPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", testmedia);
 
             lastHiddenInput.SendKeys(testmediaPath);
 
-            IWebElement 上傳 = driver.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']"));
+            var 上傳 = driver.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 上傳);
             上傳.Click();
             Thread.Sleep(1500);
 
             stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-            //IWebElement secondRow = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr")));
-            IWebElement element = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name']"));
-            IWebElement spanElement = element.FindElement(By.CssSelector("span"));
+            //var secondRow = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr")));
+            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name']"));
+            var spanElement = element.FindElement(By.CssSelector("span"));
             wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
             string 文件名稱 = spanElement.Text;
@@ -438,25 +438,25 @@ namespace DomainStorm.Project.TWC.Tests
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
 
-            IWebElement stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            IWebElement stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            IWebElement stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            IWebElement stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            IWebElement row = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr"));
-            IWebElement td = row.FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            IWebElement stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            IWebElement stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
-            IWebElement 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
+            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
+            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
+            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var row = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr"));
+            var td = row.FindElement(By.CssSelector("td.text-start.align-middle.action"));
+            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
+            var stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
+            var 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
             觀看.Click();
 
-            IWebElement divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
-            IWebElement div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
-            IWebElement videoElement = div_divElement.FindElement(By.TagName("video"));
+            var divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
+            var div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
+            var videoElement = div_divElement.FindElement(By.TagName("video"));
 
             if (videoElement != null)
             {
                 div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
-                IWebElement 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
+                var 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
                 關閉.Click();
             }
         }

@@ -31,6 +31,16 @@ public class TestHelper
             return _baseUrl;
         }
     }
+    private static string? _IpUrl;
+    public static string? IpUrl
+    {
+        get
+        {
+            _IpUrl ??= GetTestConfig().IpUrl;
+            return _IpUrl;
+        }
+    }
+
     private static string? _tokenUrl;
     public static string? TokenUrl
     {
@@ -104,7 +114,6 @@ public class TestHelper
     {
         var client = new RestClient(TokenUrl!);
         var request = new RestRequest();
-
         const string clientId = "bmuser";
         const string clientSecret = "4xW8KpkKkeFc";
         var encodedData = Convert.ToBase64String(System.Text.Encoding.GetEncoding("UTF-8").GetBytes(clientId + ":" + clientSecret));
@@ -129,11 +138,9 @@ public class TestHelper
 
         using var r = new StreamReader(jsonFilePath);
         var json = await r.ReadToEndAsync();
-
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
 
         _applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
-
         update.applyCaseNo = _applyCaseNo;
 
         //update.userCode = UserId;
@@ -181,8 +188,6 @@ public class TestHelper
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
-        applyCaseNo = _applyCaseNo;
-
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
         Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
@@ -196,16 +201,16 @@ public class TestHelper
         var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
         searchInput.SendKeys(applyCaseNo);
 
-        wait.Until(driver =>
+        IWebElement? element = null;
+
+        wait.Until(_ =>
         {
             var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
-            return element != null && !string.IsNullOrEmpty(element.Text);
+            element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
+
+            return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
         });
 
-        var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-
-        var element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
 
         var action = new Actions(webDriver);
         action.MoveToElement(element).Click().Perform();
@@ -247,6 +252,7 @@ public class WaterForm
 public class TestConfig
 {
     public string? BaseUrl { get; set; }
+    public string? IpUrl { get; set; }
     public string? TokenUrl { get; set; }
     public string? LoginUrl { get; set; }
     public string? AccessToken { get; set; }
