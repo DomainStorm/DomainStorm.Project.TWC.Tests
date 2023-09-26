@@ -518,13 +518,6 @@ namespace DomainStorm.Project.TWC.Tests
             string spanText = spanElement.GetAttribute("innerText");
 
             That(spanText, Is.EqualTo("草屯營運所業務股 - 業務員"));
-
-            //WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
-            //wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-dropdown > div > a > span")));
-
-            //var 身分 = driver.FindElement(By.CssSelector("storm-dropdown.nav-link-text"));
-            //string text = 身分.Text;
-            //That(text, Is.EqualTo("草屯營運所業務股 - 業務員"));
         }
 
         [Test]
