@@ -232,7 +232,7 @@ public class TestHelper
         return id;
     }
 
-    public static async Task CleanDb()
+    public static void CleanDb()
     {
         var client = new RestClient();
         var request = new RestRequest("http://localhost:9200/dublincore", Method.Delete);
@@ -240,8 +240,7 @@ public class TestHelper
 
         request.Method = Method.Put;
         client.Execute(request);
-
-        await using var cn = new SqlConnection("Server=localhost,5434;Database=TWCWeb;User Id=sa;Password=Pass@word");
+        using var cn = new SqlConnection("Server=localhost,5434;Database=TWCWeb;User Id=sa;Password=Pass@word");
         cn.Query("delete MainFile");
         cn.Query("delete WaterRegisterChangeForm");
         cn.Query("delete WaterRegisterLog");
