@@ -165,7 +165,7 @@ public class TestHelper
 
         using var r = new StreamReader(jsonFilePath);
         var json = await r.ReadToEndAsync();
-        var update = JsonConvert.DeserializeObject<WaterForm>(json);
+        var update = JsonConvert.DeserializeObject<WaterForm>(json)!;
 
         _applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
         update.ApplyCaseNo = _applyCaseNo;
