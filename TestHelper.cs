@@ -166,7 +166,7 @@ public class TestHelper
         var update = JsonConvert.DeserializeObject<WaterForm>(json);
 
         _applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
-        update.applyCaseNo = _applyCaseNo;
+        update.ApplyCaseNo = _applyCaseNo;
 
         //update.userCode = UserId;
 
@@ -252,27 +252,52 @@ public class TestHelper
 
         return id;
     }
+
+    public static void CleanDb()
+    {
+        var client = new RestClient();
+        var request = new RestRequest("http://localhost:9200/dublincore", Method.Delete);
+        client.Execute(request);
+
+        request.Method = Method.Put;
+        client.Execute(request);
+        using var cn = new SqlConnection("Server=localhost,5434;Database=TWCWeb;User Id=sa;Password=Pass@word");
+        cn.Query("delete MainFile");
+        cn.Query("delete WaterRegisterChangeForm");
+        cn.Query("delete WaterRegisterLog");
+        cn.Query("delete AttachmentFile");
+        cn.Query("delete FormAttachment");
+        cn.Query("delete Form");
+        cn.Query("delete MediaFile");
+        cn.Query("delete PlayList");
+        cn.Query("delete PlayListItem");
+        cn.Query("delete Question");
+        cn.Query("delete QuestionOption");
+        cn.Query("delete Questionnaire");
+        cn.Query("delete QuestionnaireForm");
+        cn.Query("delete QuestionnaireFormAnswer");
+    }
 }
 public class WaterForm
 {
-    public string? applyCaseNo { get; set; }
-    public string? applyDate { get; set; }
-    public string? operatingArea { get; set; }
-    public string? waterNo { get; set; }
-    public string? typeChange { get; set; }
-    public string? userCode { get; set; }
-    public string? deviceLocation { get; set; }
-    public string? applicant { get; set; }
-    public string? idNo { get; set; }
-    public string? unino { get; set; }
-    public string? telNo { get; set; }
-    public string? mobileNo { get; set; }
-    public string? pipeDiameter { get; set; }
-    public string? waterType { get; set; }
-    public string? scoreSheet { get; set; }
-    public string? waterBuildLic { get; set; }
-    public string? waterUseLic { get; set; }
-    public string? billAddress { get; set; }
+    public string? ApplyCaseNo { get; set; }
+    public string? ApplyDate { get; set; }
+    public string? OperatingArea { get; set; }
+    public string? WaterNo { get; set; }
+    public string? TypeChange { get; set; }
+    public string? UserCode { get; set; }
+    public string? DeviceLocation { get; set; }
+    public string? Applicant { get; set; }
+    public string? IdNo { get; set; }
+    public string? Unino { get; set; }
+    public string? TelNo { get; set; }
+    public string? MobileNo { get; set; }
+    public string? PipeDiameter { get; set; }
+    public string? WaterType { get; set; }
+    public string? ScoreSheet { get; set; }
+    public string? WaterBuildLic { get; set; }
+    public string? WaterUseLic { get; set; }
+    public string? BillAddress { get; set; }
 }
 public class TestConfig
 {
