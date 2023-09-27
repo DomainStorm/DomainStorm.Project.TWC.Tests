@@ -8,6 +8,8 @@ using Newtonsoft.Json;
 using System.Net;
 using OpenQA.Selenium.Chrome;
 using WebDriverManager;
+using System.Data.SqlClient;
+using Dapper;
 
 namespace DomainStorm.Project.TWC.Tests;
 
