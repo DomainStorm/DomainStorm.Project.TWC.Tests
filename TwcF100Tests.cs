@@ -15,6 +15,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         public TwcF100Tests()
         {
+            TestHelper.CleanDb();
         }
 
         [SetUp] // 在每個測試方法之前執行的方法

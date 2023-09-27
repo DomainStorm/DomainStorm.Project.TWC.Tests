@@ -13,6 +13,7 @@ namespace DomainStorm.Project.TWC.Tests
         private List<ChromeDriver> _chromeDriverList;
         public TwcS101Tests()
         {
+            TestHelper.CleanDb();
         }
 
         [SetUp] // 在每個測試方法之前執行的方法
