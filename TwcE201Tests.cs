@@ -3,9 +3,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System;
 using System.Net;
-using WebDriverManager;
 using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests

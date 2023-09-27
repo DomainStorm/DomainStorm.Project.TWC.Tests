@@ -5,7 +5,6 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Collections.ObjectModel;
 using System.Net;
-using WebDriverManager;
 using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
@@ -13,7 +12,6 @@ namespace DomainStorm.Project.TWC.Tests
     public class TwcA101Tests
     {
         private List<ChromeDriver> _chromeDriverList;
-
         public TwcA101Tests()
         {
         }
