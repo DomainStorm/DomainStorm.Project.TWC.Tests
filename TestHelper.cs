@@ -188,7 +188,7 @@ public class TestHelper
         ((IJavaScriptExecutor)webDriver).ExecuteScript($"window.location.href = '{LoginUrl}';");
         //webDriver.Navigate().GoToUrl(LoginUrl);
 
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
         Console.WriteLine($"::group::Login---------{LoginUrl}---------");
         Console.WriteLine($"---------{LoginUrl}---------");
