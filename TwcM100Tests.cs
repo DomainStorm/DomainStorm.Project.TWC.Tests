@@ -21,30 +21,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
-        private ChromeDriver GetNewChromeDriver()
-        {
-            var option = new ChromeOptions();
-            option.AddArgument("start-maximized");
-            option.AddArgument("--disable-gpu");
-            option.AddArgument("--enable-javascript");
-            option.AddArgument("--allow-running-insecure-content");
-            option.AddArgument("--ignore-urlfetcher-cert-requests");
-            option.AddArgument("--disable-web-security");
-            option.AddArgument("--ignore-certificate-errors");
-            //option.AddArguments("--no-sandbox");
-
-            if (TestHelper.GetChromeConfig().Headless)
-                option.AddArgument("--headless");
-
-            new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
-            var driver = new ChromeDriver(option);
-
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
-            _chromeDriverList.Add(driver);
-
-            return driver;
-        }
 
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
@@ -59,7 +35,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(0)]
         public async Task TwcM100_01() // 畫面右側出現媒體管理畫面。
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
@@ -74,7 +50,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(1)]
         public async Task TwcM100_02() // 媒體庫列表出現該筆內容。
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
@@ -124,7 +100,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(2)]
         public async Task TwcM100_03() // 畫面顯示輸入之文字-跑馬燈內容-視窗後按關閉。
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
@@ -155,7 +131,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(3)]
         public async Task TwcM100_04() // 回到媒體庫列表並顯示該筆內容。
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
@@ -199,7 +175,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(4)]
         public async Task TwcM100_05() // 畫面顯示輸入之文字-應該是宣導的內容文字-視窗後按關閉。
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
@@ -231,7 +207,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(5)]
         public async Task TwcM100_06() // 媒體庫列表已無出現該筆資訊。
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
@@ -268,7 +244,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(6)]
         public async Task TwcM100_07() // 回到媒體庫列表並顯示該筆圖片資訊。
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
@@ -310,7 +286,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(7)]
         public async Task TwcM100_08() // 畫面顯示該圖內容後視窗按關閉
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
@@ -343,7 +319,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(8)]
         public async Task TwcM100_09() // 回到媒體庫列表有於該筆列表欄位內容顯示-描述圖示說明-之文字
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
@@ -388,7 +364,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(9)]
         public async Task TwcM100_10() // 回到媒體庫列表並顯示該筆圖片資訊
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
@@ -431,7 +407,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(10)]
         public async Task TwcM100_11() // 畫面顯示該影片內容後視窗按關閉
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");

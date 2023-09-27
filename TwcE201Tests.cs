@@ -24,30 +24,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
-        private ChromeDriver GetNewChromeDriver()
-        {
-            var option = new ChromeOptions();
-            option.AddArgument("start-maximized");
-            option.AddArgument("--disable-gpu");
-            option.AddArgument("--enable-javascript");
-            option.AddArgument("--allow-running-insecure-content");
-            option.AddArgument("--ignore-urlfetcher-cert-requests");
-            option.AddArgument("--disable-web-security");
-            option.AddArgument("--ignore-certificate-errors");
-            //option.AddArguments("--no-sandbox");
-
-            if (TestHelper.GetChromeConfig().Headless)
-                option.AddArgument("--headless");
-
-            new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
-            var driver = new ChromeDriver(option);
-
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
-            _chromeDriverList.Add(driver);
-
-            return driver;
-        }
 
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
@@ -90,7 +66,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(3)]
         public async Task TwcE201_04() // 帳號0511進入批次過戶區，點選【+申請者證件】按鈕後右邊畫面直接顯示夾帶附件畫面。
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/batch");
@@ -116,7 +92,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(4)]
         public async Task TwcE201_05() // 看到夾帶附件資訊
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/batch");
@@ -189,7 +165,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(5)]
         public async Task TwcE201_06() // 該申請案件於批次過戶清單中之附件欄位有迴紋針圖示即表示該筆資料已完成夾帶檔動作。有夾帶附件之資料等待後續排程資料寫入結案日期後於批次過戶資料夾中消失。
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/batch");
