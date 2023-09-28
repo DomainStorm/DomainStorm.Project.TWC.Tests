@@ -51,10 +51,11 @@ namespace DomainStorm.Project.TWC.Tests
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
-            foreach (ChromeDriver driver in _chromeDriverList)
-            {
-                driver.Quit();
-            }
+            //foreach (ChromeDriver driver in _chromeDriverList)
+            //{
+            //    driver.Quit();
+            //}
+            TestHelper.CloseChromeDrivers();
         }
 
         [Test]
@@ -85,11 +86,13 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            string id = TestHelper.GetLastSegmentFromUrl(driver);
+            string id = TestHelper.OpenNewWindowAndNavigateToUrlWithLastSegment(driver);
 
-            ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+            //string id = TestHelper.GetLastSegmentFromUrl(driver);
+
+            //((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
+            //driver.SwitchTo().Window(driver.WindowHandles[1]);
+            //driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -108,7 +111,6 @@ namespace DomainStorm.Project.TWC.Tests
             string 申請日期 = stiApplyDate.Text;
             That(申請日期, Is.EqualTo("2023年03月06日"));
         }
-
 
         [Test]
         [Order(3)]

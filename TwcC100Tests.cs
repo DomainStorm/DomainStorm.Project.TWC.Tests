@@ -29,10 +29,7 @@ namespace DomainStorm.Project.TWC.Tests
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
-            foreach (ChromeDriver driver in _chromeDriverList)
-            {
-                driver.Quit();
-            }
+            TestHelper.CloseChromeDrivers();
         }
 
         [Test]
@@ -177,9 +174,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             var 繳費checked = 繳費.GetAttribute("checked");
 
-            if (繳費checked != null) {
+            if (繳費checked != null)
+            {
                 Console.WriteLine("該元素具有'checked'屬性");
-            }else {
+            }
+            else
+            {
                 Console.WriteLine("該元素不具有'checked'屬性");
             }
 
@@ -382,7 +382,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 公司營業章程 = thirdStormTreeNode.FindElement(By.CssSelector("a[href='#contract_3']"));
 
             actions.MoveToElement(公司營業章程).Click();
-            
+
 
             公司營業章程 = driver.FindElement(By.Id("公司營業章程"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
@@ -683,7 +683,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             ReadOnlyCollection<IWebElement> applyCaseNoElements = wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
             element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo)!;
-            
+
             string 受理編號 = element.Text;
 
             That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));

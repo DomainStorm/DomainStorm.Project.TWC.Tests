@@ -15,6 +15,7 @@ namespace DomainStorm.Project.TWC.Tests;
 
 public class TestHelper
 {
+    private static List<ChromeDriver> _chromeDriverList = new List<ChromeDriver>();
     public static ChromeDriver GetNewChromeDriver()
     {
         var option = new ChromeOptions();
@@ -33,12 +34,20 @@ public class TestHelper
         new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
         var driver = new ChromeDriver(option);
 
+        _chromeDriverList.Add(driver);
+
         driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
         driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
 
         return driver;
     }
-
+    public static void CloseChromeDrivers()
+    {
+        foreach (var driver in _chromeDriverList)
+        {
+            driver.Quit();
+        }
+    }
     private static TestConfig GetTestConfig()
     {
         return new ConfigurationBuilder()
@@ -251,6 +260,22 @@ public class TestHelper
 
         string[] segments = driver.Url.Split('/');
         string id = segments[^1];
+
+        return id;
+    }
+    public static string OpenNewWindowAndNavigateToUrlWithLastSegment(ChromeDriver driver)
+    {
+        string initialUrl = driver.Url;
+
+        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        wait.Until(d => d.Url != initialUrl);
+
+        string[] segments = driver.Url.Split('/');
+        string id = segments[^1];
+
+        ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
+        driver.SwitchTo().Window(driver.WindowHandles[1]);
+        driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
         return id;
     }

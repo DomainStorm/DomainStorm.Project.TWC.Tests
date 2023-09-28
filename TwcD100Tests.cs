@@ -28,10 +28,7 @@ namespace DomainStorm.Project.TWC.Tests
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
-            foreach (ChromeDriver driver in _chromeDriverList)
-            {
-                driver.Quit();
-            }
+            TestHelper.CloseChromeDrivers();
         }
 
         [Test]
@@ -204,7 +201,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var 同步狀態 = driver.FindElement(By.CssSelector("p.d-none"));
             wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
-            
+
             driver.SwitchTo().Frame(0);
 
             var 中結 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("中結")));

@@ -28,10 +28,7 @@ namespace DomainStorm.Project.TWC.Tests
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
-            foreach (ChromeDriver driver in _chromeDriverList)
-            {
-                driver.Quit();
-            }
+            TestHelper.CloseChromeDrivers();
         }
 
         [Test]
@@ -739,9 +736,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             var outerContainer = driver.FindElement(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show"));
             var innerContainer = outerContainer.FindElement(By.CssSelector("div.swal2-popup.swal2-modal.swal2-icon-warning.swal2-show"));
-            string hintText = innerContainer.Text; 
+            string hintText = innerContainer.Text;
 
-            That(hintText,Is.Not.Null);
+            That(hintText, Is.Not.Null);
         }
 
         [Test]
@@ -803,7 +800,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             同步狀態 = driver.FindElement(By.CssSelector("p.d-none"));
             wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
-            
+
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
 
