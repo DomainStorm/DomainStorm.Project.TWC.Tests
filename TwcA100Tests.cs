@@ -197,18 +197,18 @@ namespace DomainStorm.Project.TWC.Tests
 
             受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            wait.Until(driver =>
-            {
-                try
-                {
-                    IReadOnlyList<IWebElement> signElement = driver.FindElements(By.CssSelector("[class='sign']"));
-                    return true;
-                }
-                catch (StaleElementReferenceException)
-                {
-                    return false;
-                }
-            });
+            //wait.Until(driver =>
+            //{
+            //    try
+            //    {
+            //        IReadOnlyList<IWebElement> signElement = driver.FindElements(By.CssSelector("[class='sign']"));
+            //        return true;
+            //    }
+            //    catch (StaleElementReferenceException)
+            //    {
+            //        return false;
+            //    }
+            //});
 
             IReadOnlyList<IWebElement> signElement = driver.FindElements(By.CssSelector("[class='sign']"));
             That(signElement, Is.Not.Empty, "未受理");

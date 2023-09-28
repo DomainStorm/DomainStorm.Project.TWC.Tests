@@ -250,7 +250,7 @@ namespace DomainStorm.Project.TWC.Tests
             var innerContainer = outerContainer.FindElement(By.CssSelector("div.swal2-popup.swal2-modal.swal2-icon-warning.swal2-show"));
             string hintText = innerContainer.Text;
 
-            That(hintText,Is.EqualTo("【夾帶附件】或【掃描拍照】未上傳\r\n確定"));
+            That(hintText,Is.EqualTo("!\r\n【夾帶附件】或【掃描拍照】未上傳\r\n確定"));
         }
 
         [Test]
@@ -659,34 +659,24 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            var 查詢 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
 
             var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
             var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            inputElement.Click();
-
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft.open")));
-
-            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
-            SelectElement selectMonth = new SelectElement(monthDropdown);
-            selectMonth.SelectByText("June");
-
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 6, 2023']"));
-            spanElement.Click();
-
-            var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
-            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
-            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
-
-            inputElement.SendKeys(TestHelper.ApplyCaseNo);
-
-            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
-            var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
 
             Actions actions = new(driver);
+            actions.MoveToElement(inputElement).Click().Perform();
+            var calendar = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(".flatpickr-calendar.open")));
+            var monthDropdown = calendar.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
+            SelectElement selectMonth = new SelectElement(monthDropdown);
+            selectMonth.SelectByText("March");
+
+            var spanElement = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("span[aria-label='March 6, 2023']")));
+            actions.MoveToElement(spanElement).Click().Perform();
+
             actions.MoveToElement(查詢).Click().Perform();
 
             var stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
@@ -772,34 +762,24 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            var 查詢 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
 
             var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
             var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
             var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
             var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            inputElement.Click();
-
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft.open")));
-
-            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
-            SelectElement selectMonth = new SelectElement(monthDropdown);
-            selectMonth.SelectByText("June");
-
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 6, 2023']"));
-            spanElement.Click();
-
-            var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
-            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
-            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
-
-            inputElement.SendKeys(TestHelper.ApplyCaseNo);
-
-            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
-            var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
 
             Actions actions = new(driver);
+            actions.MoveToElement(inputElement).Click().Perform();
+            var calendar = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(".flatpickr-calendar.open")));
+            var monthDropdown = calendar.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
+            SelectElement selectMonth = new SelectElement(monthDropdown);
+            selectMonth.SelectByText("March");
+
+            var spanElement = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("span[aria-label='March 6, 2023']")));
+            actions.MoveToElement(spanElement).Click().Perform();
+
             actions.MoveToElement(查詢).Click().Perform();
 
             stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
