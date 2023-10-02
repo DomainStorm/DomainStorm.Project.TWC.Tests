@@ -509,10 +509,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.choices > div.choices__inner")));
 
-            var stormSelectElement = driver.FindElement(By.CssSelector("storm-select[label='區處別']"));
-            var select = stormSelectElement.FindElement(By.CssSelector("div.choices select"));
-            SelectElement selectElement = new SelectElement(select);
-            selectElement.SelectByText("第四區管理處");
+            //var stormSelectElement = driver.FindElement(By.CssSelector("storm-select[label='區處別']"));
+            //var select = stormSelectElement.FindElement(By.CssSelector("div.choices select"));
+            //SelectElement selectElement = new SelectElement(select);
+            //selectElement.SelectByText("第四區管理處");
 
             var divRow = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
             var divFirst = divRow.FindElement(By.CssSelector("div.col.col-sm.mt-3.mt-sm-0"));
@@ -526,8 +526,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             var divCalendar = driver.FindElement(By.CssSelector("div.flatpickr-calendar"));
             var divCurrentMonth = divCalendar.FindElement(By.CssSelector("div.flatpickr-current-month"));
-            select = divCurrentMonth.FindElement(By.CssSelector("select"));
-
+            var select = divCurrentMonth.FindElement(By.CssSelector("select"));
+            SelectElement selectElement = new SelectElement(select);
             selectElement.SelectByText("March");
 
             var divInnerContainer = driver.FindElement(By.CssSelector("div.flatpickr-innerContainer"));

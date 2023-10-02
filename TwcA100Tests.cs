@@ -178,7 +178,7 @@ namespace DomainStorm.Project.TWC.Tests
             //wait.Until(ExpectedConditions.ElementToBeClickable(受理));
             //((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
 
-            var 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
 
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             //先加入延遲1秒，不然會還沒scroll完就click
@@ -226,8 +226,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             string id = TestHelper.OpenNewWindowAndNavigateToUrlWithLastSegment(driver);
 
-            Actions actions = new(driver);
-
             driver.SwitchTo().Window(driver.WindowHandles[0]);
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
@@ -239,6 +237,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement firstStormTreeNode = secondStormTreeNode.FindElement(By.CssSelector("storm-tree-node"));
             IWebElement 消費性用水服務契約 = firstStormTreeNode.FindElement(By.CssSelector("a[href='#contract_1']"));
 
+            Actions actions = new(driver);
             actions.MoveToElement(消費性用水服務契約).Click().Perform();
 
             消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
@@ -275,8 +274,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             string id = TestHelper.OpenNewWindowAndNavigateToUrlWithLastSegment(driver);
 
-            Actions actions = new(driver);
-
             driver.SwitchTo().Window(driver.WindowHandles[0]);
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
@@ -288,6 +285,7 @@ namespace DomainStorm.Project.TWC.Tests
             secondStormTreeNode = secondStormTreeNode.FindElement(By.CssSelector("storm-tree-node:nth-child(2)"));
             IWebElement 公司個人資料保護告知事項 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#contract_2']"));
 
+            Actions actions = new(driver);
             actions.MoveToElement(公司個人資料保護告知事項).Click().Perform();
 
             公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
