@@ -505,24 +505,22 @@ namespace DomainStorm.Project.TWC.Tests
             wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
 
             var stormCard = driver.FindElement(By.CssSelector("storm-card"));
-            //var stormSelect = stormCard.FindElement(By.CssSelector("storm-select"));
-            //var divChoice = stormSelect.FindElement(By.CssSelector("div.choices"));
+            var stormSelect = stormCard.FindElement(By.CssSelector("storm-select"));
+            var divChoice = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.choices")));
 
-            //Actions actions = new Actions(driver);
-            //actions.MoveToElement(divChoice).Click().Perform();
+            Actions actions = new Actions(driver);
+            actions.MoveToElement(divChoice).Click().Perform();
 
-            //var dropDown = divChoice.FindElement(By.CssSelector("div:nth-child(2)"));
-            //var list = dropDown.FindElement(By.CssSelector("div:nth-child(1)"));
-            //var 第四區管理處 = list.FindElement(By.CssSelector("div:nth-child(2)"));
-
-            //actions.MoveToElement(第四區管理處).Click().Perform();
+            var dropDown = divChoice.FindElement(By.CssSelector("div.choices__list.choices__list--dropdown"));
+            var list = dropDown.FindElement(By.CssSelector("div:nth-child(1)"));
+            var 第四區管理處 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list [data-id='2']")));
+            actions.MoveToElement(第四區管理處).Click().Perform();
 
             var divRow = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
             var divFirst = divRow.FindElement(By.CssSelector("div.col.col-sm.mt-3.mt-sm-0"));
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
-            var 受理日期起 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-
-            Actions actions = new Actions(driver);
+            var clickableElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var 受理日期起 = wait.Until(ExpectedConditions.ElementToBeClickable(clickableElement));
             actions.MoveToElement(受理日期起).Click().Perform();
 
             wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft")));
@@ -531,17 +529,26 @@ namespace DomainStorm.Project.TWC.Tests
             var divCurrentMonth = divCalendar.FindElement(By.CssSelector("div.flatpickr-current-month"));
             var select = divCurrentMonth.FindElement(By.CssSelector("select"));
 
-            SelectElement selectElement = new SelectElement(select);
-            selectElement.SelectByText("March");
+            SelectElement 選擇月份 = new SelectElement(select);
+            選擇月份.SelectByText("March");
 
             var divInnerContainer = driver.FindElement(By.CssSelector("div.flatpickr-innerContainer"));
             var divDays = divInnerContainer.FindElement(By.CssSelector("div.flatpickr-days"));
-            var current = divDays.FindElement(By.CssSelector("span[aria-label='March 6, 2023']"));
-            actions.MoveToElement(current).Click().Perform();
+            var 受理日期 = divDays.FindElement(By.CssSelector("span[aria-label='March 6, 2023']"));
+            actions.MoveToElement(受理日期).Click().Perform();
 
+            var form = stormCard.FindElement(By.CssSelector("form"));
             //var thirdDiv = stormCard.FindElement(By.CssSelector("div:nth-child(3)"));
+            //stormSelect = thirdDiv.FindElement(By.CssSelector("storm-select"));
+            //divChoice = stormSelect.FindElement(By.CssSelector("div.choices"));
+            //divChoice = wait.Until(ExpectedConditions.ElementToBeClickable(stormSelect));
 
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
+            //actions.MoveToElement(divChoice).Click().Perform();
+
+            //dropDown = divChoice.FindElement(By.CssSelector("div.choices__list.choices__list--dropdown"));
+            //list = dropDown.FindElement(By.CssSelector("div:nth-child(1)"));
+            //var Xlsx = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list [data-id='3']")));
+            //actions.MoveToElement(Xlsx).Click().Perform();
 
             var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
             var 下載 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
