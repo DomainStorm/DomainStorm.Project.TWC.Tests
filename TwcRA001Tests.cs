@@ -5,7 +5,6 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Collections.ObjectModel;
 using System.Net;
-using WebDriverManager;
 using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
@@ -15,6 +14,7 @@ namespace DomainStorm.Project.TWC.Tests
         private List<ChromeDriver> _chromeDriverList;
         public TwcRA001Tests()
         {
+            TestHelper.CleanDb();
         }
 
         [SetUp] // 在每個測試方法之前執行的方法
@@ -23,30 +23,6 @@ namespace DomainStorm.Project.TWC.Tests
             _chromeDriverList = new List<ChromeDriver>();
 
             return Task.CompletedTask;
-        }
-        private ChromeDriver GetNewChromeDriver()
-        {
-            var option = new ChromeOptions();
-            option.AddArgument("start-maximized");
-            option.AddArgument("--disable-gpu");
-            option.AddArgument("--enable-javascript");
-            option.AddArgument("--allow-running-insecure-content");
-            option.AddArgument("--ignore-urlfetcher-cert-requests");
-            option.AddArgument("--disable-web-security");
-            option.AddArgument("--ignore-certificate-errors");
-            //option.AddArguments("--no-sandbox");
-
-            if (TestHelper.GetChromeConfig().Headless)
-                option.AddArgument("--headless");
-
-            new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
-            var driver = new ChromeDriver(option);
-
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
-            _chromeDriverList.Add(driver);
-
-            return driver;
         }
 
         [TearDown] // 在每個測試方法之後執行的方法
@@ -66,7 +42,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmMilitaryApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"));
 
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -203,7 +179,7 @@ namespace DomainStorm.Project.TWC.Tests
             stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             ReadOnlyCollection<IWebElement> applyCaseNoElements = wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
-            element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
+            element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo)!;
 
             string 受理編號 = element.Text;
 
@@ -232,7 +208,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(3)]
         public async Task TwcRA001_04() //看到申請之表單內容跳至夾帶附件區塊
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "ning53", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -268,7 +244,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(4)]
         public async Task TwcRA001_05() // 看到檔案上傳
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "ning53", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -310,7 +286,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(5)]
         public async Task TwcRA001_06() // 看到夾帶附件視窗顯示有一筆附件清單資料
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "ning53", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -363,7 +339,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(6)]
         public async Task TwcRA001_07() // 表單受理欄位中看到核章資訊
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "ning53", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -388,7 +364,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(7)]
         public async Task TwcRA001_08() // 看到■用印或代送件只需夾帶附件已打勾
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "ning53", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -416,7 +392,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(8)]
         public async Task TwcRA001_09() // 確認完成畫面進入未結案件中
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "ning53", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -486,7 +462,7 @@ namespace DomainStorm.Project.TWC.Tests
             stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             ReadOnlyCollection<IWebElement> applyCaseNoElements = wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
-            element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
+            element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo)!;
 
             string 受理編號 = element.Text;
 
@@ -497,7 +473,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(9)]
         public async Task TwcRA001_10() //使用者帳號0511登入水籍系統
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -507,18 +483,28 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(10)]
         public async Task TwcRA001_11() //有xlsx檔案下載後打開應顯示有台中所2筆、大里所1筆統計數據。
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.IpUrl}/report/RA001");
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(20));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            Thread.Sleep(1000);
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
+            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
 
             driver.SwitchTo().Frame(0);
 
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
+
             var stormCard = driver.FindElement(By.CssSelector("storm-card"));
+            var divChoice = stormCard.FindElement(By.CssSelector("div.choices"));
+
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.choices > div.choices__inner")));
+
+            var stormSelectElement = driver.FindElement(By.CssSelector("storm-select[label='區處別']"));
+            var select = stormSelectElement.FindElement(By.CssSelector("div.choices select"));
+            SelectElement selectElement = new SelectElement(select);
+            selectElement.SelectByText("第四區管理處");
+
             var divRow = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
             var divFirst = divRow.FindElement(By.CssSelector("div.col.col-sm.mt-3.mt-sm-0"));
             var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
@@ -526,39 +512,46 @@ namespace DomainStorm.Project.TWC.Tests
 
             Actions actions = new Actions(driver);
             actions.MoveToElement(受理日期起).Click().Perform();
-            Thread.Sleep(500);
+
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft")));
 
             var divCalendar = driver.FindElement(By.CssSelector("div.flatpickr-calendar"));
             var divCurrentMonth = divCalendar.FindElement(By.CssSelector("div.flatpickr-current-month"));
-            var select = divCurrentMonth.FindElement(By.CssSelector("select"));
+            select = divCurrentMonth.FindElement(By.CssSelector("select"));
 
-            SelectElement selectFirst = new SelectElement(select);
-            selectFirst.SelectByText("March");
+            selectElement.SelectByText("March");
 
             var divInnerContainer = driver.FindElement(By.CssSelector("div.flatpickr-innerContainer"));
             var divDays = divInnerContainer.FindElement(By.CssSelector("div.flatpickr-days"));
-            var current = divDays.FindElement(By.CssSelector("span[aria-label='March 3, 2023']"));
+            var current = divDays.FindElement(By.CssSelector("span[aria-label='March 6, 2023']"));
             actions.MoveToElement(current).Click().Perform();
 
-            stormCard = driver.FindElement(By.CssSelector("storm-card"));
-            var divSecond = stormCard.FindElement(By.CssSelector("div.col.col-sm.mt-3.mt-sm-0:nth-child(2)"));
-            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
-            var 受理日期迄 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
 
-            actions.MoveToElement(受理日期迄).Click().Perform();
-            Thread.Sleep(500);
+            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
+            var 下載 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+            actions.MoveToElement(下載).Click().Perform();
 
-            divCalendar = driver.FindElement(By.CssSelector("div.flatpickr-calendar"));
-            divCurrentMonth = divCalendar.FindElement(By.CssSelector("div.flatpickr-current-month"));
-            select = divCurrentMonth.FindElement(By.CssSelector("select"));
+            //stormCard = driver.FindElement(By.CssSelector("storm-card"));
+            //var divSecond = stormCard.FindElement(By.CssSelector("div.col.col-sm.mt-3.mt-sm-0:nth-child(2)"));
+            //stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
+            //var 受理日期迄 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
 
-            SelectElement selectSecond = new SelectElement(select);
-            selectSecond.SelectByText("April");
+            //actions.MoveToElement(受理日期迄).Click().Perform();
 
-            divInnerContainer = driver.FindElement(By.CssSelector("div.flatpickr-innerContainer"));
-            divDays = divInnerContainer.FindElement(By.CssSelector("div.flatpickr-days"));
-            current = divDays.FindElement(By.CssSelector("span[aria-label='April 5, 2023']"));
-            actions.MoveToElement(current).Click().Perform();
+            //wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft.open")));
+
+            //divCalendar = driver.FindElement(By.CssSelector("div.flatpickr-calendar"));
+            //divCurrentMonth = divCalendar.FindElement(By.CssSelector("div.flatpickr-current-month"));
+            //select = divCurrentMonth.FindElement(By.CssSelector("select"));
+
+            //SelectElement selectSecond = new SelectElement(select);
+            //selectSecond.SelectByText("April");
+
+            //divInnerContainer = driver.FindElement(By.CssSelector("div.flatpickr-innerContainer"));
+            //divDays = divInnerContainer.FindElement(By.CssSelector("div.flatpickr-days"));
+            //current = divDays.FindElement(By.CssSelector("span[aria-label='April 6, 2023']"));
+            //actions.MoveToElement(current).Click().Perform();
 
 
         }

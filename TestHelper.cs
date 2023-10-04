@@ -1,4 +1,3 @@
-using System.Data.SqlClient;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
@@ -7,15 +6,39 @@ using SeleniumExtras.WaitHelpers;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net;
-using Dapper;
 using OpenQA.Selenium.Chrome;
-using System.Net.Http;
-using System.Reflection;
+using WebDriverManager;
+using System.Data.SqlClient;
+using Dapper;
 
 namespace DomainStorm.Project.TWC.Tests;
 
 public class TestHelper
 {
+    public static ChromeDriver GetNewChromeDriver()
+    {
+        var option = new ChromeOptions();
+        option.AddArgument("start-maximized");
+        option.AddArgument("--disable-gpu");
+        option.AddArgument("--enable-javascript");
+        option.AddArgument("--allow-running-insecure-content");
+        option.AddArgument("--ignore-urlfetcher-cert-requests");
+        option.AddArgument("--disable-web-security");
+        option.AddArgument("--ignore-certificate-errors");
+        //option.AddArguments("--no-sandbox");
+
+        if (GetChromeConfig().Headless)
+            option.AddArgument("--headless");
+
+        new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
+        var driver = new ChromeDriver(option);
+
+        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+        driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
+
+        return driver;
+    }
+
     private static TestConfig GetTestConfig()
     {
         return new ConfigurationBuilder()
@@ -142,7 +165,7 @@ public class TestHelper
 
         using var r = new StreamReader(jsonFilePath);
         var json = await r.ReadToEndAsync();
-        var update = JsonConvert.DeserializeObject<WaterForm>(json);
+        var update = JsonConvert.DeserializeObject<WaterForm>(json)!;
 
         _applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
         update.ApplyCaseNo = _applyCaseNo;
@@ -165,7 +188,7 @@ public class TestHelper
         ((IJavaScriptExecutor)webDriver).ExecuteScript($"window.location.href = '{LoginUrl}';");
         //webDriver.Navigate().GoToUrl(LoginUrl);
 
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
         Console.WriteLine($"::group::Login---------{LoginUrl}---------");
         Console.WriteLine($"---------{LoginUrl}---------");
