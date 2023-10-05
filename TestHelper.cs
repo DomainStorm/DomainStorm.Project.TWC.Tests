@@ -67,13 +67,13 @@ public class TestHelper
             return _baseUrl;
         }
     }
-    private static string? _IpUrl;
-    public static string? IpUrl
+    private static string? _ReportUrl;
+    public static string? ReportUrl
     {
         get
         {
-            _IpUrl ??= GetTestConfig().IpUrl;
-            return _IpUrl;
+            _ReportUrl ??= GetTestConfig().ReportUrl;
+            return _ReportUrl;
         }
     }
 
@@ -329,7 +329,7 @@ public class WaterForm
 public class TestConfig
 {
     public string? BaseUrl { get; set; }
-    public string? IpUrl { get; set; }
+    public string? ReportUrl { get; set; }
     public string? TokenUrl { get; set; }
     public string? LoginUrl { get; set; }
     public string? AccessToken { get; set; }
@@ -340,4 +340,5 @@ public class TestConfig
 public class ChromeConfig
 {
     public bool Headless { get; set; }
+    public bool CleanDbable { get; set; }
 }

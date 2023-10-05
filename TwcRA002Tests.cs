@@ -9,12 +9,12 @@ using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
 {
-    public class TwcRA001Tests
+    public class TwcRA002Tests
     {
         private List<ChromeDriver> _chromeDriverList;
-        public TwcRA001Tests()
+        public TwcRA002Tests()
         {
-            //TestHelper.CleanDb();
+            TestHelper.CleanDb();
         }
 
         [SetUp] // 在每個測試方法之前執行的方法
@@ -33,7 +33,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(0)]
-        public async Task TwcRA001_01() // 0511,tw491身分各建立表單，無錯誤
+        public async Task TwcRA002_01() // 執行TwcRA001，無錯誤
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
 
@@ -191,7 +191,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(1)]
-        public async Task TwcRA001_02() // 取得token
+        public async Task TwcRA002_02() // 取得token
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
 
@@ -200,21 +200,20 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(2)]
-        public async Task TwcRA001_03() //呼叫bmTransferApply/confirm 沒錯誤則取得http 200回應
-
+        public async Task TwcRA002_03() // 呼叫bmTransferApply/confirm 沒錯誤則取得http 200回應
         {
-            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-RA001_bmTransferApply.json"));
+            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-RA002_bmTransferApply.json"));
 
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
         [Test]
         [Order(3)]
-        public async Task TwcRA001_04() //看到申請之表單內容跳至夾帶附件區塊
+        public async Task TwcRA002_04() //看到申請之表單內容跳至夾帶附件區塊
         {
             ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
-            await TestHelper.Login(driver, "ning53", TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
@@ -246,11 +245,11 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(4)]
-        public async Task TwcRA001_05() // 看到檔案上傳
+        public async Task TwcRA002_05() // 看到檔案上傳
         {
             ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
-            await TestHelper.Login(driver, "ning53", TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
@@ -288,11 +287,11 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(5)]
-        public async Task TwcRA001_06() // 看到夾帶附件視窗顯示有一筆附件清單資料
+        public async Task TwcRA002_06() // 看到夾帶附件視窗顯示有一筆附件清單資料
         {
             ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
-            await TestHelper.Login(driver, "ning53", TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
@@ -341,11 +340,11 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(6)]
-        public async Task TwcRA001_07() // 表單受理欄位中看到核章資訊
+        public async Task TwcRA002_07() // 表單受理欄位中看到核章資訊
         {
             ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
-            await TestHelper.Login(driver, "ning53", TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
@@ -369,11 +368,11 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(7)]
-        public async Task TwcRA001_08() // 看到■用印或代送件只需夾帶附件已打勾
+        public async Task TwcRA002_08() // 看到■用印或代送件只需夾帶附件已打勾
         {
             ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
-            await TestHelper.Login(driver, "ning53", TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
@@ -397,11 +396,11 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(8)]
-        public async Task TwcRA001_09() // 確認完成畫面進入未結案件中
+        public async Task TwcRA002_09() // 確認完成畫面進入未結案件中
         {
             ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
-            await TestHelper.Login(driver, "ning53", TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
@@ -481,22 +480,12 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(9)]
-        public async Task TwcRA001_10() //使用者帳號0511登入水籍系統
+        public async Task TwcRA002_10() //有xlsx檔案下載後打開應顯示有台中所2筆、大里所1筆統計數據。
         {
             ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-        }
-
-        [Test]
-        [Order(10)]
-        public async Task TwcRA001_11() //有xlsx檔案下載後打開應顯示有台中所2筆、大里所1筆統計數據。
-        {
-            ChromeDriver driver =TestHelper.GetNewChromeDriver();
-
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.ReportUrl}/report/RA001");
+            driver.Navigate().GoToUrl($@"{TestHelper.ReportUrl}/report/RA002");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
             wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
@@ -508,83 +497,44 @@ namespace DomainStorm.Project.TWC.Tests
             // 選擇區處別
             var stormCard = driver.FindElement(By.CssSelector("storm-card"));
             var stormSelect = stormCard.FindElement(By.CssSelector("storm-select"));
-            var divChoice = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.choices")));
+            var divChoices = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.choices")));
 
             Actions actions = new Actions(driver);
-            actions.MoveToElement(divChoice).Click().Perform();
+            actions.MoveToElement(divChoices).Click().Perform();
 
-            var dropDown = divChoice.FindElement(By.CssSelector("div.choices__list.choices__list--dropdown"));
+            var dropDown = divChoices.FindElement(By.CssSelector("div.choices__list.choices__list--dropdown"));
             var list = dropDown.FindElement(By.CssSelector("div:nth-child(1)"));
-            var 第四區管理處 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list [data-id='2']")));
+            var 第四區管理處 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.choices__list [data-id='2']")));
             actions.MoveToElement(第四區管理處).Click().Perform();
 
             wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
 
-            // 選擇受理日期起
-            var divRow = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
-            var divFirst = divRow.FindElement(By.CssSelector("div.col.col-sm.mt-3.mt-sm-0"));
-            var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
-            var clickableElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            var input = wait.Until(ExpectedConditions.ElementToBeClickable(clickableElement));
-            actions.MoveToElement(input).Click().Perform();
+            //選擇年份
+            stormCard = driver.FindElement(By.CssSelector("storm-card"));
+            var rowDiv = stormCard.FindElement(By.CssSelector("div.row"));
+            stormSelect = rowDiv.FindElement(By.CssSelector("storm-select"));
+            divChoices = stormSelect.FindElement(By.CssSelector("div.choices"));
+            divChoices = wait.Until(ExpectedConditions.ElementToBeClickable(divChoices));
+            actions.MoveToElement(divChoices).Click().Perform();
 
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft")));
+            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.choices")));
 
-            var divCalendar = driver.FindElement(By.CssSelector("div.flatpickr-calendar"));
-            var divCurrentMonth = divCalendar.FindElement(By.CssSelector("div.flatpickr-current-month"));
-            var select = divCurrentMonth.FindElement(By.CssSelector("select"));
-
-            var 受理日期起 = new SelectElement(select);
-            受理日期起.SelectByText("March");
-
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft")));
-
-            var divInnerContainer = driver.FindElement(By.CssSelector("div.flatpickr-innerContainer"));
-            var divDays = divInnerContainer.FindElement(By.CssSelector("div.flatpickr-days"));
-            var 受理日期 = divDays.FindElement(By.CssSelector("span[aria-label='March 6, 2023']"));
-            actions.MoveToElement(受理日期).Click().Perform();
-
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
-
-            //選擇受理日期迄
-            var divSecond = divRow.FindElement(By.CssSelector("div.col.col-sm.mt-3.mt-sm-0:nth-child(2)"));
-            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
-            clickableElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            input = wait.Until(ExpectedConditions.ElementToBeClickable(clickableElement));
-            actions.MoveToElement(input).Click().Perform();
-            //Thread.Sleep(1000);
-
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar open")));
-
-            var flatpickrMonths = driver.FindElement(By.CssSelector("div.flatpickr-months"));
-            var flatpickrMonth = flatpickrMonths.FindElement(By.CssSelector("div.flatpickr-month"));
-            var flatpickrCurrentMonth = flatpickrMonth.FindElement(By.CssSelector("div.flatpickr-current-month"));
-            var selectMonthDropDown = flatpickrCurrentMonth.FindElement(By.CssSelector("select.flatpickr-monthDropdown-months"));
-            var 受理日期迄 = new SelectElement(selectMonthDropDown);
-            受理日期迄.SelectByText("April");
-            //Thread.Sleep(1000);
-
-            //wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar open")));
-
-            var flatpickrInnerContainer = driver.FindElement(By.CssSelector("div.flatpickr-innerContainer"));
-            var flatpickrrContainer = flatpickrInnerContainer.FindElement(By.CssSelector("div.flatpickr-rContainer"));
-            var flatpickrDays = flatpickrrContainer.FindElement(By.CssSelector("div.flatpickr-days"));
-            var dayContainer = flatpickrDays.FindElement(By.CssSelector("div.dayContainer"));
-            var spanElement = driver.FindElement(By.CssSelector("span.flatpickr-day[aria-label='April 6, 2023']"));
-            actions.MoveToElement(spanElement).Click().Perform();
+            dropDown = divChoices.FindElement(By.CssSelector("div.choices__list.choices__list--dropdown"));
+            list = dropDown.FindElement(By.CssSelector("div.choices__list"));
+            var 指定年份 = list.FindElement(By.CssSelector("div.choices__list [data-id='1']"));
+            actions.MoveToElement(指定年份).Click().Perform();
 
             wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
 
             // 選擇檔案格式
-            var form = stormCard.FindElement(By.CssSelector("form"));
-            var thirdDiv = stormCard.FindElement(By.CssSelector("div:nth-child(3)"));
-            stormSelect = thirdDiv.FindElement(By.CssSelector("storm-select"));
-            divChoice = stormSelect.FindElement(By.CssSelector("div.choices"));
-            divChoice = wait.Until(ExpectedConditions.ElementToBeClickable(divChoice));
+            stormCard = driver.FindElement(By.CssSelector("storm-card"));
+            var divThird = stormCard.FindElement(By.CssSelector("div:nth-child(3)"));
+            stormSelect = divThird.FindElement(By.CssSelector("storm-select"));
+            divChoices = stormSelect.FindElement(By.CssSelector("div.choices"));
+            divChoices = wait.Until(ExpectedConditions.ElementToBeClickable(divChoices));
+            actions.MoveToElement(divChoices).Click().Perform();
 
-            actions.MoveToElement(divChoice).Click().Perform();
-
-            dropDown = divChoice.FindElement(By.CssSelector("div.choices__list.choices__list--dropdown"));
+            dropDown = divChoices.FindElement(By.CssSelector("div.choices__list.choices__list--dropdown"));
             list = dropDown.FindElement(By.CssSelector("div:nth-child(1)"));
             var Xlsx = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list [data-id='3']")));
             actions.MoveToElement(Xlsx).Click().Perform();
