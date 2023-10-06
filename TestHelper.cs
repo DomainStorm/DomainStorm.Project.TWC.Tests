@@ -282,7 +282,9 @@ public class TestHelper
 
     public static void CleanDb()
     {
-        var client = new RestClient();
+        if (GetChromeConfig().CleanDbable)
+        { 
+            var client = new RestClient();
         var request = new RestRequest("http://localhost:9200/dublincore", Method.Delete);
         client.Execute(request);
 
@@ -303,6 +305,7 @@ public class TestHelper
         cn.Query("delete Questionnaire");
         cn.Query("delete QuestionnaireForm");
         cn.Query("delete QuestionnaireFormAnswer");
+        }
     }
 }
 public class WaterForm
