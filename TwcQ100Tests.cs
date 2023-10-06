@@ -24,30 +24,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
-        private ChromeDriver GetNewChromeDriver()
-        {
-            var option = new ChromeOptions();
-            option.AddArgument("start-maximized");
-            option.AddArgument("--disable-gpu");
-            option.AddArgument("--enable-javascript");
-            option.AddArgument("--allow-running-insecure-content");
-            option.AddArgument("--ignore-urlfetcher-cert-requests");
-            option.AddArgument("--disable-web-security");
-            option.AddArgument("--ignore-certificate-errors");
-            //option.AddArguments("--no-sandbox");
-
-            if (TestHelper.GetChromeConfig().Headless)
-                option.AddArgument("--headless");
-
-            new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
-            var driver = new ChromeDriver(option);
-
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
-            _chromeDriverList.Add(driver);
-
-            return driver;
-        }
 
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
@@ -62,7 +38,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(0)]
         public async Task TwcQ100_01To07()
         {
-            var driver = GetNewChromeDriver();
+            var driver = TestHelper.GetNewChromeDriver();
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
             var actions = new Actions(driver);
 
@@ -79,7 +55,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(1)]
         public async Task TwcQ100_08()
         {
-            var driver = GetNewChromeDriver();
+            var driver = TestHelper.GetNewChromeDriver();
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
             var actions = new Actions(driver);
 
@@ -100,7 +76,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(2)]
         public async Task TwcQ100_09()
         {
-            var driver = GetNewChromeDriver();
+            var driver = TestHelper.GetNewChromeDriver();
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
             var actions = new Actions(driver);
 
@@ -131,7 +107,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(3)]
         public async Task TwcQ100_10()
         {
-            var driver = GetNewChromeDriver();
+            var driver = TestHelper.GetNewChromeDriver();
             var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
             var actions = new Actions(driver);
 
