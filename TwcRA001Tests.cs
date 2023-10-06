@@ -548,12 +548,13 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(Xlsx).Click().Perform();
 
             // 檢查下載檔案
+            string filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
+
             if (!Directory.Exists(_downloadDirectory))
             {
                 Directory.CreateDirectory(_downloadDirectory);
 
             }
-            string filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
 
             if (File.Exists(filePath))
             {
@@ -563,9 +564,16 @@ namespace DomainStorm.Project.TWC.Tests
             var 下載 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
             actions.MoveToElement(下載).Click().Perform();
 
-            Console.WriteLine($"::group::---------{driver.Url}---------");
-            Console.WriteLine(driver.PageSource);
-            Console.WriteLine("::endgroup::");
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+
+            foreach (var files in Directory.GetFiles(_downloadDirectory))
+            {
+                Console.WriteLine($"-----filename: {files}-----");
+            }
+
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
+            Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
 
             wait.Until(_ => File.Exists(filePath));
 
