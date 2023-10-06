@@ -489,11 +489,16 @@ namespace DomainStorm.Project.TWC.Tests
                 Directory.CreateDirectory(_downloadDirectory);
             }
 
+            string filePath = Path.Combine(_downloadDirectory, "41101202191.pdf");
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
             var 下載PDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 下載PDF);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 下載PDF);
-
-            string filePath = Path.Combine(_downloadDirectory, "41101202191.pdf");
 
             That(Directory.Exists(_downloadDirectory), Is.True);
 
