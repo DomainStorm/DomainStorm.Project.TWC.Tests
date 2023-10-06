@@ -90,9 +90,10 @@ namespace DomainStorm.Project.TWC.Tests
             lastHiddenInput.SendKeys(filePath);
 
             var 上傳 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-            actions.MoveToElement(上傳).Click().Perform();
+            actions.MoveToElement(上傳).Perform();
+            上傳.Click();
 
-			var stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
+            var stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
             var stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
             var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
@@ -154,7 +155,8 @@ namespace DomainStorm.Project.TWC.Tests
             lastHiddenInput.SendKeys(filePath);
 
             上傳 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-            actions.MoveToElement(上傳).Click().Perform();
+            actions.MoveToElement(上傳).Perform();
+            上傳.Click();
 
             stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
             stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
