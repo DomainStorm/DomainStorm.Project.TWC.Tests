@@ -3,10 +3,8 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System;
 using System.Collections.ObjectModel;
 using System.Net;
-using WebDriverManager;
 using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
@@ -17,6 +15,7 @@ namespace DomainStorm.Project.TWC.Tests
         private List<ChromeDriver> _chromeDriverList;
         public TwcC101Tests()
         {
+            TestHelper.CleanDb();
         }
 
         [SetUp] // 在每個測試方法之前執行的方法
@@ -25,31 +24,6 @@ namespace DomainStorm.Project.TWC.Tests
             _chromeDriverList = new List<ChromeDriver>();
 
             return Task.CompletedTask;
-        }
-        private ChromeDriver GetNewChromeDriver()
-        {
-            var option = new ChromeOptions();
-            option.AddArgument("start-maximized");
-            option.AddArgument("--disable-gpu");
-            option.AddArgument("--enable-javascript");
-            option.AddArgument("--allow-running-insecure-content");
-            option.AddArgument("--ignore-urlfetcher-cert-requests");
-            option.AddArgument("--disable-web-security");
-            option.AddArgument("--ignore-certificate-errors");
-            option.AddUserProfilePreference("download.default_directory", _downloadDirectory);
-            //option.AddArguments("--no-sandbox");
-
-            if (TestHelper.GetChromeConfig().Headless)
-                option.AddArgument("--headless");
-
-            new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
-            var driver = new ChromeDriver(option);
-
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
-            driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
-            _chromeDriverList.Add(driver);
-
-            return driver;
         }
 
         [TearDown] // 在每個測試方法之後執行的方法
@@ -83,7 +57,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcC101_03() // 看到表單受理欄位中看到核章資訊
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -108,7 +82,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcC101_04() // 看到■用印或代送件只需夾帶附件已打勾
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -137,7 +111,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcC101_05() // 系統跳出【尚未夾帶附件】訊息
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -181,7 +155,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(5)]
         public async Task TwcC101_06() // 看到掃描拍照證件圖像
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -214,7 +188,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcC101_07() // 確認完成畫面進入未結案件中
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -280,7 +254,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             ReadOnlyCollection<IWebElement> applyCaseNoElements = wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
-            var element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo);
+            var element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo)!;
 
             string 受理編號 = element.Text;
 
@@ -292,7 +266,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcC101_08() // 看到掃描拍照區塊顯示該證件圖像檔案。已勾選■已詳閱貴公司消費性用水服務契約、公司個人資料保護法、貴公司營業章程
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
@@ -370,7 +344,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(8)]
         public async Task TwcC101_09() // 查詢出來該件，列在下方
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
@@ -420,7 +394,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcC101_10() // 確認掃描拍照區塊有掃描拍照證件圖像
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
@@ -449,7 +423,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcC101_11() // PDF檔產製成功自動下載於下載區
         {
-            ChromeDriver driver = GetNewChromeDriver();
+            ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
