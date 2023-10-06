@@ -5,16 +5,18 @@ using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Collections.ObjectModel;
 using System.Net;
+using OfficeOpenXml;
 using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
 {
     public class TwcRA001Tests
     {
+        private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         private List<ChromeDriver> _chromeDriverList;
         public TwcRA001Tests()
         {
-            //TestHelper.CleanDb();
+            TestHelper.CleanDb();
         }
 
         [SetUp] // 在每個測試方法之前執行的方法
@@ -498,73 +500,84 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
             driver.Navigate().GoToUrl($@"{TestHelper.ReportUrl}/report/RA001");
 
+            Actions actions = new Actions(driver);
+
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
             wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
 
             driver.SwitchTo().Frame(0);
 
             // 選擇區處別
-            var stormCard = driver.FindElement(By.CssSelector("storm-card"));
-            var stormSelect = stormCard.FindElement(By.CssSelector("storm-select"));
-            var divChoice = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.choices")));
+            var 區處別 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card storm-select div.choices")));
+            actions.MoveToElement(區處別).Click().Perform();
 
-            Actions actions = new Actions(driver);
-            actions.MoveToElement(divChoice).Click().Perform();
-
-            var dropDown = divChoice.FindElement(By.CssSelector("div.choices__list.choices__list--dropdown"));
-            var list = dropDown.FindElement(By.CssSelector("div:nth-child(1)"));
-            var 第四區管理處 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list [data-id='2']")));
+            var 第四區管理處 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list.choices__list--dropdown div:nth-child(1) [data-value='3eed4fc4-9c06-4d16-9eb6-45aeaf198a25']")));
             actions.MoveToElement(第四區管理處).Click().Perform();
 
             // 選擇受理日期起
-            var divRow = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
-            var divFirst = divRow.FindElement(By.CssSelector("div.col.col-sm.mt-3.mt-sm-0"));
-            var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
-            var clickableElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            var input = wait.Until(ExpectedConditions.ElementToBeClickable(clickableElement));
-            actions.MoveToElement(input).Click().Perform();
+            var 受理日期起 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='受理日期起']")));
+            var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
+            受理日期起 = wait.Until(ExpectedConditions.ElementToBeClickable(input));
+            actions.MoveToElement(受理日期起).Click().Perform();
 
-            var select = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month > select")));
-            var 受理日期起 = new SelectElement(select);
-            受理日期起.SelectByText("March");
+            var select = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
+            var 受理月起 = new SelectElement(select);
+            受理月起.SelectByText("March");
 
-            var 受理日期 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
-            actions.MoveToElement(受理日期).Click().Perform();
+            var 受理日起 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
+            actions.MoveToElement(受理日起).Click().Perform();
 
             //選擇受理日期迄
-            var divSecond = divRow.FindElement(By.CssSelector("div.col.col-sm.mt-3.mt-sm-0:nth-child(2)"));
-            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
-            clickableElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            input = wait.Until(ExpectedConditions.ElementToBeClickable(clickableElement));
-            actions.MoveToElement(input).Click().Perform();
+            var 受理日期迄 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='受理日期迄']")));
+            input = 受理日期迄.GetShadowRoot().FindElement(By.CssSelector("input"));
+            受理日期迄 = wait.Until(ExpectedConditions.ElementToBeClickable(input));
+            actions.MoveToElement(受理日期迄).Click().Perform();
 
-            var divCalendar = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.open")));
-            select = divCalendar.FindElement(By.CssSelector("div.flatpickr-current-month > select"));
-            var 受理日期迄 = new SelectElement(select);
-            受理日期迄.SelectByText("April");
+            select = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
+            var 受理月迄 = new SelectElement(select);
+            受理月迄.SelectByText("April");
 
-            受理日期 = divCalendar.FindElement(By.CssSelector("div.flatpickr-innerContainer div.flatpickr-days span.flatpickr-day[aria-label='April 6, 2023']"));
-            actions.MoveToElement(受理日期).Click().Perform();
+            var 受理日迄 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='April 6, 2023']")));
+            actions.MoveToElement(受理日迄).Click().Perform();
 
             // 選擇檔案格式
-            var form = stormCard.FindElement(By.CssSelector("form"));
-            var thirdDiv = stormCard.FindElement(By.CssSelector("div:nth-child(3)"));
-            stormSelect = thirdDiv.FindElement(By.CssSelector("storm-select"));
-            divChoice = stormSelect.FindElement(By.CssSelector("div.choices"));
-            divChoice = wait.Until(ExpectedConditions.ElementToBeClickable(divChoice));
+            var 檔案格式 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='檔案格式'] div.choices")));
+            actions.MoveToElement(檔案格式).Click().Perform();
 
-            actions.MoveToElement(divChoice).Click().Perform();
-
-            dropDown = divChoice.FindElement(By.CssSelector("div.choices__list.choices__list--dropdown"));
-            list = dropDown.FindElement(By.CssSelector("div:nth-child(1)"));
-            var Xlsx = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list [data-id='3']")));
+            var Xlsx = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list [data-id='3']")));
             actions.MoveToElement(Xlsx).Click().Perform();
 
             // 檢查下載檔案
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
-            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
-            var 下載 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
+            if (!Directory.Exists(_downloadDirectory))
+            {
+                Directory.CreateDirectory(_downloadDirectory);
+
+            }
+            string filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
+
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+
+            var 下載 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
             actions.MoveToElement(下載).Click().Perform();
+
+            Console.WriteLine($"::group::---------{driver.Url}---------");
+            Console.WriteLine(driver.PageSource);
+            Console.WriteLine("::endgroup::");
+
+            wait.Until(_ => File.Exists(filePath));
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using var package = new ExcelPackage(new FileInfo(filePath));
+            var worksheet = package.Workbook.Worksheets[0];
+
+            string E7Value = worksheet.Cells["E7"].Text;
+            string E8Value = worksheet.Cells["E8"].Text;
+
+            That(E7Value == "2" && E8Value == "1",Is.True);
         }
     }
 }
