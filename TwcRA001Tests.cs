@@ -564,17 +564,6 @@ namespace DomainStorm.Project.TWC.Tests
             var 下載 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
             actions.MoveToElement(下載).Click().Perform();
 
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-            foreach (var files in Directory.GetFiles(_downloadDirectory))
-            {
-                Console.WriteLine($"-----filename: {files}-----");
-            }
-
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
-            Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
-
             wait.Until(_ => File.Exists(filePath));
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
