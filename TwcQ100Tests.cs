@@ -14,6 +14,7 @@ namespace DomainStorm.Project.TWC.Tests
         private List<ChromeDriver> _chromeDriverList;
         public TwcQ100Tests()
         {
+            //TestHelper.CleanDb();
         }
 
         [SetUp] // 在每個測試方法之前執行的方法
@@ -87,10 +88,12 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/questionnaire");
 
             var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+            //var stormTable = TestHelper.FindAndMoveElement(driver, "storm-table");
             var viewButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-toolbar > storm-button:nth-child(1) > storm-tooltip > div > button"));
             actions.MoveToElement(viewButton).Click().Perform();
 
-            var dialogContent = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-wrapper > div.rz-dialog > div > div > div.row.mx-4.mb-5 > div > h4")));
+            //var dialogContent = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-wrapper > div.rz-dialog > div > div > div.row.mx-4.mb-5 > div > h4")));
+            var dialogContent = TestHelper.FindAndMoveElement(driver, "div.rz-dialog-wrapper > div.rz-dialog > div > div > div.row.mx-4.mb-5 > div > h4");
 
             That(dialogContent.Text, Is.EqualTo("頁首說明1120824"));
         }
@@ -112,13 +115,20 @@ namespace DomainStorm.Project.TWC.Tests
             var updateButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-toolbar > storm-button:nth-child(2) > storm-tooltip > div > button"));
             actions.MoveToElement(updateButton).Click().Perform();
 
-            var updateButton2 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-wrapper > div.rz-dialog > div.rz-dialog-content > div > div > div > button")));
+            //var updateButton2 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-wrapper > div.rz-dialog > div.rz-dialog-content > div > div > div > button")));
+            var updateButton2 = TestHelper.FindAndMoveElement(driver, "div.rz-dialog-wrapper > div.rz-dialog > div.rz-dialog-content > div > div > div > button");
             actions.MoveToElement(updateButton2).Click().Perform();
 
-            await Task.Delay(500);
-            var planDisableDateCell = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div > table > tbody > tr > td:nth-child(5) > storm-table-cell > span"));
+            //await Task.Delay(500);
+            string? planDisableDateCellText = default;
+            wait.Until((_) =>
+            {
+                planDisableDateCellText = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div > table > tbody > tr > td:nth-child(5) > storm-table-cell > span")).Text;
+                return planDisableDateCellText != "-";
+            });
+            
 
-            That(planDisableDateCell.Text, !Is.EqualTo("-"));
+            That(planDisableDateCellText, !Is.EqualTo("-"));
         }
 
         [Test]
@@ -140,11 +150,18 @@ namespace DomainStorm.Project.TWC.Tests
             var deleteButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-toolbar > storm-button:nth-child(4) > storm-tooltip > div > button"));
             actions.MoveToElement(deleteButton).Click().Perform();
 
-            var deleteButton2 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-wrapper > div.rz-dialog > div.rz-dialog-content > div > div > div > button")));
+            //var deleteButton2 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-wrapper > div.rz-dialog > div.rz-dialog-content > div > div > div > button")));
+            var deleteButton2 = TestHelper.FindAndMoveElement(driver, "div.rz-dialog-wrapper > div.rz-dialog > div.rz-dialog-content > div > div > div > button");
             actions.MoveToElement(deleteButton2).Click().Perform();
 
-            await Task.Delay(500);
-            var newPageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom.p-1.pt-2 > div.table-pageInfo")).Text;
+            //await Task.Delay(500);
+            string? newPageInfo = default;
+            wait.Until((_) =>
+            {
+                newPageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom.p-1.pt-2 > div.table-pageInfo")).Text;
+                return !string.Equals(newPageInfo, oldPageInfo);
+            });
+            //var newPageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom.p-1.pt-2 > div.table-pageInfo")).Text;
 
             That(newPageInfo, !Is.EqualTo(oldPageInfo));
         }
@@ -155,7 +172,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/questionnaire/create");
 
-            var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline=\"新增問卷\"]")));
+            //var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline=\"新增問卷\"]")));
+            //var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div.card-header.pb-3.pt-2 > div > h5"));
+            var stormCard = TestHelper.FindAndMoveElement(driver, "storm-card[headline='新增問卷']");
             var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div.card-header.pb-3.pt-2 > div > h5"));
 
             That(stormCardTitle.Text, Is.EqualTo("新增問卷"));
@@ -163,32 +182,43 @@ namespace DomainStorm.Project.TWC.Tests
 
         private async Task _02(ChromeDriver driver, WebDriverWait wait, Actions actions)
         {
-            var nameStormInputGroup = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label=\"問卷名稱\"]")));
-            var nameInput = nameStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            //var nameStormInputGroup = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label=\"問卷名稱\"]")));
+            //var nameInput = nameStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            var nameStormInputGroup = TestHelper.FindAndMoveElement(driver, "storm-input-group[label='問卷名稱']");
+            var nameInput = nameStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             nameInput.SendKeys("問卷名稱1120824");
 
-            var headerContentStorInputGroup = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label=\"問卷頁首說明\"]")));
-            var headerContentInput = headerContentStorInputGroup.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            //var headerContentStorInputGroup = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label=\"問卷頁首說明\"]")));
+            //var headerContentInput = headerContentStorInputGroup.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            var headerContentStorInputGroup = TestHelper.FindAndMoveElement(driver, "storm-input-group[label='問卷頁首說明']");
+            var headerContentInput = headerContentStorInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             headerContentInput.SendKeys("頁首說明1120824");
 
-            var footerContentStorInputGroup = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label=\"問卷結尾文字\"]")));
-            var footerContentInput = footerContentStorInputGroup.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            //var footerContentStorInputGroup = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-input-group[label=\"問卷結尾文字\"]")));
+            //var footerContentInput = footerContentStorInputGroup.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            var footerContentStorInputGroup = TestHelper.FindAndMoveElement(driver, "storm-input-group[label='問卷結尾文字']");
+            var footerContentInput = footerContentStorInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
             footerContentInput.SendKeys("結尾文字1120824");
 
-            var nextbutton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.button-row.d-flex.mt-4 > button")));
+            //var nextbutton = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.button-row.d-flex.mt-4 > button")));
+            var nextbutton = TestHelper.FindAndMoveElement(driver, "div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.button-row.d-flex.mt-4 > button");
             actions.MoveToElement(nextbutton).Click().Perform();
 
-            var secondTitle = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div > div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div:nth-child(1) > div > div:nth-child(1) > h5")));
+            //var secondTitle = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div > div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div:nth-child(1) > div > div:nth-child(1) > h5")));
+            var secondTitle = TestHelper.FindAndMoveElement(driver, "div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div:nth-child(1) > div > div:nth-child(1) > h5");
 
             That(secondTitle.Text, Is.EqualTo("建立題目"));
         }
 
         private async Task _03(ChromeDriver driver, WebDriverWait wait, Actions actions)
         {
-            var createButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div > div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div:nth-child(1) > div > div.text-end.ms-auto > button")));
+            //var createButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div > div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div:nth-child(1) > div > div.text-end.ms-auto > button")));
+            var createButton = TestHelper.FindAndMoveElement(driver, "div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div:nth-child(1) > div > div.text-end.ms-auto > button");
             actions.MoveToElement(createButton).Click().Perform();
 
             var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline=\"新增題目\"]")));
+            //var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div.card-header.pb-3.pt-2 > div > h5"));
+            //var stormCard = TestHelper.FindAndMoveElement(driver, "storm-card[headline='新增題目']");
             var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div.card-header.pb-3.pt-2 > div > h5"));
 
             That(stormCardTitle.Text, Is.EqualTo("新增題目"));
@@ -273,13 +303,18 @@ namespace DomainStorm.Project.TWC.Tests
 
         private async Task _06(ChromeDriver driver, WebDriverWait wait, Actions actions)
         {
-            var nextButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.row > div > button.btn.bg-gradient-dark.ms-auto.mb-0.js-btn-next")));
+            //var nextButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.row > div > button.btn.bg-gradient-dark.ms-auto.mb-0.js-btn-next")));
+            var nextButton = TestHelper.FindAndMoveElement(driver, "div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.row > div > button.btn.bg-gradient-dark.ms-auto.mb-0.js-btn-next");
             actions.MoveToElement(nextButton).Click().Perform();
 
-            var headerContent = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div.row.mx-4.mb-5 > div > h4")));
-            var questionOne = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div:nth-child(4) > div > h5")));
-            var questionTwo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div:nth-child(5) > div > h5")));
-            var footerContent = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div.row.mx-4.mt-5 > div > h4")));
+            //var headerContent = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div.row.mx-4.mb-5 > div > h4")));
+            //var questionOne = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div:nth-child(4) > div > h5")));
+            //var questionTwo = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div:nth-child(5) > div > h5")));
+            //var footerContent = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div.row.mx-4.mt-5 > div > h4")));
+            var headerContent = TestHelper.FindAndMoveElement(driver, "div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div.row.mx-4.mb-5 > div > h4");
+            var questionOne = TestHelper.FindAndMoveElement(driver, "div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div:nth-child(4) > div > h5");
+            var questionTwo = TestHelper.FindAndMoveElement(driver, "div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div:nth-child(5) > div > h5");
+            var footerContent = TestHelper.FindAndMoveElement(driver, "div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div:nth-child(1) > div.row.mx-4.mt-5 > div > h4");
 
             That(headerContent.Text, Is.EqualTo("頁首說明1120824"));
             That(questionOne.Text, Is.EqualTo("A1"));
@@ -289,28 +324,16 @@ namespace DomainStorm.Project.TWC.Tests
 
         private async Task _07(ChromeDriver driver, WebDriverWait wait, Actions actions)
         {
-            //var nextButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.row > div > button.btn.bg-gradient-dark.ms-auto.mb-0.js-btn-next")));
-            var nextButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-header.p-0.position-relative.mt-n5.mx-3.z-index-2 > div > div > button:nth-child(4)")));
+            //var nextButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-header.p-0.position-relative.mt-n5.mx-3.z-index-2 > div > div > button:nth-child(4)")));
+            var nextButton = TestHelper.FindAndMoveElement(driver, "div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.row > div > button.btn.bg-gradient-dark.ms-auto.mb-0.js-btn-next");
             actions.MoveToElement(nextButton).Click().Perform();
 
-            var submitButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.button-row.d-flex.mt-0.mt-md-4 > button.btn.bg-gradient-dark.ms-auto.mb-0")));
+            //var submitButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.button-row.d-flex.mt-0.mt-md-4 > button.btn.bg-gradient-dark.ms-auto.mb-0")));
+            var submitButton = TestHelper.FindAndMoveElement(driver, "div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.button-row.d-flex.mt-0.mt-md-4 > button.btn.bg-gradient-dark.ms-auto.mb-0");
             actions.MoveToElement(submitButton).Click().Perform();
 
-            var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline=\"問卷狀態\"]")));
-            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div.card-header.pb-3.pt-2 > div > h5"));
-
-            That(stormCardTitle.Text, Is.EqualTo("問卷狀態"));
-        }
-
-        private async Task _08(ChromeDriver driver, WebDriverWait wait, Actions actions)
-        {
-            var nextButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.row > div > button.btn.bg-gradient-dark.ms-auto.mb-0.js-btn-next")));
-            actions.MoveToElement(nextButton).Click().Perform();
-
-            var submitButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body > form > div.multisteps-form__panel.border-radius-xl.bg-white.js-active > div > div.button-row.d-flex.mt-0.mt-md-4 > button.btn.bg-gradient-dark.ms-auto.mb-0")));
-            actions.MoveToElement(submitButton).Click().Perform();
-
-            var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline=\"問卷狀態\"]")));
+            //var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline=\"問卷狀態\"]")));
+            var stormCard = TestHelper.FindAndMoveElement(driver, "storm-card[headline='問卷狀態']");
             var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div.card-header.pb-3.pt-2 > div > h5"));
 
             That(stormCardTitle.Text, Is.EqualTo("問卷狀態"));
