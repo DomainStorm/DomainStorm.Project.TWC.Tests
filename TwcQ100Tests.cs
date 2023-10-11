@@ -56,6 +56,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/questionnaire");
 
+            _wait.Until(ExpectedConditions.UrlContains("questionnaire"));
+
             //var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
             IWebElement? stormTable = null;
             _wait.Until(_ => {
