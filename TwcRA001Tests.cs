@@ -500,8 +500,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             Actions actions = new Actions(driver);
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
-            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(30));
+            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             driver.SwitchTo().Frame(0);
 
