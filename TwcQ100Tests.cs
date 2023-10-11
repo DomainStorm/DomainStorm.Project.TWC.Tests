@@ -25,7 +25,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _actions = new Actions(_driver);
         }
 
@@ -55,6 +55,10 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "meizi", TestHelper.Password!);
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/questionnaire");
+
+            Console.WriteLine("問卷Page Start");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("問卷Page End");
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
             var viewButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-toolbar > storm-button:nth-child(1) > storm-tooltip > div > button"));
