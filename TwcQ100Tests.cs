@@ -62,7 +62,8 @@ namespace DomainStorm.Project.TWC.Tests
                 Console.WriteLine($"::group::問卷Page------------------");
                 Console.WriteLine(_driver.PageSource);
                 Console.WriteLine("::endgroup::");
-                return stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                return stormTable != null;
             });
             var viewButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-toolbar > storm-button:nth-child(1) > storm-tooltip > div > button"));
             _actions.MoveToElement(viewButton).Click().Perform();
