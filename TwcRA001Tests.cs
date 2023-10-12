@@ -500,7 +500,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             Actions actions = new Actions(driver);
 
-            Console.WriteLine($"---------group---------");
+            Console.WriteLine($"------group------");
             Console.WriteLine(driver.PageSource);
             Console.WriteLine("::endgroup::");
 
