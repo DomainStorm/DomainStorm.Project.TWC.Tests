@@ -60,18 +60,21 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().DefaultContent();
 
-            var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
-            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
+            var 夾帶附件 = wait.Until(ExpectedConditions.ElementExists((By)fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2) a[href='#file']"))));
+            //var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
+            //var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            //var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
+            //var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
+            //var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
 
             Actions actions = new(driver);
             actions.MoveToElement(夾帶附件).Click().Perform();
 
             var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
-            actions.MoveToElement(新增文件).Perform();
-            新增文件.Click();
+            actions.MoveToElement(新增文件).Click().Perform();
 
             wait.Until(_ => driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
 
@@ -84,8 +87,7 @@ namespace DomainStorm.Project.TWC.Tests
             lastHiddenInput.SendKeys(filePath);
 
             var 上傳 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-            actions.MoveToElement(上傳).Perform();
-            上傳.Click();
+            actions.MoveToElement(上傳).Click().Perform();
 
             var stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
             var stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
@@ -135,7 +137,7 @@ namespace DomainStorm.Project.TWC.Tests
             stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
             stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
+            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
             夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
 
             actions.MoveToElement(夾帶附件).Click().Perform();
@@ -154,8 +156,7 @@ namespace DomainStorm.Project.TWC.Tests
             lastHiddenInput.SendKeys(filePath);
 
             上傳 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-            actions.MoveToElement(上傳).Perform();
-            上傳.Click();
+            actions.MoveToElement(上傳).Click().Perform();
 
             stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
             stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
