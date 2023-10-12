@@ -34,6 +34,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=MetadataApiEventDb;User Id=sa;Password=Pass@word;  
+    depends_on:   
+      sqlserver:
+        condition: service_healthy  
   domainstorm.multimediaapi:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -41,6 +44,9 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=JwtAuthEventDb;User Id=sa;Password=Pass@word;  
+    depends_on:   
+      sqlserver:
+        condition: service_healthy  
   domainstorm.jwtauthapi.openidprovider:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -61,10 +67,20 @@ services:
   domainstorm.resourceapi:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=ResourceEventDb;User Id=sa;Password=Pass@word;    
+      DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=ResourceEventDb;User Id=sa;Password=Pass@word;  
+    depends_on:   
+      sqlserver:
+        condition: service_healthy        
   domainstorm.servicebus:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
+  domainstorm.project.twc.report:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=TWCWeb;User Id=sa;Password=Pass@word;
+    depends_on:   
+      sqlserver:
+        condition: service_healthy        
 
 volumes:
   sqlserver-volume-data:      
