@@ -310,6 +310,18 @@ public class TestHelper
         cn.Query("delete QuestionnaireFormAnswer");
         }
     }
+
+    public static IWebElement FindAndMoveElement(IWebDriver webDriver, string css)
+    {
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var action = new Actions(webDriver);
+
+        var element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
+
+        action.MoveToElement(element).Perform();
+
+        return element;
+    }
 }
 public class WaterForm
 {
