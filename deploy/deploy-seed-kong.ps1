@@ -1,8 +1,8 @@
 ﻿Set-Location (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
-Import-Module -Name ../../power-shell/modules/Add-KongService -Force
-Import-Module -Name ../../power-shell/modules/Add-KongRoute -Force
-Import-Module -Name ../../power-shell/modules/Test-KongService -Force
+Import-Module -Name ./power-shell/modules/Add-KongService -Force
+Import-Module -Name ./power-shell/modules/Add-KongRoute -Force
+Import-Module -Name ./power-shell/modules/Test-KongService -Force
 
 if((Test-KongService -Name "twcweb") -eq $false)
 {
