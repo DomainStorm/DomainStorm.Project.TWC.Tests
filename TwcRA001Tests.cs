@@ -93,7 +93,8 @@ namespace DomainStorm.Project.TWC.Tests
             wait.Until(driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
 
             var 用印或代送件只需夾帶附件 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
-            actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
+            actions.MoveToElement(用印或代送件只需夾帶附件).Perform();
+            用印或代送件只需夾帶附件.Click();// 這兩行並在一起會有偶發性錯誤，原因不知
 
             var 確認受理 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             actions.MoveToElement(確認受理).Click().Perform();
@@ -148,12 +149,14 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(上傳).Click().Perform();
 
             stormCardSeventh = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+            actions.MoveToElement(stormCardSeventh).Perform();
             stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td[data-field='name'] > storm-table-cell > span"));
             wait.Until(driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
 
             用印或代送件只需夾帶附件 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
             actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
+            用印或代送件只需夾帶附件.Click();
 
             確認受理 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             actions.MoveToElement(確認受理).Click().Perform();
@@ -527,7 +530,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 檔案格式 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='檔案格式'] div.choices")));
             actions.MoveToElement(檔案格式).Click().Perform();
 
-            var Xlsx = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list [data-id='3']")));
+            var Xlsx = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list [data-value='XLSX']")));
             actions.MoveToElement(Xlsx).Click().Perform();
 
             // 檢查下載檔案
