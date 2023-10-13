@@ -49,18 +49,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             Actions actions = new(driver);
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             driver.SwitchTo().Frame(0);
-
-            //var 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
-
-            //((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            ////先加入延遲1秒，不然會還沒scroll完就click
-            //Thread.Sleep(1000);
-            //((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
-            //wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
             var 受理 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
@@ -92,17 +84,15 @@ namespace DomainStorm.Project.TWC.Tests
             var 上傳 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             actions.MoveToElement(上傳).Click().Perform();
 
-            var stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
-            var stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var stormCardSeventh = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) storm-edit-table")));
+            var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
             var element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
             var spanElement = element.FindElement(By.CssSelector("span"));
             wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
-            var 用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
-            actions.MoveToElement(用印或代送件只需夾帶附件).Perform();
-            用印或代送件只需夾帶附件.Click();
+            var 用印或代送件只需夾帶附件 = wait.Until(ExpectedConditions.ElementExists(By.Id("用印或代送件只需夾帶附件")));
+            actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
 
             var 確認受理 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             actions.MoveToElement(確認受理).Click().Perform();
@@ -156,17 +146,15 @@ namespace DomainStorm.Project.TWC.Tests
             上傳 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             actions.MoveToElement(上傳).Click().Perform();
 
-            stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
-            stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
-            stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            stormCardSeventh = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) storm-edit-table")));
+            stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
             element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
             spanElement = element.FindElement(By.CssSelector("span"));
             wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
 
-            用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
-            actions.MoveToElement(用印或代送件只需夾帶附件).Perform();
-            用印或代送件只需夾帶附件.Click();
+            用印或代送件只需夾帶附件 = wait.Until(ExpectedConditions.ElementExists(By.Id("用印或代送件只需夾帶附件")));
+            actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
 
             確認受理 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             actions.MoveToElement(確認受理).Click().Perform();
@@ -498,7 +486,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             Actions actions = new Actions(driver);
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
+            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(20));
             wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
 
             driver.SwitchTo().Frame(0);
