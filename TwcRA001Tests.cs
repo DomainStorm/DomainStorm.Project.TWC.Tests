@@ -523,7 +523,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 受理日起 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
             actions.MoveToElement(受理日起).Click().Perform();
 
-            //選擇受理日期迄
+            //選擇受理日期迄 
             var 受理日期迄 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='受理日期迄']")));
             input = 受理日期迄.GetShadowRoot().FindElement(By.CssSelector("input"));
             受理日期迄 = wait.Until(ExpectedConditions.ElementToBeClickable(input));
