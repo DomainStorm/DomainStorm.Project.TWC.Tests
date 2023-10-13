@@ -70,15 +70,6 @@ public class TestHelper
             return _baseUrl;
         }
     }
-    private static string? _ReportUrl;
-    public static string? ReportUrl
-    {
-        get
-        {
-            _ReportUrl ??= GetTestConfig().ReportUrl;
-            return _ReportUrl;
-        }
-    }
 
     private static string? _tokenUrl;
     public static string? TokenUrl
@@ -347,7 +338,6 @@ public class WaterForm
 public class TestConfig
 {
     public string? BaseUrl { get; set; }
-    public string? ReportUrl { get; set; }
     public string? TokenUrl { get; set; }
     public string? LoginUrl { get; set; }
     public string? AccessToken { get; set; }
