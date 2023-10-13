@@ -43,7 +43,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
+            await TestHelper.Login(driver, "0511", TestHelper.Password!); 
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
