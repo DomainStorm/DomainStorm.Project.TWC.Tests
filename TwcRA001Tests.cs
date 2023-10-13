@@ -84,14 +84,15 @@ namespace DomainStorm.Project.TWC.Tests
             var 上傳 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             actions.MoveToElement(上傳).Click().Perform();
 
-            var stormCardSeventh = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) storm-edit-table")));
+            var stormCardSeventh = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
             var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td[data-field='name'] > storm-table-cell > span"));
 
-            var element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
-            var spanElement = element.FindElement(By.CssSelector("span"));
-            wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
+            //var element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
+            //var spanElement = element.FindElement(By.CssSelector("span"));
+            wait.Until(driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
 
-            var 用印或代送件只需夾帶附件 = wait.Until(ExpectedConditions.ElementExists(By.Id("用印或代送件只需夾帶附件")));
+            var 用印或代送件只需夾帶附件 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
             actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
 
             var 確認受理 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
@@ -146,14 +147,12 @@ namespace DomainStorm.Project.TWC.Tests
             上傳 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             actions.MoveToElement(上傳).Click().Perform();
 
-            stormCardSeventh = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) storm-edit-table")));
+            stormCardSeventh = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
             stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td[data-field='name'] > storm-table-cell > span"));
+            wait.Until(driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
 
-            element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
-            spanElement = element.FindElement(By.CssSelector("span"));
-            wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
-
-            用印或代送件只需夾帶附件 = wait.Until(ExpectedConditions.ElementExists(By.Id("用印或代送件只需夾帶附件")));
+            用印或代送件只需夾帶附件 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
             actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
 
             確認受理 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
@@ -168,7 +167,7 @@ namespace DomainStorm.Project.TWC.Tests
             stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             ReadOnlyCollection<IWebElement> applyCaseNoElements = wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
-            element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo)!;
+            var element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo)!;
 
             string 受理編號 = element.Text;
 
