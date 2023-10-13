@@ -486,7 +486,7 @@ namespace DomainStorm.Project.TWC.Tests
             ChromeDriver driver =TestHelper.GetNewChromeDriver();
 
             await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.ReportUrl}/report/RA002");
+            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/report/RA002");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
             wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
