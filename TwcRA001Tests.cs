@@ -85,6 +85,7 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(上傳).Click().Perform();
 
             var stormCardSeventh = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+            actions.MoveToElement(stormCardSeventh).Perform();
             var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             var stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td[data-field='name'] > storm-table-cell > span"));
 
