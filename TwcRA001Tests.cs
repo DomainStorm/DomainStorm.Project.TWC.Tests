@@ -85,7 +85,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
             _actions.MoveToElement(stormCardSeventh).Perform();
             var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td[data-field='name'] > storm-table-cell > span"));
+            var stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td > storm-table-cell > span"));
 
             _wait.Until(_driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
 
@@ -148,7 +148,7 @@ namespace DomainStorm.Project.TWC.Tests
             stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
             _actions.MoveToElement(stormCardSeventh).Perform();
             stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td[data-field='name'] > storm-table-cell > span"));
+            stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td > storm-table-cell > span"));
             _wait.Until(_driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
 
             用印或代送件只需夾帶附件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
