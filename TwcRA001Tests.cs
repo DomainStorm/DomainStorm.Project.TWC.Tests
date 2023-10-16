@@ -96,9 +96,6 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(確認受理).Click().Perform();
 
             stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
-            //stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card > storm-document-list-detail > storm-table")));
-            //var stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            //stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             var applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
             var text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
