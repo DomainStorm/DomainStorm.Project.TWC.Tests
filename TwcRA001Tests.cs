@@ -94,8 +94,9 @@ namespace DomainStorm.Project.TWC.Tests
             wait.Until(driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
 
             var 用印或代送件只需夾帶附件 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
-            actions.MoveToElement(用印或代送件只需夾帶附件).Perform();
-            用印或代送件只需夾帶附件.Click();// 這兩行並在一起會有偶發性錯誤，原因不知
+            //actions.MoveToElement(用印或代送件只需夾帶附件).Perform();
+            //用印或代送件只需夾帶附件.Click();// 這兩行並在一起會有偶發性錯誤，原因不知
+            actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
 
             var 確認受理 = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             actions.MoveToElement(確認受理).Click().Perform();
