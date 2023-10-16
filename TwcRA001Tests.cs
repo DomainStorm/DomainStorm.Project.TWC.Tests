@@ -53,7 +53,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var 受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#受理")));
+            var 受理 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 受理);
@@ -63,8 +63,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
-            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
+            var 夾帶附件 = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2) > a[href='#file']"));
             _actions.MoveToElement(夾帶附件).Click().Perform();
 
             var 新增文件 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-primary")));
@@ -96,9 +95,10 @@ namespace DomainStorm.Project.TWC.Tests
             var 確認受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(確認受理).Click().Perform();
 
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
-            var stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+            stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
+            //stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card > storm-document-list-detail > storm-table")));
+            //var stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
+            //stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
             var applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
             var text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
@@ -129,8 +129,7 @@ namespace DomainStorm.Project.TWC.Tests
             stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
             stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
-            夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
+            夾帶附件 = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2) > a[href='#file']"));
             _actions.MoveToElement(夾帶附件).Click().Perform();
 
             新增文件 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-primary")));
@@ -161,11 +160,9 @@ namespace DomainStorm.Project.TWC.Tests
             確認受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(確認受理).Click().Perform();
 
-            stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
-            stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
+            stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
 
-            applyCaseNoElements = _wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
+            applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
             text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
 
             string 受理編號 = text.Text;
@@ -272,8 +269,6 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcRA001_07() // 表單受理欄位中看到核章資訊
         {
-            //_wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
             _driver.SwitchTo().Frame(0);
 
             var 受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
@@ -284,7 +279,6 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 受理);
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
-            //IReadOnlyList<IWebElement> signElement = _driver.FindElements(By.CssSelector("[class='sign']"));
             var signElement = _driver.FindElements(By.CssSelector("[class='sign']"));
 
             That(signElement, Is.Not.Empty, "未受理");

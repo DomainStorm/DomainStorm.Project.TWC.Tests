@@ -29,7 +29,6 @@ public class TestHelper
 
         string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
         option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
-        //option.AddArguments("--no-sandbox");
 
         if (GetChromeConfig().Headless)
             option.AddArgument("--headless");
@@ -98,15 +97,7 @@ public class TestHelper
             return _applyCaseNo;
         }
     }
-    //private static string? _userId;
-    //public static string? UserId
-    //{
-    //    get
-    //    {
-    //        _userId ??= GetTestConfig().UserId;
-    //        return _userId;
-    //    }
-    //}
+
     private static string? _password;
     public static string? Password
     {
@@ -173,8 +164,6 @@ public class TestHelper
         _applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
         update.ApplyCaseNo = _applyCaseNo;
 
-        //update.userCode = UserId;
-
         var updatedJson = JsonConvert.SerializeObject(update);
         Console.WriteLine(updatedJson);
         request.AddParameter("application/json", updatedJson, ParameterType.RequestBody);
@@ -240,7 +229,6 @@ public class TestHelper
 
             return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
         });
-
 
         var action = new Actions(webDriver);
         action.MoveToElement(element).Click().Perform();
