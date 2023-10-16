@@ -1,13 +1,10 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System.Collections.ObjectModel;
 using System.Net;
 using OfficeOpenXml;
 using static NUnit.Framework.Assert;
-using System;
 
 namespace DomainStorm.Project.TWC.Tests
 {
@@ -53,20 +50,20 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var 受理 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            var 受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 受理);
 
             _driver.SwitchTo().DefaultContent();
 
-            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
             var 夾帶附件 = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2) > a[href='#file']"));
             _actions.MoveToElement(夾帶附件).Click().Perform();
 
-            var 新增文件 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-primary")));
+            var 新增文件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-primary")));
             _actions.MoveToElement(新增文件).Click().Perform();
 
             _wait.Until(_ => _driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
@@ -79,28 +76,26 @@ namespace DomainStorm.Project.TWC.Tests
 
             lastHiddenInput.SendKeys(filePath);
 
-            var 上傳 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
+            var 上傳 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(上傳).Click().Perform();
 
-            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
             _actions.MoveToElement(stormCardSeventh).Perform();
             var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             var stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td > storm-table-cell > span"));
-
             _wait.Until(_driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
 
             var 用印或代送件只需夾帶附件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
             _actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
 
-            var 確認受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+            var 確認受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(確認受理).Click().Perform();
 
             stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
-
             var applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
             var text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
 
-            var 登出 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("a[href='./logout']")));
+            var 登出 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[href='./logout']")));
             _actions.MoveToElement(登出).Click().Perform();
 
             //tw491 建立表單
@@ -123,13 +118,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().DefaultContent();
 
-            stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+            stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
             夾帶附件 = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2) > a[href='#file']"));
             _actions.MoveToElement(夾帶附件).Click().Perform();
 
-            新增文件 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-primary")));
+            新增文件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-primary")));
             _actions.MoveToElement(新增文件).Click().Perform();
 
             _wait.Until(_ => _driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
@@ -142,10 +137,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             lastHiddenInput.SendKeys(filePath);
 
-            上傳 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
+            上傳 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(上傳).Click().Perform();
 
-            stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+            stormCardSeventh = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
             _actions.MoveToElement(stormCardSeventh).Perform();
             stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td > storm-table-cell > span"));
@@ -154,11 +149,10 @@ namespace DomainStorm.Project.TWC.Tests
             用印或代送件只需夾帶附件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
             _actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
 
-            確認受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+            確認受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(確認受理).Click().Perform();
 
             stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
-
             applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
             text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
 
@@ -169,6 +163,17 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(1)]
+        public async Task TwcRA001_02To09()
+        {
+            await TwcRA001_02();
+            await TwcRA001_03();
+            await TwcRA001_04();
+            await TwcRA001_05();
+            await TwcRA001_06();
+            await TwcRA001_07();
+            await TwcRA001_08();
+            await TwcRA001_09();
+        }
         public async Task TwcRA001_02() // 取得token
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
@@ -176,8 +181,6 @@ namespace DomainStorm.Project.TWC.Tests
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
 
-        [Test]
-        [Order(2)]
         public async Task TwcRA001_03() //呼叫bmTransferApply/confirm 沒錯誤則取得http 200回應
 
         {
@@ -186,36 +189,22 @@ namespace DomainStorm.Project.TWC.Tests
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
-        [Test]
-        [Order(3)]
-        public async Task TwcRA001_04To09()
-        {
-            await TwcRA001_04();
-            await TwcRA001_05();
-            await TwcRA001_06();
-            await TwcRA001_07();
-            await TwcRA001_08();
-            await TwcRA001_09();
-        }
-
         public async Task TwcRA001_04() //看到申請之表單內容跳至夾帶附件區塊
         {
             await TestHelper.Login(_driver, "ning53", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
-            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
-
+            var 夾帶附件 = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2) > a[href='#file']"));
             _actions.MoveToElement(夾帶附件).Click().Perform();
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
-            _actions.MoveToElement(stormCardSeventh).Perform();
+            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+            //_actions.MoveToElement(stormCardSeventh).Perform();
             var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             var pElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td > p.h3"));
             var text = pElement.SingleOrDefault(t => t.Text == "沒有找到符合的結果");
@@ -229,7 +218,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcRA001_05() // 看到檔案上傳
         {
-            var 新增文件 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-primary")));
+            var 新增文件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-primary")));
             _actions.MoveToElement(新增文件).Click().Perform();
 
             _wait.Until(_ => _driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
@@ -253,8 +242,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 上傳 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(上傳).Click().Perform();
 
-            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
-            _actions.MoveToElement(stormCardSeventh).Perform();
+            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+            //_actions.MoveToElement(stormCardSeventh).Perform();
             var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             var stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td[data-field='name'] > storm-table-cell > span"));
             _wait.Until(driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
@@ -268,8 +257,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().Frame(0);
 
-            var 受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
-
+            var 受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             //先加入延遲1秒，不然會還沒scroll完就click
             Thread.Sleep(1000);
@@ -285,7 +273,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var fifthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5)"));
             var 受理登記 = fifthStormTreeNode.FindElement(By.CssSelector("a[href='#finished']"));
@@ -302,10 +290,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 確認受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(確認受理).Click().Perform();
 
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
-            var stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-
+            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
             var applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
             var element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo)!;
 
@@ -315,7 +300,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(4)]
+        [Order(2)]
         public async Task TwcRA001_10To11()
         {
             await TwcRA001_10();
@@ -335,43 +320,43 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             // 選擇區處別
-            var 區處別 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card storm-select div.choices")));
+            var 區處別 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card storm-select div.choices")));
             _actions.MoveToElement(區處別).Click().Perform();
 
-            var 第四區管理處 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list.choices__list--dropdown div:nth-child(1) [data-value='3eed4fc4-9c06-4d16-9eb6-45aeaf198a25']")));
+            var 第四區管理處 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.choices__list.choices__list--dropdown div:nth-child(1) [data-value='3eed4fc4-9c06-4d16-9eb6-45aeaf198a25']")));
             _actions.MoveToElement(第四區管理處).Click().Perform();
 
             // 選擇受理日期起
-            var 受理日期起 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='受理日期起']")));
+            var 受理日期起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
             var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
             受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
             _actions.MoveToElement(受理日期起).Click().Perform();
 
-            var select = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
+            var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
             var 受理月起 = new SelectElement(select);
             受理月起.SelectByText("March");
 
-            var 受理日起 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
+            var 受理日起 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
             _actions.MoveToElement(受理日起).Click().Perform();
 
             //選擇受理日期迄 
-            var 受理日期迄 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='受理日期迄']")));
+            var 受理日期迄 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期迄']")));
             input = 受理日期迄.GetShadowRoot().FindElement(By.CssSelector("input"));
             受理日期迄 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
             _actions.MoveToElement(受理日期迄).Click().Perform();
 
-            select = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
+            select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
             var 受理月迄 = new SelectElement(select);
             受理月迄.SelectByText("April");
 
-            var 受理日迄 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='April 6, 2023']")));
+            var 受理日迄 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='April 6, 2023']")));
             _actions.MoveToElement(受理日迄).Click().Perform();
 
             // 選擇檔案格式
-            var 檔案格式 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='檔案格式'] div.choices")));
+            var 檔案格式 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[label='檔案格式'] div.choices")));
             _actions.MoveToElement(檔案格式).Click().Perform();
 
-            var Xlsx = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list [data-value='XLSX']")));
+            var Xlsx = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.choices__list [data-value='XLSX']")));
             _actions.MoveToElement(Xlsx).Click().Perform();
 
             // 檢查下載檔案
@@ -388,7 +373,7 @@ namespace DomainStorm.Project.TWC.Tests
                 File.Delete(filePath);
             }
 
-            var 下載 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
+            var 下載 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(下載).Click().Perform();
 
             _wait.Until(_ => File.Exists(filePath));
