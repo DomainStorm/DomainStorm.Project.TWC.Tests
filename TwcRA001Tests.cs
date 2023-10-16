@@ -152,6 +152,10 @@ namespace DomainStorm.Project.TWC.Tests
             確認受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(確認受理).Click().Perform();
 
+            Console.WriteLine($"::group::---------{_driver.Url}---------");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::");
+
             stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
             applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
             text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
@@ -243,7 +247,7 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(上傳).Click().Perform();
 
             var stormCardSeventh = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
-            //_actions.MoveToElement(stormCardSeventh).Perform();
+            _actions.MoveToElement(stormCardSeventh).Perform();
             var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             var stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td[data-field='name'] > storm-table-cell > span"));
             _wait.Until(driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
