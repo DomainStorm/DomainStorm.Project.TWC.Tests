@@ -91,6 +91,10 @@ namespace DomainStorm.Project.TWC.Tests
             var 確認受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(確認受理).Click().Perform();
 
+            Console.WriteLine($"::group::---------Debug---------");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::---------Debug---------");
+
             stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
             var applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
             var text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
@@ -207,8 +211,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
-            //_actions.MoveToElement(stormCardSeventh).Perform();
+            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+            _actions.MoveToElement(stormCardSeventh).Perform();
             var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             var pElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td > p.h3"));
             var text = pElement.SingleOrDefault(t => t.Text == "沒有找到符合的結果");
