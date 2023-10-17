@@ -91,9 +91,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 確認受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(確認受理).Click().Perform();
 
-            Console.WriteLine($"::group::---------Debug---------");
-            Console.WriteLine(_driver.PageSource);
-            Console.WriteLine("::endgroup::---------Debug---------");
+            string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
+            _wait.Until(ExpectedConditions.UrlContains(targetUrl));
 
             stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
             var applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
@@ -155,6 +154,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             確認受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(確認受理).Click().Perform();
+
+            targetUrl = $"{TestHelper.BaseUrl}/unfinished";
+            _wait.Until(ExpectedConditions.UrlContains(targetUrl));
 
             Console.WriteLine($"::group::---------Debug---------");
             Console.WriteLine(_driver.PageSource);
