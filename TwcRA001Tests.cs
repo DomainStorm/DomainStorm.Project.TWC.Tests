@@ -152,9 +152,9 @@ namespace DomainStorm.Project.TWC.Tests
             確認受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(確認受理).Click().Perform();
 
-            Console.WriteLine($"::group::---------{_driver.Url}---------");
+            Console.WriteLine($"::group::---------Debug---------");
             Console.WriteLine(_driver.PageSource);
-            Console.WriteLine("::endgroup::");
+            Console.WriteLine("::endgroup::---------Debug---------");
 
             stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
             applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
