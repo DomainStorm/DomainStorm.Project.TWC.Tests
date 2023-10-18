@@ -11,29 +11,39 @@ namespace DomainStorm.Project.TWC.Tests
 {
     public class TwcC101Tests
     {
+        private IWebDriver _driver = null!;
+        private WebDriverWait _wait = null!;
+        private Actions _actions = null!;
         private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-        private List<ChromeDriver> _chromeDriverList;
         public TwcC101Tests()
         {
             TestHelper.CleanDb();
         }
 
         [SetUp] // 在每個測試方法之前執行的方法
-        public Task Setup()
+        public void Setup()
         {
-            _chromeDriverList = new List<ChromeDriver>();
-
-            return Task.CompletedTask;
+            _driver = TestHelper.GetNewChromeDriver();
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+            _actions = new Actions(_driver);
         }
 
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
-            TestHelper.CloseChromeDrivers();
+            _driver.Quit();
         }
 
         [Test]
         [Order(0)]
+        public async Task TwcC101_01To05()
+        {
+            await TwcC101_01();
+            await TwcC101_02();
+            await TwcC101_03();
+            await TwcC101_04();
+            await TwcC101_05();
+        }
         public async Task TwcC101_01() // 取得token
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
@@ -41,8 +51,6 @@ namespace DomainStorm.Project.TWC.Tests
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
 
-        [Test]
-        [Order(1)]
         public async Task TwcC101_02() // 呼叫bmDisableApply/confirm
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmDisableApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-C101_bmDisableApply.json"));
@@ -50,140 +58,79 @@ namespace DomainStorm.Project.TWC.Tests
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
-        [Test]
-        [Order(2)]
-
         public async Task TwcC101_03() // 看到表單受理欄位中看到核章資訊
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
 
-            driver.SwitchTo().Frame(0);
+            var 受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
 
-            var 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             //先加入延遲1秒，不然會還沒scroll完就click
             Thread.Sleep(1000);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
-            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 受理);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
-            IReadOnlyList<IWebElement> signElement = driver.FindElements(By.CssSelector("[class='sign']"));
+            var signElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
+            bool signElementExists = signElement !=null;
 
-            That(signElement, Is.Not.Empty, "未受理");
+            That(signElementExists, Is.True, "未受理");
         }
-
-        [Test]
-        [Order(3)]
 
         public async Task TwcC101_04() // 看到■用印或代送件只需夾帶附件已打勾
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            _driver.SwitchTo().DefaultContent();
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var fifthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5)"));
             var 受理登記 = fifthStormTreeNode.FindElement(By.CssSelector("a[href='#finished']"));
+            _actions.MoveToElement(受理登記).Click().Perform();
 
-            Actions actions = new(driver);
-            actions.MoveToElement(受理登記).Click().Perform();
-
-            var 用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 用印或代送件只需夾帶附件);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 用印或代送件只需夾帶附件);
+            var 用印或代送件只需夾帶附件 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
+            _actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
 
             That(用印或代送件只需夾帶附件.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
-        [Test]
-        [Order(4)]
-
         public async Task TwcC101_05() // 系統跳出【尚未夾帶附件】訊息
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            var 確認受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+            _actions.MoveToElement(確認受理).Click().Perform();
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            Actions actions = new(driver);
-
-            driver.SwitchTo().Frame(0);
-
-            var 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            //先加入延遲1秒，不然會還沒scroll完就click
-            Thread.Sleep(1000);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
-            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
-
-            driver.SwitchTo().DefaultContent();
-
-            var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
-            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var fifthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5)"));
-            var 受理登記 = fifthStormTreeNode.FindElement(By.CssSelector("a[href='#finished']"));
-
-            actions.MoveToElement(受理登記).Click().Perform();
-
-            var 用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
-            actions.MoveToElement(用印或代送件只需夾帶附件).Perform();
-            用印或代送件只需夾帶附件.Click();
-
-            var 確認受理 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-            actions.MoveToElement(確認受理).Perform();
-            確認受理.Click();
-
-            var divElement = driver.FindElement(By.Id("swal2-html-container"));
-            var h5Element = divElement.FindElement(By.TagName("h5"));
-            string 提示訊息 = h5Element.Text;
+            var hintElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-html-container > div.mx-6 > h5")));
+            string 提示訊息 = hintElement.Text;
 
             That(提示訊息, Is.EqualTo("【夾帶附件】或【掃描拍照】未上傳"));
         }
 
         [Test]
-        [Order(5)]
+        [Order(1)]
+        public async Task TwcC101_06To07()
+        {
+            await TwcC101_03();
+            await TwcC101_06();
+            await TwcC101_07();
+        }
         public async Task TwcC101_06() // 看到掃描拍照證件圖像
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            _driver.SwitchTo().DefaultContent();
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            var stormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("storm-tree-node"));
-            var 掃描拍照 = stormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
+            var 掃描拍照 = fourthStormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
+            _actions.MoveToElement(掃描拍照).Click().Perform();
 
-            Actions actions = new(driver);
-            actions.MoveToElement(掃描拍照).Click().Perform();
+            var 啟動掃描證件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.btn-primary.ms-2")));
+            _actions.MoveToElement(啟動掃描證件).Click().Perform();
 
-            var 啟動掃描證件 = driver.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
-            actions.MoveToElement(啟動掃描證件).Perform();
-            啟動掃描證件.Click();
-
-            var imgElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone-container img")));
+            var imgElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone-container img")));
             string src = imgElement.GetAttribute("src");
 
             That(src, Is.Not.Null);
@@ -194,76 +141,27 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcC101_07() // 確認完成畫面進入未結案件中
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
-
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            driver.SwitchTo().Frame(0);
-
-            var 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            //先加入延遲1秒，不然會還沒scroll完就click
-            Thread.Sleep(1000);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
-            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
-
-            driver.SwitchTo().DefaultContent();
-
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            var stormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("storm-tree-node"));
-            var 掃描拍照 = stormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
-
-            Actions actions = new(driver);
-            actions.MoveToElement(掃描拍照).Click().Perform();
-
-            var 啟動掃描證件 = driver.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
-            actions.MoveToElement(啟動掃描證件).Perform();
-            啟動掃描證件.Click();
-
-            stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
-            var stormCard_Sixth = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[5];
-            var stormUpload = stormCard_Sixth.FindElement(By.CssSelector("storm-upload"));
-
-            wait.Until(driver =>
-            {
-                var dzPreview = stormUpload.FindElement(By.CssSelector("div.dz-preview"));
-                if (dzPreview != null)
-                {
-                    return dzPreview;
-                }
-                return null;
-            });
-
             var fifthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5)"));
             var 受理登記 = fifthStormTreeNode.FindElement(By.CssSelector("a[href='#finished']"));
+            _actions.MoveToElement(受理登記).Click().Perform();
 
-            actions.MoveToElement(受理登記).Click().Perform();
+            var 用印或代送件只需夾帶附件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
+            _actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
 
-            var 用印或代送件只需夾帶附件 = driver.FindElement(By.Id("用印或代送件只需夾帶附件"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 用印或代送件只需夾帶附件);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 用印或代送件只需夾帶附件);
-
-            var 確認受理 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 確認受理);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 確認受理);
+            var 確認受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+            _actions.MoveToElement(確認受理).Click().Perform();
 
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
-            wait.Until(ExpectedConditions.UrlContains(targetUrl));
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
+            _wait.Until(ExpectedConditions.UrlContains(targetUrl));
+            TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
+            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
             var stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
             var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
 
-            ReadOnlyCollection<IWebElement> applyCaseNoElements = wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
+            ReadOnlyCollection<IWebElement> applyCaseNoElements = _wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
             var element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo)!;
 
             string 受理編號 = element.Text;
