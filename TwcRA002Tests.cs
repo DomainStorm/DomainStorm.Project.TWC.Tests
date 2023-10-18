@@ -68,10 +68,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 新增文件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-primary")));
             _actions.MoveToElement(新增文件).Click().Perform();
 
-            _wait.Until(_ => _driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
-
-            IList<IWebElement> hiddenInputs = _driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
-            var lastHiddenInput = hiddenInputs[^1];
+            var lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(3)")));
 
             string twcweb_01_1_夾帶附件1 = "twcweb_01_1_夾帶附件1.pdf";
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件1);
@@ -132,10 +129,7 @@ namespace DomainStorm.Project.TWC.Tests
             新增文件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-primary")));
             _actions.MoveToElement(新增文件).Click().Perform();
 
-            _wait.Until(_ => _driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
-
-            hiddenInputs = _driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
-            lastHiddenInput = hiddenInputs[^1];
+            lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(3)")));
 
             twcweb_01_1_夾帶附件1 = "twcweb_01_1_夾帶附件1.pdf";
             filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件1);
@@ -196,10 +190,7 @@ namespace DomainStorm.Project.TWC.Tests
             新增文件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-primary")));
             _actions.MoveToElement(新增文件).Click().Perform();
 
-            _wait.Until(_ => _driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
-
-            hiddenInputs = _driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
-            lastHiddenInput = hiddenInputs[^1];
+            lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(3)")));
 
             twcweb_01_1_夾帶附件1 = "twcweb_01_1_夾帶附件1.pdf";
             filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件1);
@@ -292,10 +283,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 新增文件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-primary")));
             _actions.MoveToElement(新增文件).Click().Perform();
 
-            _wait.Until(_ => _driver.FindElements(By.CssSelector("body > .dz-hidden-input")).Count == 3);
-
-            IList<IWebElement> hiddenInputs = _driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
-            var lastHiddenInput = hiddenInputs[^1];
+            var lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(3)")));
 
             string twcweb_01_1_夾帶附件1 = "twcweb_01_1_夾帶附件1.pdf";
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件1);
@@ -406,7 +394,7 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(Xlsx).Click().Perform();
 
             // 檢查下載檔案
-            string filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
+            string filePath = Path.Combine(_downloadDirectory, "RA002.xlsx");
 
             if (!Directory.Exists(_downloadDirectory))
             {
@@ -428,6 +416,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             using var package = new ExcelPackage(new FileInfo(filePath));
             var worksheet = package.Workbook.Worksheets[0];
+
+            string D6Value = worksheet.Cells["D6"].Text;
+            string F6Value = worksheet.Cells["F6"].Text;
+            string E7Value = worksheet.Cells["E7"].Text;
+
+            That(E7Value == "1" && D6Value == "2" && F6Value == "1", Is.True);
         }
     }
 }

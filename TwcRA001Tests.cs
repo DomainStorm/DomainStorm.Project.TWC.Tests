@@ -91,10 +91,10 @@ namespace DomainStorm.Project.TWC.Tests
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
 
-            stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
-            _actions.MoveToElement(stormTable).Perform();
-            var applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
-            var text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
+            //stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
+            //_actions.MoveToElement(stormTable).Perform();
+            //var applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
+            //var text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
 
             var 登出 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[href='./logout']")));
             _actions.MoveToElement(登出).Click().Perform();
@@ -154,9 +154,9 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
 
             stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
-            _actions.MoveToElement(stormTable).Perform();
-            applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
-            text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
+            //_actions.MoveToElement(stormTable).Perform();
+            var applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
+            var text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
 
             string 受理編號 = text.Text;
 
