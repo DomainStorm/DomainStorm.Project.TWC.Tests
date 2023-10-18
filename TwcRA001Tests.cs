@@ -90,11 +90,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
-
-            //stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
-            //_actions.MoveToElement(stormTable).Perform();
-            //var applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
-            //var text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
+            TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
             var 登出 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("a[href='./logout']")));
             _actions.MoveToElement(登出).Click().Perform();
@@ -152,13 +148,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
+            TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
-            //_actions.MoveToElement(stormTable).Perform();
-            var applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
-            var text = applyCaseNoElements.SingleOrDefault(t => t.Text == TestHelper.ApplyCaseNo)!;
-
-            string 受理編號 = text.Text;
+            var span = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.col-sm-7")));
+            string 受理編號 = span.Text;
 
             That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
@@ -263,9 +256,10 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 受理);
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
-            var signElement = _driver.FindElements(By.CssSelector("[class='sign']"));
+            var signElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
+            bool signElementExists = signElement != null;
 
-            That(signElement, Is.Not.Empty, "未受理");
+            That(signElementExists, Is.True, "未受理");
         }
 
         public async Task TwcRA001_08() // 看到■用印或代送件只需夾帶附件已打勾
@@ -291,12 +285,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
+            TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card > storm-document-list-detail > div.ms-1.me-1.border-radius-xl > storm-table")));
-            var applyCaseNoElements = _wait.Until(_driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
-            var element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo)!;
-
-            string 受理編號 = element.Text;
+            var span = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.col-sm-7")));
+            string 受理編號 = span.Text;
 
             That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
         }

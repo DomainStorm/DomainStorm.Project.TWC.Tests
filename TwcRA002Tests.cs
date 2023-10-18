@@ -323,9 +323,10 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 受理);
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
-            var signElement = _driver.FindElements(By.CssSelector("[class='sign']"));
+            var signElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
+            bool signElementExists = signElement != null;
 
-            That(signElement, Is.Not.Empty, "未受理");
+            That(signElementExists, Is.True, "未受理");
         }
 
         public async Task TwcRA002_08() // 看到■用印或代送件只需夾帶附件已打勾
