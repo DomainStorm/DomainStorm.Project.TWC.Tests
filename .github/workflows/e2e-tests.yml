@@ -99,6 +99,3 @@ jobs:
         # run: dotnet test --no-build --verbosity normal
 
         run: dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcRA001Tests --no-build --verbosity normal
-
-
-          
