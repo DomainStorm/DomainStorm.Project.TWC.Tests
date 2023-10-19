@@ -55,7 +55,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().DefaultContent();
 
-            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var 夾帶附件 = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4) > div.list-group > storm-tree-node:nth-child(2) > a[href='#file']"));
             _actions.MoveToElement(夾帶附件).Click().Perform();
@@ -71,7 +71,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 上傳 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 > button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(上傳).Click().Perform();
 
-            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
             var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             var stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
             _wait.Until(_driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
@@ -89,7 +89,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var 登出 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("a[href='./logout']")));
+            var 登出 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("a[href='./logout']")));
             _actions.MoveToElement(登出).Click().Perform();
 
             //tw491 建立表單
@@ -110,7 +110,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().DefaultContent();
 
-            stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
             stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             夾帶附件 = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4) > div.list-group > storm-tree-node:nth-child(2) > a[href='#file']"));
             _actions.MoveToElement(夾帶附件).Click().Perform();
@@ -126,7 +126,7 @@ namespace DomainStorm.Project.TWC.Tests
             上傳 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(上傳).Click().Perform();
 
-            stormCardSeventh = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+            stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
             stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
             _wait.Until(_driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
@@ -184,7 +184,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
             var 夾帶附件 = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2) > a[href='#file']"));
@@ -223,11 +223,10 @@ namespace DomainStorm.Project.TWC.Tests
             var 上傳 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(上傳).Click().Perform();
 
-            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
-            _actions.MoveToElement(stormCardSeventh).Perform();
+            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
             var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td[data-field='name'] > storm-table-cell > span"));
-            _wait.Until(driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
+            var stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+            _wait.Until(_driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
 
             string 文件名稱 = stormTableCellSpan.Text;
 
@@ -240,10 +239,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             var 受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            //先加入延遲1秒，不然會還沒scroll完就click
-            Thread.Sleep(1000);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 受理);
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
             var signElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
             bool signElementExists = signElement != null;
@@ -255,10 +252,9 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var fifthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5)"));
-            var 受理登記 = fifthStormTreeNode.FindElement(By.CssSelector("a[href='#finished']"));
+            var 受理登記 = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5) >  a[href='#finished']"));
             _actions.MoveToElement(受理登記).Click().Perform();
 
             var 用印或代送件只需夾帶附件 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
@@ -276,7 +272,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var span = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.col-sm-7")));
+            var span = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.col-sm-7")));
             string 受理編號 = span.Text;
 
             That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
