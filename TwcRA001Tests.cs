@@ -162,7 +162,7 @@ namespace DomainStorm.Project.TWC.Tests
                         "div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
                 });
 
-                return string.IsNullOrEmpty(e.Text) ? e : null;
+                return !string.IsNullOrEmpty(e.Text) ? e : null;
             });
         }
 
