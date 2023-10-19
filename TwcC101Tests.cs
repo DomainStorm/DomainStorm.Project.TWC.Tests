@@ -68,8 +68,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var 受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
-
+            var 受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
             //先加入延遲1秒，不然會還沒scroll完就click
             Thread.Sleep(1000);
@@ -127,10 +126,10 @@ namespace DomainStorm.Project.TWC.Tests
             var 掃描拍照 = fourthStormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
             _actions.MoveToElement(掃描拍照).Click().Perform();
 
-            var 啟動掃描證件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.btn-primary.ms-2")));
+            var 啟動掃描證件 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.btn-primary.ms-2")));
             _actions.MoveToElement(啟動掃描證件).Click().Perform();
 
-            var imgElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone-container img")));
+            var imgElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container img")));
             string src = imgElement.GetAttribute("src");
 
             That(src, Is.Not.Null);
@@ -147,24 +146,18 @@ namespace DomainStorm.Project.TWC.Tests
             var 受理登記 = fifthStormTreeNode.FindElement(By.CssSelector("a[href='#finished']"));
             _actions.MoveToElement(受理登記).Click().Perform();
 
-            var 用印或代送件只需夾帶附件 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
+            var 用印或代送件只需夾帶附件 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
             _actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
 
-            var 確認受理 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+            var 確認受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(確認受理).Click().Perform();
 
             string targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
-            var stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-
-            ReadOnlyCollection<IWebElement> applyCaseNoElements = _wait.Until(driver => stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']")));
-            var element = applyCaseNoElements.SingleOrDefault(e => e.Text == TestHelper.ApplyCaseNo)!;
-
-            string 受理編號 = element.Text;
+            var span = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.col-sm-7")));
+            string 受理編號 = span.Text;
 
             That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
