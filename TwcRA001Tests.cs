@@ -71,10 +71,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 上傳 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 > button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(上傳).Click().Perform();
 
-            var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
-            var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
-            _wait.Until(_driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
+            //var stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+            That(WaitUploadCompleted(), Is.Not.Null);
 
             var 受理登記 = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5) >  a[href='#finished']"));
             _actions.MoveToElement(受理登記).Click().Perform();
@@ -126,10 +124,12 @@ namespace DomainStorm.Project.TWC.Tests
             上傳 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(上傳).Click().Perform();
 
-            stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
-            stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
-            _wait.Until(_driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
+            //stormCardSeventh = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+            //stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            //stormTableCellSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+            //_wait.Until(_driver => !string.IsNullOrEmpty(stormTableCellSpan.Text));
+
+            That(WaitUploadCompleted(), Is.Not.Null);
 
             受理登記 = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5) > a[href='#finished']"));
             _actions.MoveToElement(受理登記).Click().Perform();
@@ -148,6 +148,22 @@ namespace DomainStorm.Project.TWC.Tests
             string 受理編號 = span.GetAttribute("textContent");
 
             That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
+        }
+
+        private IWebElement? WaitUploadCompleted()
+        {
+            return _wait.Until(_ =>
+            {
+                var e = _wait.Until(_ =>
+                {
+                    var stormCardSeventh = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+                    var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                    return stormTable.GetShadowRoot().FindElement(By.CssSelector(
+                        "div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+                });
+
+                return !string.IsNullOrEmpty(e.Text) ? e : null;
+            });
         }
 
         [Test]
