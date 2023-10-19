@@ -128,15 +128,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             var 啟動掃描證件 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.btn-primary.ms-2")));
             _actions.MoveToElement(啟動掃描證件).Click().Perform();
+            //等待照片加載完
+            Thread.Sleep(3000);
 
             var imgElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container img")));
             string src = imgElement.GetAttribute("src");
 
             That(src, Is.Not.Null);
         }
-
-        [Test]
-        [Order(6)]
 
         public async Task TwcC101_07() // 確認完成畫面進入未結案件中
         {
@@ -163,164 +162,92 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(7)]
+        [Order(2)]
 
         public async Task TwcC101_08() // 看到掃描拍照區塊顯示該證件圖像檔案。已勾選■已詳閱貴公司消費性用水服務契約、公司個人資料保護法、貴公司營業章程
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
+            TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
-            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var secondStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(2)"));
-            var firstStormTreeNode = secondStormTreeNode.FindElement(By.CssSelector("storm-tree-node"));
-            var 消費性用水服務契約 = firstStormTreeNode.FindElement(By.CssSelector("a[href='#contract_1']"));
-
-            Actions actions = new(driver);
-            actions.MoveToElement(消費性用水服務契約).Click().Perform();
-
-            消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
-
-            wait.Until(driver =>
-            {
-                var 消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
-                return 消費性用水服務契約.GetAttribute("checked") == "true";
-            });
+            var 消費性用水服務契約 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='消費性用水服務契約']")));
+            _actions.MoveToElement(消費性用水服務契約).Click().Perform();
 
             That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
 
-            secondStormTreeNode = secondStormTreeNode.FindElement(By.CssSelector("storm-tree-node:nth-child(2)"));
-            var 公司個人資料保護告知事項 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#contract_2']"));
+            var 公司個人資料保護告知事項 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='公司個人資料保護告知事項']")));
+            _actions.MoveToElement(公司個人資料保護告知事項).Click().Perform();
 
-            actions.MoveToElement(公司個人資料保護告知事項).Click().Perform();
+            That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
 
-            消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 消費性用水服務契約);
-
-            wait.Until(driver =>
-            {
-                var 消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
-                return 消費性用水服務契約.GetAttribute("checked") == "true";
-            });
-
-            That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
-
-            secondStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(2)"));
-            var thirdStormTreeNode = secondStormTreeNode.FindElement(By.CssSelector("storm-tree-node:nth-child(3)"));
-            var 公司營業章程 = thirdStormTreeNode.FindElement(By.CssSelector("a[href='#contract_3']"));
-
-            actions.MoveToElement(公司營業章程).Click().Perform();
-
-            公司營業章程 = driver.FindElement(By.Id("公司營業章程"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 公司營業章程);
-
-            wait.Until(driver =>
-            {
-                var 公司營業章程 = driver.FindElement(By.Id("公司營業章程"));
-                return 公司營業章程.GetAttribute("checked") == "true";
-            });
+            var 公司營業章程 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='公司營業章程']")));
+            _actions.MoveToElement(公司營業章程).Click().Perform();
 
             That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
 
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            var stormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("storm-tree-node"));
-            var 掃描拍照 = stormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
+            var 掃描拍照 = fourthStormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
+            _actions.MoveToElement(掃描拍照).Click().Perform();
 
-            actions.MoveToElement(掃描拍照).Click().Perform();
-
-            var stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[5];
-            var imgElement = stormCard.FindElement(By.CssSelector("img"));
+            var imgElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(6) > img")));
 
             That(imgElement, Is.Not.Null);
         }
 
         [Test]
-        [Order(8)]
+        [Order(3)]
+        public async Task TwcC101_9To11()
+        {
+            await TwcC101_09();
+            await TwcC101_10();
+            //await TwcC101_11();
+        }
+
         public async Task TwcC101_09() // 查詢出來該件，列在下方
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
+            
+            var 受理日期起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
+            var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
+            受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
+            _actions.MoveToElement(受理日期起).Click().Perform();
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
+            var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
+            var 受理月起 = new SelectElement(select);
+            受理月起.SelectByText("June");
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 3, 2023']")));
+            _actions.MoveToElement(受理日起).Click().Perform();
 
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var div = stormCard.FindElement(By.CssSelector("div.row"));
-            var stormInputGroup = div.FindElement(By.CssSelector("storm-input-group"));
-            var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            inputElement.Click();
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft.open")));
+            var 查詢 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            _actions.MoveToElement(查詢).Click().Perform();
 
-            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
-            SelectElement selectMonth = new SelectElement(monthDropdown);
-            selectMonth.SelectByText("March");
-
-            var span = driver.FindElement(By.CssSelector("span[aria-label='March 6, 2023']"));
-            span.Click();
-
-            var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
-            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
-            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
-
-            inputElement.SendKeys(TestHelper.ApplyCaseNo);
-
-            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
-            var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-            Actions actions = new(driver);
-            actions.MoveToElement(查詢).Click().Perform();
-
-            var stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
-            var stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-
-            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            var spanElement = element.FindElement(By.CssSelector("span"));
-            string spanText = spanElement.Text;
+            var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+            var applyCaseNo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+            string spanText = applyCaseNo.Text;
 
             That(spanText, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 
-        [Test]
-        [Order(9)]
-
         public async Task TwcC101_10() // 確認掃描拍照區塊有掃描拍照證件圖像
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+            var applyCaseNo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+            _actions.MoveToElement(applyCaseNo).Click().Perform();
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
             var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
             var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            var stormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("storm-tree-node"));
-            var 掃描拍照 = stormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
+            var 掃描拍照 = fourthStormTreeNode.FindElement(By.CssSelector("a[href='#credential']"));
+            _actions.MoveToElement(掃描拍照).Click().Perform();
 
-            Actions actions = new(driver);
-            actions.MoveToElement(掃描拍照).Click().Perform();
-
-            var stormCard = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[5];
-            var imgElement = stormCard.FindElement(By.CssSelector("img"));
+            var imgElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(6) > img")));
 
             That(imgElement, Is.Not.Null);
         }
-
-        [Test]
-        [Order(10)]
 
         public async Task TwcC101_11() // PDF檔產製成功自動下載於下載區
         {

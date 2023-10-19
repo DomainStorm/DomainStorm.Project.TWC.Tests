@@ -140,7 +140,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var span = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.col-sm-7")));
+            var span = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(9) > div.row > div.col-sm-7")));
             string 受理編號 = span.Text;
 
             That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
