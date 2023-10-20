@@ -65,4 +65,4 @@ WaitForHealthy "multimediaapi"
 WaitForHealthy "resourceapi"
 WaitForHealthy "twcweb"
 WaitForHealthy "servicebus"
-
+WaitForHealthy "twcreport"
