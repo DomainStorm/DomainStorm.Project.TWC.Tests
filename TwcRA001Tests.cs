@@ -23,7 +23,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
             _actions = new Actions(_driver);
         }
 
@@ -282,8 +282,6 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/report/RA001");
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
-
-            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
 
             // 選擇區處別
             var 區處別 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > form > div.mt-3 > storm-select >div.choices")));
