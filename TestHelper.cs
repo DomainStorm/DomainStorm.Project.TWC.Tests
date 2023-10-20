@@ -40,7 +40,7 @@ public class TestHelper
 
         _chromeDriverList.Add(driver);
 
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+        //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(15);
         driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
 
         return driver;

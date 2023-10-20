@@ -42,7 +42,7 @@ namespace DomainStorm.Project.TWC.Tests
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmMilitaryApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"));
 
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft"); 
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -144,8 +144,6 @@ namespace DomainStorm.Project.TWC.Tests
             That(受理編號, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 
-       
-
         [Test]
         [Order(1)]
         public async Task TwcRA001_02To09()
@@ -216,7 +214,6 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcRA001_06() // 看到夾帶附件視窗顯示有一筆附件清單資料
         {
-
             var 上傳 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(上傳).Click().Perform();
 
