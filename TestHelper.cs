@@ -10,11 +10,13 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace DomainStorm.Project.TWC.Tests;
 
 public class TestHelper
 {
+    private WebDriverWait _wait = null!;
     private static List<ChromeDriver> _chromeDriverList = new List<ChromeDriver>();
     public static ChromeDriver GetNewChromeDriver()
     {
@@ -289,6 +291,22 @@ public class TestHelper
         cn.Query("delete QuestionnaireFormAnswer");
         }
     }
+    public static IWebElement? WaitUploadCompleted(IWebDriver _driver)
+    {
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        return _wait.Until(_ =>
+        {
+            var e = _wait.Until(_ =>
+            {
+                var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+                var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                return stormTable.GetShadowRoot().FindElement(By.CssSelector(
+                    "div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+            });
+
+            return !string.IsNullOrEmpty(e.Text) ? e : null;
+        });
+    }
 
     public static IWebElement FindAndMoveElement(IWebDriver webDriver, string css)
     {
@@ -331,7 +349,6 @@ public class TestConfig
     public string? AccessToken { get; set; }
     public string? ApplyCaseNo { get; set; }
     public string? Password { get; set; }
-    //public string? UserId { get; set; }
 }
 public class ChromeConfig
 {
