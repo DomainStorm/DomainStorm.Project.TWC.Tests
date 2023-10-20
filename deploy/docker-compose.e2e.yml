@@ -61,6 +61,7 @@ services:
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/dev.pfx
       DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=TWCWeb;User Id=sa;Password=Pass@word;
       DomainStorm_PostInteropExe: "false"
+      DomainStorm_TwcReportPathBase: https://localhost:8443/twcreport
     depends_on:   
       sqlserver:
         condition: service_healthy            

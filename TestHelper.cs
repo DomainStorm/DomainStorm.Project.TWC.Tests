@@ -40,7 +40,7 @@ public class TestHelper
 
         _chromeDriverList.Add(driver);
 
-        //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(15);
+        //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
         driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
 
         return driver;
@@ -303,7 +303,6 @@ public class TestHelper
                 return stormTable.GetShadowRoot().FindElement(By.CssSelector(
                     "div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
             });
-
             return !string.IsNullOrEmpty(e.Text) ? e : null;
         });
     }
@@ -312,7 +311,6 @@ public class TestHelper
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
         var action = new Actions(webDriver);
-
         var element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
 
         action.MoveToElement(element).Perform();
