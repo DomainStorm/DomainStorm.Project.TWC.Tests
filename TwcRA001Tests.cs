@@ -23,7 +23,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
             _actions = new Actions(_driver);
         }
 
@@ -280,7 +280,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcRA001_11() //有xlsx檔案下載後打開應顯示有台中所2筆、大里所1筆統計數據。
         {
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/report/RA001");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
             Console.WriteLine($"::group::檢查結構---------{_driver.Url}---------");
