@@ -283,6 +283,10 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
+            Console.WriteLine($"::group::檢查結構---------{_driver.Url}---------");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::");
+
             // 選擇區處別
             var 區處別 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > form > div.mt-3 > storm-select >div.choices")));
             _actions.MoveToElement(區處別).Click().Perform();
