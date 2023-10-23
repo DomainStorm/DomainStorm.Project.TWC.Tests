@@ -262,6 +262,19 @@ public class TestHelper
 
         return id;
     }
+    public static void ShowDirectoryFilesName(string _downloadDirectory, string filePath)
+    {
+        Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+
+        foreach (var fn in Directory.GetFiles(_downloadDirectory))
+        {
+            Console.WriteLine($"-----filename: {fn}-----");
+        }
+
+        Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
+        Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
+    }
 
     public static void CleanDb()
     {

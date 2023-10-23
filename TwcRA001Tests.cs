@@ -339,16 +339,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 下載 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(下載).Click().Perform();
 
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-            foreach (var fn in Directory.GetFiles(_downloadDirectory))
-            {
-                Console.WriteLine($"-----filename: {fn}-----");
-            }
-
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
-            Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
+            TestHelper.ShowDirectoryFilesName(_downloadDirectory, filePath);
 
             _wait.Until(_ =>
             {
