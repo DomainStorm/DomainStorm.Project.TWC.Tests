@@ -13,7 +13,6 @@ namespace DomainStorm.Project.TWC.Tests
         private IWebDriver _driver = null!;
         private WebDriverWait _wait = null!;
         private Actions _actions = null!;
-        private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         public TwcRA001Tests()
         {
             TestHelper.CleanDb();
@@ -23,7 +22,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(60));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
             _actions = new Actions(_driver);
         }
 
@@ -325,6 +324,7 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(Xlsx).Click().Perform();
 
             // 檢查下載檔案
+            string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
             string filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
             if (!Directory.Exists(_downloadDirectory))
             {
