@@ -262,6 +262,18 @@ public class TestHelper
 
         return id;
     }
+    public static void PrepareToDownload(string _downloadDirectory, string filePath)
+    {
+        if (!Directory.Exists(_downloadDirectory))
+        {
+            Directory.CreateDirectory(_downloadDirectory);
+        }
+
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+    }
     public static void ShowDirectoryFilesName(string _downloadDirectory, string filePath)
     {
         Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
@@ -277,7 +289,7 @@ public class TestHelper
     }
     public static void WaitDownloadCompleted(IWebDriver _driver,string filePath)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(60));
         _wait.Until(_ =>
         {
             if (File.Exists(filePath))

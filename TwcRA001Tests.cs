@@ -323,23 +323,37 @@ namespace DomainStorm.Project.TWC.Tests
             var Xlsx = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list [data-value='XLSX']")));
             _actions.MoveToElement(Xlsx).Click().Perform();
 
-            // 檢查下載檔案
             string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
             string filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
-            if (!Directory.Exists(_downloadDirectory))
-            {
-                Directory.CreateDirectory(_downloadDirectory);
-            }
 
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
+            TestHelper.PrepareToDownload(_downloadDirectory, filePath);
+            //if (!Directory.Exists(_downloadDirectory))
+            //{
+            //    Directory.CreateDirectory(_downloadDirectory);
+            //}
+
+            //if (File.Exists(filePath))
+            //{
+            //    File.Delete(filePath);
+            //}
+
+            That(Directory.Exists(_downloadDirectory), Is.True);
 
             var 下載 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(下載).Click().Perform();
 
             TestHelper.ShowDirectoryFilesName(_downloadDirectory, filePath);
+
+            //Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+
+            //foreach (var fn in Directory.GetFiles(_downloadDirectory))
+            //{
+            //    Console.WriteLine($"-----filename: {fn}-----");
+            //}
+
+            //Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
+            //Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
 
             TestHelper.WaitDownloadCompleted(_driver, filePath);
 
@@ -356,6 +370,8 @@ namespace DomainStorm.Project.TWC.Tests
             //        return false;
             //    }
             //});
+
+            That(File.Exists(filePath), Is.True);
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using var package = new ExcelPackage(new FileInfo(filePath));
