@@ -1,10 +1,8 @@
 ﻿using OfficeOpenXml;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System.Collections.ObjectModel;
 using System.Net;
 using static NUnit.Framework.Assert;
 
@@ -15,7 +13,6 @@ namespace DomainStorm.Project.TWC.Tests
         private IWebDriver _driver = null!;
         private WebDriverWait _wait = null!;
         private Actions _actions = null!;
-        private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         public TwcRA002Tests()
         {
             TestHelper.CleanDb();
@@ -351,23 +348,21 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(Xlsx).Click().Perform();
 
             // 檢查下載檔案
-            string filePath = Path.Combine(_downloadDirectory, "RA002.xlsx");
+            string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            string filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
 
-            if (!Directory.Exists(_downloadDirectory))
-            {
-                Directory.CreateDirectory(_downloadDirectory);
+            TestHelper.PrepareToDownload(_downloadDirectory, filePath);
 
-            }
+            That(Directory.Exists(_downloadDirectory), Is.True);
 
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
-            var 下載 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
+            var 下載 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(下載).Click().Perform();
 
-            _wait.Until(_ => File.Exists(filePath));
+            TestHelper.ShowDirectoryFilesName(_downloadDirectory, filePath);
+
+            TestHelper.WaitDownloadCompleted(_driver, filePath);
+
+            That(File.Exists(filePath), Is.True);
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
