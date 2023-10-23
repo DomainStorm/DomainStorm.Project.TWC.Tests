@@ -212,6 +212,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 查詢 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(查詢).Click().Perform();
 
+            Thread.Sleep(1000);
+
             var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
             var applyCaseNo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
             string spanText = applyCaseNo.Text;
