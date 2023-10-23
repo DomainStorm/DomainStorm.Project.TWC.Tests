@@ -327,15 +327,6 @@ namespace DomainStorm.Project.TWC.Tests
             string filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
 
             TestHelper.PrepareToDownload(_downloadDirectory, filePath);
-            //if (!Directory.Exists(_downloadDirectory))
-            //{
-            //    Directory.CreateDirectory(_downloadDirectory);
-            //}
-
-            //if (File.Exists(filePath))
-            //{
-            //    File.Delete(filePath);
-            //}
 
             That(Directory.Exists(_downloadDirectory), Is.True);
 
@@ -344,32 +335,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             TestHelper.ShowDirectoryFilesName(_downloadDirectory, filePath);
 
-            //Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-            //foreach (var fn in Directory.GetFiles(_downloadDirectory))
-            //{
-            //    Console.WriteLine($"-----filename: {fn}-----");
-            //}
-
-            //Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
-            //Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
-
             TestHelper.WaitDownloadCompleted(_driver, filePath);
-
-            //_wait.Until(_ =>
-            //{
-            //    if (File.Exists(filePath))
-            //    {
-            //        Console.WriteLine($"-----檔案存在: {filePath}-----");
-            //        return true;
-            //    }
-            //    else
-            //    {
-            //        Console.WriteLine($"-----檔案不存在: {filePath}-----");
-            //        return false;
-            //    }
-            //});
 
             That(File.Exists(filePath), Is.True);
 
