@@ -487,18 +487,21 @@ namespace DomainStorm.Project.TWC.Tests
 
             That(Directory.Exists(_downloadDirectory), Is.True);
 
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-            foreach (var fn in Directory.GetFiles(_downloadDirectory))
-            {
-                Console.WriteLine($"-----filename: {fn}-----");
-            }
-
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
             Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
 
-            wait.Until(webDriver => File.Exists(filePath));
+            wait.Until(webDriver =>
+            {
+                Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+
+                foreach (var fn in Directory.GetFiles(_downloadDirectory))
+                {
+                    Console.WriteLine($"-----filename: {fn}-----");
+                }
+
+                Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
+                return File.Exists(filePath);
+            });
 
             That(File.Exists(filePath), Is.True);
         }

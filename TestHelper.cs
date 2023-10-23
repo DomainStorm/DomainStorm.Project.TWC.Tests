@@ -30,6 +30,9 @@ public class TestHelper
         if (GetChromeConfig().Headless)
             option.AddArgument("--headless");
 
+        var downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+        option.AddUserProfilePreference("download.default_directory", downloadDirectory);
+
         new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
         var driver = new ChromeDriver(option);
 
