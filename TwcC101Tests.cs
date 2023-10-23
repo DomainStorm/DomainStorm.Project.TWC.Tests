@@ -290,7 +290,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
 
-            wait.Until(webDriver =>
+            _wait.Until(webDriver =>
             {
                 Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
 
