@@ -332,6 +332,7 @@ public class TestHelper
         cn.Query("delete QuestionnaireFormAnswer");
         }
     }
+    
     public static IWebElement? WaitUploadCompleted(IWebDriver _driver)
     {
         WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
