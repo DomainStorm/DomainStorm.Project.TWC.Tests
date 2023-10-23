@@ -174,8 +174,7 @@ namespace DomainStorm.Project.TWC.Tests
             actions.MoveToElement(掃描拍照).Click().Perform();
 
             var 啟動掃描證件 = driver.FindElement(By.CssSelector("button.btn.btn-primary.ms-2"));
-            actions.MoveToElement(啟動掃描證件).Perform();
-            啟動掃描證件.Click();
+            actions.MoveToElement(啟動掃描證件).Click().Perform();
 
             var imgElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone-container img")));
             string src = imgElement.GetAttribute("src");
