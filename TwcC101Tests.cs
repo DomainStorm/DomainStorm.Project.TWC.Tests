@@ -276,6 +276,7 @@ namespace DomainStorm.Project.TWC.Tests
             }
 
             string filePath = Path.Combine(_downloadDirectory, "41101699338.pdf");
+
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
@@ -284,7 +285,24 @@ namespace DomainStorm.Project.TWC.Tests
             var 轉PDF = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2")));
             _actions.MoveToElement(轉PDF).Click().Perform();
 
-            _wait.Until(_ => File.Exists(filePath));
+
+            That(Directory.Exists(_downloadDirectory), Is.True);
+
+            Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
+
+            wait.Until(webDriver =>
+            {
+                Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+
+                foreach (var fn in Directory.GetFiles(_downloadDirectory))
+                {
+                    Console.WriteLine($"-----filename: {fn}-----");
+                }
+
+                Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
+                return File.Exists(filePath);
+            });
 
             That(File.Exists(filePath), Is.True);
         }
