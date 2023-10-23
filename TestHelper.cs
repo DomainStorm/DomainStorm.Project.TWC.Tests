@@ -275,6 +275,23 @@ public class TestHelper
 
         Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
     }
+    public static void WaitDownloadCompleted(IWebDriver _driver,string filePath)
+    {
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        _wait.Until(_ =>
+        {
+            if (File.Exists(filePath))
+            {
+                Console.WriteLine($"-----檔案存在: {filePath}-----");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"-----檔案不存在: {filePath}-----");
+                return false;
+            }
+        });
+    }
 
     public static void CleanDb()
     {
