@@ -23,7 +23,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(30));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
             _actions = new Actions(_driver);
         }
 
@@ -339,7 +339,19 @@ namespace DomainStorm.Project.TWC.Tests
             var 下載 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(下載).Click().Perform();
 
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+
+            foreach (var fn in Directory.GetFiles(_downloadDirectory))
+            {
+                Console.WriteLine($"-----filename: {fn}-----");
+            }
+
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
+            Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
+
             _wait.Until(_ => File.Exists(filePath));
+
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using var package = new ExcelPackage(new FileInfo(filePath));
             var worksheet = package.Workbook.Worksheets[0];
