@@ -350,7 +350,19 @@ namespace DomainStorm.Project.TWC.Tests
 
             Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
 
-            _wait.Until(_ => File.Exists(filePath));
+            _wait.Until(_ =>
+            {
+                if (File.Exists(filePath))
+                {
+                    Console.WriteLine($"-----檔案存在: {filePath}-----");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine($"-----檔案不存在: {filePath}-----");
+                    return false;
+                }
+            });
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using var package = new ExcelPackage(new FileInfo(filePath));
