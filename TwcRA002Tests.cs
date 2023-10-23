@@ -349,7 +349,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             // 檢查下載檔案
             string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            string filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
+            string filePath = Path.Combine(_downloadDirectory, "RA002.xlsx");
 
             TestHelper.PrepareToDownload(_downloadDirectory, filePath);
 
