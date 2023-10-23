@@ -335,9 +335,9 @@ namespace DomainStorm.Project.TWC.Tests
             var 下載 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(下載).Click().Perform();
 
-            TestHelper.ShowDirectoryFilesName(_downloadDirectory, filePath);
+            ////TestHelper.ShowDirectoryFilesName(_downloadDirectory, filePath);
 
-            TestHelper.WaitDownloadCompleted(_driver, filePath);
+            TestHelper.WaitDownloadCompleted(_driver, _downloadDirectory, filePath);
 
             That(File.Exists(filePath), Is.True);
 

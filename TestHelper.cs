@@ -274,24 +274,21 @@ public class TestHelper
             File.Delete(filePath);
         }
     }
-    public static void ShowDirectoryFilesName(string _downloadDirectory, string filePath)
+
+    public static void WaitDownloadCompleted(IWebDriver driver, string downloadDirectory, string filePath)
     {
-        Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-        foreach (var fn in Directory.GetFiles(_downloadDirectory))
+        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
+        _wait.Until(_ =>
         {
-            Console.WriteLine($"-----filename: {fn}-----");
-        }
+            Console.WriteLine($"-----{downloadDirectory} GetFiles-----");
 
-        Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+            foreach (var fn in Directory.GetFiles(downloadDirectory))
+            {
+                Console.WriteLine($"-----filename: {fn}-----");
+            }
 
-        Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
-    }
-    public static void WaitDownloadCompleted(IWebDriver _driver,string filePath)
-    {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(60));
-        _wait.Until(_driver =>
-        {
+            Console.WriteLine($"-----{downloadDirectory} GetFiles end-----");
+
             if (File.Exists(filePath))
             {
                 Console.WriteLine($"-----檔案存在: {filePath}-----");
