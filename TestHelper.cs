@@ -280,7 +280,7 @@ public class TestHelper
 
     public static void WaitDownloadCompleted(IWebDriver driver, string downloadDirectory, string filePath)
     {
-        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
+        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
         _wait.Until(_ =>
         {
             Console.WriteLine($"-----{downloadDirectory} GetFiles-----");

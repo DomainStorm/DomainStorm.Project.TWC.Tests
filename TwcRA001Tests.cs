@@ -286,8 +286,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 區處別 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card > form > div.mt-3 > storm-select >div.choices")));
             _actions.MoveToElement(區處別).Click().Perform();
 
-            //var 第四區管理處 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list.choices__list--dropdown > div.choices__list > [data-value='3eed4fc4-9c06-4d16-9eb6-45aeaf198a25']")));
-            var 第四區管理處 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list.choices__list--dropdown > div.choices__list > [data-id='2']")));
+            var 第四區管理處 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list.choices__list--dropdown > div.choices__list > [data-id='2']")));
             _actions.MoveToElement(第四區管理處).Click().Perform();
 
             // 選擇受理日期起
@@ -323,7 +322,6 @@ namespace DomainStorm.Project.TWC.Tests
             var Xlsx = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list [data-value='XLSX']")));
             _actions.MoveToElement(Xlsx).Click().Perform();
 
-
             // 檢查下載檔案
             string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
             string filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
@@ -334,8 +332,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             var 下載 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(下載).Click().Perform();
-
-            ////TestHelper.ShowDirectoryFilesName(_downloadDirectory, filePath);
 
             TestHelper.WaitDownloadCompleted(_driver, _downloadDirectory, filePath);
 
