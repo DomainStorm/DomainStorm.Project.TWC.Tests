@@ -283,7 +283,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             // 選擇區處別
-            var 區處別 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card > form > div.mt-3 > storm-select >div.choices")));
+            var 區處別 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > form > div.mt-3 > storm-select >div.choices")));
             _actions.MoveToElement(區處別).Click().Perform();
 
             var 第四區管理處 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list.choices__list--dropdown > div.choices__list > [data-id='2']")));
