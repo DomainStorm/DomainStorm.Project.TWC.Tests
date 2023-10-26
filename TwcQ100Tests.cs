@@ -78,6 +78,9 @@ namespace DomainStorm.Project.TWC.Tests
             var updateButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-toolbar > storm-button:nth-child(2) > storm-tooltip > div > button"));
             _actions.MoveToElement(updateButton).Click().Perform();
 
+            var confirmButton = TestHelper.FindAndMoveElement(_driver, "div.rz-dialog-wrapper > div.rz-dialog > div.rz-dialog-content > div.rz-dialog-confirm-buttons >button");
+            _actions.MoveToElement(confirmButton).Click().Perform();
+
             var updateButton2 = TestHelper.FindAndMoveElement(_driver, "div.rz-dialog-wrapper > div.rz-dialog > div.rz-dialog-content > div > div > div > button");
             _actions.MoveToElement(updateButton2).Click().Perform();
 
@@ -87,7 +90,6 @@ namespace DomainStorm.Project.TWC.Tests
                 planDisableDateCellText = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div > table > tbody > tr > td:nth-child(5) > storm-table-cell > span")).Text;
                 return planDisableDateCellText != "-";
             });
-            
 
             That(planDisableDateCellText, !Is.EqualTo("-"));
         }

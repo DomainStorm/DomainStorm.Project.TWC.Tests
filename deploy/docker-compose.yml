@@ -254,7 +254,7 @@ services:
     # command: ["luarocks", "install", "kong-plugin-url-rewrite"]       
     volumes:
       - ./ssl:/ssl        
-    restart: always
+    restart: on-failure
     ports:
       - 8000:8000
       - 8443:8443
@@ -268,7 +268,9 @@ services:
       kong-migrations-up:
           condition: service_started    
       domainstorm.project.twc.web:
-          condition: service_healthy         
+          condition: service_healthy
+      domainstorm.project.twc.report:
+          condition: service_healthy               
     healthcheck:       
       test: ["CMD", "kong", "health"] 
       interval: 10s
@@ -576,8 +578,8 @@ services:
       DomainStorm_LdapOptions__ManagerDn: cn=admin,${LDAP_BASEDN}
       DomainStorm_LdapOptions__ManagerPassword: ${LDAP_ADMIN_PASSWORD}
     ports:
-      - "8888:80"
-      - "7777:443"
+    #   - "8888:80"
+      #- "7777:443"
       - "3500:3500"
       #- "50001:50001"
     # links:
@@ -643,7 +645,7 @@ services:
       DomainStorm_LdapOptions__ManagerDn: cn=admin,${LDAP_BASEDN}
       DomainStorm_LdapOptions__ManagerPassword: ${LDAP_ADMIN_PASSWORD}   
     ports:
-       - "5050:5050"
+      - "5050:5050"
       #- "5051:5051"
     depends_on:
       #- domainstorm.project.twc.web
@@ -682,16 +684,18 @@ services:
     image: ${DOCKER_REGISTRY-}yanshibainu/twcweb:${TwcWeb_Version}
     container_name: twcweb
     hostname: twcweb
-    ports:
-       - "9002:80"
-       - "9003:443"
+    # ports:
+    #   - "9002:80"
+    #   - "9003:443"
     environment:
       <<: [*common-env, *gateway-env]
       ASPNETCORE_URLS: https://+:443;http://+:80
       DomainStorm_ENVIRONMENT: Staging
       DomainStorm_SignalRHubUrl: ${SignalR_EndPoint}
       DomainStorm_SqlDbOptions__ConnectionString: Server=${SQL_Server_EndPoint};Database=TWCWeb;User Id=${SQL_Server_User_Id};Password=${SQL_Server_Password};
-      Serilog__MinimumLevel__Default: Debug  
+      Serilog__MinimumLevel__Default: Debug
+      DomainStorm_TwcReportPathBase: ${Api_Gateway_EndPoint}/twcreport
+      DomainStorm_QuestionnaireEnable: ${QuestionnaireEnable}
     depends_on:
       domainstorm.jwtauthapi.openidprovider:
         condition: service_healthy
@@ -710,6 +714,9 @@ services:
       - type: volume
         source: twcweb-volume-data
         target: /app/.twc/
+      - type: volume
+        source: twcweb-keys-volume-data
+        target: /app/keys/        
       - ./ssl:/https:ro         
     restart: on-failure
     healthcheck:       
@@ -752,9 +759,9 @@ services:
       DomainStorm_MongoDbOptions__ConnectionString: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017
       DomainStorm_MongoDbOptions__DatabaseName: Resource
       DomainStorm_SqlDbOptions__ConnectionString: Server=${SQL_Server_EndPoint};Database=ResourceEventDb;User Id=${SQL_Server_User_Id};Password=${SQL_Server_Password};    
-    ports:
-       - "5501:80"
-       #- "5601:443"
+    # ports:
+    #   - "5501:80"
+      #- "5601:443"
     depends_on:
       domainstorm.jwtauthapi.openidprovider:
         condition: service_healthy       
@@ -844,6 +851,62 @@ services:
     restart: on-failure     
     network_mode: "service:domainstorm.servicebus"
 
+  domainstorm.project.twc.report:
+    image: ${DOCKER_REGISTRY-}yanshibainu/twcreport:${TwcReport_Version}
+    container_name: twcreport
+    build:
+      context: .
+      dockerfile: DomainStorm.Project.TWC.Report/DomainStorm.Project.TWC.Report.Web/Dockerfile
+    volumes:
+      - input-files-volume-data:/input
+      - output-files-volume-data:/output
+      - type: volume
+        source: twcweb-keys-volume-data
+        target: /app/keys/
+    environment:
+      <<: [*common-env, *gateway-env]
+      ASPNETCORE_URLS: http://+:80
+      DomainStorm_ENVIRONMENT: Staging
+      DomainStorm_SqlDbOptions__ConnectionString: Server=${SQL_Server_EndPoint};Database=TWCWeb;User Id=${SQL_Server_User_Id};Password=${SQL_Server_Password};
+    depends_on: 
+      sqlserver:
+        condition: service_healthy
+      redis:
+          condition: service_healthy
+      placement:
+          condition: service_started
+      kafka:
+          condition: service_healthy        
+      domainstorm.jwtauthapi.openidprovider:
+        condition: service_healthy
+    healthcheck:       
+      test: curl -f http://localhost:80/healthz || exit
+      interval: 10s
+      timeout: 10s
+      retries: 50
+    networks:
+      - backend
+
+  domainstorm.project.twc.report-dapr:
+    image: "daprio/daprd:1.8.7-mariner"
+    environment:
+      <<: *common-env    
+    command: ["./daprd",
+        "-app-id", "ReportApi",
+        "-app-port", "80",
+        "-log-level", "debug",
+        "-placement-host-address", "placement:50006",
+        "-config", "/.dapr/config.yaml",
+        "-components-path", "/.dapr/components",
+        "-dapr-http-max-request-size", "200",
+        "-dapr-http-read-buffer-size", "100"]
+    volumes:
+      - "./.dapr/config.yaml:/.dapr/config.yaml"
+      - "./.dapr/components/:/.dapr/components"
+    depends_on:
+      - domainstorm.project.twc.report
+    network_mode: "service:domainstorm.project.twc.report"    
+
 volumes:
   db-data-kong-postgres:
   minio-volume-data:
@@ -851,6 +914,7 @@ volumes:
   mongo-volume-data:
   redis-volume-data:
   twcweb-volume-data:
+  twcweb-keys-volume-data:
   seq-logs:
   ldap-volume-data:
   ldap-volume-slapd:
@@ -858,6 +922,8 @@ volumes:
   kafka:
   zookeeper-data:
   zookeeper-conf:
+  input-files-volume-data:
+  output-files-volume-data:
   # elasticsearch-volume-data:
 
 networks:

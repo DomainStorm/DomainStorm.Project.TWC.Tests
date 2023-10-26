@@ -29,10 +29,7 @@ namespace DomainStorm.Project.TWC.Tests
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
-            foreach (ChromeDriver driver in _chromeDriverList)
-            {
-                driver.Quit();
-            }
+            TestHelper.CloseChromeDrivers();
         }
 
         [Test]
@@ -198,10 +195,13 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[0]);
             driver.SwitchTo().Frame(0);
 
-            var 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            var 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
+
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            wait.Until(ExpectedConditions.ElementToBeClickable(受理));
+            //先加入延遲1秒，不然會還沒scroll完就click
+            Thread.Sleep(1000);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
+            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
             driver.SwitchTo().Window(driver.WindowHandles[1]);
             driver.SwitchTo().Frame(0);
@@ -405,10 +405,13 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[0]);
             driver.SwitchTo().Frame(0);
 
-            var 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            var 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
+
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            wait.Until(ExpectedConditions.ElementToBeClickable(受理));
+            //先加入延遲1秒，不然會還沒scroll完就click
+            Thread.Sleep(1000);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
+            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
             driver.SwitchTo().DefaultContent();
 
@@ -611,12 +614,13 @@ namespace DomainStorm.Project.TWC.Tests
             stiNote.SendKeys("備註內容");
             stiNote.SendKeys(Keys.Tab);
 
-            var 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            var 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
 
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            wait.Until(ExpectedConditions.ElementToBeClickable(受理));
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].dispatchEvent(new Event('click'));", 受理);
+            //先加入延遲1秒，不然會還沒scroll完就click
+            Thread.Sleep(1000);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
+            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
             driver.SwitchTo().DefaultContent();
 
@@ -629,9 +633,9 @@ namespace DomainStorm.Project.TWC.Tests
             Actions actions = new(driver);
             actions.MoveToElement(夾帶附件).Click().Perform();
 
-            var buttonAddDocument = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", buttonAddDocument);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", buttonAddDocument);
+            var 新增文件 = driver.FindElement(By.CssSelector("button.btn.bg-gradient-primary"));
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 新增文件);
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 新增文件);
             Thread.Sleep(500);
 
             IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));

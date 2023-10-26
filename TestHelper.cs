@@ -15,6 +15,8 @@ namespace DomainStorm.Project.TWC.Tests;
 
 public class TestHelper
 {
+    private WebDriverWait _wait = null!;
+    private static List<ChromeDriver> _chromeDriverList = new List<ChromeDriver>();
     public static ChromeDriver GetNewChromeDriver()
     {
         var option = new ChromeOptions();
@@ -25,7 +27,9 @@ public class TestHelper
         option.AddArgument("--ignore-urlfetcher-cert-requests");
         option.AddArgument("--disable-web-security");
         option.AddArgument("--ignore-certificate-errors");
-        //option.AddArguments("--no-sandbox");
+
+        string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
+        option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
 
         if (GetChromeConfig().Headless)
             option.AddArgument("--headless");
@@ -36,12 +40,20 @@ public class TestHelper
         new DriverManager().SetUpDriver(new WebDriverManager.DriverConfigs.Impl.ChromeConfig());
         var driver = new ChromeDriver(option);
 
-        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+        _chromeDriverList.Add(driver);
+
+        //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
         driver.Manage().Timeouts().PageLoad = TimeSpan.FromSeconds(10);
 
         return driver;
     }
-
+    public static void CloseChromeDrivers()
+    {
+        foreach (var driver in _chromeDriverList)
+        {
+            driver.Quit();
+        }
+    }
     private static TestConfig GetTestConfig()
     {
         return new ConfigurationBuilder()
@@ -59,15 +71,6 @@ public class TestHelper
         {
             _baseUrl ??= GetTestConfig().BaseUrl;
             return _baseUrl;
-        }
-    }
-    private static string? _IpUrl;
-    public static string? IpUrl
-    {
-        get
-        {
-            _IpUrl ??= GetTestConfig().IpUrl;
-            return _IpUrl;
         }
     }
 
@@ -98,15 +101,7 @@ public class TestHelper
             return _applyCaseNo;
         }
     }
-    //private static string? _userId;
-    //public static string? UserId
-    //{
-    //    get
-    //    {
-    //        _userId ??= GetTestConfig().UserId;
-    //        return _userId;
-    //    }
-    //}
+
     private static string? _password;
     public static string? Password
     {
@@ -172,8 +167,6 @@ public class TestHelper
 
         _applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
         update.ApplyCaseNo = _applyCaseNo;
-
-        //update.userCode = UserId;
 
         var updatedJson = JsonConvert.SerializeObject(update);
         Console.WriteLine(updatedJson);
@@ -241,7 +234,6 @@ public class TestHelper
             return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
         });
 
-
         var action = new Actions(webDriver);
         action.MoveToElement(element).Click().Perform();
     }
@@ -257,10 +249,67 @@ public class TestHelper
 
         return id;
     }
+    public static string OpenNewWindowAndNavigateToUrlWithLastSegment(ChromeDriver driver)
+    {
+        string initialUrl = driver.Url;
+
+        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        wait.Until(d => d.Url != initialUrl);
+
+        string[] segments = driver.Url.Split('/');
+        string id = segments[^1];
+
+        ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
+        driver.SwitchTo().Window(driver.WindowHandles[1]);
+        driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+
+        return id;
+    }
+    public static void PrepareToDownload(string _downloadDirectory, string filePath)
+    {
+        if (!Directory.Exists(_downloadDirectory))
+        {
+            Directory.CreateDirectory(_downloadDirectory);
+        }
+
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+    }
+
+    public static void WaitDownloadCompleted(IWebDriver driver, string downloadDirectory, string filePath)
+    {
+        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+        _wait.Until(_ =>
+        {
+            Console.WriteLine($"-----{downloadDirectory} GetFiles-----");
+
+            foreach (var fn in Directory.GetFiles(downloadDirectory))
+            {
+                Console.WriteLine($"-----filename: {fn}-----");
+            }
+
+            Console.WriteLine($"-----{downloadDirectory} GetFiles end-----");
+
+            if (File.Exists(filePath))
+            {
+                Console.WriteLine($"-----檔案存在: {filePath}-----");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"-----檔案不存在: {filePath}-----");
+                return false;
+            }
+        });
+    }
 
     public static void CleanDb()
     {
-        var client = new RestClient();
+        if (GetChromeConfig().CleanDbable)
+        { 
+            var client = new RestClient();
         var request = new RestRequest("http://localhost:9200/dublincore", Method.Delete);
         client.Execute(request);
 
@@ -281,13 +330,29 @@ public class TestHelper
         cn.Query("delete Questionnaire");
         cn.Query("delete QuestionnaireForm");
         cn.Query("delete QuestionnaireFormAnswer");
+        }
+    }
+    
+    public static IWebElement? WaitUploadCompleted(IWebDriver _driver)
+    {
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        return _wait.Until(_ =>
+        {
+            var e = _wait.Until(_ =>
+            {
+                var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
+                var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                return stormTable.GetShadowRoot().FindElement(By.CssSelector(
+                    "div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+            });
+            return !string.IsNullOrEmpty(e.Text) ? e : null;
+        });
     }
 
     public static IWebElement FindAndMoveElement(IWebDriver webDriver, string css)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
         var action = new Actions(webDriver);
-
         var element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
 
         action.MoveToElement(element).Perform();
@@ -319,15 +384,14 @@ public class WaterForm
 public class TestConfig
 {
     public string? BaseUrl { get; set; }
-    public string? IpUrl { get; set; }
     public string? TokenUrl { get; set; }
     public string? LoginUrl { get; set; }
     public string? AccessToken { get; set; }
     public string? ApplyCaseNo { get; set; }
     public string? Password { get; set; }
-    //public string? UserId { get; set; }
 }
 public class ChromeConfig
 {
     public bool Headless { get; set; }
+    public bool CleanDbable { get; set; }
 }

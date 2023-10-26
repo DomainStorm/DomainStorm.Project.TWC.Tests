@@ -51,10 +51,11 @@ namespace DomainStorm.Project.TWC.Tests
         [TearDown] // 在每個測試方法之後執行的方法
         public void TearDown()
         {
-            foreach (ChromeDriver driver in _chromeDriverList)
-            {
-                driver.Quit();
-            }
+            //foreach (ChromeDriver driver in _chromeDriverList)
+            //{
+            //    driver.Quit();
+            //}
+            TestHelper.CloseChromeDrivers();
         }
 
         [Test]
@@ -85,11 +86,13 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            string id = TestHelper.GetLastSegmentFromUrl(driver);
+            string id = TestHelper.OpenNewWindowAndNavigateToUrlWithLastSegment(driver);
 
-            ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+            //string id = TestHelper.GetLastSegmentFromUrl(driver);
+
+            //((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
+            //driver.SwitchTo().Window(driver.WindowHandles[1]);
+            //driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -109,7 +112,6 @@ namespace DomainStorm.Project.TWC.Tests
             That(申請日期, Is.EqualTo("2023年03月06日"));
         }
 
-
         [Test]
         [Order(3)]
         public async Task TwcA100_04() // driver_2中看到身分證字號欄位出現A123456789
@@ -120,11 +122,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            string id = TestHelper.GetLastSegmentFromUrl(driver);
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+            string id = TestHelper.OpenNewWindowAndNavigateToUrlWithLastSegment(driver);
 
             driver.SwitchTo().Window(driver.WindowHandles[0]);
 
@@ -167,11 +165,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            string id = TestHelper.GetLastSegmentFromUrl(driver);
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+            string id = TestHelper.OpenNewWindowAndNavigateToUrlWithLastSegment(driver);
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
             wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -179,10 +173,18 @@ namespace DomainStorm.Project.TWC.Tests
             driver.SwitchTo().Window(driver.WindowHandles[0]);
             driver.SwitchTo().Frame(0);
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
+            //IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
+            //((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
+            //wait.Until(ExpectedConditions.ElementToBeClickable(受理));
+            //((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
+
+            IWebElement 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
+
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            wait.Until(ExpectedConditions.ElementToBeClickable(受理));
+            //先加入延遲1秒，不然會還沒scroll完就click
+            Thread.Sleep(1000);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
+            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
             driver.SwitchTo().DefaultContent();
 
@@ -195,18 +197,18 @@ namespace DomainStorm.Project.TWC.Tests
 
             受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            wait.Until(driver =>
-            {
-                try
-                {
-                    IReadOnlyList<IWebElement> signElement = driver.FindElements(By.CssSelector("[class='sign']"));
-                    return true;
-                }
-                catch (StaleElementReferenceException)
-                {
-                    return false;
-                }
-            });
+            //wait.Until(driver =>
+            //{
+            //    try
+            //    {
+            //        IReadOnlyList<IWebElement> signElement = driver.FindElements(By.CssSelector("[class='sign']"));
+            //        return true;
+            //    }
+            //    catch (StaleElementReferenceException)
+            //    {
+            //        return false;
+            //    }
+            //});
 
             IReadOnlyList<IWebElement> signElement = driver.FindElements(By.CssSelector("[class='sign']"));
             That(signElement, Is.Not.Empty, "未受理");
@@ -222,13 +224,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            string id = TestHelper.GetLastSegmentFromUrl(driver);
-
-            Actions actions = new(driver);
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+            string id = TestHelper.OpenNewWindowAndNavigateToUrlWithLastSegment(driver);
 
             driver.SwitchTo().Window(driver.WindowHandles[0]);
 
@@ -241,6 +237,7 @@ namespace DomainStorm.Project.TWC.Tests
             IWebElement firstStormTreeNode = secondStormTreeNode.FindElement(By.CssSelector("storm-tree-node"));
             IWebElement 消費性用水服務契約 = firstStormTreeNode.FindElement(By.CssSelector("a[href='#contract_1']"));
 
+            Actions actions = new(driver);
             actions.MoveToElement(消費性用水服務契約).Click().Perform();
 
             消費性用水服務契約 = driver.FindElement(By.Id("消費性用水服務契約"));
@@ -275,13 +272,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            string id = TestHelper.GetLastSegmentFromUrl(driver);
-
-            Actions actions = new(driver);
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+            string id = TestHelper.OpenNewWindowAndNavigateToUrlWithLastSegment(driver);
 
             driver.SwitchTo().Window(driver.WindowHandles[0]);
 
@@ -294,6 +285,7 @@ namespace DomainStorm.Project.TWC.Tests
             secondStormTreeNode = secondStormTreeNode.FindElement(By.CssSelector("storm-tree-node:nth-child(2)"));
             IWebElement 公司個人資料保護告知事項 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#contract_2']"));
 
+            Actions actions = new(driver);
             actions.MoveToElement(公司個人資料保護告知事項).Click().Perform();
 
             公司個人資料保護告知事項 = driver.FindElement(By.Id("公司個人資料保護告知事項"));
@@ -328,13 +320,9 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            string id = TestHelper.GetLastSegmentFromUrl(driver);
+            string id = TestHelper.OpenNewWindowAndNavigateToUrlWithLastSegment(driver);
 
             Actions actions = new(driver);
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
             driver.SwitchTo().Window(driver.WindowHandles[0]);
 
@@ -381,11 +369,7 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            string id = TestHelper.GetLastSegmentFromUrl(driver);
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+            string id = TestHelper.OpenNewWindowAndNavigateToUrlWithLastSegment(driver);
 
             driver.SwitchTo().Window(driver.WindowHandles[0]);
 
@@ -394,10 +378,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
+            var 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
+
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            wait.Until(ExpectedConditions.ElementToBeClickable(受理));
+            //先加入延遲1秒，不然會還沒scroll完就click
+            Thread.Sleep(1000);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
+            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
             driver.SwitchTo().DefaultContent();
 
@@ -453,13 +440,9 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            string id = TestHelper.GetLastSegmentFromUrl(driver);
+            string id = TestHelper.OpenNewWindowAndNavigateToUrlWithLastSegment(driver);
 
             Actions actions = new(driver);
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
             driver.SwitchTo().Window(driver.WindowHandles[0]);
 
@@ -499,13 +482,9 @@ namespace DomainStorm.Project.TWC.Tests
             driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
 
-            string id = TestHelper.GetLastSegmentFromUrl(driver);
+            string id = TestHelper.OpenNewWindowAndNavigateToUrlWithLastSegment(driver);
 
             WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-            driver.SwitchTo().Window(driver.WindowHandles[1]);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
             driver.SwitchTo().Window(driver.WindowHandles[0]);
 
@@ -588,10 +567,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             driver.SwitchTo().Frame(0);
 
-            IWebElement 受理 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("受理")));
+            var 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
+
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            wait.Until(ExpectedConditions.ElementToBeClickable(受理));
+            //先加入延遲1秒，不然會還沒scroll完就click
+            Thread.Sleep(1000);
             ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
+            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
             driver.SwitchTo().DefaultContent();
 

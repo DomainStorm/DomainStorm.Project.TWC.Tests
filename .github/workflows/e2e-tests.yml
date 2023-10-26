@@ -28,7 +28,6 @@ jobs:
 
       - name: Set environment variables
         run: |
-            #echo "TestConfig__ApplyCaseNo=12345678" >> $GITHUB_ENV
             echo "TestConfig__UserId=${{ secrets.TestConfig__UserId }}" >> $GITHUB_ENV
             echo "TestConfig__Password=${{ secrets.TestConfig__Password }}" >> $GITHUB_ENV              
             echo "TestConfig__BaseUrl=https://localhost:8443" >> $GITHUB_ENV
@@ -98,6 +97,4 @@ jobs:
       #    curl -L -i http://127.0.0.1:8000/jwtauthapi/swagger/index.html       
       - name: Test
         # run: dotnet test --no-build --verbosity normal
-        run: dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcC101Tests --no-build --verbosity normal
-
-          
+        run: dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcRA002Tests --no-build --verbosity normal
