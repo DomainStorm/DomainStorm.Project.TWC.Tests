@@ -22,7 +22,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
             _actions = new Actions(_driver);
         }
 
@@ -85,8 +85,8 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var 登出 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("a[href='./logout']")));
-            _actions.MoveToElement(登出).Click().Perform();
+            var logout = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("a[href='./logout']")));
+            _actions.MoveToElement(logout).Click().Perform();
 
             //tw491 建立表單
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
