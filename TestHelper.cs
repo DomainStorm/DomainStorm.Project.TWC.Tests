@@ -20,7 +20,7 @@ public class TestHelper
     public static ChromeDriver GetNewChromeDriver()
     {
         var option = new ChromeOptions();
-        option.AddArgument("start-maximized");
+        option.AddArgument("--start-maximized");
         option.AddArgument("--disable-gpu");
         option.AddArgument("--enable-javascript");
         option.AddArgument("--allow-running-insecure-content");

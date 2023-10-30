@@ -88,7 +88,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcQ100_04()
         {
-            var createButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("form.multisteps-form__form > div:nth-child(2) > div.multisteps-form__content > div[slot='1'] > div.row > div.col >div.text-end > button")));
+            var createButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("form.multisteps-form__form > div:nth-child(2) > div.multisteps-form__content > div[slot='1'] > div.row > div.col >div.text-end > button")));
             _actions.MoveToElement(createButton).Click().Perform();
 
             var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增題目']")));
