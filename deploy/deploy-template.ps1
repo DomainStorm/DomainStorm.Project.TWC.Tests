@@ -1,6 +1,6 @@
 ﻿Set-Location (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
-Import-Module -Name     ./power-shell/modules/Get-AuthHeader -Force
+Import-Module -Name ./power-shell/modules/Get-AuthHeader -Force
 Import-Module -Name ./power-shell/modules/Add-Template -Force
 
 Write-Host "----- Add-Template process start -----" -ForegroundColor Blue
