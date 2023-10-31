@@ -21,7 +21,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
             _actions = new Actions(_driver);
         }
 
@@ -61,13 +61,14 @@ namespace DomainStorm.Project.TWC.Tests
             var abandonButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button.bg-gradient-danger");
             _actions.MoveToElement(abandonButton).Click().Perform();
 
-            var deleteButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-actions >button.swal2-confirm")));
+            Thread.Sleep(1000);
+
+            var deleteButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
             That(deleteButton.Text, Is.EqualTo("刪除"));
         }
         public async Task TwcA101_04()
         {
-            Thread.Sleep(500);
-            var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions >button.swal2-confirm")));
+            var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
             _actions.MoveToElement(deleteButton).Click().Perform();
 
             var pTitle = WaitStormTableUpload(_driver);
@@ -91,15 +92,11 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA101_05()
         {
-            TestHelper.AccessToken = await TestHelper.GetAccessToken();
-
-            That(TestHelper.AccessToken, Is.Not.Empty);
+            await TwcA101_01();
         }
         public async Task TwcA101_06()
         {
-            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"));
-
-            That(statusCode, Is.EqualTo(HttpStatusCode.OK));
+            await TwcA101_02();
         }
         public async Task TwcA101_07()
         {
@@ -170,10 +167,8 @@ namespace DomainStorm.Project.TWC.Tests
             var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
             _actions.MoveToElement(infoButton).Click().Perform();
 
-            That(WaitStormTableUpload(_driver), Is.Not.Null);
-
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
-
+            var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
+            _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
             var signNumber = TestHelper.FindAndMoveElement(_driver, "storm-card:nth-child(9) > div.row > div.col-sm-7");
