@@ -20,13 +20,14 @@ public class TestHelper
     public static ChromeDriver GetNewChromeDriver()
     {
         var option = new ChromeOptions();
-        option.AddArgument("start-maximized");
+        option.AddArgument("--start-maximized");
         option.AddArgument("--disable-gpu");
         option.AddArgument("--enable-javascript");
         option.AddArgument("--allow-running-insecure-content");
         option.AddArgument("--ignore-urlfetcher-cert-requests");
         option.AddArgument("--disable-web-security");
         option.AddArgument("--ignore-certificate-errors");
+        //option.AddArgument("--window-size=1920,1080");
 
         string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
         option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
