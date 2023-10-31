@@ -91,11 +91,15 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA101_05()
         {
-            await TwcA101_01();
+            TestHelper.AccessToken = await TestHelper.GetAccessToken();
+
+            That(TestHelper.AccessToken, Is.Not.Empty);
         }
         public async Task TwcA101_06()
         {
-            await TwcA101_02();
+            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"));
+
+            That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
         public async Task TwcA101_07()
         {
