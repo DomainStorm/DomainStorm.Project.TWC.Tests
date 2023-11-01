@@ -66,9 +66,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA101_04()
         {
-            Thread.Sleep(1000);
             var deleteButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
-            _actions.MoveToElement(deleteButton).Click().Perform();
+            deleteButton.Click();
 
             var pTitle = WaitStormTableUpload(_driver);
             That(pTitle!.Text, Is.EqualTo("沒有找到符合的結果"));
