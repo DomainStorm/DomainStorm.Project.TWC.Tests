@@ -61,7 +61,7 @@ namespace DomainStorm.Project.TWC.Tests
             var abandonButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button.bg-gradient-danger");
             _actions.MoveToElement(abandonButton).Click().Perform();
 
-            var deleteButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
+            var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
             That(deleteButton.Text, Is.EqualTo("刪除"));
         }
         public async Task TwcA101_04()
@@ -201,10 +201,19 @@ namespace DomainStorm.Project.TWC.Tests
                 var e = _wait.Until(_ =>
                 {
                     var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-                    var innerP = stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
-                    return innerP;
+
+                    try
+                    {
+                        return stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+
+                    return null;
                 });
-                return !string.IsNullOrEmpty(e.Text) ? e : null;
+                return !string.IsNullOrEmpty(e?.Text) ? e : null;
             });
         }
         public static IWebElement? WaitStormEditTableUpload(IWebDriver _driver)
