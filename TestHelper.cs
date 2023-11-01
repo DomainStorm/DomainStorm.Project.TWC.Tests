@@ -218,10 +218,7 @@ public class TestHelper
         Console.WriteLine(webDriver.PageSource);
         Console.WriteLine("::endgroup::");
 
-        var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
-        var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
-        var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-
+        var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
         var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
         searchInput.SendKeys(applyCaseNo);
 
