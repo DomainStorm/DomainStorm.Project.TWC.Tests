@@ -66,40 +66,28 @@ namespace DomainStorm.Project.TWC.Tests
 
             var 受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            //先加入延遲1秒，不然會還沒scroll完就click
-            Thread.Sleep(1000);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 受理);
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
 
             var signElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
-            bool signElementExists = signElement !=null;
-
+            var signElementExists = signElement != null;
             That(signElementExists, Is.True, "未受理");
         }
         public async Task TwcC101_04() // 看到■用印或代送件只需夾帶附件已打勾
         {
             _driver.SwitchTo().DefaultContent();
 
-            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
-            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var fifthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(5)"));
-            var 受理登記 = fifthStormTreeNode.FindElement(By.CssSelector("a[href='#finished']"));
-            _actions.MoveToElement(受理登記).Click().Perform();
-
-            var 用印或代送件只需夾帶附件 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
-            _actions.MoveToElement(用印或代送件只需夾帶附件).Click().Perform();
-
-            That(用印或代送件只需夾帶附件.GetAttribute("checked"), Is.EqualTo("true"));
+            var checkButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
+            _actions.MoveToElement(checkButton).Click().Perform();
+            That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcC101_05() // 系統跳出【尚未夾帶附件】訊息
         {
-            var 確認受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
-            _actions.MoveToElement(確認受理).Click().Perform();
+            var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+            _actions.MoveToElement(infoButton).Click().Perform();
 
-            var hintElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-html-container > div.mx-6 > h5")));
-            string 提示訊息 = hintElement.Text;
-
-            That(提示訊息, Is.EqualTo("【夾帶附件】或【掃描拍照】未上傳"));
+            var hintTitle = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-html-container > div.mx-6 > h5")));
+            That(hintTitle.Text, Is.EqualTo("【夾帶附件】或【掃描拍照】未上傳"));
         }
         [Test]
         [Order(1)]

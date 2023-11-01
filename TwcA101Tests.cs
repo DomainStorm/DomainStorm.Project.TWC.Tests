@@ -61,7 +61,7 @@ namespace DomainStorm.Project.TWC.Tests
             var abandonButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button.bg-gradient-danger");
             _actions.MoveToElement(abandonButton).Click().Perform();
 
-            var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
+            var deleteButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
             That(deleteButton.Text, Is.EqualTo("刪除"));
         }
         public async Task TwcA101_04()
@@ -155,7 +155,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             var signElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
             var signElementExists = signElement != null;
-
             That(signElementExists, Is.True, "未受理");
         }
         public async Task TwcA101_13()
