@@ -70,7 +70,7 @@ namespace DomainStorm.Project.TWC.Tests
             deleteButton.Click();
 
             var pTitle = WaitStormTableUpload(_driver);
-            That(pTitle!.Text, Is.EqualTo("沒有找到符合的結果"));
+            That(pTitle!.Text, Is.EqualTo("沒有找到符合的結果")); 
         }
 
         [Test]
