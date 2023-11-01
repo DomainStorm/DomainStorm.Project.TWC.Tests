@@ -66,7 +66,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA101_04()
         {
-            var deleteButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
+            var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
             deleteButton.Click();
 
             var pTitle = WaitStormTableUpload(_driver);
