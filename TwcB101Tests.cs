@@ -72,40 +72,23 @@ namespace DomainStorm.Project.TWC.Tests
             var addFileButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='file'] > div.float-end > button")));
             _actions.MoveToElement(addFileButton).Click().Perform();
 
-            var firstHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(3)")));
+            var lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(3)")));
             var firstFile = "twcweb_01_1_夾帶附件1.pdf";
             var firstFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", firstFile);
-            firstHiddenInput.SendKeys(firstFilePath);
+            lastHiddenInput.SendKeys(firstFilePath);
+
+            lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(3)")));
+            var secondFile = "twcweb_01_1_夾帶附件2.pdf";
+            var secondFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", secondFile);
+            lastHiddenInput.SendKeys(secondFilePath);
 
             var stormInputGroup = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
             var fileName = stormInputGroup.GetAttribute("value");
-            That(fileName, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(fileName, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf,twcweb_01_1_夾帶附件2.pdf"));
 
             var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
 
-            addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='file'] > div.float-end > button")));
-            _actions.MoveToElement(addFileButton).Click().Perform();
-
-            var secondHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(4)")));
-            var secondFile = "twcweb_01_1_夾帶附件2.pdf";
-            var secondFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", secondFile);
-            secondHiddenInput.SendKeys(secondFilePath);
-
-
-
-            //    hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
-
-            //    lastHiddenInput = hiddenInputs[^1];
-
-            //    string twcweb_01_1_夾帶附件2 = "twcweb_01_1_夾帶附件2.pdf";
-            //    string 附件2Path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件2);
-
-            //    lastHiddenInput.SendKeys(附件2Path);
-
-            //    var 上傳 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-            //    actions.MoveToElement(上傳).Perform();
-            //    上傳.Click();
 
             //    var stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
             //    var stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
