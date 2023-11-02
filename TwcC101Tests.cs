@@ -98,8 +98,13 @@ namespace DomainStorm.Project.TWC.Tests
             closeButton.Click();
 
             _driver.SwitchTo().DefaultContent();
-            
-            var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='credential'] > form > div > div > button.btn-primary")));
+
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var credentialButton = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("a[href='#credential']"));
+            _actions.MoveToElement(credentialButton).Click().Perform();
+
+            var scanButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='credential'] > form > div > div > button.btn-primary");
             _actions.MoveToElement(scanButton).Click().Perform();
 
             var checkImage = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img")));
