@@ -148,7 +148,7 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcC101_10();
             await TwcC101_11();
         }
-        public async Task TwcC101_09() // 查詢出來該件，列在下方
+        public async Task TwcC101_09()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
@@ -178,7 +178,7 @@ namespace DomainStorm.Project.TWC.Tests
                 return !string.IsNullOrEmpty(e.GetAttribute("textContent")) ? e : null;
             });
         }
-        public async Task TwcC101_10() // 確認掃描拍照區塊有掃描拍照證件圖像
+        public async Task TwcC101_10()
         {
             var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
             var applyCaseNo = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo'] > storm-table-cell > span"));
@@ -187,7 +187,7 @@ namespace DomainStorm.Project.TWC.Tests
             var imgElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(6) > img")));
             That(imgElement, Is.Not.Null);
         }
-        public async Task TwcC101_11() // PDF檔產製成功自動下載於下載區
+        public async Task TwcC101_11()
         {
             if (!Directory.Exists(_downloadDirectory))
             {
