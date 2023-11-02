@@ -11,83 +11,61 @@ namespace DomainStorm.Project.TWC.Tests
 {
     public class TwcB101Tests
     {
-        private List<ChromeDriver> _chromeDriverList;
+        private IWebDriver _driver = null!;
+        private WebDriverWait _wait = null!;
+        private Actions _actions = null!;
+        private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         public TwcB101Tests()
         {
             TestHelper.CleanDb();
         }
 
-        [SetUp] // 在每個測試方法之前執行的方法
-        public Task Setup()
+        [SetUp]
+        public void Setup()
         {
-            _chromeDriverList = new List<ChromeDriver>();
-
-            return Task.CompletedTask;
+            _driver = TestHelper.GetNewChromeDriver();
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+            _actions = new Actions(_driver);
         }
-        
-        [TearDown] // 在每個測試方法之後執行的方法
+
+        [TearDown]
         public void TearDown()
         {
-            TestHelper.CloseChromeDrivers();
+            _driver.Quit();
         }
 
         [Test]
         [Order(0)]
-        public async Task TwcB101_01() // 取得token
+        public async Task TwcB101_01To08()
+        {
+            await TwcB101_01();
+            await TwcB101_02();
+        }
+        public async Task TwcB101_01()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
 
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
-
-        [Test]
-        [Order(1)]
-        public async Task TwcB101_02() // 呼叫bmRecoverApply/confirm
+        public async Task TwcB101_02()
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmRecoverApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-B101_bmRecoverApply.json"));
 
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
-        [Test]
-        [Order(2)]
-        public async Task TwcB101_03() // 看到申請之表單內容跳至夾帶附件區塊
+        public async Task TwcB101_03()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
-
-            var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
-            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
-            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
-
-            Actions actions = new(driver);
-            actions.MoveToElement(夾帶附件).Click().Perform();
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            var stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
-            var stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
+            var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
             var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-
-            var findElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td > p.h3"));
-            var element = findElement.SingleOrDefault(e => e.Text == "沒有找到符合的結果");
-            if (element != null)
-            {
-                string filename = element.Text;
-
-                That(filename, Is.EqualTo("沒有找到符合的結果"));
-            }
+            var pTitle = stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
+            That(pTitle.Text, Is.EqualTo("沒有找到符合的結果"));
         }
-
-        [Test]
-        [Order(3)]
-        public async Task TwcB101_04() // 看到夾帶附件先新增第一筆附件後新增第二筆附件；再刪除第一筆後最後顯示第二筆
+        public async Task TwcB101_04()
         {
             ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
