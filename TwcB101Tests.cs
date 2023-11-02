@@ -40,6 +40,8 @@ namespace DomainStorm.Project.TWC.Tests
         {
             await TwcB101_01();
             await TwcB101_02();
+            await TwcB101_03();
+            await TwcB101_04();
         }
         public async Task TwcB101_01()
         {
@@ -70,61 +72,74 @@ namespace DomainStorm.Project.TWC.Tests
             var addFileButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='file'] > div.float-end > button")));
             _actions.MoveToElement(addFileButton).Click().Perform();
 
-            var lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(3)")));
-            var twcweb_01_1_夾帶附件1 = "twcweb_01_1_夾帶附件1.pdf";
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件1);
-            lastHiddenInput.SendKeys(filePath);
+            var firstHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(3)")));
+            var firstFile = "twcweb_01_1_夾帶附件1.pdf";
+            var firstFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", firstFile);
+            firstHiddenInput.SendKeys(firstFilePath);
 
             var stormInputGroup = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
             var fileName = stormInputGroup.GetAttribute("value");
             That(fileName, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
-        //    hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
+            var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
+            _actions.MoveToElement(uploadButton).Click().Perform();
 
-        //    lastHiddenInput = hiddenInputs[^1];
+            addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='file'] > div.float-end > button")));
+            _actions.MoveToElement(addFileButton).Click().Perform();
 
-        //    string twcweb_01_1_夾帶附件2 = "twcweb_01_1_夾帶附件2.pdf";
-        //    string 附件2Path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件2);
+            var secondHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(4)")));
+            var secondFile = "twcweb_01_1_夾帶附件2.pdf";
+            var secondFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", secondFile);
+            secondHiddenInput.SendKeys(secondFilePath);
 
-        //    lastHiddenInput.SendKeys(附件2Path);
 
-        //    var 上傳 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-        //    actions.MoveToElement(上傳).Perform();
-        //    上傳.Click();
 
-        //    var stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
-        //    var stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
-        //    var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            //    hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
 
-        //    var element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
-        //    var spanElement = element.FindElement(By.CssSelector("span"));
-        //    wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
+            //    lastHiddenInput = hiddenInputs[^1];
 
-        //    var thirdTd = stormTable.GetShadowRoot().FindElement(By.CssSelector("table tbody td:nth-child(3)"));
-        //    var stormTableToolbar = thirdTd.FindElement(By.CssSelector("storm-table-toolbar"));
-        //    var stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
-        //    var 刪除 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
-  
-        //    actions.MoveToElement(刪除).Click().Perform();
+            //    string twcweb_01_1_夾帶附件2 = "twcweb_01_1_夾帶附件2.pdf";
+            //    string 附件2Path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件2);
 
-        //    var 確認刪除 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.swal2-confirm.swal2-styled.swal2-default-outline")));
-        //    確認刪除.Click();
+            //    lastHiddenInput.SendKeys(附件2Path);
 
-        //    wait.Until(driver =>
-        //    {
-        //        var stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
-        //        var stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
-        //        var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-        //        var tbody = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody"));
-        //        var trElements = tbody.FindElements(By.CssSelector("tr"));
-        //        return trElements.Count == 1;
-        //    });
+            //    var 上傳 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
+            //    actions.MoveToElement(上傳).Perform();
+            //    上傳.Click();
 
-        //    element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
-        //    spanElement = element.FindElement(By.CssSelector("span"));
-        //    string 文件名稱 = spanElement.Text;
+            //    var stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
+            //    var stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
+            //    var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
 
-        //    That(文件名稱, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
+            //    var element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
+            //    var spanElement = element.FindElement(By.CssSelector("span"));
+            //    wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
+
+            //    var thirdTd = stormTable.GetShadowRoot().FindElement(By.CssSelector("table tbody td:nth-child(3)"));
+            //    var stormTableToolbar = thirdTd.FindElement(By.CssSelector("storm-table-toolbar"));
+            //    var stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
+            //    var 刪除 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
+
+            //    actions.MoveToElement(刪除).Click().Perform();
+
+            //    var 確認刪除 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.swal2-confirm.swal2-styled.swal2-default-outline")));
+            //    確認刪除.Click();
+
+            //    wait.Until(driver =>
+            //    {
+            //        var stormCardSeventh = stormVerticalNavigation.FindElements(By.CssSelector("storm-card"))[6];
+            //        var stormEditTable = stormCardSeventh.FindElement(By.CssSelector("storm-edit-table"));
+            //        var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            //        var tbody = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody"));
+            //        var trElements = tbody.FindElements(By.CssSelector("tr"));
+            //        return trElements.Count == 1;
+            //    });
+
+            //    element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
+            //    spanElement = element.FindElement(By.CssSelector("span"));
+            //    string 文件名稱 = spanElement.Text;
+
+            //    That(文件名稱, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
         }
 
         [Test]
