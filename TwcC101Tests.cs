@@ -98,12 +98,13 @@ namespace DomainStorm.Project.TWC.Tests
             closeButton.Click();
 
             _driver.SwitchTo().DefaultContent();
+            //Thread.Sleep(1000);
 
             var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='credential'] > form > div > div > button.btn-primary")));
             _actions.MoveToElement(scanButton).Click().Perform();
 
-            var checkImage = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img")));
-            That(checkImage.GetAttribute("src"), Is.Not.Null);
+            var checkImage = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img[alt='證件_005.tiff']")));
+            That(checkImage, Is.Not.Null, "元素不存在");
         }
         public async Task TwcC101_07()
         {
