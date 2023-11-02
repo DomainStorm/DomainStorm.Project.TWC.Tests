@@ -106,6 +106,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var scanButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='credential'] > form > div > div > button.btn-primary");
             _actions.MoveToElement(scanButton).Click().Perform();
+            Thread.Sleep(1000);
 
             var checkImage = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img")));
             That(checkImage.GetAttribute("src"), Is.Not.Null);
