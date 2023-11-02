@@ -44,31 +44,25 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcD101_01()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
-
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
         public async Task TwcD101_02()
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmAolishedApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-D101_bmAolishedApply.json"));
-
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
         public async Task TwcD101_03()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
 
-            driver.SwitchTo().Frame(0);
+            var 中結 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            var 中結 = driver.FindElement(By.Id("中結"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 中結);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 中結);
 
             That(中結.GetAttribute("checked"), Is.EqualTo("true"));
         }
