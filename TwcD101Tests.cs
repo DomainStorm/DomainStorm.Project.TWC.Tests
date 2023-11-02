@@ -11,48 +11,49 @@ namespace DomainStorm.Project.TWC.Tests
 {
     public class TwcD101Tests
     {
+        private IWebDriver _driver = null!;
+        private WebDriverWait _wait = null!;
+        private Actions _actions = null!;
         private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-        private List<ChromeDriver> _chromeDriverList;
-        public TwcD101Tests()
+        public TwcC101Tests()
         {
             TestHelper.CleanDb();
         }
 
-        [SetUp] // 在每個測試方法之前執行的方法
-        public Task Setup()
+        [SetUp]
+        public void Setup()
         {
-            _chromeDriverList = new List<ChromeDriver>();
-
-            return Task.CompletedTask;
+            _driver = TestHelper.GetNewChromeDriver();
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+            _actions = new Actions(_driver);
         }
 
-        [TearDown] // 在每個測試方法之後執行的方法
+        [TearDown]
         public void TearDown()
         {
-            TestHelper.CloseChromeDrivers();
+            _driver.Quit();
         }
 
         [Test]
         [Order(0)]
-        public async Task TwcD101_01() // 取得token
+        public async Task TwcD101_01To08()
+        {
+            await TwcD101_01();
+            await TwcD101_02();
+        }
+        public async Task TwcD101_01()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
 
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
-
-        [Test]
-        [Order(1)]
-        public async Task TwcD101_02() // 呼叫bmAolishedApply/confirm
+        public async Task TwcD101_02()
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmAolishedApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-D101_bmAolishedApply.json"));
 
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
-
-        [Test]
-        [Order(2)]
-        public async Task TwcD101_03() // 看到表單內容並於表單受理欄位中看到有■中結
+        public async Task TwcD101_03()
         {
             ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
