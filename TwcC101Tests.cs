@@ -94,11 +94,12 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcC101_06()
         {
-            var closeButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
-            closeButton.Click();
+            Thread.Sleep(1000);
+            var closeButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
+            _actions.MoveToElement(closeButton).Click().Perform();
+            Thread.Sleep(1000);
 
             _driver.SwitchTo().DefaultContent();
-            //Thread.Sleep(1000);
 
             var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='credential'] > form > div > div > button.btn-primary")));
             _actions.MoveToElement(scanButton).Click().Perform();
