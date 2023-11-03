@@ -27,7 +27,7 @@ public class TestHelper
         option.AddArgument("--ignore-urlfetcher-cert-requests");
         option.AddArgument("--disable-web-security");
         option.AddArgument("--ignore-certificate-errors");
-        option.AddArgument("--window-size=1920,1080");
+        //option.AddArgument("--window-size=1920,1080");
 
         string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
         option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
@@ -333,15 +333,22 @@ public class TestHelper
     
     public static IWebElement? WaitUploadCompleted(IWebDriver _driver)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>
             {
                 var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
                 var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-                return stormTable.GetShadowRoot().FindElement(By.CssSelector(
-                    "div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+                try
+                {
+                    return stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+                }
+                catch 
+                {
+                    // ignored
+                }
+                return null;
             });
             return !string.IsNullOrEmpty(e.Text) ? e : null;
         });

@@ -21,7 +21,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _actions = new Actions(_driver);
         }
 
@@ -148,12 +148,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#受理")));
-            acceptSign.Click();
-            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            //_wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
-            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 受理);
-            //var signElementExists = chceckSign != null;
+            var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='受理']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
+
             var chceckSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
             That(chceckSign !=null, "未受理");
         }
