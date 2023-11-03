@@ -69,7 +69,7 @@ namespace DomainStorm.Project.TWC.Tests
             var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
             deleteButton.Click();
 
-            var pTitle = WaitStormTableUpload(_driver);
+            var pTitle = TestHelper.WaitStormTableUpload(_driver);
             That(pTitle!.Text, Is.EqualTo("沒有找到符合的結果")); 
         }
 
@@ -102,9 +102,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var pTitle = stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
+            var pTitle = TestHelper.WaitStormEditTableUpload(_driver, "td > p");
             That(pTitle.Text, Is.EqualTo("沒有找到符合的結果"));
         }
         public async Task TwcA101_08()
@@ -126,7 +124,12 @@ namespace DomainStorm.Project.TWC.Tests
             var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
 
-            That(TestHelper.WaitUploadCompleted(_driver), Is.Not.Null);
+            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span"), Is.Not.Null);
+            
+            var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var fileName = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-cell > span"));
+            That(fileName.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
         public async Task TwcA101_10()
         {
@@ -192,52 +195,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             var checkFileName = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] > div > a");
             That(checkFileName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
-        }
-        public static IWebElement? WaitStormTableUpload(IWebDriver _driver)
-        {
-            WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            return _wait.Until(_ =>
-            {
-                var e = _wait.Until(_ =>
-                {
-                    var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-
-                    try
-                    {
-                        return stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-
-                    return null;
-                });
-                return !string.IsNullOrEmpty(e?.Text) ? e : null;
-            });
-        }
-        public static IWebElement? WaitStormEditTableUpload(IWebDriver _driver)
-        {
-            WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            return _wait.Until(_ =>
-            {
-                var e = _wait.Until(_ =>
-                {
-                    var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
-                    var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-
-                    try
-                    {
-                        return stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
-                    }
-                    catch
-                    {
-                        // ignored
-                    }
-                    return null;
-                });
-                return !string.IsNullOrEmpty(e.Text) ? e : null;
-            });
         }
     }
 }
