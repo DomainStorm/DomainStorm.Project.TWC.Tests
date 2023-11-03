@@ -331,7 +331,7 @@ public class TestHelper
         }
     }
 
-    public static IWebElement? WaitStormTableUpload(IWebDriver _driver)
+    public static IWebElement? WaitStormTableUpload(IWebDriver _driver, string css)
     {
         WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         return _wait.Until(_ =>
@@ -341,7 +341,7 @@ public class TestHelper
                 var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
                 try
                 {
-                    return stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
+                    return stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
                 }
                 catch
                 {
