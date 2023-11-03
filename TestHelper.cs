@@ -338,11 +338,11 @@ public class TestHelper
         {
             var e = _wait.Until(_ =>
             {
-                var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
-                var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
                 try
                 {
-                    return stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+                    return stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-cell > span"));
                 }
                 catch 
                 {
