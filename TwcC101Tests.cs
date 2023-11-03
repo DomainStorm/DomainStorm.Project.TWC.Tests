@@ -128,6 +128,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
             _actions.MoveToElement(infoButton).Click().Perform();
+            That(infoButton.Displayed, Is.False, "該按鈕不可見");
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
