@@ -95,15 +95,21 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcC101_06()
         {
-            var confirmButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
-            _actions.MoveToElement(confirmButton).Click().Perform();
+            while (true)
+            {
+                try
+                {
+                    WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
+                    var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
+                    _actions.MoveToElement(confirmButton).Click().Perform();
+                }
+                catch
+                {
+                    break;
+                }
+            }
 
             _driver.SwitchTo().DefaultContent();
-
-            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
-            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var credentialButton = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4) > div.list-group > storm-tree-node > a[href='#credential']"));
-            _actions.MoveToElement(credentialButton).Click().Perform();
 
             var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='credential'] > form > div > div > button.btn-primary")));
             _actions.MoveToElement(scanButton).Click().Perform();
