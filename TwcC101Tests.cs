@@ -1,7 +1,9 @@
-﻿using OpenQA.Selenium;
+﻿using NSubstitute.Core;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
+using System;
 using System.Net;
 using static NUnit.Framework.Assert;
 
@@ -67,14 +69,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var 受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#受理")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 受理);
+            var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='受理']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
 
-            var signElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
-            var signElementExists = signElement != null;
-            That(signElementExists, Is.True, "未受理");
+            var chceckSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
+            That(chceckSign != null, "未受理");
         }
         public async Task TwcC101_04()
         {
@@ -94,12 +95,15 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcC101_06()
         {
-            Thread.Sleep(1000);
-            var closeButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
-            _actions.MoveToElement(closeButton).Click().Perform();
-            Thread.Sleep(1000);
+            var confirmButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
+            _actions.MoveToElement(confirmButton).Click().Perform();
 
             _driver.SwitchTo().DefaultContent();
+
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var credentialButton = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4) > div.list-group > storm-tree-node > a[href='#credential']"));
+            _actions.MoveToElement(credentialButton).Click().Perform();
 
             var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='credential'] > form > div > div > button.btn-primary")));
             _actions.MoveToElement(scanButton).Click().Perform();
@@ -164,16 +168,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var 查詢 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(查詢).Click().Perform();
-
-            _wait.Until(_ =>
-            {
-                var e = _wait.Until(_ =>
-                {
-                    var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-                    return stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo'] > storm-table-cell > span"));
-                });
-                return !string.IsNullOrEmpty(e.GetAttribute("textContent")) ? e : null;
-            });
+            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell > span"), Is.Not.Null);
         }
         public async Task TwcC101_10()
         {
