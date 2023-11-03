@@ -130,7 +130,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcD101_08()
         {
             var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
-            _actions.MoveToElement(infoButton).Click().Perform();
+            infoButton.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
 
