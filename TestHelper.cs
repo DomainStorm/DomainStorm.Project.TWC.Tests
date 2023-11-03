@@ -330,18 +330,25 @@ public class TestHelper
         cn.Query("delete QuestionnaireFormAnswer");
         }
     }
-    
+
     public static IWebElement? WaitUploadCompleted(IWebDriver _driver)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>
             {
                 var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
                 var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-                return stormTable.GetShadowRoot().FindElement(By.CssSelector(
-                    "div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+                try
+                {
+                    return stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+                }
+                catch
+                {
+                    // ignored
+                }
+                return null;
             });
             return !string.IsNullOrEmpty(e.Text) ? e : null;
         });

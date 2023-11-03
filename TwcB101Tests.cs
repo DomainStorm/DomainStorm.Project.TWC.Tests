@@ -1,5 +1,4 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
@@ -87,7 +86,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
-            That(TestHelper.WaitUploadCompleted(_driver), Is.Not.Null);
+            That(WaitStormEditTableUpload(_driver), Is.Not.Null);
 
             addFileButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='file'] > div.float-end > button")));
             _actions.MoveToElement(addFileButton).Click().Perform();
@@ -99,7 +98,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
-            Thread.Sleep(1000);
+
+            That(WaitStormEditTableUpload(_driver), Is.Not.Null);
 
             var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
             var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
@@ -192,6 +192,29 @@ namespace DomainStorm.Project.TWC.Tests
         {
             var checkFileName = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] > div > a");
             That(checkFileName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
+        }
+        public static IWebElement? WaitStormEditTableUpload(IWebDriver _driver)
+        {
+            WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            return _wait.Until(_ =>
+            {
+                var e = _wait.Until(_ =>
+                {
+                    var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                    var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+
+                    try
+                    {
+                        return stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-cell > span"));
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                    return null;
+                });
+                return !string.IsNullOrEmpty(e.Text) ? e : null;
+            });
         }
     }
 }
