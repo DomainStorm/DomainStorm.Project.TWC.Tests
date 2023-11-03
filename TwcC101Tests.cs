@@ -126,7 +126,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcC101_07()
         {
-            var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+            var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
             _actions.MoveToElement(infoButton).Click().Perform();
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
