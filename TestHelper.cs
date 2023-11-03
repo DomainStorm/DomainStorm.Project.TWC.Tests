@@ -330,8 +330,31 @@ public class TestHelper
         cn.Query("delete QuestionnaireFormAnswer");
         }
     }
-    
-    public static IWebElement? WaitUploadCompleted(IWebDriver _driver)
+
+    public static IWebElement? WaitStormTableUpload(IWebDriver _driver)
+    {
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+        return _wait.Until(_ =>
+        {
+            var e = _wait.Until(_ =>
+            {
+                var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+
+                try
+                {
+                    return stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
+                }
+                catch
+                {
+                    // ignored
+                }
+
+                return null;
+            });
+            return !string.IsNullOrEmpty(e?.Text) ? e : null;
+        });
+    }
+    public static IWebElement? WaitStormEditTableUpload(IWebDriver _driver, string css)
     {
         WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         return _wait.Until(_ =>
@@ -340,11 +363,12 @@ public class TestHelper
             {
                 var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
                 var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+
                 try
                 {
-                    return stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-cell > span"));
+                    return stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
                 }
-                catch 
+                catch
                 {
                     // ignored
                 }
