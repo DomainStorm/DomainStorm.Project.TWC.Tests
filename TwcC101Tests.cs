@@ -101,7 +101,14 @@ namespace DomainStorm.Project.TWC.Tests
                 {
                     WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
                     var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
-                    _actions.MoveToElement(confirmButton).Click().Perform();
+                    if (confirmButton.Displayed)
+                    {
+                        _actions.MoveToElement(confirmButton).Click().Perform();
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
                 catch
                 {
