@@ -17,7 +17,7 @@ namespace DomainStorm.Project.TWC.Tests
             TestHelper.CleanDb();
         }
 
-        [SetUp] // 在每個測試方法之前執行的方法
+        [SetUp]
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
@@ -25,7 +25,7 @@ namespace DomainStorm.Project.TWC.Tests
             _actions = new Actions(_driver);
         }
 
-        [TearDown] // 在每個測試方法之後執行的方法
+        [TearDown]
         public void TearDown()
         {
             _driver.Quit();
@@ -148,14 +148,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var 受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#受理")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 受理);
-
-            var signElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
-            var signElementExists = signElement != null;
-            That(signElementExists, Is.True, "未受理");
+            var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#受理")));
+            acceptSign.Click();
+            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
+            //_wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理")));
+            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 受理);
+            //var signElementExists = chceckSign != null;
+            var chceckSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
+            That(chceckSign !=null, "未受理");
         }
         public async Task TwcA101_13()
         {
@@ -224,8 +224,16 @@ namespace DomainStorm.Project.TWC.Tests
                 {
                     var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
                     var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-                    var p = stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
-                    return p;
+
+                    try
+                    {
+                        return stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                    return null;
                 });
                 return !string.IsNullOrEmpty(e.Text) ? e : null;
             });
