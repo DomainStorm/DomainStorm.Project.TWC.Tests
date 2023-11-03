@@ -102,8 +102,10 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var pTitle = WaitStormEditTableUpload(_driver);
-            That(pTitle!.Text, Is.EqualTo("沒有找到符合的結果"));
+            var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var pTitle = stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
+            That(pTitle.Text, Is.EqualTo("沒有找到符合的結果"));
         }
         public async Task TwcA101_08()
         {
