@@ -1,7 +1,9 @@
-﻿using OpenQA.Selenium;
+using NSubstitute.Core;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
+using System;
 using System.Net;
 using static NUnit.Framework.Assert;
 
@@ -98,7 +100,7 @@ namespace DomainStorm.Project.TWC.Tests
             var secondFile = "twcweb_01_1_夾帶附件2.pdf";
             var secondFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", secondFile);
             lastHiddenInput.SendKeys(secondFilePath);
-
+        
             uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
             That(TestHelper.WaitStormEditTableUpload(_driver, "tr:nth-child(2) > td > storm-table-cell > span"), Is.Not.Null);
