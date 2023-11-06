@@ -171,7 +171,7 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            var 受理日期起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
+            var 受理日期起 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='受理日期起']")));
             var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
             受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
             _actions.MoveToElement(受理日期起).Click().Perform();

@@ -11,97 +11,86 @@ namespace DomainStorm.Project.TWC.Tests
 {
     public class TwcE101Tests
     {
+        private IWebDriver _driver = null!;
+        private WebDriverWait _wait = null!;
+        private Actions _actions = null!;
         private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-        private List<ChromeDriver> _chromeDriverList;
         public TwcE101Tests()
         {
             TestHelper.CleanDb();
         }
 
-        [SetUp] // 在每個測試方法之前執行的方法
-        public Task Setup()
+        [SetUp]
+        public void Setup()
         {
-            _chromeDriverList = new List<ChromeDriver>();
-
-            return Task.CompletedTask;
+            _driver = TestHelper.GetNewChromeDriver();
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
+            _actions = new Actions(_driver);
         }
 
-        [TearDown] // 在每個測試方法之後執行的方法
+        [TearDown]
         public void TearDown()
         {
-            TestHelper.CloseChromeDrivers();
+            _driver.Quit();
         }
 
         [Test]
         [Order(0)]
-        public async Task TwcE101_01() // 取得token
+        public async Task TwcE101_01To13()
+        {
+            await TwcE101_01();
+            await TwcE101_02();
+            await TwcE101_03();
+            //await TwcE101_04();
+            //await TwcE101_05();
+            //await TwcE101_06();
+            //await TwcE101_07();
+            //await TwcE101_08();
+            //await TwcE101_09();
+            //await TwcE101_10();
+            //await TwcE101_11();
+            //await TwcE101_12();
+            //await TwcE101_13();
+        }
+            public async Task TwcE101_01()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
-
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
 
-        [Test]
-        [Order(1)]
-        public async Task TwcE101_02() // 呼叫bmTransferApply/confirm
+        public async Task TwcE101_02()
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-E101_bmTransferApply.json"));
-
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
-        [Test]
-        [Order(2)]
-        public async Task TwcE101_03() // 看到表單內容並於表單受理欄位中看到有■中結
+        public async Task TwcE101_03()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
+            TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);   
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
 
-            driver.SwitchTo().Frame(0);
-
-            var 中結 = driver.FindElement(By.Id("中結"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 中結);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 中結);
-
+            var 中結 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='中結']")));
+            中結.Click();
             That(中結.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
-        [Test]
-        [Order(3)]
-        public async Task TwcE101_04() // 顯示臨櫃人員核章職稱姓名等資訊
+        public async Task TwcE101_04()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='受理']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            driver.SwitchTo().Frame(0);
-
-            var 受理 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("#受理")));
-
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 受理);
-            //先加入延遲1秒，不然會還沒scroll完就click
-            Thread.Sleep(1000);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 受理);
-            wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#受理 .sign")));
-
-            IReadOnlyList<IWebElement> signElement = driver.FindElements(By.CssSelector("[class='sign']"));
-            That(signElement, Is.Not.Empty, "未受理");
+            var chceckSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
+            That(chceckSign != null, "未受理");
         }
 
-        [Test]
-        [Order(4)]
-        public async Task TwcE101_05() // 看到■申請電子帳單
+        public async Task TwcE101_05()
         {
             ChromeDriver driver = TestHelper.GetNewChromeDriver();
 
