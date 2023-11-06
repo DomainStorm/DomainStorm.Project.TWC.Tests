@@ -124,12 +124,19 @@ namespace DomainStorm.Project.TWC.Tests
             var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='credential'] > form > div > div > button.btn-primary")));
             _actions.MoveToElement(scanButton).Click().Perform();
 
-            var scanSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark > svg")));
-            That(scanSuccess.GetAttribute("fill"), Is.EqualTo("white"));
+            var scanOneSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(2) > div.dz-success-mark")));
+            var scanTwoSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(3) > div.dz-success-mark")));
+            var scanThreeSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(4) > div.dz-success-mark")));
+            var scanFourSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(5) > div.dz-success-mark")));
+            var scanFiveSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark")));
+            That(scanOneSuccess, Is.Not.Null, "元素不存在");
+            That(scanTwoSuccess, Is.Not.Null, "元素不存在");
+            That(scanThreeSuccess, Is.Not.Null, "元素不存在");
+            That(scanFourSuccess, Is.Not.Null, "元素不存在");
+            That(scanFiveSuccess, Is.Not.Null, "元素不存在");
         }
         public async Task TwcD101_08()
         {
-            Thread.Sleep(3000);
             var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
             _actions.MoveToElement(infoButton).Click().Perform();
 
