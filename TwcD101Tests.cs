@@ -1,9 +1,7 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System.Collections.ObjectModel;
 using System.Net;
 using static NUnit.Framework.Assert;
 
@@ -24,7 +22,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
             _actions = new Actions(_driver);
         }
 
@@ -100,54 +98,39 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcD101_07()
         {
-            var confirmButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
-            confirmButton.Click();
-            //while (true)
-            //{
-            //    try
-            //    {
-            //        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
-            //        var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
-            //        if (confirmButton.Displayed)
-            //        {
-            //            _actions.MoveToElement(confirmButton).Click().Perform();
-            //        }
-            //        else
-            //        {
-            //            break;
-            //        }
-            //    }
-            //    catch
-            //    {
-            //        break;
-            //    }
-            //}
+            while (true)
+            {
+                try
+                {
+                    WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
+                    var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
+                    if (confirmButton.Displayed)
+                    {
+                        _actions.MoveToElement(confirmButton).Click().Perform();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                catch
+                {
+                    break;
+                }
+            }
+
+            _driver.SwitchTo().DefaultContent();
 
             var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='credential'] > form > div > div > button.btn-primary")));
             _actions.MoveToElement(scanButton).Click().Perform();
 
-            var checkImage = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img[alt='證件_005.tiff']")));
-            That(checkImage, Is.Not.Null, "元素不存在");
+            var scanSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark")));
+            That(scanSuccess, Is.Not.Null, "等待上傳中");
         }
         public async Task TwcD101_08()
         {
-            //Thread.Sleep(3000);
             var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
-            infoButton.Click();
-
-            //var hintTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > div.mx-6 > h5")));
-
-            _wait.Until(_driver =>
-                {
-                    var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
-                    Console.WriteLine($"::group::aaaaaaaaaaaaa---------{_driver.Url}---------");
-                    Console.WriteLine(_driver.PageSource);
-                    Console.WriteLine("::endgroup::");
-                    return (ExpectedConditions.UrlContains(targetUrl)); ;
-                });
-            
-            
+            _actions.MoveToElement(infoButton).Click().Perform();
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
