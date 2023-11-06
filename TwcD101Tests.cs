@@ -140,6 +140,15 @@ namespace DomainStorm.Project.TWC.Tests
             var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
             _actions.MoveToElement(infoButton).Click().Perform();
 
+            _wait.Until(_driver =>
+            {
+                var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
+                Console.WriteLine($"::group::CheckHtml---------{_driver.Url}---------");
+                Console.WriteLine(_driver.PageSource);
+                Console.WriteLine("::endgroup::");
+                return (ExpectedConditions.UrlContains(targetUrl)); ;
+            });
+
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
