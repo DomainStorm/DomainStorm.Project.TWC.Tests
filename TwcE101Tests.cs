@@ -41,8 +41,8 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcE101_01();
             await TwcE101_02();
             await TwcE101_03();
-            //await TwcE101_04();
-            //await TwcE101_05();
+            await TwcE101_04();
+            await TwcE101_05();
             //await TwcE101_06();
             //await TwcE101_07();
             //await TwcE101_08();
@@ -74,9 +74,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var 中結 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='中結']")));
-            中結.Click();
-            That(中結.GetAttribute("checked"), Is.EqualTo("true"));
+            var stiEnd = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='中結']")));
+            stiEnd.Click();
+            That(stiEnd.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         public async Task TwcE101_04()
@@ -92,22 +92,9 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcE101_05()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
-
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            driver.SwitchTo().Frame(0);
-
-            var 申請電子帳單勾選 = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("申請電子帳單勾選")));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 申請電子帳單勾選);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 申請電子帳單勾選);
-
-            That(申請電子帳單勾選.GetAttribute("checked"), Is.EqualTo("true"));
+            var stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='申請電子帳單勾選']")));
+            stiApplyEmail.Click();
+            That(stiApplyEmail.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         [Test]
