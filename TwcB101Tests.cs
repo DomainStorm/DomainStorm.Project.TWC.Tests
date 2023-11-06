@@ -100,7 +100,7 @@ namespace DomainStorm.Project.TWC.Tests
             var secondFile = "twcweb_01_1_夾帶附件2.pdf";
             var secondFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", secondFile);
             lastHiddenInput.SendKeys(secondFilePath);
-        
+
             uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
             That(TestHelper.WaitStormEditTableUpload(_driver, "tr:nth-child(2) > td > storm-table-cell > span"), Is.Not.Null);

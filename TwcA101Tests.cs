@@ -69,7 +69,7 @@ namespace DomainStorm.Project.TWC.Tests
             var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
             deleteButton.Click();
 
-            var pTitle = TestHelper.WaitStormTableUpload(_driver , "td > p");
+            var pTitle = TestHelper.WaitStormTableUpload(_driver);
             That(pTitle!.Text, Is.EqualTo("沒有找到符合的結果"));
         }
 
