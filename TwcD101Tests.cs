@@ -129,7 +129,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcD101_08()
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(3000);
             var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
             _actions.MoveToElement(infoButton).Click().Perform();
 
