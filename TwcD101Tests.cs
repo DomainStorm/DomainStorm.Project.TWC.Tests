@@ -95,31 +95,33 @@ namespace DomainStorm.Project.TWC.Tests
             var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(infoButton).Click().Perform();
 
-            var hintTitle = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-html-container > div.mx-6 > h5")));
+            var hintTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > div.mx-6 > h5")));
             That(hintTitle.Text, Is.EqualTo("【夾帶附件】或【掃描拍照】未上傳"));
         }
         public async Task TwcD101_07()
         {
-            while (true)
-            {
-                try
-                {
-                    WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
-                    var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
-                    if (confirmButton.Displayed)
-                    {
-                        _actions.MoveToElement(confirmButton).Click().Perform();
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                catch
-                {
-                    break;
-                }
-            }
+            var confirmButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
+            confirmButton.Click();
+            //while (true)
+            //{
+            //    try
+            //    {
+            //        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
+            //        var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
+            //        if (confirmButton.Displayed)
+            //        {
+            //            _actions.MoveToElement(confirmButton).Click().Perform();
+            //        }
+            //        else
+            //        {
+            //            break;
+            //        }
+            //    }
+            //    catch
+            //    {
+            //        break;
+            //    }
+            //}
 
             var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='credential'] > form > div > div > button.btn-primary")));
             _actions.MoveToElement(scanButton).Click().Perform();
