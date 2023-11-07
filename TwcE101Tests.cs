@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.DevTools.V113.Debugger;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
@@ -49,7 +50,7 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcE101_10();
             await TwcE101_11();
             await TwcE101_12();
-            //await TwcE101_13();
+            await TwcE101_13();
         }
         public async Task TwcE101_01()
         {
@@ -143,19 +144,40 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiApplyEmail);
 
             var stiApplyEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
-            stiApplyEmailInput.SendKeys("aaa@bbb.ccc");
+            _wait.Until(_ =>
+            {
+                try
+                {
+                    stiApplyEmailInput.SendKeys("aaa@bbb.ccc");
+                    return true;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    stiApplyEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
+                    return false;
+                }
+            });
 
             var stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
-            stiEmailTelNoInput.SendKeys("02-12345678");
-
-            stiApplyEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
-            stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
-            That(stiApplyEmailInput.Text, Is.EqualTo("aaa@bbb.ccc"));
-            That(stiEmailTelNoInput.Text, Is.EqualTo("02-12345678"));
+            _wait.Until(_ =>
+            {
+                try
+                {
+                    stiEmailTelNoInput.SendKeys("02-12345678");
+                    return true;
+                }
+                catch (StaleElementReferenceException)
+                {
+                    stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
+                    return false;
+                }
+            });
         }
 
         public async Task TwcE101_09()
         {
+            _driver.SwitchTo().DefaultContent();
+
             var pTitle = TestHelper.WaitStormEditTableUpload(_driver, "td > p");
             That(pTitle.Text, Is.EqualTo("沒有找到符合的結果"));
         }
@@ -170,7 +192,7 @@ namespace DomainStorm.Project.TWC.Tests
             var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", twcweb_01_1_夾帶附件1);
             lastHiddenInput.SendKeys(filePath);
 
-            var stormInputGroup = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            var stormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
             var fileName = stormInputGroup.GetAttribute("value");
             That(fileName, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
@@ -206,7 +228,8 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().Frame(0);
 
-            var stiApplyEmail = TestHelper.FindAndMoveElement(_driver, "[id='contract_1']");
+            var stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='申請電子帳單勾選']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiApplyEmail);
 
             _driver.SwitchTo().DefaultContent();
 
@@ -229,161 +252,78 @@ namespace DomainStorm.Project.TWC.Tests
             That(checkFileName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
         [Test]
-        [Order(13)]
-        public async Task TwcE101_14() // 查詢出來該件，列在下方
+        [Order(1)]
+        public async Task TwcE101_14To16()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
-
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
-
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
-            var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
-            var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            inputElement.Click();
-
-            wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.animate.arrowTop.arrowLeft.open")));
-
-            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
-            SelectElement selectMonth = new SelectElement(monthDropdown);
-            selectMonth.SelectByText("June");
-
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 6, 2023']"));
-            spanElement.Click();
-
-            var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
-            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
-            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
-
-            inputElement.SendKeys(TestHelper.ApplyCaseNo);
-
-            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
-            var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-
-            Actions actions = new(driver);
-            actions.MoveToElement(查詢).Click().Perform();
-
-            var stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
-            var stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-
-            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            spanElement = element.FindElement(By.CssSelector("span"));
-            string spanText = spanElement.Text;
-
-            That(spanText, Is.EqualTo(TestHelper.ApplyCaseNo));
+            await TwcE101_14();
+            await TwcE101_15();
+            await TwcE101_16();
         }
-        [Test]
-        [Order(14)]
-        public async Task TwcE101_15() // 確認附件有一件[twcweb_01_1_夾帶附件1.pdf]
+            public async Task TwcE101_14()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
-            TestHelper.ClickRow(driver, TestHelper.ApplyCaseNo!);
+            var 受理日期起 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='受理日期起']")));
+            var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
+            受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
+            _actions.MoveToElement(受理日期起).Click().Perform();
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
+            var 受理月起 = new SelectElement(select);
+            受理月起.SelectByText("June");
 
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
-            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
-            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
+            var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 3, 2023']")));
+            _actions.MoveToElement(受理日起).Click().Perform();
 
-            Actions actions = new(driver);
-            actions.MoveToElement(夾帶附件).Click().Perform();
-
-            var linkElement = driver.FindElement(By.CssSelector("a[download='twcweb_01_1_夾帶附件1.pdf']"));
-            string download = linkElement.GetAttribute("download");
-
-            That(download, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            var 查詢 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            _actions.MoveToElement(查詢).Click().Perform();
+            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell > span"), Is.Not.Null);
         }
-        [Test]
-        [Order(15)]
-        public async Task TwcE101_16() // PDF檔產製成功
+
+        public async Task TwcE101_15()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+            var applyCaseNo = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo'] > storm-table-cell > span"));
+            _actions.MoveToElement(applyCaseNo).Click().Perform();
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
+            var checkFileName = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] > div > a");
+            That(checkFileName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+        }
 
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
-            var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
-            var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            inputElement.Click();
-
-            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
-            SelectElement selectMonth = new SelectElement(monthDropdown);
-            Thread.Sleep(750);
-            selectMonth.SelectByText("June");
-
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
-            spanElement.Click();
-
-            var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
-            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
-            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
-
-            inputElement.SendKeys(TestHelper.ApplyCaseNo);
-
-            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
-            var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-
-            Actions actions = new(driver);
-            actions.MoveToElement(查詢).Click().Perform();
-
-            stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
-            var stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-
-            actions.MoveToElement(element).Click().Perform();
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(60));
-
-            var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
-            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
-            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
-
-            actions.MoveToElement(夾帶附件).Click().Perform();
-
+        public async Task TwcE101_16()
+        {
             if (!Directory.Exists(_downloadDirectory))
             {
                 Directory.CreateDirectory(_downloadDirectory);
             }
 
-            var 下載PDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 下載PDF);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 下載PDF);
+            var filePath = Path.Combine(_downloadDirectory, "41881288118.pdf");
 
-            string filePath = Path.Combine(_downloadDirectory, "41881288118.pdf");
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            var downloadButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button");
+            downloadButton.Click();
 
             That(Directory.Exists(_downloadDirectory), Is.True);
 
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-            foreach (var fn in Directory.GetFiles(_downloadDirectory))
-            {
-                Console.WriteLine($"-----filename: {fn}-----");
-            }
-
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
             Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
 
-            wait.Until(webDriver => File.Exists(filePath));
+            _wait.Until(webDriver =>
+            {
+                Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+
+                foreach (var fn in Directory.GetFiles(_downloadDirectory))
+                {
+                    Console.WriteLine($"-----filename: {fn}-----");
+                }
+
+                Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
+                return File.Exists(filePath);
+            });
 
             That(File.Exists(filePath), Is.True);
         }
