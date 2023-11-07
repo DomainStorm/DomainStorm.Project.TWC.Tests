@@ -1,9 +1,7 @@
-﻿using NSubstitute.Core;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System;
 using System.Net;
 using static NUnit.Framework.Assert;
 
@@ -95,7 +93,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcC101_06()
         {
-            while (true)
+            _wait.Until(_ =>
             {
                 try
                 {
@@ -104,17 +102,15 @@ namespace DomainStorm.Project.TWC.Tests
                     if (confirmButton.Displayed)
                     {
                         _actions.MoveToElement(confirmButton).Click().Perform();
+                        return false;
                     }
-                    else
-                    {
-                        break;
-                    }
+                    return true;
                 }
                 catch
                 {
-                    break;
+                    return true;
                 }
-            }
+            });
 
             _driver.SwitchTo().DefaultContent();
 
@@ -126,9 +122,25 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcC101_07()
         {
-            Thread.Sleep(3000);
-            var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
-            _actions.MoveToElement(infoButton).Click().Perform();
+            _wait.Until(_ =>
+            {
+                WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
+                var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+                _actions.MoveToElement(infoButton).Click().Perform();
+                try
+                {
+                    if (infoButton.Displayed)
+                    {
+                        _actions.MoveToElement(infoButton).Click().Perform();
+                        return false;
+                    }
+                    return true;
+                }
+                catch
+                {
+                    return true;
+                }
+            });
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
