@@ -3,6 +3,7 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
+using System;
 using System.Net;
 using static NUnit.Framework.Assert;
 
@@ -10,82 +11,65 @@ namespace DomainStorm.Project.TWC.Tests
 {
     public class TwcE201Tests
     {
-        private List<ChromeDriver> _chromeDriverList;
+        private IWebDriver _driver = null!;
+        private WebDriverWait _wait = null!;
+        private Actions _actions = null!;
         public TwcE201Tests()
         {
             TestHelper.CleanDb();
         }
 
-        [SetUp] // 在每個測試方法之前執行的方法
-        public Task Setup()
+        [SetUp]
+        public void Setup()
         {
-            _chromeDriverList = new List<ChromeDriver>();
-
-            return Task.CompletedTask;
+            _driver = TestHelper.GetNewChromeDriver();
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
+            _actions = new Actions(_driver);
         }
 
-        [TearDown] // 在每個測試方法之後執行的方法
+        [TearDown]
         public void TearDown()
         {
-            TestHelper.CloseChromeDrivers();
+            _driver.Quit();
         }
 
         [Test]
         [Order(0)]
-        public async Task TwcE201_01() // 取得token
+        public async Task TwcE101_01To06()
+        {
+            await TwcE201_01();
+            await TwcE201_02();
+            await TwcE201_03();
+            await TwcE201_04();
+        }
+        public async Task TwcE201_01()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
-
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
-
-        [Test]
-        [Order(1)]
-        public async Task TwcE201_02() // 呼叫bmTransferApply/confirmbground，沒錯誤則取得http 200回應
-
+        public async Task TwcE201_02()
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirmbground", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-E201_bmTransferApply_bground.json"));
-
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
-
-        [Test]
-        [Order(2)]
-        public async Task TwcE201_03() // 呼叫bmTransferApply/confirmbground，沒錯誤則取得http 200回應
+        public async Task TwcE201_03()
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirmbground", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-E201_bmTransferApply_bground2.json"));
-
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
-
-        [Test]
-        [Order(3)]
         public async Task TwcE201_04() // 帳號0511進入批次過戶區，點選【+申請者證件】按鈕後右邊畫面直接顯示夾帶附件畫面。
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/batch");
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/batch");
+            That(TestHelper.WaitStormTableUpload, Is.Not.Null);
+            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+            //var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
+            //searchInput.SendKeys(TestHelper.ApplyCaseNo!);
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            var card = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("body > storm-main-content > main > div.container-fluid.py-4.position-relative > storm-card")));
-            var stormDocumentListDetail = card.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-
-            var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
-            searchInput.SendKeys(TestHelper.ApplyCaseNo!);
-
-            var CheckAll = stormTable.GetShadowRoot().FindElement(By.CssSelector("input[aria-label='Check All']"));
-            CheckAll.Click();
-            Thread.Sleep(500);
-
-            var stormToolbar = stormDocumentListDetail.FindElement(By.CssSelector("storm-toolbar"));
-            var stormButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-button button"));
-            That(stormButton, Is.Not.Null, "不存在");
+            var checkAll = stormTable.GetShadowRoot().FindElement(By.CssSelector("input[aria-label='Check All']"));
+            _actions.MoveToElement(checkAll).Click().Perform();
         }
-
-        [Test]
-        [Order(4)]
         public async Task TwcE201_05() // 看到夾帶附件資訊
         {
             ChromeDriver driver = TestHelper.GetNewChromeDriver();
@@ -156,9 +140,6 @@ namespace DomainStorm.Project.TWC.Tests
             That(spanText1, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
             That(spanText2, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
         }
-
-        [Test]
-        [Order(5)]
         public async Task TwcE201_06() // 該申請案件於批次過戶清單中之附件欄位有迴紋針圖示即表示該筆資料已完成夾帶檔動作。有夾帶附件之資料等待後續排程資料寫入結案日期後於批次過戶資料夾中消失。
         {
             ChromeDriver driver = TestHelper.GetNewChromeDriver();
