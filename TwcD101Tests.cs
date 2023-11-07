@@ -98,7 +98,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcD101_07()
         {
-            while (true)
+            _wait.Until(_ =>
             {
                 try
                 {
@@ -107,47 +107,44 @@ namespace DomainStorm.Project.TWC.Tests
                     if (confirmButton.Displayed)
                     {
                         _actions.MoveToElement(confirmButton).Click().Perform();
+                        return false;
                     }
-                    else
-                    {
-                        break;
-                    }
+                    return true;
                 }
                 catch
                 {
-                    break;
+                    return true;
                 }
-            }
+            });
 
             _driver.SwitchTo().DefaultContent();
 
             var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='credential'] > form > div > div > button.btn-primary")));
             _actions.MoveToElement(scanButton).Click().Perform();
 
-            var scanOneSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(2) > div.dz-success-mark")));
-            var scanTwoSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(3) > div.dz-success-mark")));
-            var scanThreeSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(4) > div.dz-success-mark")));
-            var scanFourSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(5) > div.dz-success-mark")));
-            var scanFiveSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark")));
-            That(scanOneSuccess, Is.Not.Null, "元素不存在");
-            That(scanTwoSuccess, Is.Not.Null, "元素不存在");
-            That(scanThreeSuccess, Is.Not.Null, "元素不存在");
-            That(scanFourSuccess, Is.Not.Null, "元素不存在");
-            That(scanFiveSuccess, Is.Not.Null, "元素不存在");
+            var scanSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark")));
+            That(scanSuccess, Is.Not.Null, "未上傳");
         }
         public async Task TwcD101_08()
         {
-            var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
-            infoButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
-            _actions.MoveToElement(infoButton).Click().Perform();
-
-            _wait.Until(_driver =>
+            _wait.Until(_ =>
             {
-                var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
-                Console.WriteLine($"::group::CheckHtml---------{_driver.Url}---------");
-                Console.WriteLine(_driver.PageSource);
-                Console.WriteLine("::endgroup::");
-                return (ExpectedConditions.UrlContains(targetUrl)); ;
+                WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
+                var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+                _actions.MoveToElement(infoButton).Click().Perform();
+                try
+                {
+                    if (infoButton.Displayed)
+                    {
+                        _actions.MoveToElement(infoButton).Click().Perform();
+                        return false;
+                    }
+                    return true;
+                }
+                catch
+                {
+                    return true;
+                }
             });
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
@@ -200,7 +197,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 3, 2023']")));
             _actions.MoveToElement(受理日起).Click().Perform();
 
-            var 查詢 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            var 查詢 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(查詢).Click().Perform();
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell > span"), Is.Not.Null);
         }

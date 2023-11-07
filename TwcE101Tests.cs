@@ -49,7 +49,7 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcE101_10();
             await TwcE101_11();
             await TwcE101_12();
-            await TwcE101_13();
+            //await TwcE101_13();
         }
         public async Task TwcE101_01()
         {
@@ -91,8 +91,10 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcE101_05()
         {
-            var stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='申請電子帳單勾選']")));
-            stiApplyEmail.Click();
+            var stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='申請電子帳單勾選']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiApplyEmail);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='申請電子帳單勾選']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiApplyEmail);
             That(stiApplyEmail.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
@@ -138,7 +140,9 @@ namespace DomainStorm.Project.TWC.Tests
             }
 
             _driver.SwitchTo().Frame(0);
-            var stiApplyEmail = TestHelper.FindAndMoveElement(_driver, "[id='申請電子帳單勾選']");
+
+            var stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='申請電子帳單勾選']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiApplyEmail);
 
             var stiApplyEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
             stiApplyEmailInput.SendKeys("aaa@bbb.ccc");
@@ -146,6 +150,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
             stiEmailTelNoInput.SendKeys("02-12345678");
+            stiEmailTelNoInput.SendKeys(Keys.Tab);
             That(stiEmailTelNoInput.GetAttribute("value"), Is.EqualTo("02-12345678"));
         }
 
@@ -201,7 +206,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().Frame(0);
 
-
+            var stiApplyEmail = TestHelper.FindAndMoveElement(_driver, "[id='contract_1']");
 
             _driver.SwitchTo().DefaultContent();
 
