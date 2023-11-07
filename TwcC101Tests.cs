@@ -118,7 +118,7 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(scanButton).Click().Perform();
 
             var scanSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark")));
-            That(scanSuccess, Is.Not.Null, "等待上傳中");
+            That(scanSuccess, Is.Not.Null, "未上傳");
         }
         public async Task TwcC101_07()
         {
