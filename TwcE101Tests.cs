@@ -144,12 +144,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stiApplyEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
             stiApplyEmailInput.SendKeys("aaa@bbb.ccc");
-            That(stiApplyEmailInput.GetAttribute("value"), Is.EqualTo("aaa@bbb.ccc"));
 
             var stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
             stiEmailTelNoInput.SendKeys("02-12345678");
-            stiEmailTelNoInput.SendKeys(Keys.Tab);
-            That(stiEmailTelNoInput.GetAttribute("value"), Is.EqualTo("02-12345678"));
+
+            stiApplyEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
+            stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
+            That(stiApplyEmailInput.Text, Is.EqualTo("aaa@bbb.ccc"));
+            That(stiEmailTelNoInput.Text, Is.EqualTo("02-12345678"));
         }
 
         public async Task TwcE101_09()
