@@ -10,6 +10,7 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
+using AngleSharp.Dom;
 
 namespace DomainStorm.Project.TWC.Tests;
 
@@ -217,6 +218,19 @@ public class TestHelper
         Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);
         Console.WriteLine("::endgroup::");
+
+        wait.Until(_ =>
+        {
+            try
+            { 
+                var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+                return stormTable != null;
+            }
+            catch
+            {  
+                return false; 
+            }
+        });
 
         var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
         var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
