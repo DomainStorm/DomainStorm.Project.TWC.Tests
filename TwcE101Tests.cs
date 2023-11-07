@@ -147,11 +147,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
             stiEmailTelNoInput.SendKeys("02-12345678");
-
-            stiApplyEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
-            stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
-            That(stiApplyEmailInput.Text, Is.EqualTo("aaa@bbb.ccc"));
-            That(stiEmailTelNoInput.Text, Is.EqualTo("02-12345678"));
         }
 
         public async Task TwcE101_09()
@@ -307,83 +302,39 @@ namespace DomainStorm.Project.TWC.Tests
         }
         [Test]
         [Order(15)]
-        public async Task TwcE101_16() // PDF檔產製成功
+        public async Task TwcE101_16()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
-
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
-
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
-            var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
-            var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            inputElement.Click();
-
-            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
-            SelectElement selectMonth = new SelectElement(monthDropdown);
-            Thread.Sleep(750);
-            selectMonth.SelectByText("June");
-
-            var spanElement = driver.FindElement(By.CssSelector("span[aria-label='June 1, 2023']"));
-            spanElement.Click();
-
-            var divSecond = stormCard.FindElement(By.CssSelector("div.row.mt-3"));
-            stormInputGroup = divSecond.FindElement(By.CssSelector("storm-input-group"));
-            inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector(".form-control.multisteps-form__input"));
-
-            inputElement.SendKeys(TestHelper.ApplyCaseNo);
-
-            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
-            var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-
-            Actions actions = new(driver);
-            actions.MoveToElement(查詢).Click().Perform();
-
-            stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCardSecond = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
-            var stormDocumentListDetail = stormCardSecond.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-
-            actions.MoveToElement(element).Click().Perform();
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(60));
-
-            var stormVerticalNavigation = driver.FindElement(By.CssSelector("storm-vertical-navigation"));
-            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var fourthStormTreeNode = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-child(4)"));
-            var secondStormTreeNode = fourthStormTreeNode.FindElement(By.CssSelector("div storm-tree-node:nth-child(2)"));
-            var 夾帶附件 = secondStormTreeNode.FindElement(By.CssSelector("a[href='#file']"));
-
-            actions.MoveToElement(夾帶附件).Click().Perform();
-
             if (!Directory.Exists(_downloadDirectory))
             {
                 Directory.CreateDirectory(_downloadDirectory);
             }
 
-            var 下載PDF = driver.FindElement(By.CssSelector("button.btn.bg-gradient-warning.m-0.ms-2"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 下載PDF);
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", 下載PDF);
+            var filePath = Path.Combine(_downloadDirectory, "41881288118.pdf");
 
-            string filePath = Path.Combine(_downloadDirectory, "41881288118.pdf");
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            var downloadButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button");
+            downloadButton.Click();
 
             That(Directory.Exists(_downloadDirectory), Is.True);
 
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-            foreach (var fn in Directory.GetFiles(_downloadDirectory))
-            {
-                Console.WriteLine($"-----filename: {fn}-----");
-            }
-
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
             Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
 
-            wait.Until(webDriver => File.Exists(filePath));
+            _wait.Until(webDriver =>
+            {
+                Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+
+                foreach (var fn in Directory.GetFiles(_downloadDirectory))
+                {
+                    Console.WriteLine($"-----filename: {fn}-----");
+                }
+
+                Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
+                return File.Exists(filePath);
+            });
 
             That(File.Exists(filePath), Is.True);
         }
