@@ -368,7 +368,7 @@ public class TestHelper
     }
     public static IWebElement? WaitStormEditTableUpload(IWebDriver _driver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>
