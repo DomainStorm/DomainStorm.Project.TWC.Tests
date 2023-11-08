@@ -126,8 +126,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             var attachFileOneTitle = TestHelper.WaitStormTableUpload(_driver, "tr > td[data-field='attached'] > storm-table-cell > span > i");
             var attachFileTwoTitle = TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) > td[data-field='attached'] > storm-table-cell > span > i");
-            That(attachFileOneTitle.Text, Is.EqualTo("attach_file"));
-            That(attachFileTwoTitle.Text, Is.EqualTo("attach_file"));
+            That(attachFileOneTitle!.Text, Is.EqualTo("attach_file"));
+            That(attachFileTwoTitle!.Text, Is.EqualTo("attach_file"));
         }
     }
 }
