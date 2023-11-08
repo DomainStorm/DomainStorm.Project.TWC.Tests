@@ -173,7 +173,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             var chceckSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
-            That(chceckSign!= null, "未受理");
+            That(chceckSign != null, "未受理");
 
             _driver.SwitchTo().DefaultContent();
 
@@ -195,8 +195,8 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(1)]
-        public async Task TwcF101_11To13() 
-        { 
+        public async Task TwcF101_11To13()
+        {
             await TwcF101_11();
             await TwcF101_12();
             await TwcF101_13();
@@ -237,34 +237,27 @@ namespace DomainStorm.Project.TWC.Tests
             {
                 Directory.CreateDirectory(_downloadDirectory);
             }
-
             var filePath = Path.Combine(_downloadDirectory, "41188239939.pdf");
-
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
             }
+
             var downloadButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button");
             _actions.MoveToElement(downloadButton).Click().Perform();
-
             That(Directory.Exists(_downloadDirectory), Is.True);
 
             Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
-
             _wait.Until(webDriver =>
             {
                 Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
                 foreach (var fn in Directory.GetFiles(_downloadDirectory))
                 {
                     Console.WriteLine($"-----filename: {fn}-----");
                 }
-
                 Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
                 return File.Exists(filePath);
             });
-
             That(File.Exists(filePath), Is.True);
         }
     }
