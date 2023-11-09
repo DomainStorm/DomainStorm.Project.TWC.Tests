@@ -57,11 +57,7 @@ namespace DomainStorm.Project.TWC.Tests
 
                 _driver.SwitchTo().DefaultContent();
 
-                var checkButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
-                _actions.MoveToElement(checkButton).Click().Perform();
-                That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));
-
-                var addFileButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='file'] > div.float-end > button")));
+                var addFileButton = TestHelper.FindAndMoveElement(_driver, "[id='file'] > div.float-end > button");
                 _actions.MoveToElement(addFileButton).Click().Perform();
 
                 var lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(3)")));
@@ -75,6 +71,10 @@ namespace DomainStorm.Project.TWC.Tests
                 var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
                 _actions.MoveToElement(uploadButton).Click().Perform();
                 That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span"), Is.Not.Null);
+
+                var checkButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
+                _actions.MoveToElement(checkButton).Click().Perform();
+                That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));
 
                 _wait.Until(_ =>
                 {
@@ -106,6 +106,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/unfinished");
             That(TestHelper.WaitStormTableUpload(_driver, "tr > td"), Is.Not.Null);
+
             var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
             var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
             That(pageInfo.Text, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
@@ -117,6 +118,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             await TwcS101_02();
             await TwcS101_03();
+            await TwcS101_04();
         }
         public async Task TwcS101_02()
         {
@@ -150,62 +152,34 @@ namespace DomainStorm.Project.TWC.Tests
             var nextPage = stormPagination.GetShadowRoot().FindElement(By.CssSelector("ul > li:nth-child(3) > a"));
             _actions.MoveToElement(nextPage).Click().Perform();
 
-            That(TestHelper.WaitStormTableUpload(_driver, "tr > td"), Is.Not.Null);
+            _wait.Until(driver =>
+            {
+                var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                return rows.Count == 5;
+            });
+
             stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
             var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
             That(pageInfo.Text, Is.EqualTo("顯示第 11 至 15 筆，共 15 筆"));
         }
         public async Task TwcS101_04()
         {
-            ChromeDriver driver =TestHelper.GetNewChromeDriver();
-
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var div = stormCard.FindElement(By.CssSelector("div.row"));
-            var stormInputGroup = div.FindElement(By.CssSelector("storm-input-group"));
-            var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            inputElement.Click();
-            Thread.Sleep(500);
-
-            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
-            SelectElement selectMonth = new SelectElement(monthDropdown);
-            selectMonth.SelectByText("March");
-
-            var span = driver.FindElement(By.CssSelector("span[aria-label='March 5, 2023']"));
-            span.Click();
-
-            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
-            var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-
-            Actions actions = new(driver);
-            actions.MoveToElement(查詢).Click().Perform();
-
-            stormCard = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
-            var stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-
+            var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
             var stormPagination = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-pagination"));
-            span = stormPagination.GetShadowRoot().FindElement(By.CssSelector("span.material-icons"));
+            var backPage = stormPagination.GetShadowRoot().FindElement(By.CssSelector("ul > li > a"));
+            _actions.MoveToElement(backPage).Click().Perform();
 
-            actions.MoveToElement(span).Click().Perform();
-            Thread.Sleep(500);
+            _wait.Until(driver =>
+            {
+                var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                return rows.Count == 10;
+            });
 
-            actions.MoveToElement(span).Click().Perform();
-            Thread.Sleep(500);
-
-            stormMainContent = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-main-content")));
-            stormCard = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
-            stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-            var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-pageInfo"));
-            string pageInfoText = pageInfo.Text;
-
-            //That(pageInfoText, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
+            stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+            var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
+            That(pageInfo.Text, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
         }
     }
 }
