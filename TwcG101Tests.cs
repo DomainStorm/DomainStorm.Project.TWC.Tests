@@ -368,8 +368,8 @@ namespace DomainStorm.Project.TWC.Tests
             }
 
             var downloadButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button");
+            downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card[id='finished'] > div.float-end > div:nth-child(3) > button")));
             _actions.MoveToElement(downloadButton).Click().Perform();
-            That(Directory.Exists(_downloadDirectory), Is.True);
 
             Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
             _wait.Until(webDriver =>
