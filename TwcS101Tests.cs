@@ -22,7 +22,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
             _actions = new Actions(_driver);
         }
 
@@ -116,95 +116,46 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcS101_02To04()
         {
             await TwcS101_02();
+            await TwcS101_03();
         }
-        public async Task TwcS101_02() // 查詢後資料清單列表顯示有10筆，畫面下方顯示有第 1 至 10 筆，共 15 筆。
+        public async Task TwcS101_02()
         {
-            ChromeDriver driver =TestHelper.GetNewChromeDriver();
+            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
+            var 受理日期起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
+            var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
+            受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
+            _actions.MoveToElement(受理日期起).Click().Perform();
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
+            var 受理月起 = new SelectElement(select);
+            受理月起.SelectByText("March");
 
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var div = stormCard.FindElement(By.CssSelector("div.row"));
-            var stormInputGroup = div.FindElement(By.CssSelector("storm-input-group"));
-            var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            inputElement.Click();
-            Thread.Sleep(500);
+            var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
+            _actions.MoveToElement(受理日起).Click().Perform();
 
-            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
-            SelectElement selectMonth = new SelectElement(monthDropdown);
-            selectMonth.SelectByText("March");
+            var 查詢 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            _actions.MoveToElement(查詢).Click().Perform();
+            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell > span"), Is.Not.Null);
 
-            var span = driver.FindElement(By.CssSelector("span[aria-label='March 6, 2023']"));
-            span.Click();
-
-            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
-            var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-
-            Actions actions = new(driver);
-            actions.MoveToElement(查詢).Click().Perform();
-
-            stormCard = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
-            var stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-            var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-pageInfo"));
-            string pageInfoText = pageInfo.Text;
-
-            //That(pageInfoText, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
+            var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+            var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
+            That(pageInfo.Text, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
         }
-        public async Task TwcS101_03() // 顯示清單畫面切換為5筆，下方顯示第 11 至 5 筆，共 15 筆。
+        public async Task TwcS101_03()
         {
-            ChromeDriver driver =TestHelper.GetNewChromeDriver();
-
-            await TestHelper.Login(driver, "0511", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var div = stormCard.FindElement(By.CssSelector("div.row"));
-            var stormInputGroup = div.FindElement(By.CssSelector("storm-input-group"));
-            var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            inputElement.Click();
-            Thread.Sleep(500);
-
-            var monthDropdown = driver.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
-            SelectElement selectMonth = new SelectElement(monthDropdown);
-            selectMonth.SelectByText("March");
-
-            var span = driver.FindElement(By.CssSelector("span[aria-label='March 4, 2023']"));
-            span.Click();
-
-            var divElement = stormCard.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4"));
-            var 查詢 = divElement.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-
-            Actions actions = new(driver);
-            actions.MoveToElement(查詢).Click().Perform();
-
-            stormCard = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
-            var stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-
+            var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
             var stormPagination = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-pagination"));
-            span = stormPagination.GetShadowRoot().FindElement(By.CssSelector("span.material-icons"));
+            var nextPage = stormPagination.GetShadowRoot().FindElement(By.CssSelector("ul > li:nth-child(3) > a"));
+            _actions.MoveToElement(nextPage).Click().Perform();
 
-            actions.MoveToElement(span).Click().Perform();
-            Thread.Sleep(500);
-
-            stormMainContent = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-main-content")));
-            stormCard = stormMainContent.FindElements(By.CssSelector("storm-card"))[1];
-            stormDocumentListDetail = stormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-            var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-pageInfo"));
-            string pageInfoText = pageInfo.Text;
-
-            //That(pageInfoText, Is.EqualTo("顯示第 11 至 5 筆，共 15 筆"));
+            That(TestHelper.WaitStormTableUpload(_driver, "tr > td"), Is.Not.Null);
+            stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+            var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
+            That(pageInfo.Text, Is.EqualTo("顯示第 11 至 15 筆，共 15 筆"));
         }
-        public async Task TwcS101_04() // 顯示清單畫面切換至第一頁10筆，下方顯示第 1 至 10 筆，共 15 筆。
+        public async Task TwcS101_04()
         {
             ChromeDriver driver =TestHelper.GetNewChromeDriver();
 

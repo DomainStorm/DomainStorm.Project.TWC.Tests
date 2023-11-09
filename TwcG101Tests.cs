@@ -248,6 +248,21 @@ namespace DomainStorm.Project.TWC.Tests
                         _actions.MoveToElement(infoButton).Click().Perform();
                         return false;
                     }
+                    var hintTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > h5")));
+                    if (infoButton.Displayed)
+                    {
+                        var stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
+                        try
+                        {
+                            stiEmailTelNoInput.SendKeys("02-12345678");
+                            return true;
+                        }
+                        catch (StaleElementReferenceException)
+                        {
+                            stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
+                            return false;
+                        }
+                    }
                     return true;
                 }
                 catch
@@ -307,11 +322,15 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcG101_17To19()
         {
             await TwcG101_17();
+            await TwcG101_18();
+            await TwcG101_19();
         }
         public async Task TwcG101_17()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
+
+            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
 
             var 受理日期起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
             var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
