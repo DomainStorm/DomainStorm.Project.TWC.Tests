@@ -93,7 +93,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcC101_06()
         {
-            while (true)
+            _wait.Until(_ =>
             {
                 try
                 {
@@ -102,17 +102,15 @@ namespace DomainStorm.Project.TWC.Tests
                     if (confirmButton.Displayed)
                     {
                         _actions.MoveToElement(confirmButton).Click().Perform();
+                        return false;
                     }
-                    else
-                    {
-                        break;
-                    }
+                    return true;
                 }
                 catch
                 {
-                    break;
+                    return true;
                 }
-            }
+            });
 
             _driver.SwitchTo().DefaultContent();
 
@@ -120,12 +118,29 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(scanButton).Click().Perform();
 
             var scanSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark")));
-            That(scanSuccess, Is.Not.Null, "等待上傳中");
+            That(scanSuccess, Is.Not.Null, "未上傳");
         }
         public async Task TwcC101_07()
         {
-            var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
-            _actions.MoveToElement(infoButton).Click().Perform();
+            _wait.Until(_ =>
+            {
+                WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
+                var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+                _actions.MoveToElement(infoButton).Click().Perform();
+                try
+                {
+                    if (infoButton.Displayed)
+                    {
+                        _actions.MoveToElement(infoButton).Click().Perform();
+                        return false;
+                    }
+                    return true;
+                }
+                catch
+                {
+                    return true;
+                }
+            });
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));

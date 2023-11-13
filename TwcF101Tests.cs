@@ -72,7 +72,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
 
             var chceckSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
-            That(chceckSign!= null, "未受理");
+            That(chceckSign != null, "未受理");
         }
         public async Task TwcF101_04()
         {

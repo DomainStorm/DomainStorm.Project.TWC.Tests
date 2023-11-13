@@ -1,7 +1,9 @@
-﻿using OpenQA.Selenium;
+﻿using NSubstitute.Core;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
+using System;
 using System.Net;
 using static NUnit.Framework.Assert;
 

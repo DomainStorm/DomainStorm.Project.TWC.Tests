@@ -1,5 +1,4 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
@@ -34,7 +33,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(0)]
-        public async Task TwcS101_01() // 15次皆無錯誤。
+        public async Task TwcS101_01()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             for (int i = 0; i < 15; i++)

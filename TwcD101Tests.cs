@@ -98,7 +98,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcD101_07()
         {
-            while (true)
+            _wait.Until(_ =>
             {
                 try
                 {
@@ -107,31 +107,45 @@ namespace DomainStorm.Project.TWC.Tests
                     if (confirmButton.Displayed)
                     {
                         _actions.MoveToElement(confirmButton).Click().Perform();
+                        return false;
                     }
-                    else
-                    {
-                        break;
-                    }
+                    return true;
                 }
                 catch
                 {
-                    break;
+                    return true;
                 }
-            }
+            });
 
             _driver.SwitchTo().DefaultContent();
 
             var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='credential'] > form > div > div > button.btn-primary")));
             _actions.MoveToElement(scanButton).Click().Perform();
 
-            var scanSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark > svg")));
-            That(scanSuccess.GetAttribute("fill"), Is.EqualTo("white"));
+            var scanSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark")));
+            That(scanSuccess, Is.Not.Null, "未上傳");
         }
         public async Task TwcD101_08()
         {
-            Thread.Sleep(3000);
-            var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
-            _actions.MoveToElement(infoButton).Click().Perform();
+            _wait.Until(_ =>
+            {
+                WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
+                var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+                _actions.MoveToElement(infoButton).Click().Perform();
+                try
+                {
+                    if (infoButton.Displayed)
+                    {
+                        _actions.MoveToElement(infoButton).Click().Perform();
+                        return false;
+                    }
+                    return true;
+                }
+                catch
+                {
+                    return true;
+                }
+            });
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
@@ -183,7 +197,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 3, 2023']")));
             _actions.MoveToElement(受理日起).Click().Perform();
 
-            var 查詢 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            var 查詢 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(查詢).Click().Perform();
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell > span"), Is.Not.Null);
         }

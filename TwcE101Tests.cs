@@ -199,6 +199,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
+
             That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span"), Is.Not.Null);
 
             var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
@@ -256,7 +257,7 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcE101_15();
             await TwcE101_16();
         }
-            public async Task TwcE101_14()
+        public async Task TwcE101_14()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");

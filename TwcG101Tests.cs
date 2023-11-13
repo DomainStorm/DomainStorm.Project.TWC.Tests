@@ -1,9 +1,7 @@
-﻿    using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System.Collections.ObjectModel;
 using System.Net;
 using static NUnit.Framework.Assert;
 
@@ -81,53 +79,30 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcG101_04()
         {
             var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='受理']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
 
             var chceckSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
-            That(chceckSign != null, "未受理");
+            That(chceckSign!, Is.Not.Null);
         }
         public async Task TwcG101_05()
         {
             var stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='申請電子帳單勾選']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiApplyEmail);
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='申請電子帳單勾選']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiApplyEmail);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiApplyEmail);
+            Thread.Sleep(1000);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='申請電子帳單勾選']")));
             That(stiApplyEmail.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcG101_06()
         {
             var stiIdentificationChoose = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='檢附證件group3']")));
-            _wait.Until(_ =>
-            {
-                try
-                {
-                    ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiIdentificationChoose);
-                    That(stiIdentificationChoose.GetAttribute("checked"), Is.EqualTo("true"));
-                    return true;
-                }
-                catch
-                {
-                    stiIdentificationChoose = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='檢附證件group3']")));
-                    return false;
-                }
-            });
-            
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiIdentificationChoose);
+            Thread.Sleep(1000);
+            That(stiIdentificationChoose.GetAttribute("checked"), Is.EqualTo("true"));
+
             var stiIdentificationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[id='檢附證件'] > input")));
-            _wait.Until(_ =>
-            {
-                try
-                {
-                    stiIdentificationInput.SendKeys("BBB");
-                    return true;
-                }
-                catch
-                {
-                    stiIdentificationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[id='檢附證件'] > input")));
-                    return false;
-                }
-            });
+            stiIdentificationInput.SendKeys("BBB");
         }
         public async Task TwcG101_07()
         {
@@ -227,7 +202,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
-            if (uploadButton.Displayed) 
+            if (uploadButton.Displayed)
             {
                 _actions.MoveToElement(uploadButton).Click().Perform();
             }
