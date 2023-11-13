@@ -331,18 +331,46 @@ public class TestHelper
         }
     }
     
-    public static IWebElement? WaitUploadCompleted(IWebDriver _driver)
+    public static IWebElement? WaitStormTableUpload(IWebDriver _driver)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>
             {
-                var stormCardSeventh = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(7) > storm-edit-table")));
-                var stormTable = stormCardSeventh.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-                return stormTable.GetShadowRoot().FindElement(By.CssSelector(
-                    "div.table-responsive > div.table-container > table > tbody > tr > td.align-middle.text-start > storm-table-cell.hydrated > span"));
+                var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                try
+                {
+                    return stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
+                }
+                catch
+                {
+                    // ignored
+                }
+                return null;
             });
+            return !string.IsNullOrEmpty(e?.Text) ? e : null;
+        });
+    }
+    public static IWebElement? WaitStormEditTableUpload(IWebDriver _driver , string css)
+    {
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+        return _wait.Until(_ =>
+        {
+            var e = _wait.Until(_ =>
+            {
+                var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                try
+                {
+                    return stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
+                }
+                catch
+                {
+                    // ignored
+                }
+                return null;
+                });
             return !string.IsNullOrEmpty(e.Text) ? e : null;
         });
     }
