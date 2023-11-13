@@ -72,7 +72,7 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(button).Click().Perform();
 
             var pTitle = TestHelper.WaitStormEditTableUpload(_driver, "td > p");
-            That(pTitle.Text, Is.EqualTo("沒有找到符合的結果"));
+            That(pTitle!.Text, Is.EqualTo("沒有找到符合的結果"));
         }
         public async Task TwcE201_05()
         {
@@ -85,19 +85,10 @@ namespace DomainStorm.Project.TWC.Tests
             var secondFile = "twcweb_01_1_夾帶附件2.pdf";
             var secondFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", secondFile);
             lastHiddenInput.SendKeys(firstFilePath);
-            _wait.Until(_ =>
-            {
-                try
-                {
-                    lastHiddenInput.SendKeys(secondFilePath);
-                    return true;
-                }
-                catch (StaleElementReferenceException)
-                {
-                    lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(2)")));
-                    return false;
-                }
-            });
+            Thread.Sleep(1000);
+
+            lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(2)")));
+            lastHiddenInput.SendKeys(secondFilePath);
 
             var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
@@ -115,8 +106,9 @@ namespace DomainStorm.Project.TWC.Tests
             });
 
             var spanOne = stormTable.GetShadowRoot().FindElement(By.CssSelector("tr > td > storm-table-cell > span"));
-            var spanTwo = stormTable.GetShadowRoot().FindElement(By.CssSelector("tr:nth-child(2) > td > storm-table-cell > span"));
             That(spanOne.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+
+            var spanTwo = stormTable.GetShadowRoot().FindElement(By.CssSelector("tr:nth-child(2) > td > storm-table-cell > span"));
             That(spanTwo.Text, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
         }
         public async Task TwcE201_06()
@@ -125,8 +117,9 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(submitButton).Click().Perform();
 
             var attachFileOneTitle = TestHelper.WaitStormTableUpload(_driver, "tr > td[data-field='attached'] > storm-table-cell > span > i");
-            var attachFileTwoTitle = TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) > td[data-field='attached'] > storm-table-cell > span > i");
             That(attachFileOneTitle!.Text, Is.EqualTo("attach_file"));
+
+            var attachFileTwoTitle = TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) > td[data-field='attached'] > storm-table-cell > span > i");
             That(attachFileTwoTitle!.Text, Is.EqualTo("attach_file"));
         }
     }

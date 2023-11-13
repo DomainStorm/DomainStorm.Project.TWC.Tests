@@ -90,7 +90,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='申請電子帳單勾選']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiApplyEmail);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiApplyEmail);
-            Thread.Sleep(1000);
+
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='申請電子帳單勾選']")));
             That(stiApplyEmail.GetAttribute("checked"), Is.EqualTo("true"));
         }
@@ -98,11 +98,11 @@ namespace DomainStorm.Project.TWC.Tests
         {
             var stiIdentificationChoose = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='檢附證件group3']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiIdentificationChoose);
-            Thread.Sleep(1000);
             That(stiIdentificationChoose.GetAttribute("checked"), Is.EqualTo("true"));
 
             var stiIdentificationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[id='檢附證件'] > input")));
             stiIdentificationInput.SendKeys("BBB");
+            That(stiIdentificationInput.GetAttribute("value"), Is.EqualTo("BBB"));
         }
         public async Task TwcG101_07()
         {
@@ -149,34 +149,14 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             var stiEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
-            _wait.Until(_ =>
-            {
-                try
-                {
-                    stiEmailInput.SendKeys("aaa@bbb.ccc");
-                    return true;
-                }
-                catch (StaleElementReferenceException)
-                {
-                    stiEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
-                    return false;
-                }
-            });
+            stiEmailInput.SendKeys("aaa@bbb.ccc");
+            stiEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
+            That(stiEmailInput.GetAttribute("value"), Is.EqualTo("aaa@bbb.ccc"));
 
             var stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
-            _wait.Until(_ =>
-            {
-                try
-                {
-                    stiEmailTelNoInput.SendKeys("02-12345678");
-                    return true;
-                }
-                catch (StaleElementReferenceException)
-                {
-                    stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
-                    return false;
-                }
-            });
+            stiEmailTelNoInput.SendKeys("02-12345678");
+            stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
+            That(stiEmailTelNoInput.GetAttribute("value"), Is.EqualTo("02-12345678"));
         }
         public async Task TwcG101_11()
         {
@@ -202,10 +182,6 @@ namespace DomainStorm.Project.TWC.Tests
         {
             var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
-            if (uploadButton.Displayed)
-            {
-                _actions.MoveToElement(uploadButton).Click().Perform();
-            }
             That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span"), Is.Not.Null);
 
             var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));

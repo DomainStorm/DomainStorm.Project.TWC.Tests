@@ -63,7 +63,6 @@ namespace DomainStorm.Project.TWC.Tests
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
             _driver.SwitchTo().Frame(0);
 
             var 中結 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='中結']")));
@@ -73,12 +72,11 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcD101_04()
         {
             var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='受理']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
 
             var chceckSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
-            That(chceckSign != null, "未受理");
+            That(chceckSign!, Is.Not.Null);
         }
         public async Task TwcD101_05()
         {
@@ -197,8 +195,8 @@ namespace DomainStorm.Project.TWC.Tests
             var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 3, 2023']")));
             _actions.MoveToElement(受理日起).Click().Perform();
 
-            var 查詢 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
-            _actions.MoveToElement(查詢).Click().Perform();
+            var search = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            _actions.MoveToElement(search).Click().Perform();
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell > span"), Is.Not.Null);
         }
         public async Task TwcD101_11()
@@ -218,32 +216,26 @@ namespace DomainStorm.Project.TWC.Tests
             }
 
             var filePath = Path.Combine(_downloadDirectory, "41104433664.pdf");
-
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
             }
+
             var downloadButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button");
             downloadButton.Click();
-
             That(Directory.Exists(_downloadDirectory), Is.True);
 
             Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
-
             _wait.Until(webDriver =>
             {
                 Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
                 foreach (var fn in Directory.GetFiles(_downloadDirectory))
                 {
                     Console.WriteLine($"-----filename: {fn}-----");
                 }
-
                 Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
                 return File.Exists(filePath);
             });
-
             That(File.Exists(filePath), Is.True);
         }
     }

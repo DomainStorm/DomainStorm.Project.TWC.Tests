@@ -74,31 +74,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
-            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span"), Is.Not.Null);
+            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             var checkButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
             _actions.MoveToElement(checkButton).Click().Perform();
             That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));
 
-            _wait.Until(_ =>
-            {
-                WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
-                var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
-                _actions.MoveToElement(infoButton).Click().Perform();
-                try
-                {
-                    if (infoButton.Displayed)
-                    {
-                        _actions.MoveToElement(infoButton).Click().Perform();
-                        return false;
-                    }
-                    return true;
-                }
-                catch
-                {
-                    return true;
-                }
-            });
+            var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+            _actions.MoveToElement(infoButton).Click().Perform();
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
@@ -251,8 +234,9 @@ namespace DomainStorm.Project.TWC.Tests
             var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
             _actions.MoveToElement(受理日起).Click().Perform();
 
-            var 查詢 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
-            _actions.MoveToElement(查詢).Click().Perform();
+            var search = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            _actions.MoveToElement(search).Click().Perform();
+
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell > span"), Is.Not.Null);
             That(TestHelper.WaitStormTableUpload(_driver, "tr > td[data-field='userName'] > storm-table-cell > span")!.Text, Is.EqualTo("張博文"));
             That(TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) > td[data-field='userName'] > storm-table-cell > span")!.Text, Is.EqualTo("謝德威"));
@@ -265,8 +249,8 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "4e03", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            var stormDropdown = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-sidenav ul> li > storm-dropdown > div > a > div > span")));
-            That(stormDropdown.GetAttribute("innerText"), Is.EqualTo("草屯營運所業務股 - 業務員"));
+            var stormDropdown = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-sidenav > aside > ul > li > storm-dropdown > div > a > div > div > span")));
+            That(stormDropdown.Text, Is.EqualTo("草屯營運所業務股 - 業務員"));
         }
         public async Task TwcS100_13() //因不同站所，故查詢不到任何資料
         {
