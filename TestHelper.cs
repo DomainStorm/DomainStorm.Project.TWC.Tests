@@ -15,7 +15,6 @@ namespace DomainStorm.Project.TWC.Tests;
 
 public class TestHelper
 {
-    private WebDriverWait _wait = null!;
     private static List<ChromeDriver> _chromeDriverList = new List<ChromeDriver>();
     public static ChromeDriver GetNewChromeDriver()
     {
@@ -27,7 +26,6 @@ public class TestHelper
         option.AddArgument("--ignore-urlfetcher-cert-requests");
         option.AddArgument("--disable-web-security");
         option.AddArgument("--ignore-certificate-errors");
-        //option.AddArgument("--window-size=1920,1080");
 
         string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
         option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
@@ -200,14 +198,14 @@ public class TestHelper
         var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
 
-        usernameElement.SendKeys(userId); 
+        usernameElement.SendKeys(userId);
         passwordElement.SendKeys(password);
 
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
         button.Click();
 
         wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
-        
+
         return Task.CompletedTask;
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
@@ -217,6 +215,19 @@ public class TestHelper
         Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);
         Console.WriteLine("::endgroup::");
+
+        wait.Until(_ =>
+        {
+            try
+            {
+                var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+                return stormTable != null;
+            }
+            catch
+            {
+                return false;
+            }
+        });
 
         var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
         var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
@@ -263,8 +274,46 @@ public class TestHelper
 
         return id;
     }
-    public static void PrepareToDownload(string _downloadDirectory, string filePath)
+    public static bool DownloadFileAndVerify(IWebDriver driver, string fileName, string css)
     {
+        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        Actions _actions = new Actions(driver);
+        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+
+        if (!Directory.Exists(_downloadDirectory))
+        {
+            Directory.CreateDirectory(_downloadDirectory);
+        }
+
+        var filePath = Path.Combine(_downloadDirectory, fileName);
+
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+
+        var downloadButton = TestHelper.FindAndMoveElement(driver, css);
+        downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
+        _actions.MoveToElement(downloadButton).Click().Perform();
+
+        Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
+
+        _wait.Until(webDriver =>
+        {
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+            foreach (var fn in Directory.GetFiles(_downloadDirectory))
+            {
+                Console.WriteLine($"-----filename: {fn}-----");
+            }
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+            return File.Exists(filePath);
+        });
+
+        return File.Exists(filePath);
+    }
+    public static void PrepareToDownload(string filePath)
+    {
+        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         if (!Directory.Exists(_downloadDirectory))
         {
             Directory.CreateDirectory(_downloadDirectory);
@@ -276,19 +325,20 @@ public class TestHelper
         }
     }
 
-    public static void WaitDownloadCompleted(IWebDriver driver, string downloadDirectory, string filePath)
+    public static void WaitDownloadCompleted(IWebDriver driver, string filePath)
     {
-        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
         _wait.Until(_ =>
         {
-            Console.WriteLine($"-----{downloadDirectory} GetFiles-----");
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
 
-            foreach (var fn in Directory.GetFiles(downloadDirectory))
+            foreach (var fn in Directory.GetFiles(_downloadDirectory))
             {
                 Console.WriteLine($"-----filename: {fn}-----");
             }
 
-            Console.WriteLine($"-----{downloadDirectory} GetFiles end-----");
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
 
             if (File.Exists(filePath))
             {
@@ -306,34 +356,34 @@ public class TestHelper
     public static void CleanDb()
     {
         if (GetChromeConfig().CleanDbable)
-        { 
+        {
             var client = new RestClient();
-        var request = new RestRequest("http://localhost:9200/dublincore", Method.Delete);
-        client.Execute(request);
+            var request = new RestRequest("http://localhost:9200/dublincore", Method.Delete);
+            client.Execute(request);
 
-        request.Method = Method.Put;
-        client.Execute(request);
-        using var cn = new SqlConnection("Server=localhost,5434;Database=TWCWeb;User Id=sa;Password=Pass@word");
-        cn.Query("delete MainFile");
-        cn.Query("delete WaterRegisterChangeForm");
-        cn.Query("delete WaterRegisterLog");
-        cn.Query("delete AttachmentFile");
-        cn.Query("delete FormAttachment");
-        cn.Query("delete Form");
-        cn.Query("delete MediaFile");
-        cn.Query("delete PlayList");
-        cn.Query("delete PlayListItem");
-        cn.Query("delete Question");
-        cn.Query("delete QuestionOption");
-        cn.Query("delete Questionnaire");
-        cn.Query("delete QuestionnaireForm");
-        cn.Query("delete QuestionnaireFormAnswer");
+            request.Method = Method.Put;
+            client.Execute(request);
+            using var cn = new SqlConnection("Server=localhost,5434;Database=TWCWeb;User Id=sa;Password=Pass@word");
+            cn.Query("delete MainFile");
+            cn.Query("delete WaterRegisterChangeForm");
+            cn.Query("delete WaterRegisterLog");
+            cn.Query("delete AttachmentFile");
+            cn.Query("delete FormAttachment");
+            cn.Query("delete Form");
+            cn.Query("delete MediaFile");
+            cn.Query("delete PlayList");
+            cn.Query("delete PlayListItem");
+            cn.Query("delete Question");
+            cn.Query("delete QuestionOption");
+            cn.Query("delete Questionnaire");
+            cn.Query("delete QuestionnaireForm");
+            cn.Query("delete QuestionnaireFormAnswer");
         }
     }
 
-    public static IWebElement? WaitStormTableUpload(IWebDriver _driver)
+    public static IWebElement? WaitStormTableUpload(IWebDriver _driver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>
@@ -341,7 +391,7 @@ public class TestHelper
                 var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
                 try
                 {
-                    return stormTable.GetShadowRoot().FindElement(By.CssSelector("td > p"));
+                    return stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
                 }
                 catch
                 {
@@ -354,7 +404,7 @@ public class TestHelper
     }
     public static IWebElement? WaitStormEditTableUpload(IWebDriver _driver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>
