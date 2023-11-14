@@ -212,39 +212,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcD101_12()
         {
-            if (!Directory.Exists(_downloadDirectory))
-            {
-                Directory.CreateDirectory(_downloadDirectory);
-            }
-
-            var filePath = Path.Combine(_downloadDirectory, "41104433664.pdf");
-
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-            var downloadButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button");
-            downloadButton.Click();
-
-            That(Directory.Exists(_downloadDirectory), Is.True);
-
-            Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
-
-            _wait.Until(webDriver =>
-            {
-                Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-                foreach (var fn in Directory.GetFiles(_downloadDirectory))
-                {
-                    Console.WriteLine($"-----filename: {fn}-----");
-                }
-
-                Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
-                return File.Exists(filePath);
-            });
-
-            That(File.Exists(filePath), Is.True);
+            That(TestHelper.DownloadFileAndVerify(_driver, "41104433664.pdf", "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button"), Is.True);
         }
     }
 }
