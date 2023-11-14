@@ -10,6 +10,7 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
+using System;
 
 namespace DomainStorm.Project.TWC.Tests;
 
@@ -276,6 +277,43 @@ public class TestHelper
 
         return id;
     }
+    public static bool DownloadFileAndVerify(IWebDriver driver, string fileName, string css)
+    {
+        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        Actions _actions = new Actions(driver);
+        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+
+        if (!Directory.Exists(_downloadDirectory))
+        {
+            Directory.CreateDirectory(_downloadDirectory);
+        }
+
+        var filePath = Path.Combine(_downloadDirectory, fileName);
+
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+
+        var downloadButton = TestHelper.FindAndMoveElement(driver, css);
+        downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
+        _actions.MoveToElement(downloadButton).Click().Perform();
+
+        Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
+
+        _wait.Until(webDriver =>
+        {
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+            foreach (var fn in Directory.GetFiles(_downloadDirectory))
+            {
+                Console.WriteLine($"-----filename: {fn}-----");
+            }
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+            return File.Exists(filePath);
+        });
+
+        return File.Exists(filePath);
+    }
     public static void PrepareToDownload(string filePath)
     {
         string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
@@ -316,25 +354,6 @@ public class TestHelper
                 return false;
             }
         });
-        //_wait.Until(_ =>
-        //{
-        //    Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-        //    foreach (var fn in Directory.GetFiles(_downloadDirectory))
-        //    {
-        //        Console.WriteLine($"-----filename: {fn}-----");
-
-        //        if (fn == filePath)
-        //        {
-        //            Console.WriteLine($"-----檔案存在: {filePath}-----");
-        //            return true;
-        //        }
-        //    }
-
-        //    Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
-        //    return false;
-        //});
     }
 
     public static void CleanDb()
