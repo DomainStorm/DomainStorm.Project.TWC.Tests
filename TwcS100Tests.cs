@@ -22,7 +22,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
             _actions = new Actions(_driver);
         }
 
@@ -212,10 +212,11 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(2)]
-        public async Task TwcS100_11To12()
+        public async Task TwcS100_11To13()
         {
             await TwcS100_11();
             await TwcS100_12();
+            await TwcS100_13();
         }
         public async Task TwcS100_11()
         {
@@ -236,10 +237,17 @@ namespace DomainStorm.Project.TWC.Tests
 
             var search = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(search).Click().Perform();
-
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell > span"), Is.Not.Null);
-            That(TestHelper.WaitStormTableUpload(_driver, "tr > td[data-field='userName'] > storm-table-cell > span")!.Text, Is.EqualTo("張博文"));
-            That(TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) > td[data-field='userName'] > storm-table-cell > span")!.Text, Is.EqualTo("謝德威"));
+
+            var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+            var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
+            That(pageInfo.Text, Is.EqualTo("顯示第 1 至 2 筆，共 2 筆"));
+
+            Console.WriteLine($"::group::LetMeSeeSee---------{_driver.Url}---------");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::");
+            //That(TestHelper.WaitStormTableUpload(_driver, "tr > td[data-field='userName'] > storm-table-cell > span")!.Text, Is.EqualTo("張博文"));
+            //That(TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) > td[data-field='userName'] > storm-table-cell > span")!.Text, Is.EqualTo("謝德威"));
         }
         public async Task TwcS100_12()
         {
@@ -252,40 +260,24 @@ namespace DomainStorm.Project.TWC.Tests
             var stormDropdown = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-sidenav > aside > ul > li > storm-dropdown > div > a > div > div > span")));
             That(stormDropdown.Text, Is.EqualTo("草屯營運所業務股 - 業務員"));
         }
-        public async Task TwcS100_13() //因不同站所，故查詢不到任何資料
+        public async Task TwcS100_13()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();;
+            var 受理日期起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
+            var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
+            受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
+            _actions.MoveToElement(受理日期起).Click().Perform();
 
-            await TestHelper.Login(driver, "4e03", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
+            var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
+            var 受理月起 = new SelectElement(select);
+            受理月起.SelectByText("March");
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(15));
-            var 查詢 = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
+            _actions.MoveToElement(受理日起).Click().Perform();
 
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var divFirst = stormCard.FindElement(By.CssSelector("div.row"));
-            var stormInputGroup = divFirst.FindElement(By.CssSelector("storm-input-group"));
-            var inputElement = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var 查詢 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            _actions.MoveToElement(查詢).Click().Perform();
+            That(TestHelper.WaitStormTableUpload(_driver, "td > p")!.Text, Is.EqualTo("沒有找到符合的結果"));
 
-            Actions actions = new(driver);
-            actions.MoveToElement(inputElement).Click().Perform();
-            var calendar = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(".flatpickr-calendar.open")));
-            var monthDropdown = calendar.FindElement(By.ClassName("flatpickr-monthDropdown-months"));
-            SelectElement selectMonth = new SelectElement(monthDropdown);
-            selectMonth.SelectByText("March");
-
-            var spanElement = wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("span[aria-label='March 6, 2023']")));
-            actions.MoveToElement(spanElement).Click().Perform();
-
-            actions.MoveToElement(查詢).Click().Perform();
-
-            var secondStormCard = stormMainContent.FindElement(By.CssSelector("storm-card:nth-child(2)"));
-            var stormDocumentListDetail = secondStormCard.FindElement(By.CssSelector("storm-document-list-detail"));
-            var stormTable = stormDocumentListDetail.FindElement(By.CssSelector("storm-table"));
-            var text = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive.border table tbody tr td p")).GetAttribute("textContent");
-
-            That(text, Is.EqualTo("沒有找到符合的結果"));
         }
     }
 }

@@ -22,7 +22,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _actions = new Actions(_driver);
         }
 
@@ -150,6 +150,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stiEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
             stiEmailInput.SendKeys("aaa@bbb.ccc");
+            Thread.Sleep(500);
+            stiEmailInput.SendKeys(Keys.Tab);
+            Thread.Sleep(1000);
             stiEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
             That(stiEmailInput.GetAttribute("value"), Is.EqualTo("aaa@bbb.ccc"));
 

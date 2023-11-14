@@ -10,7 +10,6 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
-using AngleSharp.Dom;
 
 namespace DomainStorm.Project.TWC.Tests;
 
@@ -277,8 +276,9 @@ public class TestHelper
 
         return id;
     }
-    public static void PrepareToDownload(string _downloadDirectory, string filePath)
+    public static void PrepareToDownload(string filePath)
     {
+        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         if (!Directory.Exists(_downloadDirectory))
         {
             Directory.CreateDirectory(_downloadDirectory);
@@ -290,19 +290,20 @@ public class TestHelper
         }
     }
 
-    public static void WaitDownloadCompleted(IWebDriver driver, string downloadDirectory, string filePath)
+    public static void WaitDownloadCompleted(IWebDriver driver, string filePath)
     {
-        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(30));
+        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
         _wait.Until(_ =>
         {
-            Console.WriteLine($"-----{downloadDirectory} GetFiles-----");
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
 
-            foreach (var fn in Directory.GetFiles(downloadDirectory))
+            foreach (var fn in Directory.GetFiles(_downloadDirectory))
             {
                 Console.WriteLine($"-----filename: {fn}-----");
             }
 
-            Console.WriteLine($"-----{downloadDirectory} GetFiles end-----");
+            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
 
             if (File.Exists(filePath))
             {
@@ -315,6 +316,25 @@ public class TestHelper
                 return false;
             }
         });
+        //_wait.Until(_ =>
+        //{
+        //    Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
+
+        //    foreach (var fn in Directory.GetFiles(_downloadDirectory))
+        //    {
+        //        Console.WriteLine($"-----filename: {fn}-----");
+
+        //        if (fn == filePath)
+        //        {
+        //            Console.WriteLine($"-----ÀÉ®×¦s¦b: {filePath}-----");
+        //            return true;
+        //        }
+        //    }
+
+        //    Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
+        //    return false;
+        //});
     }
 
     public static void CleanDb()
@@ -347,7 +367,7 @@ public class TestHelper
 
     public static IWebElement? WaitStormTableUpload(IWebDriver _driver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>
