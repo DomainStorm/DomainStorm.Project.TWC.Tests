@@ -16,7 +16,6 @@ namespace DomainStorm.Project.TWC.Tests;
 
 public class TestHelper
 {
-    private WebDriverWait _wait = null!;
     private static List<ChromeDriver> _chromeDriverList = new List<ChromeDriver>();
     public static ChromeDriver GetNewChromeDriver()
     {
