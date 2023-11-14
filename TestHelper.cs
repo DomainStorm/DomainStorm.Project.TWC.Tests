@@ -297,7 +297,7 @@ public class TestHelper
         downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
         _actions.MoveToElement(downloadButton).Click().Perform();
 
-        Console.WriteLine($"-----�ˬd�ɮק�����|: {filePath}-----");
+        Console.WriteLine($"-----ÀË¬dÀÉ®×§¹¾ã¸ô®|: {filePath}-----");
 
         _wait.Until(webDriver =>
         {
@@ -343,12 +343,12 @@ public class TestHelper
 
             if (File.Exists(filePath))
             {
-                Console.WriteLine($"-----�ɮצs�b: {filePath}-----");
+                Console.WriteLine($"-----ÀÉ®×¦s¦b: {filePath}-----");
                 return true;
             }
             else
             {
-                Console.WriteLine($"-----�ɮפ��s�b: {filePath}-----");
+                Console.WriteLine($"-----ÀÉ®×¤£¦s¦b: {filePath}-----");
                 return false;
             }
         });
@@ -381,10 +381,10 @@ public class TestHelper
             cn.Query("delete QuestionnaireFormAnswer");
         }
     }
-
+  
     public static IWebElement? WaitStormTableUpload(IWebDriver _driver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>
@@ -403,6 +403,7 @@ public class TestHelper
             return !string.IsNullOrEmpty(e?.Text) ? e : null;
         });
     }
+  
     public static IWebElement? WaitStormEditTableUpload(IWebDriver _driver, string css)
     {
         WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
@@ -422,6 +423,28 @@ public class TestHelper
                 }
                 return null;
             });
+            return !string.IsNullOrEmpty(e?.Text) ? e : null;
+        });
+    }
+    public static IWebElement? WaitStormEditTableUpload(IWebDriver _driver , string css)
+    {
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+        return _wait.Until(_ =>
+        {
+            var e = _wait.Until(_ =>
+            {
+                var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                try
+                {
+                    return stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
+                }
+                catch
+                {
+                    // ignored
+                }
+                return null;
+                });
             return !string.IsNullOrEmpty(e.Text) ? e : null;
         });
     }
