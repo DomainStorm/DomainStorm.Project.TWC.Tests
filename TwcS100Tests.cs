@@ -241,13 +241,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
             var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
+            _actions.MoveToElement(pageInfo).Perform();
             That(pageInfo.Text, Is.EqualTo("顯示第 1 至 2 筆，共 2 筆"));
 
             Console.WriteLine($"::group::LetMeSeeSee---------{_driver.Url}---------");
             Console.WriteLine(_driver.PageSource);
             Console.WriteLine("::endgroup::");
-            //That(TestHelper.WaitStormTableUpload(_driver, "tr > td[data-field='userName'] > storm-table-cell > span")!.Text, Is.EqualTo("張博文"));
-            //That(TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) > td[data-field='userName'] > storm-table-cell > span")!.Text, Is.EqualTo("謝德威"));
+            That(TestHelper.WaitStormTableUpload(_driver, "tr > td[data-field='userName'] > storm-table-cell > span")!.Text, Is.EqualTo("張博文"));
+            That(TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) > td[data-field='userName'] > storm-table-cell > span")!.Text, Is.EqualTo("謝德威"));
         }
         public async Task TwcS100_12()
         {
