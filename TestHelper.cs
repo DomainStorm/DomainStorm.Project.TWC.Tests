@@ -10,7 +10,6 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
-using System;
 
 namespace DomainStorm.Project.TWC.Tests;
 
