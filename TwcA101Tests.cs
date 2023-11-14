@@ -102,6 +102,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var pTitle = TestHelper.WaitStormEditTableUpload(_driver, "td > p");
             That(pTitle!.Text, Is.EqualTo("沒有找到符合的結果"));
+        }
         public async Task TwcA101_08()
         {
             var addFileButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='file'] > div.float-end > button")));
