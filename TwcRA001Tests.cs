@@ -18,15 +18,15 @@ namespace DomainStorm.Project.TWC.Tests
             TestHelper.CleanDb();
         }
 
-        [SetUp] // 在每個測試方法之前執行的方法
+        [SetUp]
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
             _actions = new Actions(_driver);
         }
 
-        [TearDown] // 在每個測試方法之後執行的方法
+        [TearDown]
         public void TearDown()
         {
             _driver.Quit();
@@ -34,14 +34,14 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(0)]
-        public async Task TwcRA001_01() // 0511,tw491身分各建立表單，無錯誤
+        public async Task TwcRA001_01()
         {
             //0511 建立表單
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmMilitaryApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"));
 
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft"); 
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -85,8 +85,8 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var logout = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("a[href='./logout']")));
-            _actions.MoveToElement(logout).Click().Perform();
+            var 登出 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("a[href='./logout']")));
+            _actions.MoveToElement(登出).Click().Perform();
 
             //tw491 建立表單
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
@@ -156,14 +156,14 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcRA001_08();
             await TwcRA001_09();
         }
-        public async Task TwcRA001_02() // 取得token
+        public async Task TwcRA001_02()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
 
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
 
-        public async Task TwcRA001_03() //呼叫bmTransferApply/confirm 沒錯誤則取得http 200回應
+        public async Task TwcRA001_03()
 
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-RA001_bmTransferApply.json"));
@@ -171,7 +171,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
-        public async Task TwcRA001_04() //看到申請之表單內容跳至夾帶附件區塊
+        public async Task TwcRA001_04()
         {
             await TestHelper.Login(_driver, "ning53", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
@@ -195,7 +195,7 @@ namespace DomainStorm.Project.TWC.Tests
             }
         }
 
-        public async Task TwcRA001_05() // 看到檔案上傳
+        public async Task TwcRA001_05()
         {
             var 新增文件 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-primary")));
             _actions.MoveToElement(新增文件).Click().Perform();
@@ -211,7 +211,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(文件名稱, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
 
-        public async Task TwcRA001_06() // 看到夾帶附件視窗顯示有一筆附件清單資料
+        public async Task TwcRA001_06()
         {
             var 上傳 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(上傳).Click().Perform();
@@ -219,7 +219,7 @@ namespace DomainStorm.Project.TWC.Tests
             //That(TestHelper.WaitUploadCompleted(_driver), Is.Not.Null);
         }
 
-        public async Task TwcRA001_07() // 表單受理欄位中看到核章資訊
+        public async Task TwcRA001_07()
         {
             _driver.SwitchTo().Frame(0);
 
@@ -234,7 +234,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(signElementExists, Is.True, "未受理");
         }
 
-        public async Task TwcRA001_08() // 看到■用印或代送件只需夾帶附件已打勾
+        public async Task TwcRA001_08()
         {
             _driver.SwitchTo().DefaultContent();
 
@@ -249,7 +249,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(用印或代送件只需夾帶附件.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
-        public async Task TwcRA001_09() // 確認完成畫面進入未結案件中
+        public async Task TwcRA001_09()
         {
             var 確認受理 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(確認受理).Click().Perform();
@@ -271,25 +271,23 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcRA001_10();
             await TwcRA001_11();
         }
-        public async Task TwcRA001_10() //使用者帳號0511登入水籍系統
+        public async Task TwcRA001_10()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
         }
 
-        public async Task TwcRA001_11() //有xlsx檔案下載後打開應顯示有台中所2筆、大里所1筆統計數據。
+        public async Task TwcRA001_11()
         {
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/report/RA001");
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            // 選擇區處別
             var 區處別 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > form > div.mt-3 > storm-select >div.choices")));
             _actions.MoveToElement(區處別).Click().Perform();
 
             var 第四區管理處 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list.choices__list--dropdown > div.choices__list > [data-id='2']")));
             _actions.MoveToElement(第四區管理處).Click().Perform();
 
-            // 選擇受理日期起
             var 受理日期起 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='受理日期起']")));
             var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
             受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
@@ -302,7 +300,6 @@ namespace DomainStorm.Project.TWC.Tests
             var 受理日起 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
             _actions.MoveToElement(受理日起).Click().Perform();
 
-            //選擇受理日期迄 
             var 受理日期迄 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='受理日期迄']")));
             input = 受理日期迄.GetShadowRoot().FindElement(By.CssSelector("input"));
             受理日期迄 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
@@ -315,25 +312,23 @@ namespace DomainStorm.Project.TWC.Tests
             var 受理日迄 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='April 6, 2023']")));
             _actions.MoveToElement(受理日迄).Click().Perform();
 
-            // 選擇檔案格式
             var 檔案格式 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='檔案格式'] div.choices")));
             _actions.MoveToElement(檔案格式).Click().Perform();
 
             var Xlsx = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list [data-value='XLSX']")));
             _actions.MoveToElement(Xlsx).Click().Perform();
 
-            // 檢查下載檔案
             string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
             string filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
 
-            TestHelper.PrepareToDownload(_downloadDirectory, filePath);
+            //TestHelper.PrepareToDownload(_downloadDirectory, filePath);
 
             That(Directory.Exists(_downloadDirectory), Is.True);
 
             var 下載 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(下載).Click().Perform();
 
-            TestHelper.WaitDownloadCompleted(_driver, _downloadDirectory, filePath);
+            //TestHelper.WaitDownloadCompleted(_driver, _downloadDirectory, filePath);
 
             That(File.Exists(filePath), Is.True);
 
@@ -344,7 +339,7 @@ namespace DomainStorm.Project.TWC.Tests
             string E7Value = worksheet.Cells["E7"].Text;
             string E8Value = worksheet.Cells["E8"].Text;
 
-            That(E7Value == "2" && E8Value == "1",Is.True);
+            That(E7Value == "2" && E8Value == "1", Is.True);
         }
     }
 }

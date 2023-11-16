@@ -89,24 +89,26 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcC101_06()
         {
-            _wait.Until(_ =>
-            {
-                try
-                {
-                    WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
-                    var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
-                    if (confirmButton.Displayed)
-                    {
-                        _actions.MoveToElement(confirmButton).Click().Perform();
-                        return false;
-                    }
-                    return true;
-                }
-                catch
-                {
-                    return true;
-                }
-            });
+            var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
+            _actions.MoveToElement(confirmButton).Click().Perform();
+            //_wait.Until(_ =>
+            //{
+            //    try
+            //    {
+            //        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
+            //        var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
+            //        if (confirmButton.Displayed)
+            //        {
+            //            _actions.MoveToElement(confirmButton).Click().Perform();
+            //            return false;
+            //        }
+            //        return true;
+            //    }
+            //    catch
+            //    {
+            //        return true;
+            //    }
+            //});
 
             _driver.SwitchTo().DefaultContent();
 

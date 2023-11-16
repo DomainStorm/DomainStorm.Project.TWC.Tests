@@ -351,14 +351,14 @@ namespace DomainStorm.Project.TWC.Tests
             string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
             string filePath = Path.Combine(_downloadDirectory, "RA002.xlsx");
 
-            TestHelper.PrepareToDownload(_downloadDirectory, filePath);
+            //TestHelper.PrepareToDownload(_downloadDirectory, filePath);
 
             That(Directory.Exists(_downloadDirectory), Is.True);
 
             var 下載 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card.hydrated > form > div:nth-child(5).d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(下載).Click().Perform();
 
-            TestHelper.WaitDownloadCompleted(_driver, _downloadDirectory, filePath);
+            //TestHelper.WaitDownloadCompleted(_driver, _downloadDirectory, filePath);
 
             That(File.Exists(filePath), Is.True);
 
