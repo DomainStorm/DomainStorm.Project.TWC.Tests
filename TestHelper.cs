@@ -313,47 +313,6 @@ public class TestHelper
 
         return File.Exists(filePath);
     }
-    public static void PrepareToDownload(string filePath)
-    {
-        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-        if (!Directory.Exists(_downloadDirectory))
-        {
-            Directory.CreateDirectory(_downloadDirectory);
-        }
-
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
-    }
-
-    public static void WaitDownloadCompleted(IWebDriver driver, string filePath)
-    {
-        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-        _wait.Until(_ =>
-        {
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-            foreach (var fn in Directory.GetFiles(_downloadDirectory))
-            {
-                Console.WriteLine($"-----filename: {fn}-----");
-            }
-
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
-            if (File.Exists(filePath))
-            {
-                Console.WriteLine($"-----檔案存在: {filePath}-----");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine($"-----檔案不存在: {filePath}-----");
-                return false;
-            }
-        });
-    }
 
     public static void CleanDb()
     {
