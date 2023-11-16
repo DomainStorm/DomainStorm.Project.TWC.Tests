@@ -1,9 +1,7 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System.Collections.ObjectModel;
 using System.Net;
 using static NUnit.Framework.Assert;
 
@@ -14,7 +12,6 @@ namespace DomainStorm.Project.TWC.Tests
         private IWebDriver _driver = null!;
         private WebDriverWait _wait = null!;
         private Actions _actions = null!;
-        private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         public TwcD101Tests()
         {
             TestHelper.CleanDb();
@@ -65,22 +62,20 @@ namespace DomainStorm.Project.TWC.Tests
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
             _driver.SwitchTo().Frame(0);
 
-            var 中結 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='中結']")));
-            中結.Click();
-            That(中結.GetAttribute("checked"), Is.EqualTo("true"));
+            var stiEnd = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='中結']")));
+            stiEnd.Click();
+            That(stiEnd.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcD101_04()
         {
             var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='受理']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
 
             var chceckSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
-            That(chceckSign != null, "未受理");
+            That(chceckSign!, Is.Not.Null);
         }
         public async Task TwcD101_05()
         {
@@ -100,7 +95,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcD101_07()
         {
-            while (true)
+            _wait.Until(_ =>
             {
                 try
                 {
@@ -109,17 +104,15 @@ namespace DomainStorm.Project.TWC.Tests
                     if (confirmButton.Displayed)
                     {
                         _actions.MoveToElement(confirmButton).Click().Perform();
+                        return false;
                     }
-                    else
-                    {
-                        break;
-                    }
+                    return true;
                 }
                 catch
                 {
-                    break;
+                    return true;
                 }
-            }
+            });
 
             _driver.SwitchTo().DefaultContent();
 
@@ -127,12 +120,29 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(scanButton).Click().Perform();
 
             var scanSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark")));
-            That(scanSuccess, Is.Not.Null, "等待上傳中");
+            That(scanSuccess, Is.Not.Null, "未上傳");
         }
         public async Task TwcD101_08()
         {
-            var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
-            _actions.MoveToElement(infoButton).Click().Perform();
+            _wait.Until(_ =>
+            {
+                WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
+                var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+                _actions.MoveToElement(infoButton).Click().Perform();
+                try
+                {
+                    if (infoButton.Displayed)
+                    {
+                        _actions.MoveToElement(infoButton).Click().Perform();
+                        return false;
+                    }
+                    return true;
+                }
+                catch
+                {
+                    return true;
+                }
+            });
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
@@ -172,20 +182,19 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            var 受理日期起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
-            var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
-            受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
-            _actions.MoveToElement(受理日期起).Click().Perform();
+            var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
+            var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
+            _actions.MoveToElement(applyDateBegin).Click().Perform();
 
             var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
-            var 受理月起 = new SelectElement(select);
-            受理月起.SelectByText("June");
+            var applyMonthBegin = new SelectElement(select);
+            applyMonthBegin.SelectByText("June");
 
-            var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 3, 2023']")));
-            _actions.MoveToElement(受理日起).Click().Perform();
+            var applyDayBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 3, 2023']")));
+            _actions.MoveToElement(applyDayBegin).Click().Perform();
 
-            var 查詢 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
-            _actions.MoveToElement(查詢).Click().Perform();
+            var search = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            _actions.MoveToElement(search).Click().Perform();
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell > span"), Is.Not.Null);
         }
         public async Task TwcD101_11()
@@ -199,39 +208,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcD101_12()
         {
-            if (!Directory.Exists(_downloadDirectory))
-            {
-                Directory.CreateDirectory(_downloadDirectory);
-            }
-
-            var filePath = Path.Combine(_downloadDirectory, "41104433664.pdf");
-
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-            var downloadButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button");
-            downloadButton.Click();
-
-            That(Directory.Exists(_downloadDirectory), Is.True);
-
-            Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
-
-            _wait.Until(webDriver =>
-            {
-                Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-                foreach (var fn in Directory.GetFiles(_downloadDirectory))
-                {
-                    Console.WriteLine($"-----filename: {fn}-----");
-                }
-
-                Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
-                return File.Exists(filePath);
-            });
-
-            That(File.Exists(filePath), Is.True);
+            That(TestHelper.DownloadFileAndVerify(_driver, "41104433664.pdf", "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button"), Is.True);
         }
     }
 }

@@ -12,7 +12,6 @@ namespace DomainStorm.Project.TWC.Tests
         private IWebDriver _driver = null!;
         private WebDriverWait _wait = null!;
         private Actions _actions = null!;
-        private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         public TwcC101Tests()
         {
             TestHelper.CleanDb();
@@ -22,7 +21,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
             _actions = new Actions(_driver);
         }
 
@@ -48,13 +47,11 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcC101_01()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
-
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
         public async Task TwcC101_02()
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmDisableApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-C101_bmDisableApply.json"));
-
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
         public async Task TwcC101_03()
@@ -64,16 +61,14 @@ namespace DomainStorm.Project.TWC.Tests
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
             _driver.SwitchTo().Frame(0);
 
             var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='受理']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
 
             var chceckSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
-            That(chceckSign != null, "未受理");
+            That(chceckSign!, Is.Not.Null);
         }
         public async Task TwcC101_04()
         {
@@ -179,21 +174,20 @@ namespace DomainStorm.Project.TWC.Tests
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
-            
-            var 受理日期起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
-            var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
-            受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
-            _actions.MoveToElement(受理日期起).Click().Perform();
+
+            var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
+            var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
+            _actions.MoveToElement(applyDateBegin).Click().Perform();
 
             var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
-            var 受理月起 = new SelectElement(select);
-            受理月起.SelectByText("June");
+            var applyMonthBegin = new SelectElement(select);
+            applyMonthBegin.SelectByText("June");
 
-            var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 3, 2023']")));
-            _actions.MoveToElement(受理日起).Click().Perform();
+            var applyDayBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 3, 2023']")));
+            _actions.MoveToElement(applyDayBegin).Click().Perform();
 
-            var 查詢 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
-            _actions.MoveToElement(查詢).Click().Perform();
+            var search = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            _actions.MoveToElement(search).Click().Perform();
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell > span"), Is.Not.Null);
         }
         public async Task TwcC101_10()
