@@ -10,6 +10,7 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
+using System;
 
 namespace DomainStorm.Project.TWC.Tests;
 
@@ -26,6 +27,7 @@ public class TestHelper
         option.AddArgument("--ignore-urlfetcher-cert-requests");
         option.AddArgument("--disable-web-security");
         option.AddArgument("--ignore-certificate-errors");
+        //option.AddArgument("--window-size=1920,1080");
 
         string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
         option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
