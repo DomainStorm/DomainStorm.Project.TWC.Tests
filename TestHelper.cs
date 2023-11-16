@@ -1,4 +1,4 @@
-using OpenQA.Selenium;
+ï»¿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using RestSharp;
@@ -10,7 +10,6 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
-using System;
 
 namespace DomainStorm.Project.TWC.Tests;
 
@@ -297,7 +296,7 @@ public class TestHelper
         downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
         _actions.MoveToElement(downloadButton).Click().Perform();
 
-        Console.WriteLine($"-----ÀË¬dÀÉ®×§¹¾ã¸ô®|: {filePath}-----");
+        Console.WriteLine($"-----æª¢æŸ¥æª”æ¡ˆå®Œæ•´è·¯å¾‘|: {filePath}-----");
 
         _wait.Until(webDriver =>
         {
@@ -311,47 +310,6 @@ public class TestHelper
         });
 
         return File.Exists(filePath);
-    }
-    public static void PrepareToDownload(string filePath)
-    {
-        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-        if (!Directory.Exists(_downloadDirectory))
-        {
-            Directory.CreateDirectory(_downloadDirectory);
-        }
-
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
-    }
-
-    public static void WaitDownloadCompleted(IWebDriver driver, string filePath)
-    {
-        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-        _wait.Until(_ =>
-        {
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-            foreach (var fn in Directory.GetFiles(_downloadDirectory))
-            {
-                Console.WriteLine($"-----filename: {fn}-----");
-            }
-
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
-            if (File.Exists(filePath))
-            {
-                Console.WriteLine($"-----ÀÉ®×¦s¦b: {filePath}-----");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine($"-----ÀÉ®×¤£¦s¦b: {filePath}-----");
-                return false;
-            }
-        });
     }
 
     public static void CleanDb()
