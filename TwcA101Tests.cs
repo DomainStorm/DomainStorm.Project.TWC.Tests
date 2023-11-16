@@ -67,7 +67,7 @@ namespace DomainStorm.Project.TWC.Tests
             var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
             deleteButton.Click();
 
-            var pTitle = TestHelper.WaitStormTableUpload(_driver,"td > p");
+            var pTitle = TestHelper.WaitStormTableUpload(_driver, "td > p");
             That(pTitle!.Text, Is.EqualTo("沒有找到符合的結果"));
         }
 
@@ -123,7 +123,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
         public async Task TwcA101_10()
-        {   
+        {
             var checkButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
             _actions.MoveToElement(checkButton).Click().Perform();
             That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));

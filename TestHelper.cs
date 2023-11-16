@@ -1,4 +1,4 @@
-using OpenQA.Selenium;
+ï»¿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using RestSharp;
@@ -200,14 +200,14 @@ public class TestHelper
         var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
 
-        usernameElement.SendKeys(userId); 
+        usernameElement.SendKeys(userId);
         passwordElement.SendKeys(password);
 
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
         button.Click();
 
         wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
-        
+
         return Task.CompletedTask;
     }
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
@@ -221,13 +221,13 @@ public class TestHelper
         wait.Until(_ =>
         {
             try
-            { 
+            {
                 var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
                 return stormTable != null;
             }
             catch
-            {  
-                return false; 
+            {
+                return false;
             }
         });
 
@@ -298,7 +298,7 @@ public class TestHelper
         downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
         _actions.MoveToElement(downloadButton).Click().Perform();
 
-        Console.WriteLine($"-----ÀË¬dÀÉ®×§¹¾ã¸ô®|: {filePath}-----");
+        Console.WriteLine($"-----æª¢æŸ¥æª”æ¡ˆå®Œæ•´è·¯å¾‘|: {filePath}-----");
 
         _wait.Until(webDriver =>
         {
@@ -317,28 +317,28 @@ public class TestHelper
     public static void CleanDb()
     {
         if (GetChromeConfig().CleanDbable)
-        { 
+        {
             var client = new RestClient();
-        var request = new RestRequest("http://localhost:9200/dublincore", Method.Delete);
-        client.Execute(request);
+            var request = new RestRequest("http://localhost:9200/dublincore", Method.Delete);
+            client.Execute(request);
 
-        request.Method = Method.Put;
-        client.Execute(request);
-        using var cn = new SqlConnection("Server=localhost,5434;Database=TWCWeb;User Id=sa;Password=Pass@word");
-        cn.Query("delete MainFile");
-        cn.Query("delete WaterRegisterChangeForm");
-        cn.Query("delete WaterRegisterLog");
-        cn.Query("delete AttachmentFile");
-        cn.Query("delete FormAttachment");
-        cn.Query("delete Form");
-        cn.Query("delete MediaFile");
-        cn.Query("delete PlayList");
-        cn.Query("delete PlayListItem");
-        cn.Query("delete Question");
-        cn.Query("delete QuestionOption");
-        cn.Query("delete Questionnaire");
-        cn.Query("delete QuestionnaireForm");
-        cn.Query("delete QuestionnaireFormAnswer");
+            request.Method = Method.Put;
+            client.Execute(request);
+            using var cn = new SqlConnection("Server=localhost,5434;Database=TWCWeb;User Id=sa;Password=Pass@word");
+            cn.Query("delete MainFile");
+            cn.Query("delete WaterRegisterChangeForm");
+            cn.Query("delete WaterRegisterLog");
+            cn.Query("delete AttachmentFile");
+            cn.Query("delete FormAttachment");
+            cn.Query("delete Form");
+            cn.Query("delete MediaFile");
+            cn.Query("delete PlayList");
+            cn.Query("delete PlayListItem");
+            cn.Query("delete Question");
+            cn.Query("delete QuestionOption");
+            cn.Query("delete Questionnaire");
+            cn.Query("delete QuestionnaireForm");
+            cn.Query("delete QuestionnaireFormAnswer");
         }
     }
 
