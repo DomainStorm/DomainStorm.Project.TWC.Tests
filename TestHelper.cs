@@ -10,6 +10,7 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
+using System;
 
 namespace DomainStorm.Project.TWC.Tests;
 
@@ -26,6 +27,7 @@ public class TestHelper
         option.AddArgument("--ignore-urlfetcher-cert-requests");
         option.AddArgument("--disable-web-security");
         option.AddArgument("--ignore-certificate-errors");
+        //option.AddArgument("--window-size=1920,1080");
 
         string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
         option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
@@ -296,7 +298,7 @@ public class TestHelper
         downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
         _actions.MoveToElement(downloadButton).Click().Perform();
 
-        Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
+        Console.WriteLine($"-----檢查檔案完整路徑|: {filePath}-----");
 
         _wait.Until(webDriver =>
         {
@@ -310,47 +312,6 @@ public class TestHelper
         });
 
         return File.Exists(filePath);
-    }
-    public static void PrepareToDownload(string filePath)
-    {
-        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-        if (!Directory.Exists(_downloadDirectory))
-        {
-            Directory.CreateDirectory(_downloadDirectory);
-        }
-
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
-    }
-
-    public static void WaitDownloadCompleted(IWebDriver driver, string filePath)
-    {
-        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-        _wait.Until(_ =>
-        {
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-
-            foreach (var fn in Directory.GetFiles(_downloadDirectory))
-            {
-                Console.WriteLine($"-----filename: {fn}-----");
-            }
-
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-
-            if (File.Exists(filePath))
-            {
-                Console.WriteLine($"-----檔案存在: {filePath}-----");
-                return true;
-            }
-            else
-            {
-                Console.WriteLine($"-----檔案不存在: {filePath}-----");
-                return false;
-            }
-        });
     }
 
     public static void CleanDb()
