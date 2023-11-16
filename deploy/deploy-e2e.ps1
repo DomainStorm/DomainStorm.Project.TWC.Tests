@@ -1,4 +1,4 @@
-﻿Set-Location (Split-Path -Parent $MyInvocation.MyCommand.Path)
+Set-Location (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
 Write-Output Api_Gateway_EndPoint: $env:Api_Gateway_EndPoint
 Write-Output OpenIDConnectOptions_Authority: $env:OpenIDConnectOptions_Authority
@@ -22,10 +22,10 @@ $env:MetadataApi_Version = "1.1.2"
 $env:MultiMediaApi_Version = "0.0.6"
 $env:JwtAuthApi_Version = "0.3.3"
 $env:OpenidProvider_Version = "0.3.3"
-$env:TwcWeb_Version = "1.1.0"
+$env:TwcWeb_Version = "1.1.2"
 $env:ResourceApi_Version = "0.1.4"
 $env:ServiceBus_Version = "0.0.6"
-$env:TwcReport_Version = "0.1.1"
+$env:TwcReport_Version = "0.1.2"
 
 
 docker compose -f docker-compose.yml -f docker-compose.metadataapi.yml -f docker-compose.e2e.yml up -d
