@@ -40,7 +40,7 @@
 		<PackageReference Include="RestSharp" Version="110.2.0" />
 		<PackageReference Include="Selenium.Support" Version="4.11.0" />
 		<PackageReference Include="Selenium.WebDriver" Version="4.11.0" />
-		<PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="118.0.5993.7000" />
+		<PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="119.0.6045.10500" />
 		<PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
 		<PackageReference Include="WebDriverManager" Version="2.17.1" />
 	</ItemGroup>
@@ -143,6 +143,9 @@
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	  <None Update="Assets\台水官網圖.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Assets\台水簡介3分鐘精華版.mp4">
 	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 	  </None>
 	</ItemGroup>

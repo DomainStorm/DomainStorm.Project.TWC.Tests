@@ -1,4 +1,4 @@
-﻿Set-Location (Split-Path -Parent $MyInvocation.MyCommand.Path)
+Set-Location (Split-Path -Parent $MyInvocation.MyCommand.Path)
 
 Write-Output Api_Gateway_EndPoint: $env:Api_Gateway_EndPoint
 Write-Output OpenIDConnectOptions_Authority: $env:OpenIDConnectOptions_Authority
