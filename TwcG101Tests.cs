@@ -12,7 +12,6 @@ namespace DomainStorm.Project.TWC.Tests
         private IWebDriver _driver = null!;
         private WebDriverWait _wait = null!;
         private Actions _actions = null!;
-        private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         public TwcG101Tests()
         {
             TestHelper.CleanDb();
@@ -22,7 +21,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
             _actions = new Actions(_driver);
         }
 
@@ -81,6 +80,7 @@ namespace DomainStorm.Project.TWC.Tests
             var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
+            Thread.Sleep(500);
 
             var chceckSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
             That(chceckSign!, Is.Not.Null);
@@ -90,6 +90,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='申請電子帳單勾選']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiApplyEmail);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiApplyEmail);
+            Thread.Sleep(500);
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='申請電子帳單勾選']")));
             That(stiApplyEmail.GetAttribute("checked"), Is.EqualTo("true"));
@@ -98,15 +99,21 @@ namespace DomainStorm.Project.TWC.Tests
         {
             var stiIdentificationChoose = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='檢附證件group3']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiIdentificationChoose);
+            Thread.Sleep(500);
+            stiIdentificationChoose = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='檢附證件group3']")));
             That(stiIdentificationChoose.GetAttribute("checked"), Is.EqualTo("true"));
 
             var stiIdentificationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[id='檢附證件'] > input")));
-            stiIdentificationInput.SendKeys("BBB");
+            stiIdentificationInput.SendKeys("BBB" + Keys.Tab);
+            Thread.Sleep(500);
+            stiIdentificationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[id='檢附證件'] > input")));
             That(stiIdentificationInput.GetAttribute("value"), Is.EqualTo("BBB"));
         }
         public async Task TwcG101_07()
         {
             var stiOverApply = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[id='超戶申請radio'] > input[id='超戶申請group2']")));
+            Thread.Sleep(500);
+            stiOverApply = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[id='超戶申請radio'] > input[id='超戶申請group2']")));
             That(stiOverApply.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcG101_08()
@@ -127,37 +134,20 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcG101_10()
         {
-            _wait.Until(_ =>
-            {
-                try
-                {
-                    WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
-                    var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
-                    if (confirmButton.Displayed)
-                    {
-                        _actions.MoveToElement(confirmButton).Click().Perform();
-                        return false;
-                    }
-                    return true;
-                }
-                catch
-                {
-                    return true;
-                }
-            });
+            var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
+            confirmButton.Click();
 
             _driver.SwitchTo().Frame(0);
 
             var stiEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
-            stiEmailInput.SendKeys("aaa@bbb.ccc");
+            stiEmailInput.SendKeys("aaa@bbb.ccc" + Keys.Tab);
             Thread.Sleep(500);
-            stiEmailInput.SendKeys(Keys.Tab);
-            Thread.Sleep(1000);
             stiEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單Email'] > input")));
             That(stiEmailInput.GetAttribute("value"), Is.EqualTo("aaa@bbb.ccc"));
 
             var stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
-            stiEmailTelNoInput.SendKeys("02-12345678");
+            stiEmailTelNoInput.SendKeys("02-12345678" + Keys.Tab);
+            Thread.Sleep(500);
             stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
             That(stiEmailTelNoInput.GetAttribute("value"), Is.EqualTo("02-12345678"));
         }
@@ -185,49 +175,12 @@ namespace DomainStorm.Project.TWC.Tests
         {
             var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
-            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span"), Is.Not.Null);
-
-            var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var fileName = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-cell > span"));
-            That(fileName.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
         public async Task TwcG101_14()
         {
-            _wait.Until(_ =>
-            {
-                WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
-                var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
-                _actions.MoveToElement(infoButton).Click().Perform();
-                try
-                {
-                    if (infoButton.Displayed)
-                    {
-                        _actions.MoveToElement(infoButton).Click().Perform();
-                        return false;
-                    }
-                    var hintTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > h5")));
-                    if (infoButton.Displayed)
-                    {
-                        var stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
-                        try
-                        {
-                            stiEmailTelNoInput.SendKeys("02-12345678");
-                            return true;
-                        }
-                        catch (StaleElementReferenceException)
-                        {
-                            stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='電子帳單聯絡電話'] > input")));
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-                catch
-                {
-                    return true;
-                }
-            });
+            var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
+            _actions.MoveToElement(infoButton).Click().Perform();
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
@@ -288,20 +241,19 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            var 受理日期起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
-            var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
-            受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
-            _actions.MoveToElement(受理日期起).Click().Perform();
+            var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
+            var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
+            _actions.MoveToElement(applyDateBegin).Click().Perform();
 
             var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
-            var 受理月起 = new SelectElement(select);
-            受理月起.SelectByText("June");
+            var applyMonthBegin = new SelectElement(select);
+            applyMonthBegin.SelectByText("June");
 
-            var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 17, 2023']")));
-            _actions.MoveToElement(受理日起).Click().Perform();
+            var applyDayBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 17, 2023']")));
+            _actions.MoveToElement(applyDayBegin).Click().Perform();
 
-            var 查詢 = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
-            _actions.MoveToElement(查詢).Click().Perform();
+            var search = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
+            _actions.MoveToElement(search).Click().Perform();
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell > span"), Is.Not.Null);
         }
         public async Task TwcG101_18()

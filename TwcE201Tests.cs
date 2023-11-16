@@ -21,7 +21,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _actions = new Actions(_driver);
         }
 
@@ -82,12 +82,11 @@ namespace DomainStorm.Project.TWC.Tests
             var lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(2)")));
             var firstFile = "twcweb_01_1_夾帶附件1.pdf";
             var firstFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", firstFile);
-            var secondFile = "twcweb_01_1_夾帶附件2.pdf";
-            var secondFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", secondFile);
             lastHiddenInput.SendKeys(firstFilePath);
-            Thread.Sleep(1000);
 
             lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(2)")));
+            var secondFile = "twcweb_01_1_夾帶附件2.pdf";
+            var secondFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", secondFile);
             lastHiddenInput.SendKeys(secondFilePath);
 
             var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
@@ -105,11 +104,8 @@ namespace DomainStorm.Project.TWC.Tests
                 return rows.Count == 2;
             });
 
-            var spanOne = stormTable.GetShadowRoot().FindElement(By.CssSelector("tr > td > storm-table-cell > span"));
-            That(spanOne.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
-
-            var spanTwo = stormTable.GetShadowRoot().FindElement(By.CssSelector("tr:nth-child(2) > td > storm-table-cell > span"));
-            That(spanTwo.Text, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
+            That(TestHelper.WaitStormEditTableUpload(_driver, "tr > td > storm-table-cell > span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(TestHelper.WaitStormEditTableUpload(_driver, "tr:nth-child(2) > td > storm-table-cell > span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
         }
         public async Task TwcE201_06()
         {

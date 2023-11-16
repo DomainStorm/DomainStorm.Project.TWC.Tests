@@ -12,7 +12,6 @@ namespace DomainStorm.Project.TWC.Tests
         private IWebDriver _driver = null!;
         private WebDriverWait _wait = null!;
         private Actions _actions = null!;
-        private string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         public TwcC101Tests()
         {
             TestHelper.CleanDb();
@@ -22,7 +21,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
             _actions = new Actions(_driver);
         }
 
@@ -89,26 +88,24 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcC101_06()
         {
-            var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
-            _actions.MoveToElement(confirmButton).Click().Perform();
-            //_wait.Until(_ =>
-            //{
-            //    try
-            //    {
-            //        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
-            //        var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
-            //        if (confirmButton.Displayed)
-            //        {
-            //            _actions.MoveToElement(confirmButton).Click().Perform();
-            //            return false;
-            //        }
-            //        return true;
-            //    }
-            //    catch
-            //    {
-            //        return true;
-            //    }
-            //});
+            _wait.Until(_ =>
+            {
+                try
+                {
+                    WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(1));
+                    var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
+                    if (confirmButton.Displayed)
+                    {
+                        _actions.MoveToElement(confirmButton).Click().Perform();
+                        return false;
+                    }
+                    return true;
+                }
+                catch
+                {
+                    return true;
+                }
+            });
 
             _driver.SwitchTo().DefaultContent();
 
@@ -178,17 +175,16 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            var 受理日期起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
-            var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
-            受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
-            _actions.MoveToElement(受理日期起).Click().Perform();
+            var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
+            var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
+            _actions.MoveToElement(applyDateBegin).Click().Perform();
 
             var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
-            var 受理月起 = new SelectElement(select);
-            受理月起.SelectByText("June");
+            var applyMonthBegin = new SelectElement(select);
+            applyMonthBegin.SelectByText("June");
 
-            var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 3, 2023']")));
-            _actions.MoveToElement(受理日起).Click().Perform();
+            var applyDayBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 3, 2023']")));
+            _actions.MoveToElement(applyDayBegin).Click().Perform();
 
             var search = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(search).Click().Perform();
@@ -205,33 +201,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcC101_11()
         {
-            if (!Directory.Exists(_downloadDirectory))
-            {
-                Directory.CreateDirectory(_downloadDirectory);
-            }
-
-            var filePath = Path.Combine(_downloadDirectory, "41101699338.pdf");
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-
-            var downloadButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button");
-            downloadButton.Click();
-            That(Directory.Exists(_downloadDirectory), Is.True);
-
-            Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
-            _wait.Until(webDriver =>
-            {
-                Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-                foreach (var fn in Directory.GetFiles(_downloadDirectory))
-                {
-                    Console.WriteLine($"-----filename: {fn}-----");
-                }
-                Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
-                return File.Exists(filePath);
-            });
-            That(File.Exists(filePath), Is.True);
+            That(TestHelper.DownloadFileAndVerify(_driver, "41101699338.pdf", "storm-card[id='finished'] > div.float-end > div:nth-child(3) > button"), Is.True);
         }
     }
 }
