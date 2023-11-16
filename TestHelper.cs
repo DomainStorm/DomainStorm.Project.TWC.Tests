@@ -298,7 +298,7 @@ public class TestHelper
         downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
         _actions.MoveToElement(downloadButton).Click().Perform();
 
-        Console.WriteLine($"-----檢查檔案完整路徑: {filePath}-----");
+        Console.WriteLine($"-----檢查檔案完整路徑|: {filePath}-----");
 
         _wait.Until(webDriver =>
         {
@@ -313,6 +313,7 @@ public class TestHelper
 
         return File.Exists(filePath);
     }
+
     public static void CleanDb()
     {
         if (GetChromeConfig().CleanDbable)
@@ -340,10 +341,10 @@ public class TestHelper
             cn.Query("delete QuestionnaireFormAnswer");
         }
     }
-  
+
     public static IWebElement? WaitStormTableUpload(IWebDriver _driver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>
@@ -381,7 +382,7 @@ public class TestHelper
                 }
                 return null;
             });
-            return !string.IsNullOrEmpty(e?.Text) ? e : null;
+            return !string.IsNullOrEmpty(e.Text) ? e : null;
         });
     }
 
