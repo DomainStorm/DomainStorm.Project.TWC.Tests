@@ -298,7 +298,7 @@ public class TestHelper
         downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
         _actions.MoveToElement(downloadButton).Click().Perform();
 
-        Console.WriteLine($"-----ÀË¬dÀÉ®×§¹¾ã¸ô®||: {filePath}-----");
+        Console.WriteLine($"-----æª¢æŸ¥æª”æ¡ˆå®Œæ•´è·¯å¾‘|: {filePath}-----");
 
         _wait.Until(webDriver =>
         {
