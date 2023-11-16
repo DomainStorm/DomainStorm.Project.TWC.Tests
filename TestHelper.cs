@@ -362,7 +362,6 @@ public class TestHelper
             return !string.IsNullOrEmpty(e?.Text) ? e : null;
         });
     }
-  
     public static IWebElement? WaitStormEditTableUpload(IWebDriver _driver, string css)
     {
         WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
