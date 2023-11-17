@@ -10,10 +10,8 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
-using System;
 
 namespace DomainStorm.Project.TWC.Tests;
-
 public class TestHelper
 {
     private static List<ChromeDriver> _chromeDriverList = new List<ChromeDriver>();
@@ -27,10 +25,6 @@ public class TestHelper
         option.AddArgument("--ignore-urlfetcher-cert-requests");
         option.AddArgument("--disable-web-security");
         option.AddArgument("--ignore-certificate-errors");
-        //option.AddArgument("--window-size=1920,1080");
-
-        string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
-        option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
 
         if (GetChromeConfig().Headless)
             option.AddArgument("--headless");
@@ -280,7 +274,7 @@ public class TestHelper
     {
         WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
         Actions _actions = new Actions(driver);
-        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+        var _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
         if (!Directory.Exists(_downloadDirectory))
         {
