@@ -371,7 +371,6 @@ public class TestHelper
             return !string.IsNullOrEmpty(e.Text) ? e : null;
         });
     }
-
     public static IWebElement FindAndMoveElement(IWebDriver webDriver, string css)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
