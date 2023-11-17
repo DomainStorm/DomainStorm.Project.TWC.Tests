@@ -1,5 +1,6 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using static NUnit.Framework.Assert;
@@ -8,38 +9,41 @@ namespace DomainStorm.Project.TWC.Tests
 {
     public class TwcM100Tests
     {
-        private List<ChromeDriver> _chromeDriverList;
+        private IWebDriver _driver = null!;
+        private WebDriverWait _wait = null!;
+        private Actions _actions = null!;
         public TwcM100Tests()
         {
             TestHelper.CleanDb();
         }
 
-        [SetUp] // 在每個測試方法之前執行的方法
-        public Task Setup()
+        [SetUp]
+        public void Setup()
         {
-            _chromeDriverList = new List<ChromeDriver>();
-
-            return Task.CompletedTask;
+            _driver = TestHelper.GetNewChromeDriver();
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+            _actions = new Actions(_driver);
         }
 
-        [TearDown] // 在每個測試方法之後執行的方法
+        [TearDown]
         public void TearDown()
         {
-            TestHelper.CloseChromeDrivers();
+            _driver.Quit();
         }
 
         [Test]
         [Order(0)]
-        public async Task TwcM100_01() // 畫面右側出現媒體管理畫面。
+        public async Task TwcM100_01To11()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            await TwcM100_01();
+            await TwcM100_02();
+        }
+        public async Task TwcM100_01()
+        {
+            await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
 
-            await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-            var mediaLibrary = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
-
+            var mediaLibrary = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
             That(mediaLibrary, Is.Not.Null, "媒體庫未找到");
         }
 

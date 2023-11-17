@@ -272,7 +272,7 @@ public class TestHelper
     }
     public static bool DownloadFileAndVerify(IWebDriver driver, string fileName, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
         Actions _actions = new Actions(driver);
         var _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
