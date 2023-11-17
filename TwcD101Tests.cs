@@ -154,15 +154,12 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcD101_09()
         {
             var 消費性用水服務契約 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
-            _actions.MoveToElement(消費性用水服務契約).Click().Perform();
             That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
 
             var 公司個人資料保護告知事項 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
-            _actions.MoveToElement(公司個人資料保護告知事項).Click().Perform();
             That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
 
             var 公司營業章程 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
-            _actions.MoveToElement(公司營業章程).Click().Perform();
             That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
 
             var imgElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card:nth-child(6) > img")));
@@ -184,6 +181,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
             var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
+            applyDateBegin = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
             _actions.MoveToElement(applyDateBegin).Click().Perform();
 
             var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));

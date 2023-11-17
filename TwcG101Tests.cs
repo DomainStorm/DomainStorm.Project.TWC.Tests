@@ -243,6 +243,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
             var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
+            applyDateBegin = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
             _actions.MoveToElement(applyDateBegin).Click().Perform();
 
             var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));

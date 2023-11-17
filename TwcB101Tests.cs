@@ -145,15 +145,12 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcB101_09()
         {
             var 消費性用水服務契約 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
-            _actions.MoveToElement(消費性用水服務契約).Click().Perform();
             That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
 
             var 公司個人資料保護告知事項 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
-            _actions.MoveToElement(公司個人資料保護告知事項).Click().Perform();
             That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
 
             var 公司營業章程 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
-            _actions.MoveToElement(公司營業章程).Click().Perform();
             That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
 
             var checkFileName = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] > div > a");
