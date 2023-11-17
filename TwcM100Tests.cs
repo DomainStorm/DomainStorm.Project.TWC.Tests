@@ -33,409 +33,176 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(0)]
-        public async Task TwcM100_01To11()
+        public async Task TwcM100_01To06()
         {
             await TwcM100_01();
             await TwcM100_02();
+            await TwcM100_03();
+            await TwcM100_04();
+            await TwcM100_05();
+            await TwcM100_06();
         }
         public async Task TwcM100_01()
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
 
-            var mediaLibrary = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
-            That(mediaLibrary, Is.Not.Null, "媒體庫未找到");
+            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
+            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div > div > div > h5"));
+            That(stormCardTitle.Text, Is.EqualTo("媒體庫"));
         }
+        public async Task TwcM100_02()
+        {
+            var addTextButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card > div > button:nth-child(2)")));
+            _actions.MoveToElement(addTextButton).Click().Perform();
 
+            var stormInputGroupName = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-input-group[label='名稱']")));
+            var stormInputGroupNameInput = stormInputGroupName.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            stormInputGroupNameInput.SendKeys("宣導文字");
+
+            var stormInputGroupDesc = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-input-group[label='說明']")));
+            var stormInputGroupDescInput = stormInputGroupDesc.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            stormInputGroupDescInput.SendKeys("宣導說明文字");
+
+            var stormInputGroupDuration = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-input-group[label='播放秒數']")));
+            var stormInputGroupDurationInput = stormInputGroupDuration.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            stormInputGroupDurationInput.SendKeys("10");
+
+            var stormTextEditor = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-text-editor")));
+            var stormTextEditorInput = stormTextEditor.GetShadowRoot().FindElement(By.CssSelector("div.ql-container > div.ql-editor"));
+            stormTextEditorInput.SendKeys("跑馬燈內容");
+
+            var addButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button[type='submit']")));
+            _actions.MoveToElement(addButton).Click().Perform();
+            That(TestHelper.WaitStormEditTableUpload(_driver, "td[data-field='name'] > storm-table-cell > span")!.Text, Is.EqualTo("宣導文字"));
+        }
+        public async Task TwcM100_03()
+        {
+            var viewButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button > storm-tooltip > div > button");
+            _actions.MoveToElement(viewButton).Click().Perform();
+
+            var viewText = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-html-container > p")));
+            That(viewText.Text, Is.EqualTo("跑馬燈內容"));
+
+            var closeButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-actions > button.swal2-cancel")));
+            _actions.MoveToElement(closeButton).Click().Perform();
+        }
+        public async Task TwcM100_04()
+        {
+            var editButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button:nth-child(2) > storm-tooltip > div > button");
+            _actions.MoveToElement(editButton).Click().Perform();
+
+            var stormTextEditor = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-text-editor")));
+            var stormTextEditorInput = stormTextEditor.GetShadowRoot().FindElement(By.CssSelector("div.ql-container > div.ql-editor"));
+            stormTextEditorInput.Clear();
+
+            stormTextEditorInput = stormTextEditor.GetShadowRoot().FindElement(By.CssSelector("div.ql-container > div.ql-editor"));
+            stormTextEditorInput.SendKeys("應該是宣導的內容文字");
+
+            var updateButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[type='submit']")));
+            _actions.MoveToElement(updateButton).Click().Perform();
+        }
+        public async Task TwcM100_05()
+        {
+            var viewButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button > storm-tooltip > div > button");
+            _actions.MoveToElement(viewButton).Click().Perform();
+
+            var viewText = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-html-container > p")));
+            That(viewText.Text, Is.EqualTo("應該是宣導的內容文字"));
+
+            var closeButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions > button.swal2-cancel")));
+            _actions.MoveToElement(closeButton).Click().Perform();
+        }
+        public async Task TwcM100_06()
+        {
+            var deleteButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button:nth-child(3) > storm-tooltip > div > button");
+            _actions.MoveToElement(deleteButton).Click().Perform();
+
+            var deleteConfirm = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
+            deleteConfirm.Click();
+            That(TestHelper.WaitStormEditTableUpload(_driver, "td > p")!.Text,Is.EqualTo("沒有找到符合的結果"));
+        }
         [Test]
         [Order(1)]
-        public async Task TwcM100_02() // 媒體庫列表出現該筆內容。
+        public async Task TwcM100_07To11()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
-
-            await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-
-            var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            var 新增文字 = stormCard.FindElement(By.CssSelector(".btn-primary:last-child"));
-            新增文字.Click();
-
-            var stormInputGroup = driver.FindElement(By.CssSelector("storm-input-group[label='名稱']"));
-            var 名稱 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            名稱.SendKeys("宣導文字");
-
-            stormInputGroup = driver.FindElement(By.CssSelector("storm-input-group[label='說明']"));
-            var 說明 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            說明.SendKeys("宣導說明");
-
-            stormInputGroup = driver.FindElement(By.CssSelector("storm-input-group[label='播放秒數']"));
-            var 播放秒數 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            播放秒數.SendKeys("10");
-
-            var stormTextEditor = driver.FindElement(By.CssSelector("storm-text-editor"));
-            var 文字 = stormTextEditor.GetShadowRoot().FindElement(By.CssSelector(".ql-editor"));
-            文字.SendKeys("跑馬燈內容");
-            文字.SendKeys(Keys.Tab);
-
-            stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            var 新增 = stormCard.FindElement(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2"));
-            新增.Click();
-            Thread.Sleep(500);
-
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-
-            var element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
-            var spanElement = element.FindElement(By.CssSelector("span"));
-            wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
-
-            string spanText = spanElement.Text;
-            That(spanText, Is.EqualTo("宣導文字"));
+            await TwcM100_07();
+            await TwcM100_08();
+            await TwcM100_09();
+            await TwcM100_10();
+            await TwcM100_11();
         }
-
-        [Test]
-        [Order(2)]
-        public async Task TwcM100_03() // 畫面顯示輸入之文字-跑馬燈內容-視窗後按關閉。
+        public async Task TwcM100_07()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
 
-            await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
+            var addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card > div > button")));
+            _actions.MoveToElement(addFileButton).Click().Perform();
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            var lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input")));
+            var 台水官網圖 = "台水官網圖.png";
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", 台水官網圖);
+            lastHiddenInput.SendKeys(filePath);
 
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            var stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
-            var 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
-            觀看.Click();
+            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            That(fileName.GetAttribute("value"), Is.EqualTo("台水官網圖.png"));
 
-            var divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
-            var div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
-            string innerText = div_divElement.Text;
-            That(innerText, Is.EqualTo("跑馬燈內容"));
-
-            div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
-            var 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
-            關閉.Click();
+            var uploadButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button[type='submit']")));
+            _actions.MoveToElement(uploadButton).Click().Perform();
+            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span")!.Text, Is.EqualTo("台水官網圖.png"));
         }
-
-        [Test]
-        [Order(3)]
-        public async Task TwcM100_04() // 回到媒體庫列表並顯示該筆內容。
+        public async Task TwcM100_08()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            var viewButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button > storm-tooltip > div > button");
+            _actions.MoveToElement(viewButton).Click().Perform();
 
-            await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
+            var viewImg = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-html-container > img")));
+            That(viewImg, Is.Not.Null);
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            var stormButton = stormTableToolbar.FindElements(By.CssSelector("storm-button"))[1];
-            var stormToolTip = stormButton.FindElement(By.CssSelector("storm-tooltip"));
-            var 修改 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
-            修改.Click();
-
-            var stormTextEditor = driver.FindElement(By.CssSelector("storm-text-editor"));
-            var 文字 = stormTextEditor.GetShadowRoot().FindElement(By.CssSelector(".ql-editor"));
-            文字.Clear();
-            文字.SendKeys("應該是宣導的內容文字");
-            文字.SendKeys(Keys.Tab);
-
-            stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            var 更新 = stormCard.FindElement(By.CssSelector("button.btn.bg-gradient-info"));
-            更新.Click();
-            Thread.Sleep(500);
-
-            stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']")));
-            var spanElement = element.FindElement(By.CssSelector("span"));
-            wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
-
-            string spanText = spanElement.Text;
-            That(spanText, Is.EqualTo("宣導文字"));
+            var closeButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-actions > button.swal2-cancel")));
+            closeButton.Click();
         }
-
-        [Test]
-        [Order(4)]
-        public async Task TwcM100_05() // 畫面顯示輸入之文字-應該是宣導的內容文字-視窗後按關閉。
+        public async Task TwcM100_09()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            var editButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button:nth-child(2) > storm-tooltip > div > button");
+            _actions.MoveToElement(editButton).Click().Perform();
 
-            await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
+            var updateButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button[type='submit']")));
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            var stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
-            var 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
-            觀看.Click();
-            Thread.Sleep(500);
-
-            var divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
-            var div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
-            string innerText = div_divElement.Text;
-            That(innerText, Is.EqualTo("應該是宣導的內容文字"));
-
-            div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
-            var 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
-            關閉.Click();
+            var stormInputGroupDesc = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='說明']")));
+            var stormInputGroupDescInput = stormInputGroupDesc.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            stormInputGroupDescInput.SendKeys("描述圖示說明");
+            _actions.MoveToElement(updateButton).Click().Perform();
+            That(TestHelper.WaitStormEditTableUpload(_driver, "td[data-field='description'] > storm-table-cell > span")!.Text, Is.EqualTo("描述圖示說明"));
         }
-
-        [Test]
-        [Order(5)]
-        public async Task TwcM100_06() // 媒體庫列表已無出現該筆資訊。
+        public async Task TwcM100_10()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            var addFileButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card > div > button")));
+            _actions.MoveToElement(addFileButton).Click().Perform();
 
-            await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
+            var lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(2)")));
+            var testmedia = "testmedia.mp4";
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", testmedia);
+            lastHiddenInput.SendKeys(filePath);
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
+            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            That(fileName.GetAttribute("value"), Is.EqualTo("testmedia.mp4"));
 
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            var stormButton = stormTableToolbar.FindElements(By.CssSelector("storm-button"))[2];
-            var stormToolTip = stormButton.FindElement(By.CssSelector("storm-tooltip"));
-            var 刪除 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
-            刪除.Click();
-
-            var divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
-            var div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
-            刪除 = div_divElement.FindElement(By.CssSelector("button.swal2-confirm"));
-            刪除.Click();
-
-            var findElement = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td > p.h3"));
-            var element = findElement.SingleOrDefault(e => e.Text == "沒有找到符合的結果");
-            if (element != null)
-            {
-                string pText = element.Text;
-
-                That(pText, Is.EqualTo("沒有找到符合的結果"));
-            }
+            var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button[type='submit']")));
+            _actions.MoveToElement(uploadButton).Click().Perform();
+            That(TestHelper.WaitStormEditTableUpload(_driver, "tr:nth-child(2) > td[data-field='name'] > storm-table-cell > span")!.Text, Is.EqualTo("testmedia.mp4"));
         }
-
-        [Test]
-        [Order(6)]
-        public async Task TwcM100_07() // 回到媒體庫列表並顯示該筆圖片資訊。
+        public async Task TwcM100_11()
         {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
+            var viewButton = TestHelper.WaitStormEditTableUpload(_driver, "tr:nth-child(2) storm-button > storm-tooltip > div > button");
+            _actions.MoveToElement(viewButton).Click().Perform();
 
-            await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
+            var viewVideo = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-html-container > video")));
+            That(viewVideo, Is.Not.Null);
 
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-
-            var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            var 新增檔案 = stormCard.FindElement(By.CssSelector(".btn-primary:first-child"));
-            新增檔案.Click();
-            Thread.Sleep(500);
-
-            IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
-            var lastHiddenInput = hiddenInputs[^1];
-
-            string 台水官網圖 = "台水官網圖.png";
-            string 台水官網圖Path = Path.Combine(Directory.GetCurrentDirectory(), "Assets", 台水官網圖);
-
-            lastHiddenInput.SendKeys(台水官網圖Path);
-
-            var 上傳 = driver.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 上傳);
-            上傳.Click();
-            Thread.Sleep(3000);
-
-            stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-
-            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='name']"));
-            var spanElement = element.FindElement(By.CssSelector("span"));
-            wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
-
-            string 文件名稱 = spanElement.Text;
-
-            That(文件名稱, Is.EqualTo(台水官網圖));
-        }
-        
-        [Test]
-        [Order(7)]
-        public async Task TwcM100_08() // 畫面顯示該圖內容後視窗按關閉
-        {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
-
-            await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            var stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
-            var 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
-            觀看.Click();
-
-            var divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
-            var div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
-            var imgElement = div_divElement.FindElement(By.TagName("img"));
-
-            if (imgElement != null)
-            {
-                div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
-                var 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
-                關閉.Click();
-            }
-        }
-
-        [Test]
-        [Order(8)]
-        public async Task TwcM100_09() // 回到媒體庫列表有於該筆列表欄位內容顯示-描述圖示說明-之文字
-        {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
-
-            await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var td = stormTable.GetShadowRoot().FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            var stormButton = stormTableToolbar.FindElements(By.CssSelector("storm-button"))[1];
-            var stormToolTip = stormButton.FindElement(By.CssSelector("storm-tooltip"));
-            var 修改 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
-            修改.Click();
-            Thread.Sleep(500);
-
-            var stormInputGroup = driver.FindElement(By.CssSelector("storm-input-group[label='說明']"));
-            var 說明 = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
-            說明.Clear();
-            說明.SendKeys("描述圖示說明");
-            說明.SendKeys(Keys.Tab);
-
-            stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            var 更新 = stormCard.FindElement(By.CssSelector("button.btn.bg-gradient-info"));
-            更新.Click();
-            Thread.Sleep(500);
-
-            stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var element = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr > td[data-field='description']")));
-            var spanElement = element.FindElement(By.CssSelector("span"));
-            wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
-
-            string spanText = spanElement.Text;
-            That(spanText, Is.EqualTo("描述圖示說明"));
-        }
-
-        [Test]
-        [Order(9)]
-        public async Task TwcM100_10() // 回到媒體庫列表並顯示該筆圖片資訊
-        {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
-
-            await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-
-            var stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            var 新增檔案 = stormCard.FindElement(By.CssSelector(".btn-primary:first-child"));
-            新增檔案.Click();
-            Thread.Sleep(500);
-
-            IList<IWebElement> hiddenInputs = driver.FindElements(By.CssSelector("body > .dz-hidden-input"));
-            var lastHiddenInput = hiddenInputs[^1];
-
-            string testmedia = "testmedia.mp4";
-            string testmediaPath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", testmedia);
-
-            lastHiddenInput.SendKeys(testmediaPath);
-
-            var 上傳 = driver.FindElement(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']"));
-            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", 上傳);
-            上傳.Click();
-            Thread.Sleep(1500);
-
-            stormCard = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card")));
-            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-
-            //var secondRow = wait.Until(driver => stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr")));
-            var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name']"));
-            var spanElement = element.FindElement(By.CssSelector("span"));
-            wait.Until(driver => !string.IsNullOrEmpty(spanElement.Text));
-
-            string 文件名稱 = spanElement.Text;
-
-            That(文件名稱, Is.EqualTo(testmedia));
-        }
-
-        [Test]
-        [Order(10)]
-        public async Task TwcM100_11() // 畫面顯示該影片內容後視窗按關閉
-        {
-            ChromeDriver driver = TestHelper.GetNewChromeDriver();
-
-            await TestHelper.Login(driver, "irenewei", TestHelper.Password!);
-            driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
-
-            WebDriverWait wait = new(driver, TimeSpan.FromSeconds(10));
-
-            var stormMainContent = driver.FindElement(By.CssSelector("storm-main-content"));
-            var stormCard = stormMainContent.FindElement(By.CssSelector("storm-card"));
-            var stormEditTable = stormCard.FindElement(By.CssSelector("storm-edit-table"));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var row = stormTable.GetShadowRoot().FindElement(By.CssSelector("table > tbody > tr"));
-            var td = row.FindElement(By.CssSelector("td.text-start.align-middle.action"));
-            var stormTableToolbar = td.FindElement(By.CssSelector("storm-table-toolbar"));
-            var stormToolTip = stormTableToolbar.FindElement(By.CssSelector("storm-tooltip"));
-            var 觀看 = stormToolTip.FindElement(By.CssSelector("button[type='button']"));
-            觀看.Click();
-
-            var divElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-container.swal2-center.swal2-backdrop-show")));
-            var div_divElement = divElement.FindElement(By.CssSelector("div.swal2-html-container"));
-            var videoElement = div_divElement.FindElement(By.TagName("video"));
-
-            if (videoElement != null)
-            {
-                div_divElement = divElement.FindElement(By.CssSelector("div.swal2-actions"));
-                var 關閉 = div_divElement.FindElement(By.CssSelector("button.swal2-cancel"));
-                關閉.Click();
-            }
+            var closeButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions > button.swal2-cancel")));
+            closeButton.Click();
         }
     }
 }
