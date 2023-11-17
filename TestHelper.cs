@@ -214,15 +214,8 @@ public class TestHelper
 
         wait.Until(_ =>
         {
-            try
-            {
-                var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
-                return stormTable != null;
-            }
-            catch
-            {
-                return false;
-            }
+            var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+            return stormTable != null;
         });
 
         var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
@@ -242,34 +235,34 @@ public class TestHelper
         var action = new Actions(webDriver);
         action.MoveToElement(element).Click().Perform();
     }
-    public static string GetLastSegmentFromUrl(ChromeDriver driver)
+    public static string GetLastSegmentFromUrl(IWebDriver driver)
     {
-        string initialUrl = driver.Url;
+        string targetUrl = driver.Url;
 
         WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-        wait.Until(driver => driver.Url != initialUrl);
+        wait.Until(driver => driver.Url != targetUrl);
 
         string[] segments = driver.Url.Split('/');
-        string id = segments[^1];
+        string uuid = segments[^1];
 
-        return id;
+        return uuid;
     }
-    public static string OpenNewWindowAndNavigateToUrlWithLastSegment(ChromeDriver driver)
-    {
-        string initialUrl = driver.Url;
+    //public static string OpenNewWindowAndNavigateToUrlWithLastSegment(ChromeDriver driver)
+    //{
+    //    string initialUrl = driver.Url;
 
-        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-        wait.Until(d => d.Url != initialUrl);
+    //    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+    //    wait.Until(d => d.Url != initialUrl);
 
-        string[] segments = driver.Url.Split('/');
-        string id = segments[^1];
+    //    string[] segments = driver.Url.Split('/');
+    //    string id = segments[^1];
 
-        ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-        driver.SwitchTo().Window(driver.WindowHandles[1]);
-        driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
+    //    ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
+    //    driver.SwitchTo().Window(driver.WindowHandles[1]);
+    //    driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
 
-        return id;
-    }
+    //    return id;
+    //}
     public static bool DownloadFileAndVerify(IWebDriver driver, string fileName, string css)
     {
         WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));

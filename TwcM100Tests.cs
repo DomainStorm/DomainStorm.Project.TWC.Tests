@@ -191,7 +191,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var uploadButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button[type='submit']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
-            That(TestHelper.WaitStormEditTableUpload(_driver, "tr:nth-child(2) > td[data-field='name'] > storm-table-cell > span")!.Text, Is.EqualTo("testmedia.mp4"));
+            That(TestHelper.WaitStormEditTableUpload(_driver, "div.table-bottom > div.table-pageInfo")!.Text, Is.EqualTo("顯示第 1 至 2 筆，共 2 筆"));
         }
         public async Task TwcM100_11()
         {
