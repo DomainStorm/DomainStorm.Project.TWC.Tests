@@ -304,7 +304,6 @@ public class TestHelper
             Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
             return File.Exists(filePath);
         });
-
         return File.Exists(filePath);
     }
 
