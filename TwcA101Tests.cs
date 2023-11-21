@@ -64,8 +64,9 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA101_04()
         {
-            var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
-            deleteButton.Click();
+            var deleteButton = TestHelper.FindAndMoveElement(_driver, "div.swal2-actions > button.swal2-confirm");
+            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions > button.swal2-confirm")));
+            _actions.MoveToElement(deleteButton).Click().Perform();
 
             var pTitle = TestHelper.WaitStormTableUpload(_driver, "td > p");
             That(pTitle!.Text, Is.EqualTo("沒有找到符合的結果"));
@@ -105,7 +106,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA101_08()
         {
-            var addFileButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='file'] > div.float-end > button")));
+            var addFileButton = TestHelper.FindAndMoveElement(_driver, "[id='file'] > div.float-end > button");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='file'] > div.float-end > button")));
             _actions.MoveToElement(addFileButton).Click().Perform();
 
             var lastHiddenInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input.dz-hidden-input:nth-of-type(3)")));
