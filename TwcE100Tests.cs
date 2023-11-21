@@ -158,7 +158,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stiEnd = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='中結']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiEnd);
-            Thread.Sleep(500);
+            Thread.Sleep(750);
 
             _driver.SwitchTo().DefaultContent();
 
