@@ -227,8 +227,8 @@ public class TestHelper
         wait.Until(_ =>
         {
             var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+            Thread.Sleep(500);
             element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
-
             return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
         });
 
