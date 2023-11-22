@@ -138,7 +138,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(infoButton).Click().Perform();
 
-            var hintTitle = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.swal2-html-container > h5")));
+            var hintTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > h5")));
             That(hintTitle.Text, Is.EqualTo("【受理】未核章"));
         }
         public async Task TwcA101_12()
@@ -160,12 +160,6 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            //var stormModal = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-modal:nth-child(5)")));
-            //var template = stormModal.GetShadowRoot().FindElement(By.CssSelector("template"));
-            //var checkScript = "return arguments[0].content.querySelector('swal-html')";
-            //var swalHtml = ((IJavaScriptExecutor)_driver).ExecuteScript(checkScript, template) as IWebElement;
-            //var hintElement = swalHtml.FindElement(By.CssSelector("div > h5"));
-
             var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
             _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(infoButton).Click().Perform();
@@ -178,6 +172,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             var signNumber = TestHelper.FindAndMoveElement(_driver, "[sti-apply-case-no]");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
             That(signNumber.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
         public async Task TwcA101_14()

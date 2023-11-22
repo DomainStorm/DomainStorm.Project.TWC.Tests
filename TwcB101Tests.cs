@@ -154,6 +154,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             var signNumber = TestHelper.FindAndMoveElement(_driver, "[sti-apply-case-no]");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
             That(signNumber.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
         public async Task TwcB101_09()

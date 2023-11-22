@@ -103,7 +103,6 @@ namespace DomainStorm.Project.TWC.Tests
             var confirmButton = TestHelper.FindAndMoveElement(_driver, "div.swal2-popup > div.swal2-actions > button.swal2-confirm");
             _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
             _actions.MoveToElement(confirmButton).Click().Perform();
-
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
 
             var scanButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='credential'] > form > div > div > button.btn-primary");
@@ -131,6 +130,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             var signNumber = TestHelper.FindAndMoveElement(_driver, "[sti-apply-case-no]");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
             That(signNumber.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
         public async Task TwcD101_09()
