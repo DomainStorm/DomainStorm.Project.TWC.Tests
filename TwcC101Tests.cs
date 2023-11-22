@@ -67,7 +67,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
 
-            var chceckSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[class='sign']")));
+            var chceckSign = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[class='sign']")));
             That(chceckSign!, Is.Not.Null);
         }
         public async Task TwcC101_04()
@@ -112,25 +112,6 @@ namespace DomainStorm.Project.TWC.Tests
             var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
             _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
             _actions.MoveToElement(infoButton).Click().Perform();
-            //_wait.Until(_ =>
-            //{
-            //    WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
-            //    var infoButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
-            //    _actions.MoveToElement(infoButton).Click().Perform();
-            //    try
-            //    {
-            //        if (infoButton.Displayed)
-            //        {
-            //            _actions.MoveToElement(infoButton).Click().Perform();
-            //            return false;
-            //        }
-            //        return true;
-            //    }
-            //    catch
-            //    {
-            //        return true;
-            //    }
-            //});
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
