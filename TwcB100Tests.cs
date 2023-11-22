@@ -109,7 +109,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stiPay = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='繳費']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiPay);
-            Thread.Sleep(500);
+            stiPay.SendKeys(Keys.Tab);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView();", stiPay);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='繳費']")));
 
             _driver.SwitchTo().DefaultContent();
 
@@ -120,7 +122,6 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             stiPay = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='繳費']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView();", stiPay);
             That(stiPay.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcB100_06()
@@ -148,8 +149,10 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             var 消費性用水服務契約 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='消費性用水服務契約']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView();", 消費性用水服務契約);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
+            消費性用水服務契約.SendKeys(Keys.Tab);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView();", 消費性用水服務契約);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='消費性用水服務契約']")));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
@@ -162,8 +165,10 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
             var 公司個人資料保護告知事項 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='公司個人資料保護告知事項']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView();", 公司個人資料保護告知事項);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
+            公司個人資料保護告知事項.SendKeys(Keys.Tab);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView();", 公司個人資料保護告知事項);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司個人資料保護告知事項']")));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
@@ -176,8 +181,10 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
             var 公司營業章程 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='公司營業章程']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView();", 公司營業章程);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司營業章程);
+            公司營業章程.SendKeys(Keys.Tab);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView();", 公司營業章程);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司營業章程']")));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 

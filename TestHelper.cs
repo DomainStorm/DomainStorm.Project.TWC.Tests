@@ -235,38 +235,29 @@ public class TestHelper
         var action = new Actions(webDriver);
         action.MoveToElement(element).Click().Perform();
     }
-    public static string GetLastSegmentFromUrl(IWebDriver driver)
+    public static string GetLastSegmentFromUrl(IWebDriver webDriver)
     {
-        string targetUrl = driver.Url;
+        string targetUrl = webDriver.Url;
 
-        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-        wait.Until(driver => driver.Url != targetUrl);
+        WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        wait.Until(webDriver => webDriver.Url != targetUrl);
 
-        string[] segments = driver.Url.Split('/');
+        string[] segments = webDriver.Url.Split('/');
         string uuid = segments[^1];
 
         return uuid;
     }
-    //public static string OpenNewWindowAndNavigateToUrlWithLastSegment(ChromeDriver driver)
-    //{
-    //    string initialUrl = driver.Url;
-
-    //    WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-    //    wait.Until(d => d.Url != initialUrl);
-
-    //    string[] segments = driver.Url.Split('/');
-    //    string id = segments[^1];
-
-    //    ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-    //    driver.SwitchTo().Window(driver.WindowHandles[1]);
-    //    driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
-
-    //    return id;
-    //}
-    public static bool DownloadFileAndVerify(IWebDriver driver, string fileName, string css)
+    public static void UploadFile(IWebDriver webDriver, string filePath, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
-        Actions _actions = new Actions(driver);
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var lastHiddenInput = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
+        lastHiddenInput.SendKeys(filePath);
+    }
+
+    public static bool DownloadFileAndVerify(IWebDriver webDriver, string fileName, string css)
+    {
+        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
+        Actions _actions = new Actions(webDriver);
         var _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
         if (!Directory.Exists(_downloadDirectory))
@@ -281,7 +272,7 @@ public class TestHelper
             File.Delete(filePath);
         }
 
-        var downloadButton = TestHelper.FindAndMoveElement(driver, css);
+        var downloadButton = FindAndMoveElement(webDriver, css);
         downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
         _actions.MoveToElement(downloadButton).Click().Perform();
 
@@ -328,9 +319,9 @@ public class TestHelper
         }
     }
 
-    public static IWebElement? WaitStormTableUpload(IWebDriver _driver, string css)
+    public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>
@@ -349,9 +340,9 @@ public class TestHelper
             return !string.IsNullOrEmpty(e?.Text) ? e : null;
         });
     }
-    public static IWebElement? WaitStormEditTableUpload(IWebDriver _driver, string css)
+    public static IWebElement? WaitStormEditTableUpload(IWebDriver webDriver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>
