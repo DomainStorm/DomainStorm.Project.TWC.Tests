@@ -85,11 +85,16 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var signNumber = TestHelper.FindAndMoveElement(_driver, "storm-card:nth-child(9) > div.row > div.col-sm-7");
-            That(signNumber.GetAttribute("textContent"), Is.EqualTo(TestHelper.ApplyCaseNo));
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
+
+            var signNumber = TestHelper.FindAndMoveElement(_driver, "[sti-apply-case-no]");
+            That(signNumber.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
         public async Task TwcS100_02()
         {
+            _driver.SwitchTo().DefaultContent();
+
             var logout = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-tooltip > div > a[href='./logout']")));
             _actions.MoveToElement(logout).Click().Perform();
 
@@ -177,8 +182,11 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var signNumber = TestHelper.FindAndMoveElement(_driver, "storm-card:nth-child(9) > div.row > div.col-sm-7");
-            That(signNumber.GetAttribute("textContent"), Is.EqualTo(TestHelper.ApplyCaseNo));
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
+
+            var signNumber = TestHelper.FindAndMoveElement(_driver, "[sti-apply-case-no]");
+            That(signNumber.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 
         [Test]
@@ -194,17 +202,17 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "tw491", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            var 受理日期起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
-            var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
-            受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
-            _actions.MoveToElement(受理日期起).Click().Perform();
+            var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
+            var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
+            applyDateBegin = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
+            _actions.MoveToElement(applyDateBegin).Click().Perform();
 
             var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
-            var 受理月起 = new SelectElement(select);
-            受理月起.SelectByText("March");
+            var applyMonthBegin = new SelectElement(select);
+            applyMonthBegin.SelectByText("March");
 
-            var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
-            _actions.MoveToElement(受理日起).Click().Perform();
+            var applyDayBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
+            _actions.MoveToElement(applyDayBegin).Click().Perform();
 
             var search = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(search).Click().Perform();
@@ -229,17 +237,17 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcS100_13()
         {
-            var 受理日期起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
-            var input = 受理日期起.GetShadowRoot().FindElement(By.CssSelector("input"));
-            受理日期起 = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
-            _actions.MoveToElement(受理日期起).Click().Perform();
+            var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
+            var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
+            applyDateBegin = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
+            _actions.MoveToElement(applyDateBegin).Click().Perform();
 
             var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
-            var 受理月起 = new SelectElement(select);
-            受理月起.SelectByText("March");
+            var applyMonthBegin = new SelectElement(select);
+            applyMonthBegin.SelectByText("June");
 
-            var 受理日起 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
-            _actions.MoveToElement(受理日起).Click().Perform();
+            var applyDayBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 17, 2023']")));
+            _actions.MoveToElement(applyDayBegin).Click().Perform();
 
             var search = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(search).Click().Perform();

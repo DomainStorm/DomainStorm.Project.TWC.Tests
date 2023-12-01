@@ -10,10 +10,8 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
-using System;
 
 namespace DomainStorm.Project.TWC.Tests;
-
 public class TestHelper
 {
     private static List<ChromeDriver> _chromeDriverList = new List<ChromeDriver>();
@@ -27,10 +25,6 @@ public class TestHelper
         option.AddArgument("--ignore-urlfetcher-cert-requests");
         option.AddArgument("--disable-web-security");
         option.AddArgument("--ignore-certificate-errors");
-        //option.AddArgument("--window-size=1920,1080");
-
-        string downloadsFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Downloads";
-        option.AddUserProfilePreference("download.default_directory", downloadsFolderPath);
 
         if (GetChromeConfig().Headless)
             option.AddArgument("--headless");
@@ -220,15 +214,8 @@ public class TestHelper
 
         wait.Until(_ =>
         {
-            try
-            {
-                var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
-                return stormTable != null;
-            }
-            catch
-            {
-                return false;
-            }
+            var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+            return stormTable != null;
         });
 
         var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
@@ -240,47 +227,38 @@ public class TestHelper
         wait.Until(_ =>
         {
             var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+            Thread.Sleep(500);
             element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
-
             return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
         });
 
         var action = new Actions(webDriver);
         action.MoveToElement(element).Click().Perform();
     }
-    public static string GetLastSegmentFromUrl(ChromeDriver driver)
+    public static string GetLastSegmentFromUrl(IWebDriver webDriver)
     {
-        string initialUrl = driver.Url;
+        string targetUrl = webDriver.Url;
 
-        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-        wait.Until(driver => driver.Url != initialUrl);
+        WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        wait.Until(webDriver => webDriver.Url != targetUrl);
 
-        string[] segments = driver.Url.Split('/');
-        string id = segments[^1];
+        string[] segments = webDriver.Url.Split('/');
+        string uuid = segments[^1];
 
-        return id;
+        return uuid;
     }
-    public static string OpenNewWindowAndNavigateToUrlWithLastSegment(ChromeDriver driver)
+    public static void UploadFile(IWebDriver webDriver, string filePath, string css)
     {
-        string initialUrl = driver.Url;
-
-        WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-        wait.Until(d => d.Url != initialUrl);
-
-        string[] segments = driver.Url.Split('/');
-        string id = segments[^1];
-
-        ((IJavaScriptExecutor)driver).ExecuteScript("window.open();");
-        driver.SwitchTo().Window(driver.WindowHandles[1]);
-        driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{id}");
-
-        return id;
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var lastHiddenInput = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
+        lastHiddenInput.SendKeys(filePath);
     }
-    public static bool DownloadFileAndVerify(IWebDriver driver, string fileName, string css)
+
+    public static bool DownloadFileAndVerify(IWebDriver webDriver, string fileName, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-        Actions _actions = new Actions(driver);
-        string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
+        Actions _actions = new Actions(webDriver);
+        var _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
         if (!Directory.Exists(_downloadDirectory))
         {
@@ -294,7 +272,7 @@ public class TestHelper
             File.Delete(filePath);
         }
 
-        var downloadButton = TestHelper.FindAndMoveElement(driver, css);
+        var downloadButton = FindAndMoveElement(webDriver, css);
         downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
         _actions.MoveToElement(downloadButton).Click().Perform();
 
@@ -310,7 +288,6 @@ public class TestHelper
             Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
             return File.Exists(filePath);
         });
-
         return File.Exists(filePath);
     }
 
@@ -342,9 +319,9 @@ public class TestHelper
         }
     }
 
-    public static IWebElement? WaitStormTableUpload(IWebDriver _driver, string css)
+    public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>
@@ -363,9 +340,9 @@ public class TestHelper
             return !string.IsNullOrEmpty(e?.Text) ? e : null;
         });
     }
-    public static IWebElement? WaitStormEditTableUpload(IWebDriver _driver, string css)
+    public static IWebElement? WaitStormEditTableUpload(IWebDriver webDriver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
+        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
         return _wait.Until(_ =>
         {
             var e = _wait.Until(_ =>

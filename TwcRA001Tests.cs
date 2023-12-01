@@ -115,8 +115,11 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var signNumber = TestHelper.FindAndMoveElement(_driver, "storm-card:nth-child(9) > div.row > div.col-sm-7");
-            That(signNumber.GetAttribute("textContent"), Is.EqualTo(TestHelper.ApplyCaseNo));
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
+
+            var signNumber = TestHelper.FindAndMoveElement(_driver, "[sti-apply-case-no]");
+            That(signNumber.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 
         [Test]
@@ -206,8 +209,11 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var signNumber = TestHelper.FindAndMoveElement(_driver, "storm-card:nth-child(9) > div.row > div.col-sm-7");
-            That(signNumber.GetAttribute("textContent"), Is.EqualTo(TestHelper.ApplyCaseNo));
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
+
+            var signNumber = TestHelper.FindAndMoveElement(_driver, "[sti-apply-case-no]");
+            That(signNumber.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 
         [Test]
@@ -236,6 +242,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var applyDateBegin = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='受理日期起']")));
             var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
+            applyDateBegin = _wait.Until(ExpectedConditions.ElementToBeClickable(input));
             _actions.MoveToElement(applyDateBegin).Click().Perform();
 
             var select = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
