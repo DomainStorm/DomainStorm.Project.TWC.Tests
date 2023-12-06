@@ -3,8 +3,6 @@ using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using static NUnit.Framework.Assert;
-using System.Linq;
-using NSubstitute;
 
 namespace DomainStorm.Project.TWC.Tests
 {
@@ -70,8 +68,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroupDurationInput = stormInputGroupDuration.GetShadowRoot().FindElement(By.CssSelector("div > input"));
             stormInputGroupDurationInput.SendKeys("10");
 
-            var stormTextEditor = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor")));
-            var stormTextEditorInput = stormTextEditor.GetShadowRoot().FindElement(By.CssSelector("div.ql-container > div.ql-editor"));
+            var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor > div.ql-container > div.ql-editor")));
             stormTextEditorInput.SendKeys("跑馬燈內容");
 
             var addButton = TestHelper.FindAndMoveElement(_driver, "button[type='submit']");
@@ -84,7 +81,7 @@ namespace DomainStorm.Project.TWC.Tests
             var viewButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button > storm-tooltip > div > button");
             _actions.MoveToElement(viewButton).Click().Perform();
 
-            var viewText = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > p")));
+            var viewText = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > h6")));
             That(viewText.Text, Is.EqualTo("跑馬燈內容"));
 
             var closeButton = TestHelper.FindAndMoveElement(_driver, "div.swal2-actions > button.swal2-cancel");
@@ -96,11 +93,10 @@ namespace DomainStorm.Project.TWC.Tests
             var editButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button:nth-child(2) > storm-tooltip > div > button");
             _actions.MoveToElement(editButton).Click().Perform();
 
-            var stormTextEditor = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor")));
-            var stormTextEditorInput = stormTextEditor.GetShadowRoot().FindElement(By.CssSelector("div.ql-container > div.ql-editor"));
+            var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor >div.ql-container > div.ql-editor")));
             stormTextEditorInput.Clear();
 
-            stormTextEditorInput = stormTextEditor.GetShadowRoot().FindElement(By.CssSelector("div.ql-container > div.ql-editor"));
+            stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor >div.ql-container > div.ql-editor")));
             stormTextEditorInput.SendKeys("應該是宣導的內容文字");
 
             var updateButton = TestHelper.FindAndMoveElement(_driver, "button[type='submit']");

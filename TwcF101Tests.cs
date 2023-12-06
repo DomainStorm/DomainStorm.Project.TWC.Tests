@@ -184,10 +184,10 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
 
             var applyMonthBegin = new SelectElement(select);
-            applyMonthBegin.SelectByText("June");
+            applyMonthBegin.SelectByText("六月");
 
-            var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 13, 2023']");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='June 13, 2023']")));
+            var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='六月 13, 2023']");
+            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='六月 13, 2023']")));
             _actions.MoveToElement(applyDayBegin).Click().Perform();
 
             var search = TestHelper.FindAndMoveElement(_driver, "storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button");

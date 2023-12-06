@@ -109,15 +109,19 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='受理日期起']")));
+            var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
+            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[label='受理日期起']")));
             var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
-            _actions.MoveToElement(applyDateBegin).Click().Perform();
+            _actions.MoveToElement(input).Click().Perform();
 
-            var select = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
+            var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
+            
             var applyMonthBegin = new SelectElement(select);
-            applyMonthBegin.SelectByText("March");
+            applyMonthBegin.SelectByText("三月");
 
-            var applyDayBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='March 6, 2023']")));
+            var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='三月 6, 2023']");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='三月 6, 2023']")));
             _actions.MoveToElement(applyDayBegin).Click().Perform();
 
             var search = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));

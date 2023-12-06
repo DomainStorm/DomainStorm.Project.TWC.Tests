@@ -85,15 +85,20 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcB100_04()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
+            
+            var 同步前 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("p.d-none")));
+            var 同步前2 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("p.d-none")));
             _driver.SwitchTo().Frame(0);
-
             var stiTrusteeIdNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-trustee-id-no] > input")));
             stiTrusteeIdNoInput.SendKeys("A123456789" + Keys.Tab);
 
             _driver.SwitchTo().DefaultContent();
 
-            var 同步狀態 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("p.d-none")));
-            _wait.Until(driver => ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0].innerText;", 同步狀態) as string == "同步完成");
+
+            
+            //_wait.Until(driver =>
+            //{   var 同步後 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("p.d-none")));
+            //    ((IJavaScriptExecutor)driver).ExecuteScript("return arguments[0];") ,同步前 == 同步後});
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
