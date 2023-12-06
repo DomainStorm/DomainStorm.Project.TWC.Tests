@@ -25,7 +25,7 @@ $env:OpenidProvider_Version = "0.3.5"
 $env:TwcWeb_Version = "1.1.7"
 $env:ResourceApi_Version = "0.1.4"
 $env:ServiceBus_Version = "0.0.7"
-$env:TwcReport_Version = "0.1.3"
+$env:TwcReport_Version = "0.1.4"
 
 
 docker compose -f docker-compose.yml -f docker-compose.metadataapi.yml -f docker-compose.e2e.yml up -d
