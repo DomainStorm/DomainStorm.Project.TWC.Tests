@@ -236,9 +236,19 @@ namespace DomainStorm.Project.TWC.Tests
             var nextPageButton = TestHelper.FindAndMoveElement(_driver, "form.multisteps-form__form > div:nth-child(3) div.button-row button.bg-gradient-dark");
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("form.multisteps-form__form > div:nth-child(3) div.button-row button.bg-gradient-dark")));
             _actions.MoveToElement(nextPageButton).Click().Perform();
+
+            var contentTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.multisteps-form__content div[slot='3'] h5")));
+            That(contentTitle.Text, Is.EqualTo("問卷完成"));
         }
         public async Task TwcA100_11()
         {
+            var sendButton = TestHelper.FindAndMoveElement(_driver, "form.multisteps-form__form > div:nth-child(4) div.button-row button.bg-gradient-dark");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("form.multisteps-form__form > div:nth-child(4) div.button-row button.bg-gradient-dark")));
+            _actions.MoveToElement(sendButton).Click().Perform();
+
+            var stormCard = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='問卷狀態']")));
+            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
+            That(stormCardTitle.Text, Is.EqualTo("問卷狀態"));
         }
         public async Task TwcA100_12()
         {
