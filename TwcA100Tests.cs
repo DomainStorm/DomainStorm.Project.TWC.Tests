@@ -190,15 +190,49 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcA100_07()
         {
+            await TwcA100_05();
         }
         public async Task TwcA100_08()
         {
+            var contentStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目']")));
+            var contentInput = contentStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            contentInput.SendKeys("題目2");
+
+            var optionSelect = TestHelper.FindAndMoveElement(_driver, "storm-select[label='選項數量'] > div.choices");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-select[label='選項數量'] > div.choices")));
+            _actions.MoveToElement(optionSelect).Click().Perform();
+
+            var optionValue = TestHelper.FindAndMoveElement(_driver, "div[data-value='3']");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[data-value='3']")));
+            _actions.MoveToElement(optionValue).Click().Perform();
+
+            var optionOneStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1']")));
+            var optionOneInput = optionOneStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            optionOneInput.SendKeys("同意");
+
+            var optionTwoStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2']")));
+            var optionTwoInput = optionTwoStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            optionTwoInput.SendKeys("普通");
+
+            var optionThreeStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3']")));
+            var optionThreeInput = optionThreeStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            optionThreeInput.SendKeys("不同意");
+
+            var addButton = TestHelper.FindAndMoveElement(_driver, "div.float-end > button");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.float-end > button")));
+            _actions.MoveToElement(addButton).Click().Perform();
         }
         public async Task TwcA100_09()
         {
+            var nextPageButton = TestHelper.FindAndMoveElement(_driver, "div.button-row button");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.button-row button")));
+            _actions.MoveToElement(nextPageButton).Click().Perform();
         }
         public async Task TwcA100_10()
         {
+            var nextPageButton = TestHelper.FindAndMoveElement(_driver, "div.button-row button");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.button-row button")));
+            _actions.MoveToElement(nextPageButton).Click().Perform();
         }
         public async Task TwcA100_11()
         {
