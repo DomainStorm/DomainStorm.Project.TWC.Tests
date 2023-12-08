@@ -316,8 +316,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             That(TestHelper.DownloadFileAndVerify(_driver, "RA001.xlsx", "storm-card > form > div > button"), Is.True);
 
-            string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            string filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
+            var _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            var filePath = Path.Combine(_downloadDirectory, "RA001.xlsx");
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using var package = new ExcelPackage(new FileInfo(filePath));

@@ -138,8 +138,8 @@ namespace DomainStorm.Project.TWC.Tests
             var textInput = textStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
             textInput.SendKeys("測試問卷結尾文字");
 
-            var nextPageButton = TestHelper.FindAndMoveElement(_driver, "div.button-row button");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.button-row button")));
+            var nextPageButton = TestHelper.FindAndMoveElement(_driver, "form.multisteps-form__form > div:nth-child(1) div.button-row button.bg-gradient-dark");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("form.multisteps-form__form > div:nth-child(1) div.button-row button.bg-gradient-dark")));
             _actions.MoveToElement(nextPageButton).Click().Perform();
 
             var contentTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.multisteps-form__content div.row h5")));
@@ -224,14 +224,17 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA100_09()
         {
-            var nextPageButton = TestHelper.FindAndMoveElement(_driver, "div.button-row button");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.button-row button")));
+            var nextPageButton = TestHelper.FindAndMoveElement(_driver, "form.multisteps-form__form > div:nth-child(2) div.button-row button.bg-gradient-dark");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("form.multisteps-form__form > div:nth-child(2) div.button-row button.bg-gradient-dark")));
             _actions.MoveToElement(nextPageButton).Click().Perform();
+
+            var contentTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.multisteps-form__content div[slot='2'] h5")));
+            That(contentTitle.Text, Is.EqualTo("問卷預覽"));
         }
         public async Task TwcA100_10()
         {
-            var nextPageButton = TestHelper.FindAndMoveElement(_driver, "div.button-row button");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.button-row button")));
+            var nextPageButton = TestHelper.FindAndMoveElement(_driver, "form.multisteps-form__form > div:nth-child(3) div.button-row button.bg-gradient-dark");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("form.multisteps-form__form > div:nth-child(3) div.button-row button.bg-gradient-dark")));
             _actions.MoveToElement(nextPageButton).Click().Perform();
         }
         public async Task TwcA100_11()
