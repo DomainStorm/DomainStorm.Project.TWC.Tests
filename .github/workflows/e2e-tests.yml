@@ -96,11 +96,11 @@ jobs:
       #  run: | 
       #    curl -L -i http://127.0.0.1:8000/jwtauthapi/swagger/index.html       
       - name: Test
-        run: |
-          # dotnet test --no-build --verbosity normal
+        run: 
+          dotnet test --no-build --verbosity normal
           # - dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcA101Tests --no-build --verbosity normal
           # - dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcB101Tests --no-build --verbosity normal
-          dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcC101Tests --no-build --verbosity normal
+          # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcC101Tests --no-build --verbosity normal
           # - dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcD101Tests --no-build --verbosity normal
           # - dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcE101Tests --no-build --verbosity normal
           # - dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcF101Tests --no-build --verbosity normal
@@ -108,5 +108,5 @@ jobs:
           # - dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcM100Tests --no-build --verbosity normal
           # - dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcS100Tests --no-build --verbosity normal
           # - dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcS101Tests --no-build --verbosity normal
-          dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcRA001Tests --no-build --verbosity normal
+          # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcRA001Tests --no-build --verbosity normal
           # - dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcRA002Tests --no-build --verbosity normal 
