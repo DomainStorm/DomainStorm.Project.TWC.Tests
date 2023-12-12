@@ -372,6 +372,17 @@ public class TestHelper
 
         return element;
     }
+    public static string GetChineseMonth(int month)
+    {
+        string[] chineseMonths = { "一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二" };
+
+        if (month >= 1 && month <= 12)
+        {
+            return chineseMonths[month - 1];
+        }
+
+        return string.Empty;
+    }
 }
 public class WaterForm
 {
