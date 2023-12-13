@@ -41,30 +41,32 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
-            _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/multimedia"));
+            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card > div > button")));
 
-            var addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card > div > button")));
+            var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card > div > button");
             _actions.MoveToElement(addFileButton).Click().Perform();
 
             var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "testmedia.mp4");
             TestHelper.UploadFile(_driver, file, "input.dz-hidden-input");
 
-            var fileName = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
             That(fileName.GetAttribute("value"), Is.EqualTo("testmedia.mp4"));
 
-            var uploadButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button[type='submit']")));
+            var uploadButton = TestHelper.FindAndMoveElement(_driver, "button[type='submit']");
+            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[type='submit']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
             That(TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo")!.Text,Is.EqualTo("顯示第 1 至 1 筆，共 1 筆"));
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
-            _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
+            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
 
-            var addListButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
+            var addListButton = TestHelper.FindAndMoveElement(_driver, "button");
             _actions.MoveToElement(addListButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist/create"));
+            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
 
-            var addMediaButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
+            var addMediaButton = TestHelper.FindAndMoveElement(_driver, "button");
             _actions.MoveToElement(addMediaButton).Click().Perform();
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack > storm-table")));
