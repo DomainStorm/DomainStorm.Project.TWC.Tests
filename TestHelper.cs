@@ -337,7 +337,7 @@ public class TestHelper
                 }
                 return null;
             });
-            return !string.IsNullOrEmpty(e?.Text) ? e : null;
+            return !string.IsNullOrEmpty(e!.Text) ? e : null;
         });
     }
     public static IWebElement? WaitStormEditTableUpload(IWebDriver webDriver, string css)

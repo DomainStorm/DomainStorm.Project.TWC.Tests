@@ -38,11 +38,11 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_01()
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
+
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
+            _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/multimedia"));
 
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card > div > button")));
-
-            var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card > div > button");
+            var addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card > div > button")));
             _actions.MoveToElement(addFileButton).Click().Perform();
 
             var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "testmedia.mp4");
@@ -57,14 +57,16 @@ namespace DomainStorm.Project.TWC.Tests
             That(TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo")!.Text,Is.EqualTo("顯示第 1 至 1 筆，共 1 筆"));
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
+            _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
 
             var addListButton = TestHelper.FindAndMoveElement(_driver, "button");
             _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
             _actions.MoveToElement(addListButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
+            _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist/create"));
 
             var addMediaButton = TestHelper.FindAndMoveElement(_driver, "button");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
             _actions.MoveToElement(addMediaButton).Click().Perform();
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack > storm-table")));
@@ -86,10 +88,13 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.bg-gradient-info")));
             _actions.MoveToElement(submitButton).Click().Perform();
 
+            _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
+
             var pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo");
             _wait.Until(driver => pageInfo!.Text == "顯示第 1 至 1 筆，共 1 筆");
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist/approve");
+            _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist/approve"));
 
             pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo");
             _wait.Until(driver => pageInfo!.Text == "顯示第 1 至 1 筆，共 1 筆");
@@ -100,6 +105,7 @@ namespace DomainStorm.Project.TWC.Tests
             var approveTrueButton = TestHelper.FindAndMoveElement(_driver, "div.rz-dialog-wrapper button");
             _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-wrapper button")));
             _actions.MoveToElement(approveTrueButton).Click().Perform();
+
             var status = TestHelper.WaitStormTableUpload(_driver, "div.table-responsive td[data-field='playListStatus'] span");
             _wait.Until(driver => status!.Text == "核准");
             That(TestHelper.WaitStormTableUpload(_driver, "div.table-responsive td[data-field='playListStatus'] span")!.Text, Is.EqualTo("核准"));
