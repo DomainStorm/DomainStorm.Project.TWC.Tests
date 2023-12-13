@@ -40,8 +40,9 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
 
-            var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card > div > button");
             _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card > div > button")));
+
+            var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card > div > button");
             _actions.MoveToElement(addFileButton).Click().Perform();
 
             var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "testmedia.mp4");
