@@ -66,7 +66,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist/create"));
 
             var addMediaButton = TestHelper.FindAndMoveElement(_driver, "button");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
+            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
             _actions.MoveToElement(addMediaButton).Click().Perform();
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack > storm-table")));
