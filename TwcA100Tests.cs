@@ -90,6 +90,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist/approve");
 
+            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.bg-gradient-info")));
+
             var approveButton = TestHelper.WaitStormTableUpload(_driver, "div.table-responsive storm-button:nth-child(3)");
             _actions.MoveToElement(approveButton).Click().Perform();
 
