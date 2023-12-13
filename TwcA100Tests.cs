@@ -55,6 +55,7 @@ namespace DomainStorm.Project.TWC.Tests
             var uploadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[type='submit']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
             That(TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo")!.Text,Is.EqualTo("顯示第 1 至 1 筆，共 1 筆"));
+            Thread.Sleep(1000);
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
@@ -83,11 +84,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.bg-gradient-info")));
             _actions.MoveToElement(submitButton).Click().Perform();
+            Thread.Sleep(1000);
 
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
 
             var pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo");
             _wait.Until(driver => pageInfo!.Text == "顯示第 1 至 1 筆，共 1 筆");
+            Thread.Sleep(1000);
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist/approve");
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist/approve"));
