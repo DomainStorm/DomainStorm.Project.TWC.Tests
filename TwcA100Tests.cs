@@ -85,12 +85,14 @@ namespace DomainStorm.Project.TWC.Tests
             var submitButton = TestHelper.FindAndMoveElement(_driver, "button.bg-gradient-info");
             _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.bg-gradient-info")));
             _actions.MoveToElement(submitButton).Click().Perform();
+
             var pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo");
-            _wait.Until(driver => pageInfo.Text == "顯示第 1 至 1 筆，共 1 筆");
+            _wait.Until(driver => pageInfo!.Text == "顯示第 1 至 1 筆，共 1 筆");
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist/approve");
 
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.bg-gradient-info")));
+            pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo");
+            _wait.Until(driver => pageInfo!.Text == "顯示第 1 至 1 筆，共 1 筆");
 
             var approveButton = TestHelper.WaitStormTableUpload(_driver, "div.table-responsive storm-button:nth-child(3)");
             _actions.MoveToElement(approveButton).Click().Perform();
