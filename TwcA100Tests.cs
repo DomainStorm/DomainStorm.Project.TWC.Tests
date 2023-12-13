@@ -1,4 +1,5 @@
 ﻿using AngleSharp.Dom;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
@@ -51,30 +52,26 @@ namespace DomainStorm.Project.TWC.Tests
             var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
             That(fileName.GetAttribute("value"), Is.EqualTo("testmedia.mp4"));
 
-            var uploadButton = TestHelper.FindAndMoveElement(_driver, "button[type='submit']");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[type='submit']")));
+            var uploadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[type='submit']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
             That(TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo")!.Text,Is.EqualTo("顯示第 1 至 1 筆，共 1 筆"));
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
 
-            var addListButton = TestHelper.FindAndMoveElement(_driver, "button");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
+            var addListButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
             _actions.MoveToElement(addListButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist/create"));
 
-            var addMediaButton = TestHelper.FindAndMoveElement(_driver, "button");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
+            var addMediaButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
             _actions.MoveToElement(addMediaButton).Click().Perform();
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack > storm-table")));
             var stormTableCell = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div > table > tbody > tr > td[data-field='name']"));
             _actions.MoveToElement(stormTableCell).Click().Perform();
 
-            var addButton = TestHelper.FindAndMoveElement(_driver, "span.rz-button-box");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("span.rz-button-box")));
+            var addButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("span.rz-button-box")));
             _actions.MoveToElement(addButton).Click().Perform();
 
             var stormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group")));
@@ -84,8 +81,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor > div.ql-container > div.ql-editor")));
             stormTextEditorInput.SendKeys("跑馬燈測試");
 
-            var submitButton = TestHelper.FindAndMoveElement(_driver, "button.bg-gradient-info");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.bg-gradient-info")));
+            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.bg-gradient-info")));
             _actions.MoveToElement(submitButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
@@ -102,8 +98,7 @@ namespace DomainStorm.Project.TWC.Tests
             var approveButton = TestHelper.WaitStormTableUpload(_driver, "div.table-responsive storm-button:nth-child(3)");
             _actions.MoveToElement(approveButton).Click().Perform();
 
-            var approveTrueButton = TestHelper.FindAndMoveElement(_driver, "div.rz-dialog-wrapper button");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-wrapper button")));
+            var approveTrueButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-wrapper button")));
             _actions.MoveToElement(approveTrueButton).Click().Perform();
 
             var status = TestHelper.WaitStormTableUpload(_driver, "div.table-responsive td[data-field='playListStatus'] span");
