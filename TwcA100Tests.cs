@@ -49,13 +49,12 @@ namespace DomainStorm.Project.TWC.Tests
             var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "testmedia.mp4");
             TestHelper.UploadFile(_driver, file, "input.dz-hidden-input");
 
-            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            var fileName = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
             That(fileName.GetAttribute("value"), Is.EqualTo("testmedia.mp4"));
 
-            var uploadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[type='submit']")));
+            var uploadButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button[type='submit']")));
             _actions.MoveToElement(uploadButton).Click().Perform();
             That(TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo")!.Text,Is.EqualTo("顯示第 1 至 1 筆，共 1 筆"));
-            Thread.Sleep(1000);
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
@@ -82,15 +81,13 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor > div.ql-container > div.ql-editor")));
             stormTextEditorInput.SendKeys("跑馬燈測試");
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.bg-gradient-info")));
+            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button.bg-gradient-info")));
             _actions.MoveToElement(submitButton).Click().Perform();
-            Thread.Sleep(1000);
 
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
 
             var pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo");
             _wait.Until(driver => pageInfo!.Text == "顯示第 1 至 1 筆，共 1 筆");
-            Thread.Sleep(1000);
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist/approve");
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist/approve"));
