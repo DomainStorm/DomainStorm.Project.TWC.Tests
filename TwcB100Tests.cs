@@ -107,6 +107,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
+
+            pay = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='繳費']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", pay);
+
+            That(pay.GetAttribute("checked"), Is.True);
         }
         public async Task TwcB100_06()
         {
