@@ -10,6 +10,7 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
+using System;
 
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
@@ -319,47 +320,57 @@ public class TestHelper
         }
     }
 
-    public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
+public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
     {
         WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-        return _wait.Until(_ =>
+
+        return _wait.Until(driver =>
         {
-            var e = _wait.Until(_ =>
+            IWebElement e = null;
+
+            _wait.Until(_ =>
             {
-                var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
                 try
                 {
-                    return stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
+                    var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+
+                    if (stormTable != null)
+                    {
+                        e = stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
+                        return true;
+                    }
                 }
                 catch
                 {
-                    // ignored
                 }
-                return null;
+                return false;
             });
-            return !string.IsNullOrEmpty(e!.Text) ? e : null;
+            return e;
         });
     }
+
     public static IWebElement? WaitStormEditTableUpload(IWebDriver webDriver, string css)
     {
         WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
         return _wait.Until(_ =>
         {
-            var e = _wait.Until(_ =>
+            IWebElement e = null;
+
+            _wait.Until(_ =>
             {
                 var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
                 var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
                 try
                 {
-                    return stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
+                    e = stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
+                    return true;
                 }
                 catch
                 {
-                    // ignored
                 }
-                return null;
+                return false;
             });
-            return !string.IsNullOrEmpty(e.Text) ? e : null;
+            return e;
         });
     }
     public static IWebElement FindAndMoveElement(IWebDriver webDriver, string css)
