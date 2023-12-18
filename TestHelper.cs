@@ -373,6 +373,30 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
             return e;
         });
     }
+
+    public static IWebElement? WaitStormCardUpload(IWebDriver webDriver, string css1, string css2)
+    {
+        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        return _wait.Until(_ =>
+        {
+            IWebElement e = null;
+
+            _wait.Until(_ =>
+            {
+                try
+                {
+                    var stormCard = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css1)));
+                    e = stormCard.GetShadowRoot().FindElement(By.CssSelector(css2));
+                    return true;
+                }
+                catch
+                {
+                }
+                return false;
+            });
+            return e;
+        });
+    }
     public static IWebElement FindAndMoveElement(IWebDriver webDriver, string css)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
