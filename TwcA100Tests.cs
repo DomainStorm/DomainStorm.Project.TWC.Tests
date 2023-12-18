@@ -598,7 +598,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_35()
         {
             var button = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions > button")));
-            _actions.MoveToElement(button).Click().Perform();
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", button);
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.swal2-actions > button")));
 
