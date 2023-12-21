@@ -267,28 +267,34 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var 區處別 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card storm-select div.choices")));
+            var 區處別 = TestHelper.FindAndMoveElement(_driver, "storm-card storm-select div.choices");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card storm-select div.choices")));
             _actions.MoveToElement(區處別).Click().Perform();
 
-            var 第四區管理處 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list.choices__list--dropdown > div.choices__list > [data-id='2']")));
+            var 第四區管理處 = TestHelper.FindAndMoveElement(_driver, "div.choices__list.choices__list--dropdown > div.choices__list > [data-id='2']");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list.choices__list--dropdown > div.choices__list > [data-id='2']")));
             _actions.MoveToElement(第四區管理處).Click().Perform();
 
-            var 選擇年份 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='選擇年份'] div.choices")));
+            var 選擇年份 = TestHelper.FindAndMoveElement(_driver, "[label='選擇年份'] div.choices");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='選擇年份'] div.choices")));
             _actions.MoveToElement(選擇年份).Click().Perform();
 
-            var 年份 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list [data-value='2023']")));
+            var 年份 = TestHelper.FindAndMoveElement(_driver, "div.choices__list [data-value='2023']");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list [data-value='2023']")));
             _actions.MoveToElement(年份).Click().Perform();
 
-            var 檔案格式 = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[label='檔案格式'] div.choices")));
+            var 檔案格式 = TestHelper.FindAndMoveElement(_driver, "[label='檔案格式'] div.choices");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='檔案格式'] div.choices")));
             _actions.MoveToElement(檔案格式).Click().Perform();
 
-            var xlsx = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.choices__list [data-value='XLSX']")));
+            var xlsx = TestHelper.FindAndMoveElement(_driver, "div.choices__list [data-value='XLSX']");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list [data-value='XLSX']")));
             _actions.MoveToElement(xlsx).Click().Perform();
 
             That(TestHelper.DownloadFileAndVerify(_driver, "RA002.xlsx", "storm-card > form > div > button"), Is.True);
 
-            string _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-            string filePath = Path.Combine(_downloadDirectory, "RA002.xlsx");
+            var downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+            var filePath = Path.Combine(downloadDirectory, "RA002.xlsx");
 
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
