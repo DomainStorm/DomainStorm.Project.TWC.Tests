@@ -150,7 +150,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             var confirmButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
             _actions.MoveToElement(confirmButton).Click().Perform();
-
         }
         public async Task TwcA101_12()
         {
