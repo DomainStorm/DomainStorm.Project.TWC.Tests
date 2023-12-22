@@ -11,6 +11,9 @@ using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
 using System;
+using AngleSharp.Dom;
+using System.Xml.Linq;
+using static System.Collections.Specialized.BitVector32;
 
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
@@ -322,17 +325,17 @@ public class TestHelper
 
 public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
-        return _wait.Until(driver =>
+        return wait.Until(driver =>
         {
             IWebElement e = null;
 
-            _wait.Until(_ =>
+            wait.Until(_ =>
             {
                 try
                 {
-                    var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                    var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
 
                     if (stormTable != null)
                     {
@@ -340,60 +343,85 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
                         return true;
                     }
                 }
+
                 catch
                 {
+                    return false;
                 }
+
                 return false;
             });
+
             return e;
         });
     }
 
     public static IWebElement? WaitStormEditTableUpload(IWebDriver webDriver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-        return _wait.Until(_ =>
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+
+        return wait.Until(_ =>
         {
             IWebElement e = null;
 
-            _wait.Until(_ =>
+            wait.Until(_ =>
             {
-                var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
-                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
                 try
                 {
-                    e = stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
-                    return true;
+                    var stormEditTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                    var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+
+                    if (stormTable != null)
+                    {
+                        e = stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
+
+                        return true;
+                    }
                 }
+
                 catch
                 {
+                    return false;
                 }
+
                 return false;
             });
+
             return e;
         });
     }
 
-    public static IWebElement? WaitStormCardUpload(IWebDriver webDriver, string css1, string css2)
+    public static IWebElement? FindShadowRootElement(IWebDriver webDriver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        return _wait.Until(_ =>
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+
+        return wait.Until(_ =>
         {
             IWebElement e = null;
 
-            _wait.Until(_ =>
+            wait.Until(_ =>
             {
                 try
                 {
-                    var stormCard = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css1)));
-                    e = stormCard.GetShadowRoot().FindElement(By.CssSelector(css2));
-                    return true;
+                    var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+                    var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+
+                    if (stormTreeView != null)
+                    {
+                        e = stormTreeView.GetShadowRoot().FindElement(By.CssSelector(css));
+
+                        return true;
+                    }
                 }
+
                 catch
                 {
+                    return false;
                 }
+
                 return false;
             });
+
             return e;
         });
     }
@@ -404,6 +432,7 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
         var element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
 
         action.MoveToElement(element).Perform();
+        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(css)));
 
         return element;
     }
