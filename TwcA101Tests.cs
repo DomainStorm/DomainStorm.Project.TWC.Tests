@@ -200,6 +200,9 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[id='contract_3'] > div.d-flex > div.form-check > input")));
             That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
 
+            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
+            _actions.MoveToElement(href).Click().Perform();
+
             var attachmentName = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] > div > a");
             That(attachmentName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }

@@ -180,6 +180,9 @@ namespace DomainStorm.Project.TWC.Tests
             var applyCaseNo = TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell span");
             _actions.MoveToElement(applyCaseNo).Click().Perform();
 
+            var href = TestHelper.FindShadowRootElement(_driver, "[href='#credential']");
+            _actions.MoveToElement(href).Click().Perform();
+
             var img = TestHelper.FindAndMoveElement(_driver, "storm-card:nth-child(6) > img");
             That(img, Is.Not.Null);
         }

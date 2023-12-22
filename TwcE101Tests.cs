@@ -263,6 +263,9 @@ namespace DomainStorm.Project.TWC.Tests
             var applyCaseNo = TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell span");
             _actions.MoveToElement(applyCaseNo).Click().Perform();
 
+            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
+            _actions.MoveToElement(href).Click().Perform();
+
             var attachmentName = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] > div > a");
             That(attachmentName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
