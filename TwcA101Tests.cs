@@ -201,7 +201,6 @@ namespace DomainStorm.Project.TWC.Tests
             That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
 
             var attachmentName = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] > div > a");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[id='file'] > div > a")));
             That(attachmentName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
     }

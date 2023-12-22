@@ -68,8 +68,8 @@ namespace DomainStorm.Project.TWC.Tests
             var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
             _actions.MoveToElement(href).Click().Perform();
 
-            var pTitle = TestHelper.WaitStormEditTableUpload(_driver, "td > p");
-            That(pTitle!.Text, Is.EqualTo("沒有找到符合的結果"));
+            var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
+            That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
         }
         public async Task TwcB101_04()
         {
@@ -185,8 +185,8 @@ namespace DomainStorm.Project.TWC.Tests
             var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
             _actions.MoveToElement(href).Click().Perform();
 
-            var checkAttachmentName = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] > div > a");
-            That(checkAttachmentName.Text, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
+            var attachmentName = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] > div > a");
+            That(attachmentName.Text, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
         }
     }
 }
