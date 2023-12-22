@@ -60,7 +60,7 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(href).Click().Perform();
 
             var abandonButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] button.bg-gradient-danger");
-            _actions.MoveToElement(abandonButton).Click().Perform();
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", abandonButton);
 
             var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-actions button.swal2-confirm")));
             That(confirmButton.Text, Is.EqualTo("刪除"));
