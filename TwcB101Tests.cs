@@ -63,6 +63,8 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+
             var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
             _actions.MoveToElement(href).Click().Perform();
 

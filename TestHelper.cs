@@ -181,7 +181,6 @@ public class TestHelper
     public static Task Login(IWebDriver webDriver, string userId, string password)
     {
         ((IJavaScriptExecutor)webDriver).ExecuteScript($"window.location.href = '{LoginUrl}';");
-        //webDriver.Navigate().GoToUrl(LoginUrl);
 
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
@@ -243,7 +242,7 @@ public class TestHelper
     {
         string targetUrl = webDriver.Url;
 
-        WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
         wait.Until(webDriver => webDriver.Url != targetUrl);
 
         string[] segments = webDriver.Url.Split('/');
@@ -325,7 +324,7 @@ public class TestHelper
 
 public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
         return wait.Until(driver =>
         {
@@ -358,7 +357,7 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
 
     public static IWebElement? WaitStormEditTableUpload(IWebDriver webDriver, string css)
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
         return wait.Until(_ =>
         {
@@ -393,7 +392,8 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
 
     public static IWebElement? FindShadowRootElement(IWebDriver webDriver, string css)
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        var action = new Actions(webDriver);
 
         return wait.Until(_ =>
         {
@@ -435,17 +435,6 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
         wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(css)));
 
         return element;
-    }
-    public static string GetChineseMonth(int month)
-    {
-        string[] chineseMonths = { "一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二" };
-
-        if (month >= 1 && month <= 12)
-        {
-            return chineseMonths[month - 1];
-        }
-
-        return string.Empty;
     }
 }
 public class WaterForm

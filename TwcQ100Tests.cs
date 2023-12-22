@@ -345,13 +345,7 @@ namespace DomainStorm.Project.TWC.Tests
             var input = takeDownDateChoose.GetShadowRoot().FindElement(By.CssSelector("input"));
             _actions.MoveToElement(input).Click().Perform();
 
-            var cultureInfo = new CultureInfo("zh-TW");
-            var monthInChinese = TestHelper.GetChineseMonth(DateTime.Now.Month);
-            var today = $"{monthInChinese}月 {DateTime.Now.Day}, {DateTime.Now.Year}";
             //sendkey
-            var takeDownDate = TestHelper.FindAndMoveElement(_driver, $"div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='{today}']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector($"div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='{today}']")));
-            _actions.MoveToElement(takeDownDate).Click().Perform();
         }
         public async Task TwcQ100_18()
         {
