@@ -56,29 +56,32 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().DefaultContent();
 
-            var addFileButton = TestHelper.FindAndMoveElement(_driver, "[id='file'] > div.float-end > button");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='file'] > div.float-end > button")));
-            _actions.MoveToElement(addFileButton).Click().Perform();
+            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
+            _actions.MoveToElement(href).Click().Perform();
 
-            var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
-            TestHelper.UploadFile(_driver, file, "input.dz-hidden-input:nth-of-type(3)");
+            var createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
+            _actions.MoveToElement(createAttachmentButton).Click().Perform();
 
-            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
-            That(fileName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            var attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
+            TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input:nth-of-type(3)");
 
-            var uploadButton = TestHelper.FindAndMoveElement(_driver, "div.d-flex.justify-content-end.mt-4 button[name='button']");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-            _actions.MoveToElement(uploadButton).Click().Perform();
-            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            That(attachmentName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+
+            var submitButton = TestHelper.FindAndMoveElement(_driver, "div.d-flex.justify-content-end.mt-4 button[name='button']");
+            _actions.MoveToElement(submitButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
+            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+
+            href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            _actions.MoveToElement(href).Click().Perform();
 
             var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
             _actions.MoveToElement(checkButton).Click().Perform();
-            That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
-            _actions.MoveToElement(infoButton).Click().Perform();
+            submitButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info");
+            _actions.MoveToElement(submitButton).Click().Perform();
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
@@ -87,14 +90,12 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            var signNumber = TestHelper.FindAndMoveElement(_driver, "[sti-apply-case-no]");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
-            That(signNumber.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
+            That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             _driver.SwitchTo().DefaultContent();
 
             var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-tooltip > div > a[href='./logout']")));
             _actions.MoveToElement(logout).Click().Perform();
 
             //tw491 建立表單
@@ -117,29 +118,32 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().DefaultContent();
 
-            addFileButton = TestHelper.FindAndMoveElement(_driver, "[id='file'] > div.float-end > button");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='file'] > div.float-end > button")));
-            _actions.MoveToElement(addFileButton).Click().Perform();
+            href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
+            _actions.MoveToElement(href).Click().Perform();
 
-            file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
-            TestHelper.UploadFile(_driver, file, "input.dz-hidden-input:nth-of-type(3)");
+            createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
+            _actions.MoveToElement(createAttachmentButton).Click().Perform();
 
-            fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
-            That(fileName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
+            TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input:nth-of-type(3)");
 
-            uploadButton = TestHelper.FindAndMoveElement(_driver, "div.d-flex.justify-content-end.mt-4 button[name='button']");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-            _actions.MoveToElement(uploadButton).Click().Perform();
-            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            That(attachmentName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+
+            submitButton = TestHelper.FindAndMoveElement(_driver, "div.d-flex.justify-content-end.mt-4 button[name='button']");
+            _actions.MoveToElement(submitButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
+            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+
+            href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            _actions.MoveToElement(href).Click().Perform();
 
             checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
             _actions.MoveToElement(checkButton).Click().Perform();
-            That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));
 
-            infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
-            _actions.MoveToElement(infoButton).Click().Perform();
+            submitButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info");
+            _actions.MoveToElement(submitButton).Click().Perform();
 
             targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
@@ -148,9 +152,8 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            signNumber = TestHelper.FindAndMoveElement(_driver, "[sti-apply-case-no]");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
-            That(signNumber.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+            applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
+            That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 
         [Test]
@@ -185,29 +188,32 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var pTitle = TestHelper.WaitStormEditTableUpload(_driver, "td > p");
-            That(pTitle!.Text, Is.EqualTo("沒有找到符合的結果"));
+            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
+            _actions.MoveToElement(href).Click().Perform();
+
+            var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
+            That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
         }
 
         public async Task TwcRA001_05()
         {
-            var addFileButton = TestHelper.FindAndMoveElement(_driver, "[id='file'] > div.float-end > button");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='file'] > div.float-end > button")));
-            _actions.MoveToElement(addFileButton).Click().Perform();
+            var createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
+            _actions.MoveToElement(createAttachmentButton).Click().Perform();
 
-            var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
-            TestHelper.UploadFile(_driver, file, "input.dz-hidden-input:nth-of-type(3)");
+            var attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
+            TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input:nth-of-type(3)");
 
-            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
-            That(fileName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            That(attachmentName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
 
         public async Task TwcRA001_06()
         {
-            var uploadButton = TestHelper.FindAndMoveElement(_driver, "div.d-flex.justify-content-end.mt-4 button[name='button']");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-            _actions.MoveToElement(uploadButton).Click().Perform();
-            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell > span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            var submitButton = TestHelper.FindAndMoveElement(_driver, "div.d-flex.justify-content-end.mt-4 button[name='button']");
+            _actions.MoveToElement(submitButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
+            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
 
         public async Task TwcRA001_07()
@@ -226,17 +232,19 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
+            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            _actions.MoveToElement(href).Click().Perform();
+
             var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[id='用印或代送件只需夾帶附件']")));
             _actions.MoveToElement(checkButton).Click().Perform();
+
             That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));
         }
 
         public async Task TwcRA001_09()
         {
-            var infoButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
-            _actions.MoveToElement(infoButton).Click().Perform();
+            var submitButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info");
+            _actions.MoveToElement(submitButton).Click().Perform();
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
@@ -245,9 +253,8 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            var signNumber = TestHelper.FindAndMoveElement(_driver, "[sti-apply-case-no]");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
-            That(signNumber.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
+            That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 
         [Test]
@@ -269,49 +276,37 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             var 區處別 = TestHelper.FindAndMoveElement(_driver, "storm-card > form > div.mt-3 > storm-select >div.choices");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card > form > div.mt-3 > storm-select >div.choices")));
             _actions.MoveToElement(區處別).Click().Perform();
 
             var 第四區管理處 = TestHelper.FindAndMoveElement(_driver, "div.choices__list.choices__list--dropdown > div.choices__list > [data-id='2']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list.choices__list--dropdown > div.choices__list > [data-id='2']")));
             _actions.MoveToElement(第四區管理處).Click().Perform();
 
             var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[label='受理日期起']")));
             var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
             _actions.MoveToElement(input).Click().Perform();
 
             var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
-            
             var applyMonthBegin = new SelectElement(select);
             applyMonthBegin.SelectByText("三月");
 
             var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='三月 6, 2023']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='三月 6, 2023']")));
             _actions.MoveToElement(applyDayBegin).Click().Perform();
 
             var applyDateEnd = TestHelper.FindAndMoveElement(_driver, "[label='受理日期迄']");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[label='受理日期迄']")));
             input = applyDateEnd.GetShadowRoot().FindElement(By.CssSelector("input"));
             _actions.MoveToElement(applyDateEnd).Click().Perform();
 
             select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-current-month select")));
-            
             var applyMonthEnd = new SelectElement(select);
             applyMonthEnd.SelectByText("四月");
 
             var applyDatEnd = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='四月 6, 2023']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='四月 6, 2023']")));
             _actions.MoveToElement(applyDatEnd).Click().Perform();
 
             var 檔案格式 = TestHelper.FindAndMoveElement(_driver, "[label='檔案格式'] div.choices");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[label='檔案格式'] div.choices")));
             _actions.MoveToElement(檔案格式).Click().Perform();
 
             var xlsx = TestHelper.FindAndMoveElement(_driver, "div.choices__list [data-value='XLSX']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.choices__list [data-value='XLSX']")));
             _actions.MoveToElement(xlsx).Click().Perform();
 
             That(TestHelper.DownloadFileAndVerify(_driver, "RA001.xlsx", "storm-card > form > div > button"), Is.True);
