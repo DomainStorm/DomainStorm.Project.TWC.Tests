@@ -56,12 +56,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
 
-            var addPlayListButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
+            var addPlayListButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button")));
             _actions.MoveToElement(addPlayListButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist/create"));
 
-            var addMediaButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
+            var addMediaButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button")));
             _actions.MoveToElement(addMediaButton).Click().Perform();
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack > storm-table")));
@@ -103,8 +103,17 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-dialog-wrapper button")));
 
-            var status = TestHelper.WaitStormTableUpload(_driver, "div.table-responsive td[data-field='playListStatus'] span");
-            _wait.Until(driver => status!.Text == "核准");
+            _wait.Until(driver => {
+                try
+                {
+                    var statusElement = TestHelper.WaitStormTableUpload(_driver, "div.table-responsive td[data-field='playListStatus'] span");
+                    return statusElement!.Text == "核准";
+                }
+                catch (StaleElementReferenceException)
+                {
+                    return false;
+                }
+            });
             That(TestHelper.WaitStormTableUpload(_driver, "div.table-responsive td[data-field='playListStatus'] span")!.Text, Is.EqualTo("核准"));
         }
 
