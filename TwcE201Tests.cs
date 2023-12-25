@@ -33,7 +33,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(0)]
-        public async Task TwcE101_01To06()
+        public async Task TwcE201_01To06()
         {
             await TwcE201_01();
             await TwcE201_02();
