@@ -161,8 +161,8 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
 
-            var signCheck = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[class='sign']")));
-            That(signCheck!, Is.Not.Null);
+            var signName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.sign-name > span")));
+            That(signName.Text, Is.EqualTo("張博文"));
         }
         public async Task TwcA101_13()
         {

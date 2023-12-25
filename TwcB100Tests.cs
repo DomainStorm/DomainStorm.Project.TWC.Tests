@@ -99,18 +99,18 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            var pay = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='繳費']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", pay);
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", pay);
+            var stiPay = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='繳費']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiPay);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiPay);
             Thread.Sleep(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            pay = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='繳費']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", pay);
+            stiPay = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='繳費']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiPay);
 
-            That(pay.GetAttribute("checked"), Is.EqualTo("true"));
+            That(stiPay.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcB100_06()
         {
