@@ -112,6 +112,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
+
             var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-note]")));
             That(stiNote.Text, Is.EqualTo("備註內容"));
         }
