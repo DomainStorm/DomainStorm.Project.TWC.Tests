@@ -10,6 +10,7 @@
 "cancelEbill": "Y",
 "applyEbill": "Y",
 "cancelSmsBill": "Y",
+"applyEmailAddr": "gmail@gmail.com",
 "deviceLocation": "台中市西屯區逢甲路100號",
 "applicant": "馬單件過戶代送",
 "idNo": "A123456789",
