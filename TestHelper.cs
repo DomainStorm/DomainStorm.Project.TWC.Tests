@@ -92,6 +92,7 @@ public class TestHelper
         }
     }
     private static string? _applyCaseNo;
+    private static string? _applyEmailAddr;
     public static string? ApplyCaseNo
     {
         get
@@ -445,6 +446,12 @@ public class WaterForm
     public string? WaterNo { get; set; }
     public string? TypeChange { get; set; }
     public string? UserCode { get; set; }
+    public string? ChangeAddress { get; set; }
+    public string? CancelPayAccount { get; set; }
+    public string? CancelEbill { get; set; }
+    public string? ApplyEbill { get; set; }
+    public string? CancelSmsBill { get; set; }
+    public string? ApplyEmailAddr { get; set; }
     public string? DeviceLocation { get; set; }
     public string? Applicant { get; set; }
     public string? IdNo { get; set; }
