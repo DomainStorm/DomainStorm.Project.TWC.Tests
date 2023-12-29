@@ -242,6 +242,8 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
+
             var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
             var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
             _actions.MoveToElement(input).Click().Perform();

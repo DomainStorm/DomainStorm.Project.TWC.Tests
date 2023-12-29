@@ -325,7 +325,7 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/report/RA002");
 
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
             _driver.SwitchTo().Frame(0);
 
             var 區處別 = TestHelper.FindAndMoveElement(_driver, "storm-card storm-select div.choices");
