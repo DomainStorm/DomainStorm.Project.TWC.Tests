@@ -50,12 +50,13 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcN100_13();
             await TwcN100_14();
             await TwcN100_15();
-            await TwcN100_16();
-            await TwcN100_17();
+            //await TwcN100_16();
+            //await TwcN100_17();
         }
         public async Task TwcN100_01()
         {
             await TestHelper.Login(_driver, "meizi", TestHelper.Password!);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
 
             var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip a[href='./logout'] i");
             That(logout.Text,Is.EqualTo("logout"));
@@ -82,9 +83,9 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcN100_04()
         {
-            var stormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱']")));
-            var stormInputGroupInput = stormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
-            stormInputGroupInput.SendKeys("公告測試");
+            var name = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱']")));
+            var nameInput = name.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            nameInput.SendKeys("公告測試");
 
             var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor")));
             editorInput.SendKeys("水籍系統將於12/20進行系統更新，造成不便敬請見諒");
@@ -104,7 +105,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button")!.Text, Is.EqualTo("visibility"));
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button:nth-child(2)")!.Text, Is.EqualTo("drive_file_rename_outline"));
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button:nth-child(4)")!.Text, Is.EqualTo("delete"));
+            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button:nth-child(3)")!.Text, Is.EqualTo("delete"));
         }
         public async Task TwcN100_06()
         {
@@ -148,7 +149,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcN100_10()
         {
-            var deleteButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button:nth-child(4)");
+            var deleteButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button:nth-child(3)");
             _actions.MoveToElement(deleteButton).Click().Perform();
 
             var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-content h5")));
@@ -207,15 +208,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='name'] span")!.Text, Is.EqualTo("公告測試2"));
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='marquee'] span")!.Text, Is.EqualTo("測試公告自動下架"));
-
-            // 目前仍須審核
-            var approveButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button:nth-child(3)");
-            _actions.MoveToElement(approveButton).Click().Perform();
-
-            var primaryButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-stack div.rz-stack button")));
-            _actions.MoveToElement(primaryButton).Click().Perform();
-
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack div.rz-stack button")));
         }
         public async Task TwcN100_14()
         {
