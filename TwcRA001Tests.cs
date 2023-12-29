@@ -272,7 +272,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcRA001_11()
         {
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/report/RA001");
-            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
             _driver.SwitchTo().Frame(0);
 
             var 區處別 = TestHelper.FindAndMoveElement(_driver, "storm-card > form > div.mt-3 > storm-select >div.choices");
@@ -281,27 +281,42 @@ namespace DomainStorm.Project.TWC.Tests
             var 第四區管理處 = TestHelper.FindAndMoveElement(_driver, "div.choices__list.choices__list--dropdown > div.choices__list > [data-id='2']");
             _actions.MoveToElement(第四區管理處).Click().Perform();
 
-            var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
-            var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
-            _actions.MoveToElement(input).Click().Perform();
+            var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期起']")));
+            var applyDateBeginInput = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
 
-            var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
-            var applyMonthBegin = new SelectElement(select);
-            applyMonthBegin.SelectByText("三月");
+            區處別 = TestHelper.FindAndMoveElement(_driver, "storm-card > form > div.mt-3 > storm-select >div.choices");
+            _actions.MoveToElement(區處別).Click().Perform();
 
-            var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='三月 6, 2023']");
-            _actions.MoveToElement(applyDayBegin).Click().Perform();
+            string formattedApplyDateBegin = "2023-3-6";
+            ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginInput);
 
-            var applyDateEnd = TestHelper.FindAndMoveElement(_driver, "[label='受理日期迄']");
-            input = applyDateEnd.GetShadowRoot().FindElement(By.CssSelector("input"));
-            _actions.MoveToElement(applyDateEnd).Click().Perform();
+            var applyDateEnd = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期迄']")));
+            var applyDateEndInput = applyDateEnd.GetShadowRoot().FindElement(By.CssSelector("input"));
 
-            select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
-            var applyMonthEnd = new SelectElement(select);
-            applyMonthEnd.SelectByText("四月");
+            string formattedApplyDateEnd = "2023-4-6";
+            ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateEnd}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateEndInput);
 
-            var applyDatEnd = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='四月 6, 2023']");
-            _actions.MoveToElement(applyDatEnd).Click().Perform();
+            //var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
+            //var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
+            //_actions.MoveToElement(input).Click().Perform();
+
+            //var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
+            //var applyMonthBegin = new SelectElement(select);
+            //applyMonthBegin.SelectByText("三月");
+
+            //var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='三月 6, 2023']");
+            //_actions.MoveToElement(applyDayBegin).Click().Perform();
+
+            //var applyDateEnd = TestHelper.FindAndMoveElement(_driver, "[label='受理日期迄']");
+            //input = applyDateEnd.GetShadowRoot().FindElement(By.CssSelector("input"));
+            //_actions.MoveToElement(applyDateEnd).Click().Perform();
+
+            //select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
+            //var applyMonthEnd = new SelectElement(select);
+            //applyMonthEnd.SelectByText("四月");
+
+            //var applyDatEnd = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='四月 6, 2023']");
+            //_actions.MoveToElement(applyDatEnd).Click().Perform();
 
             var 檔案格式 = TestHelper.FindAndMoveElement(_driver, "[label='檔案格式'] div.choices");
             _actions.MoveToElement(檔案格式).Click().Perform();
