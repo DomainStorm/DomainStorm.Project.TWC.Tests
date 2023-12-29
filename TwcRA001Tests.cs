@@ -280,20 +280,17 @@ namespace DomainStorm.Project.TWC.Tests
 
             var 第四區管理處 = TestHelper.FindAndMoveElement(_driver, "div.choices__list.choices__list--dropdown > div.choices__list > [data-id='2']");
             _actions.MoveToElement(第四區管理處).Click().Perform();
-
+            
             var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期起']")));
             var applyDateBeginInput = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
 
-            區處別 = TestHelper.FindAndMoveElement(_driver, "storm-card > form > div.mt-3 > storm-select >div.choices");
-            _actions.MoveToElement(區處別).Click().Perform();
-
-            string formattedApplyDateBegin = "2023-3-6";
+            string formattedApplyDateBegin = "2023-03-06";
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginInput);
 
             var applyDateEnd = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期迄']")));
-            var applyDateEndInput = applyDateEnd.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var applyDateEndInput = applyDateEnd.GetShadowRoot().FindElement(By.CssSelector("div input"));
 
-            string formattedApplyDateEnd = "2023-4-6";
+            string formattedApplyDateEnd = "2023-04-06";
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateEnd}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateEndInput);
 
             //var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");

@@ -159,16 +159,22 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
-            var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
-            _actions.MoveToElement(input).Click().Perform();
+            var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期起']")));
+            var applyDateBeginInput = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
 
-            var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
-            var applyMonthBegin = new SelectElement(select);
-            applyMonthBegin.SelectByText("六月");
+            string formattedApplyDateBegin = "2023-06-03";
+            ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginInput);
 
-            var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='六月 3, 2023']");
-            _actions.MoveToElement(applyDayBegin).Click().Perform();
+            //var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
+            //var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
+            //_actions.MoveToElement(input).Click().Perform();
+
+            //var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
+            //var applyMonthBegin = new SelectElement(select);
+            //applyMonthBegin.SelectByText("六月");
+
+            //var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='六月 3, 2023']");
+            //_actions.MoveToElement(applyDayBegin).Click().Perform();
 
             var search = TestHelper.FindAndMoveElement(_driver, "storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button");
             _actions.MoveToElement(search).Click().Perform();
