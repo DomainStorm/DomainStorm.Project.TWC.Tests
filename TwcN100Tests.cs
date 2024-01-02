@@ -50,8 +50,9 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcN100_13();
             await TwcN100_14();
             await TwcN100_15();
-            //await TwcN100_16();
-            //await TwcN100_17();
+            await TwcN100_16();
+            await TwcN100_17();
+            await TwcN100_18();
         }
         public async Task TwcN100_01()
         {
@@ -59,7 +60,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
 
             var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip a[href='./logout'] i");
-            That(logout.Text,Is.EqualTo("logout"));
+            That(logout.Text, Is.EqualTo("logout"));
         }
         public async Task TwcN100_02()
         {
@@ -188,14 +189,14 @@ namespace DomainStorm.Project.TWC.Tests
             var releaseDate = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='上架日期']")));
             var releaseDateInput = releaseDate.GetShadowRoot().FindElement(By.CssSelector("div input"));
 
-            DateTime targetReleaseDate = currentDateTime.AddDays(-1);
-            string formattedReleaseDate = targetReleaseDate.ToString("yyyy-MM-dd");
+            string formattedReleaseDate = currentDateTime.ToString("yyyy-MM-dd");
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedReleaseDate}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", releaseDateInput);
 
             var expiryDate = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='下架日期']")));
             var expiryDateInput = expiryDate.GetShadowRoot().FindElement(By.CssSelector("div input"));
 
-            string formattedExpiryDate = currentDateTime.ToString("yyyy-MM-dd");
+            DateTime targetReleaseExpiryDate = currentDateTime.AddDays(1);
+            string formattedExpiryDate = targetReleaseExpiryDate.ToString("yyyy-MM-dd");
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedExpiryDate}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", expiryDateInput);
 
             var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor")));
@@ -211,33 +212,43 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcN100_14()
         {
-            var logoutButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-tooltip a[href='./logout']")));
-            _actions.MoveToElement(logoutButton).Click().Perform();
-
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='公告管理']")));
+            await TwcN100_03();
         }
         public async Task TwcN100_15()
         {
-            var usernameElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
-            usernameElement.SendKeys("0511");
+            var name = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱']")));
+            var nameInput = name.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            nameInput.SendKeys("公告測試3");
 
-            var passwordElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
-            passwordElement.SendKeys(TestHelper.Password!);
+            DateTime currentDateTime = DateTime.Now;
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            var releaseDate = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='上架日期']")));
+            var releaseDateInput = releaseDate.GetShadowRoot().FindElement(By.CssSelector("div input"));
 
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
+            string formattedReleaseDate = currentDateTime.ToString("yyyy-MM-dd");
+            ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedReleaseDate}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", releaseDateInput);
+
+            var expiryDate = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='下架日期']")));
+            var expiryDateInput = expiryDate.GetShadowRoot().FindElement(By.CssSelector("div input"));
+
+            string formattedExpiryDate = currentDateTime.ToString("yyyy-MM-dd");
+            ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedExpiryDate}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", expiryDateInput);
+
+            var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor")));
+            editorInput.SendKeys("測試公告");
+
+            var createButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[form='create']")));
+            _actions.MoveToElement(createButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增公告']")));
+
+            That(TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) td[data-field ='name'] span")!.Text, Is.EqualTo("公告測試3"));
+            That(TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) td[data-field ='marquee'] span")!.Text, Is.EqualTo("測試公告"));
         }
         public async Task TwcN100_16()
         {
-            //var headline = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='系統公告'] h6")));
-            //That(headline.Text, Is.EqualTo("測試公告自動下架"));
-
-            var logoutButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-tooltip a[href='./logout']")));
-            _actions.MoveToElement(logoutButton).Click().Perform();
-
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='系統公告']")));
+            var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
+            _actions.MoveToElement(logout).Click().Perform();
         }
         public async Task TwcN100_17()
         {
@@ -251,10 +262,12 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(submitButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
-
-            var headline = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='系統公告']")));
-            var systemannouncement = headline.GetShadowRoot().FindElement(By.CssSelector("slot"));
-            That(systemannouncement.Text, Is.EqualTo(""));
         }
+        public async Task TwcN100_18()
+        {
+            var systemannouncement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flex-column h6")));
+            That(systemannouncement.Text, Is.EqualTo("測試公告自動下架"));
+        }
+
     }
 }
