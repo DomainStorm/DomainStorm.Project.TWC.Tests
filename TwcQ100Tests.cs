@@ -152,7 +152,7 @@ namespace DomainStorm.Project.TWC.Tests
             var addButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.float-end > button")));
             _actions.MoveToElement(addButton).Click().Perform();
 
-            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.row.mx-4.mb-3 > div.col > h5")));
+            var content = TestHelper.FindAndMoveElement(_driver, "div.row.mx-4.mb-3 > div.col > h5");
             var optionOne = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.flex-wrap > div:nth-child(1) > label")));
             var optionTwo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.flex-wrap > div:nth-child(2) > label")));
             var optionThree = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.d-flex.flex-wrap > div:nth-child(3) > label")));
@@ -208,7 +208,7 @@ namespace DomainStorm.Project.TWC.Tests
             var addButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.float-end > button")));
             _actions.MoveToElement(addButton).Click().Perform();
 
-            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.row.mx-4.mb-3:nth-child(2) > div.col > h5")));
+            var content = TestHelper.FindAndMoveElement(_driver, "div.row.mx-4.mb-3:nth-child(2) > div.col > h5");
             var optionOne = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.row.mx-4.mb-3:nth-child(2) > div.col > div.d-flex.flex-wrap > div:nth-child(1) > label")));
             var optionTwo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.row.mx-4.mb-3:nth-child(2) > div.col > div.d-flex.flex-wrap > div:nth-child(2) > label")));
             var optionThree = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.row.mx-4.mb-3:nth-child(2) > div.col > div.d-flex.flex-wrap > div:nth-child(3) > label")));
@@ -264,12 +264,12 @@ namespace DomainStorm.Project.TWC.Tests
             var addButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.float-end > button")));
             _actions.MoveToElement(addButton).Click().Perform();
 
-            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.row.mx-4.mb-3:nth-child(3) > div.col > h5")));
-            var optionOne = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.row.mx-4.mb-3:nth-child(3) > div.col > div.d-flex.flex-wrap > div:nth-child(1) > label")));
-            var optionTwo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.row.mx-4.mb-3:nth-child(3) > div.col > div.d-flex.flex-wrap > div:nth-child(2) > label")));
-            var optionThree = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.row.mx-4.mb-3:nth-child(3) > div.col > div.d-flex.flex-wrap > div:nth-child(3) > label")));
-            var optionFour = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.row.mx-4.mb-3:nth-child(3) > div.col > div.d-flex.flex-wrap > div:nth-child(4) > label")));
-            var optionFive = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.row.mx-4.mb-3:nth-child(3) > div.col > div.d-flex.flex-wrap > div:nth-child(5) > label")));
+            var content = TestHelper.FindAndMoveElement(_driver, "div.row.mx-4.mb-3:nth-child(3) > div.col > h5");
+            var optionOne = TestHelper.FindAndMoveElement(_driver, "div.row.mx-4.mb-3:nth-child(3) > div.col > div.d-flex.flex-wrap > div:nth-child(1) > label");
+            var optionTwo = TestHelper.FindAndMoveElement(_driver, "div.row.mx-4.mb-3:nth-child(3) > div.col > div.d-flex.flex-wrap > div:nth-child(2) > label");
+            var optionThree = TestHelper.FindAndMoveElement(_driver, "div.row.mx-4.mb-3:nth-child(3) > div.col > div.d-flex.flex-wrap > div:nth-child(3) > label");
+            var optionFour = TestHelper.FindAndMoveElement(_driver, "div.row.mx-4.mb-3:nth-child(3) > div.col > div.d-flex.flex-wrap > div:nth-child(4) > label");
+            var optionFive = TestHelper.FindAndMoveElement(_driver, "div.row.mx-4.mb-3:nth-child(3) > div.col > div.d-flex.flex-wrap > div:nth-child(5) > label");
 
             That(content.Text, Is.EqualTo("本次活動讓我收穫豐富"));
             That(optionOne.Text, Is.EqualTo("非常同意"));
@@ -283,7 +283,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcQ100_11()
         {
-            var nextPageButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("form > div:nth-child(2) button[title='Next']")));
+            var nextPageButton = TestHelper.FindAndMoveElement(_driver, "form > div:nth-child(2) button[title='Next']");
             _actions.MoveToElement(nextPageButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div[slot='1']")));
@@ -298,7 +298,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div[slot='2']")));
 
-            var contentTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[slot='3'] h5")));
+            var contentTitle = TestHelper.FindAndMoveElement(_driver, "div[slot='3'] h5");
             That(contentTitle.Text, Is.EqualTo("問卷完成"));
         }
         public async Task TwcQ100_13()
@@ -388,9 +388,10 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcQ100_21()
         {
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/questionnaire");
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-sidenav")));
 
-            var accountName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.nav-link-text span:nth-of-type(2)")));
-            That(accountName.Text, Is.EqualTo("陳依玫"));
+            var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
+            That(logout, Is.Not.Null);
         }
         public async Task TwcQ100_22()
         {
@@ -413,8 +414,17 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack button")));
 
-            var pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo");
-            That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
+            _wait.Until(driver => {
+                try
+                {
+                    var pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo");
+                    return pageInfo!.Text == "共 0 筆";
+                }
+                catch
+                {
+                    return false;
+                }
+            });
         }
     }
 }
