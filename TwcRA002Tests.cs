@@ -337,7 +337,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 選擇年份 = TestHelper.FindAndMoveElement(_driver, "[label='選擇年份'] div.choices");
             _actions.MoveToElement(選擇年份).Click().Perform();
 
-            var 年份 = TestHelper.FindAndMoveElement(_driver, "div.choices__list [data-value='2023']");
+            var 年份 = TestHelper.FindAndMoveElement(_driver, "div.choices__list [data-value='2024']");
             _actions.MoveToElement(年份).Click().Perform();
 
             var 檔案格式 = TestHelper.FindAndMoveElement(_driver, "[label='檔案格式'] div.choices");
