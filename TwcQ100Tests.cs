@@ -51,8 +51,14 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcQ100_14();
             await TwcQ100_15();
             await TwcQ100_16();
-            //await TwcQ100_17();
-            //await TwcQ100_18();
+            await TwcQ100_17();
+            await TwcQ100_18();
+            await TwcQ100_19();
+            await TwcQ100_20();
+            await TwcQ100_21();
+            await TwcQ100_22();
+            await TwcQ100_23();
+            await TwcQ100_24();
         }
 
         public async Task TwcQ100_01()
@@ -308,64 +314,107 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcQ100_14()
         {
-            TestHelper.WaitStormTableUpload(_driver, "table > tbody > tr > td[data-field='name'] > storm-table-cell span");
+            var viewButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_6'] storm-button");
+            _actions.MoveToElement(viewButton).Click().Perform();
 
-            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
-            var watchButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody > tr > td[data-field='__action_6'] > storm-table-cell > storm-table-toolbar > storm-button:nth-child(1) > storm-tooltip > div > button"));
-            _actions.MoveToElement(watchButton).Click().Perform();
-
-            var checkButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-content > div > div:nth-child(6) > div > button > span")));
+            var checkButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-content div:nth-child(6) span")));
             That(checkButton.Text, Is.EqualTo("確定"));
+
             _actions.MoveToElement(checkButton).Click().Perform();
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-dialog-content div:nth-child(6) span")));
         }
 
         public async Task TwcQ100_15()
         {
-            var takeDownButton = TestHelper.WaitStormTableUpload(_driver, "tbody > tr > td[data-field='__action_6'] > storm-table-cell > storm-table-toolbar > storm-button:nth-child(2) > storm-tooltip > div > button");
+            var takeDownButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-button:nth-child(2)");
             _actions.MoveToElement(takeDownButton).Click().Perform();
 
-            var checkButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-content > div > button > span > span")));
+            var checkButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack button")));
             That(checkButton.Text, Is.EqualTo("確認"));
         }
         public async Task TwcQ100_16()
         {
-            var cancelButton = TestHelper.FindAndMoveElement(_driver, "div.rz-dialog-content > div > button:nth-child(2) > span > span");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-content > div > button:nth-child(2) > span > span")));
+            var cancelButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-stack button:nth-child(2)")));
             _actions.MoveToElement(cancelButton).Click().Perform();
 
-            var planDisableDate = TestHelper.WaitStormTableUpload(_driver, "tbody > tr > td[data-field='planDisableDate'] > storm-table-cell > span");
-            That(planDisableDate.Text, Is.EqualTo("-"));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack button:nth-child(2)")));
+
+            var checkButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-content > div > button")));
+            _actions.MoveToElement(checkButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-dialog-content > div > button")));
+
+            var planDisableDate = TestHelper.WaitStormTableUpload(_driver, "td[data-field='planDisableDate'] span");
+            That(planDisableDate!.Text, Is.EqualTo("-"));
         }
         public async Task TwcQ100_17()
         {
-            var takeDownButton = TestHelper.WaitStormTableUpload(_driver, "tbody > tr > td[data-field='__action_6'] > storm-table-cell > storm-table-toolbar > storm-button:nth-child(2) > storm-tooltip > div > button");
+            var takeDownButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-button:nth-child(2)");
             _actions.MoveToElement(takeDownButton).Click().Perform();
 
-            var checkButton = TestHelper.FindAndMoveElement(_driver, "div.rz-dialog-content > div > button");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-content > div > button")));
-            _actions.MoveToElement(checkButton).Click().Perform();
+            DateTime currentDateTime = DateTime.Now;
 
-            var takeDownDateChoose = TestHelper.FindAndMoveElement(_driver, "[label='下架日期']");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("[label='下架日期']")));
-            var input = takeDownDateChoose.GetShadowRoot().FindElement(By.CssSelector("input"));
-            _actions.MoveToElement(input).Click().Perform();
+            var expiryDate = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='下架日期']")));
+            var expiryDateInput = expiryDate.GetShadowRoot().FindElement(By.CssSelector("div input"));
 
-            //sendkey
+            string formattedExpiryDate = currentDateTime.ToString("yyyy-MM-dd");
+            ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedExpiryDate}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", expiryDateInput);
+
+            var checkButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack button")));
+            That(checkButton.Text, Is.EqualTo("確認"));
         }
         public async Task TwcQ100_18()
         {
-            var confirmButton = TestHelper.FindAndMoveElement(_driver, "div.rz-dialog-confirm-buttons > button");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-confirm-buttons > button")));
-            _actions.MoveToElement(confirmButton).Click().Perform();
+            var checkButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack button")));
+            _actions.MoveToElement(checkButton).Click().Perform();
 
-            var takeDownButton = TestHelper.FindAndMoveElement(_driver, "div.rz-dialog-wrapper > div > div > div > div > div > button");
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-stack button")));
-            _actions.MoveToElement(takeDownButton).Click().Perform();
-            //var deleteButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-content > div > div > div > button > span > span")));
-            //_actions.MoveToElement(deleteButton).Click().Perform();
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack button")));
 
-            //var checkDetele = TestHelper.WaitStormTableUpload(_driver, "td > p");
-            //That(checkDetele!.Text, Is.EqualTo("沒有找到符合的結果"));
+            checkButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-content > div > button")));
+            _actions.MoveToElement(checkButton).Click().Perform();
+        }
+        public async Task TwcQ100_19()
+        {
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/questionnaire/now");
+
+            var title = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("h3")));
+            That(title.Text, Is.EqualTo("用水設備各種異動服務申請滿意度問卷調查"));
+        }
+        public async Task TwcQ100_20()
+        {
+            var card = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.card-body")));
+            That(card, Is.Not.Null);
+        }
+        public async Task TwcQ100_21()
+        {
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/questionnaire");
+
+            var accountName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.nav-link-text span:nth-of-type(2)")));
+            That(accountName.Text, Is.EqualTo("陳依玫"));
+        }
+        public async Task TwcQ100_22()
+        {
+            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='問卷狀態']")));
+            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("h5"));
+            That(stormCardTitle.Text, Is.EqualTo("問卷狀態"));
+        }
+        public async Task TwcQ100_23()
+        {
+            var deleteButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_6'] storm-button:nth-child(4)");
+            _actions.MoveToElement(deleteButton).Click().Perform();
+
+            var checkButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack button")));
+            That(checkButton.Text, Is.EqualTo("刪除"));
+        }
+        public async Task TwcQ100_24()
+        {
+            var checkButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack button")));
+            _actions.MoveToElement(checkButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack button")));
+
+            var pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo");
+            That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
         }
     }
 }
