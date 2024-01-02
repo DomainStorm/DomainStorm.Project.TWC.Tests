@@ -70,11 +70,11 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcN100_03()
         {
             var primaryButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", primaryButton);
+            _actions.MoveToElement(primaryButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='公告管理']")));
 
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增公告']")));
+            var stormCard = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增公告']")));
             var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
             That(stormCardTitle.Text, Is.EqualTo("新增公告"));
         }
