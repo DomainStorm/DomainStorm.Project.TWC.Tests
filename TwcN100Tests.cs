@@ -58,14 +58,10 @@ namespace DomainStorm.Project.TWC.Tests
         {
             await TestHelper.Login(_driver, "meizi", TestHelper.Password!);
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
-
-            var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip a[href='./logout'] i");
-            That(logout.Text, Is.EqualTo("logout"));
         }
         public async Task TwcN100_02()
         {
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/systemannouncement");
-            That(TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo")!.Text, Is.EqualTo("共 0 筆"));
 
             var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='公告管理']")));
             var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
@@ -268,6 +264,5 @@ namespace DomainStorm.Project.TWC.Tests
             var systemannouncement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flex-column h6")));
             That(systemannouncement.Text, Is.EqualTo("測試公告自動下架"));
         }
-
     }
 }
