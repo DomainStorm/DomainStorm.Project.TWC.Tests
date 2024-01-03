@@ -74,10 +74,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='公告管理']")));
 
-            //Console.WriteLine($"::group::ClickRow---------{_driver.Url}---------");
-            //Console.WriteLine(_driver.PageSource);
-            //Console.WriteLine("::endgroup::");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱']")));
+            var stormCard = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增公告']")));
+            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
+            That(stormCardTitle.Text, Is.EqualTo("新增公告"));
         }
         public async Task TwcN100_04()
         {

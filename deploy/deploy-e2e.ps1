@@ -18,6 +18,7 @@ $env:MONGO_INITDB_ROOT_PASSWORD = "adminadmin"
 $env:KONG_POSTGRES_USER = "admin"
 $env:KONG_POSTGRES_DB = "kong"
 $env:KONG_POSTGRES_PASSWORD = "adminadmin"
+
 $env:MetadataApi_Version = "1.1.3"
 $env:MultiMediaApi_Version = "0.0.7"
 $env:JwtAuthApi_Version = "0.4.1"
@@ -26,7 +27,6 @@ $env:TwcWeb_Version = "1.2.8"
 $env:ResourceApi_Version = "0.1.6"
 $env:ServiceBus_Version = "0.0.8"
 $env:TwcReport_Version = "0.1.5"
-
 
 docker compose -f docker-compose.yml -f docker-compose.metadataapi.yml -f docker-compose.e2e.yml up -d
 
