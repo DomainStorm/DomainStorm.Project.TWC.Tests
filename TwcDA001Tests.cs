@@ -88,7 +88,7 @@ namespace DomainStorm.Project.TWC.Tests
             var submitButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='新增檔案'] button");
             _actions.MoveToElement(submitButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.PresenceOfAllElementsLocatedBy(By.CssSelector("storm-card[headline='新增檔案'] button")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增檔案'] button")));
 
             _wait.Until(driver =>
             {
