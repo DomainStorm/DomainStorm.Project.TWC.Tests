@@ -122,7 +122,17 @@ namespace DomainStorm.Project.TWC.Tests
             var deleteConfirm = TestHelper.FindAndMoveElement(_driver, "div.swal2-actions > button.swal2-confirm");
             _actions.MoveToElement(deleteConfirm).Click().Perform();
 
-            That(TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo")!.Text, Is.EqualTo("共 0 筆"));
+           _wait.Until(driver => {
+                try
+                {
+                    var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
+                    return pageInfo!.Text == "共 0 筆";
+                }
+                catch
+                {
+                    return false;
+                }
+            });
         }
 
         [Test]

@@ -158,6 +158,7 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(primaryButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack div.rz-stack button")));
+
             _wait.Until(driver => {
                 try
                 {
