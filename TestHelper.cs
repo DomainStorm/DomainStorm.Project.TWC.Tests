@@ -151,7 +151,7 @@ public class TestHelper
         var response = await client.PostAsync<TokenResponse>(request);
         return response?.Access_token ?? throw new InvalidOperationException("Failed to get access token.");
     }
-    public static async Task<HttpStatusCode> CreateForm(string accessToken, string apiUrl, string jsonFilePath)
+    public static async Task<HttpStatusCode> CreateForm(string accessToken, string apiUrl, string jsonFilePath, bool modifyApplyDate = false)
     {
         var client = new RestClient(apiUrl);
         var request = new RestRequest
@@ -164,6 +164,13 @@ public class TestHelper
         using var r = new StreamReader(jsonFilePath);
         var json = await r.ReadToEndAsync();
         var update = JsonConvert.DeserializeObject<WaterForm>(json)!;
+
+        if (modifyApplyDate)
+        {
+            DateTime ApplyDate = DateTime.Now.AddDays(-2);
+            string formattedApplyDate = ApplyDate.ToString("yyyy-MM-dd");
+            update.ApplyDate = formattedApplyDate;
+        }
 
         _applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
         update.ApplyCaseNo = _applyCaseNo;
