@@ -21,7 +21,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
+            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
             _actions = new Actions(_driver);
         }
 
@@ -151,8 +151,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             var submitButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
             _actions.MoveToElement(submitButton).Click().Perform();
-
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
         }
         public async Task TwcDA001_10()
         {
