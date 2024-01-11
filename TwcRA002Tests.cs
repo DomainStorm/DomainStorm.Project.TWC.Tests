@@ -56,8 +56,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().DefaultContent();
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            _actions.MoveToElement(href).Click().Perform();
+            //var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
+            //_actions.MoveToElement(href).Click().Perform();
 
             var createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
             _actions.MoveToElement(createAttachmentButton).Click().Perform();
@@ -65,7 +65,7 @@ namespace DomainStorm.Project.TWC.Tests
             var attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input:nth-of-type(3)");
 
-            var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
             That(attachmentName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             var submitButton = TestHelper.FindAndMoveElement(_driver, "div.d-flex.justify-content-end.mt-4 button[name='button']");
@@ -74,7 +74,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
-            href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
             _actions.MoveToElement(href).Click().Perform();
 
             var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
@@ -117,9 +117,6 @@ namespace DomainStorm.Project.TWC.Tests
             That(signName.Text, Is.EqualTo("謝德威"));
 
             _driver.SwitchTo().DefaultContent();
-
-            href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            _actions.MoveToElement(href).Click().Perform();
 
             createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
             _actions.MoveToElement(createAttachmentButton).Click().Perform();
@@ -179,9 +176,6 @@ namespace DomainStorm.Project.TWC.Tests
             That(signName.Text, Is.EqualTo("陳宥甯"));
 
             _driver.SwitchTo().DefaultContent();
-
-            href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            _actions.MoveToElement(href).Click().Perform();
 
             createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
             _actions.MoveToElement(createAttachmentButton).Click().Perform();
@@ -249,9 +243,6 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            _actions.MoveToElement(href).Click().Perform();
-
             var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
             That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
         }
@@ -264,7 +255,7 @@ namespace DomainStorm.Project.TWC.Tests
             var attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input:nth-of-type(3)");
 
-            var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
             That(attachmentName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
 
@@ -337,7 +328,7 @@ namespace DomainStorm.Project.TWC.Tests
             var 選擇年份 = TestHelper.FindAndMoveElement(_driver, "[label='選擇年份'] div.choices");
             _actions.MoveToElement(選擇年份).Click().Perform();
 
-            var 年份 = TestHelper.FindAndMoveElement(_driver, "div.choices__list [data-value='2024']");
+            var 年份 = TestHelper.FindAndMoveElement(_driver, "div.choices__list [data-value='2023']");
             _actions.MoveToElement(年份).Click().Perform();
 
             var 檔案格式 = TestHelper.FindAndMoveElement(_driver, "[label='檔案格式'] div.choices");

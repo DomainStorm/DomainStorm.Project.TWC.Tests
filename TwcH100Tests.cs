@@ -38,13 +38,13 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
 
-            var addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card button")));
+            var addFileButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫'] button")));
             _actions.MoveToElement(addFileButton).Click().Perform();
 
             var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "台水官網圖.png");
             TestHelper.UploadFile(_driver, file, "input.dz-hidden-input");
 
-            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
             That(fileName.GetAttribute("value"), Is.EqualTo("台水官網圖.png"));
 
             var submitButton = TestHelper.FindAndMoveElement(_driver, "button[type='submit']");
@@ -59,7 +59,7 @@ namespace DomainStorm.Project.TWC.Tests
             file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "testmedia.mp4");
             TestHelper.UploadFile(_driver, file, "input.dz-hidden-input:nth-of-type(2)");
 
-            fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
             That(fileName.GetAttribute("value"), Is.EqualTo("testmedia.mp4"));
 
             submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[type='submit']")));
@@ -162,7 +162,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增節目單']")));
 
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='name'] span")!.Text, Is.EqualTo("節目單測試"));
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='marquee'] span")!.Text, Is.EqualTo("跑馬燈測試"));
+            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='marquee'] span")!.Text, Is.EqualTo("<h6>跑馬燈測試</h6>"));
         }
         public async Task TwcH100_07()
         {

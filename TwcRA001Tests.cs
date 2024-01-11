@@ -56,9 +56,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().DefaultContent();
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            _actions.MoveToElement(href).Click().Perform();
-
             var createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
             _actions.MoveToElement(createAttachmentButton).Click().Perform();
 
@@ -74,7 +71,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
-            href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
             _actions.MoveToElement(href).Click().Perform();
 
             var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
@@ -117,9 +114,6 @@ namespace DomainStorm.Project.TWC.Tests
             That(signName.Text, Is.EqualTo("謝德威"));
 
             _driver.SwitchTo().DefaultContent();
-
-            href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            _actions.MoveToElement(href).Click().Perform();
 
             createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
             _actions.MoveToElement(createAttachmentButton).Click().Perform();
@@ -187,9 +181,6 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "ning53", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
-
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            _actions.MoveToElement(href).Click().Perform();
 
             var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
             That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
@@ -284,7 +275,7 @@ namespace DomainStorm.Project.TWC.Tests
             var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期起']")));
             var applyDateBeginInput = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
 
-            string formattedApplyDateBegin = "2023-03-06";
+            string formattedApplyDateBegin = "2023-03-01";
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginInput);
 
             var applyDateEnd = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期迄']")));
@@ -292,28 +283,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             string formattedApplyDateEnd = "2023-04-06";
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateEnd}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateEndInput);
-
-            //var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
-            //var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
-            //_actions.MoveToElement(input).Click().Perform();
-
-            //var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
-            //var applyMonthBegin = new SelectElement(select);
-            //applyMonthBegin.SelectByText("三月");
-
-            //var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='三月 6, 2023']");
-            //_actions.MoveToElement(applyDayBegin).Click().Perform();
-
-            //var applyDateEnd = TestHelper.FindAndMoveElement(_driver, "[label='受理日期迄']");
-            //input = applyDateEnd.GetShadowRoot().FindElement(By.CssSelector("input"));
-            //_actions.MoveToElement(applyDateEnd).Click().Perform();
-
-            //select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
-            //var applyMonthEnd = new SelectElement(select);
-            //applyMonthEnd.SelectByText("四月");
-
-            //var applyDatEnd = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='四月 6, 2023']");
-            //_actions.MoveToElement(applyDatEnd).Click().Perform();
 
             var 檔案格式 = TestHelper.FindAndMoveElement(_driver, "[label='檔案格式'] div.choices");
             _actions.MoveToElement(檔案格式).Click().Perform();

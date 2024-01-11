@@ -63,9 +63,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            _actions.MoveToElement(href).Click().Perform();
-
             var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
             That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
         }

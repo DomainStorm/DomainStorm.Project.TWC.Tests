@@ -62,10 +62,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().DefaultContent();
 
-
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            _actions.MoveToElement(href).Click().Perform();
-
             var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
             That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
             
@@ -84,7 +80,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
-            href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
             _actions.MoveToElement(href).Click().Perform();
 
             var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
@@ -148,9 +144,6 @@ namespace DomainStorm.Project.TWC.Tests
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            _actions.MoveToElement(href).Click().Perform();
 
             var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
             That(pageInfo!.Text, Is.EqualTo("共 0 筆"));

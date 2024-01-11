@@ -65,9 +65,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            _actions.MoveToElement(href).Click().Perform();
-
             var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
             That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
         }
@@ -129,7 +126,7 @@ namespace DomainStorm.Project.TWC.Tests
             var submitButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='受理登記'] button");
             _actions.MoveToElement(submitButton).Click().Perform();
 
-            var hintTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > h5")));
+            var hintTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container h5")));
             That(hintTitle.Text, Is.EqualTo("【受理】未核章"));
 
             var confirmButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.swal2-actions button")));

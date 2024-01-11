@@ -339,10 +339,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack button:nth-child(2)")));
 
-            var checkButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-content > div > button")));
-            _actions.MoveToElement(checkButton).Click().Perform();
+            //var checkButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-content button")));
+            //_actions.MoveToElement(checkButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-dialog-content > div > button")));
+            //_wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-dialog-content > div > button")));
 
             var planDisableDate = TestHelper.WaitStormTableUpload(_driver, "td[data-field='planDisableDate'] span");
             That(planDisableDate!.Text, Is.EqualTo("-"));
@@ -369,9 +369,6 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(checkButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack button")));
-
-            checkButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-content > div > button")));
-            _actions.MoveToElement(checkButton).Click().Perform();
         }
         public async Task TwcQ100_19()
         {

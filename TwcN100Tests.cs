@@ -96,7 +96,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增公告']")));
 
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='name'] span")!.Text, Is.EqualTo("公告測試"));
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='marquee'] span")!.Text, Is.EqualTo("水籍系統將於12/20進行系統更新，造成不便敬請見諒"));
+            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='marquee'] span")!.Text, Is.EqualTo("<h6 style=\"color: rgb(230, 0, 0);\">水籍系統將於12/20進行系統更新，造成不便敬請見諒</h6>"));
         }
         public async Task TwcN100_05()
         {
@@ -205,7 +205,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增公告']")));
 
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='name'] span")!.Text, Is.EqualTo("公告測試2"));
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='marquee'] span")!.Text, Is.EqualTo("測試公告自動下架"));
+            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='marquee'] span")!.Text, Is.EqualTo("<h6>測試公告自動下架</h6>"));
         }
         public async Task TwcN100_14()
         {
@@ -240,7 +240,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增公告']")));
 
             That(TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) td[data-field ='name'] span")!.Text, Is.EqualTo("公告測試3"));
-            That(TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) td[data-field ='marquee'] span")!.Text, Is.EqualTo("測試公告"));
+            That(TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) td[data-field ='marquee'] span")!.Text, Is.EqualTo("<h6>測試公告</h6>"));
         }
         public async Task TwcN100_16()
         {

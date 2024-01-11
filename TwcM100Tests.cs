@@ -55,35 +55,38 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcM100_02()
         {
-            var addTextButton = TestHelper.FindAndMoveElement(_driver, "storm-card > div > button:nth-child(2)");
+            var addTextButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體庫'] button:nth-child(2)");
             _actions.MoveToElement(addTextButton).Click().Perform();
 
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體庫'] button")));
+
             var stormInputGroupName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱']")));
-            var stormInputGroupNameInput = stormInputGroupName.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            var stormInputGroupNameInput = stormInputGroupName.GetShadowRoot().FindElement(By.CssSelector("div input"));
             stormInputGroupNameInput.SendKeys("宣導文字");
 
             var stormInputGroupDesc = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='說明']")));
-            var stormInputGroupDescInput = stormInputGroupDesc.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            var stormInputGroupDescInput = stormInputGroupDesc.GetShadowRoot().FindElement(By.CssSelector("div input"));
             stormInputGroupDescInput.SendKeys("宣導說明文字");
 
             var stormInputGroupDuration = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='播放秒數']")));
-            var stormInputGroupDurationInput = stormInputGroupDuration.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            var stormInputGroupDurationInput = stormInputGroupDuration.GetShadowRoot().FindElement(By.CssSelector("div input"));
             stormInputGroupDurationInput.SendKeys("10");
 
-            var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor > div.ql-container > div.ql-editor")));
+            var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
             stormTextEditorInput.SendKeys("跑馬燈內容");
 
-            var submitButton = TestHelper.FindAndMoveElement(_driver, "button[type='submit']");
+            var submitButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='新增文字'] button[type='submit']");
             _actions.MoveToElement(submitButton).Click().Perform();
 
-            That(TestHelper.WaitStormEditTableUpload(_driver, "td[data-field='name'] > storm-table-cell span")!.Text, Is.EqualTo("宣導文字"));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增文字'] button[type='submit']")));
+            That(TestHelper.WaitStormEditTableUpload(_driver, "td[data-field='name'] span")!.Text, Is.EqualTo("宣導文字"));
         }
         public async Task TwcM100_03()
         {
             var viewButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button > storm-tooltip > div > button");
             _actions.MoveToElement(viewButton).Click().Perform();
 
-            var viewText = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > h6")));
+            var viewText = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container h6")));
             That(viewText.Text, Is.EqualTo("跑馬燈內容"));
 
             var cancelButton = TestHelper.FindAndMoveElement(_driver, "div.swal2-actions > button.swal2-cancel");

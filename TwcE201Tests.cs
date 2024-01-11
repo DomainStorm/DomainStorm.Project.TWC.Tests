@@ -87,21 +87,23 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+                var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
                 return attachmentName!.GetAttribute("value") == "twcweb_01_1_夾帶附件1.pdf,twcweb_01_1_夾帶附件2.pdf";
             });
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
+            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增檔案'] button")));
             _actions.MoveToElement(submitButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增檔案'] button")));
 
-            var attachmentName = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            var attachmentName = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
             That(attachmentName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf,twcweb_01_1_夾帶附件2.pdf"));
 
-            var fileCount = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
-            _wait.Until(driver => fileCount!.Text == "顯示第 1 至 2 筆，共 2 筆");
-            That(fileCount!.Text, Is.EqualTo("顯示第 1 至 2 筆，共 2 筆"));
+            _wait.Until(driver =>
+            {
+                var target = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
+                return target!.Text == "顯示第 1 至 2 筆，共 2 筆";
+            });
         }
         public async Task TwcE201_06()
         {
