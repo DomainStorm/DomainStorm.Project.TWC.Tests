@@ -40,6 +40,11 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcM100_04();
             await TwcM100_05();
             await TwcM100_06();
+            await TwcM100_07();
+            await TwcM100_08();
+            await TwcM100_09();
+            await TwcM100_10();
+            await TwcM100_11();
         }
         public async Task TwcM100_01()
         {
@@ -58,7 +63,7 @@ namespace DomainStorm.Project.TWC.Tests
             var addTextButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體庫'] button:nth-child(2)");
             _actions.MoveToElement(addTextButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體庫'] button")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體庫']")));
 
             var stormInputGroupName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱']")));
             var stormInputGroupNameInput = stormInputGroupName.GetShadowRoot().FindElement(By.CssSelector("div input"));
@@ -138,29 +143,20 @@ namespace DomainStorm.Project.TWC.Tests
             });
         }
 
-        [Test]
-        [Order(1)]
-        public async Task TwcM100_07To11()
-        {
-            await TwcM100_07();
-            await TwcM100_08();
-            await TwcM100_09();
-            await TwcM100_10();
-            await TwcM100_11();
-        }
         public async Task TwcM100_07()
         {
-            await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
-
             var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card > div > button");
             _actions.MoveToElement(addFileButton).Click().Perform();
 
             var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "台水官網圖.png");
             TestHelper.UploadFile(_driver, file, "input.dz-hidden-input");
 
-            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
             That(fileName.GetAttribute("value"), Is.EqualTo("台水官網圖.png"));
+
+            var stormInputGroupDuration = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='播放秒數']")));
+            var stormInputGroupDurationInput = stormInputGroupDuration.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            stormInputGroupDurationInput.SendKeys("10");
 
             var submitButton = TestHelper.FindAndMoveElement(_driver, "button[type='submit']");
             _actions.MoveToElement(submitButton).Click().Perform();
