@@ -254,7 +254,7 @@ namespace DomainStorm.Project.TWC.Tests
             var videoAutoPlay = stormCarousel.GetShadowRoot().FindElement(By.CssSelector("video[autoplay]"));
             That(videoAutoPlay, Is.Not.Null, "影片正在撥放");
 
-            var closeButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-stack button")));
+            var closeButton = TestHelper.FindAndMoveElement(_driver, "div.rz-stack button");
             _actions.MoveToElement(closeButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-carousel")));
@@ -266,7 +266,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='修改節目單']")));
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button[form='create']")));
+            var submitButton = TestHelper.FindAndMoveElement(_driver, "button[form='create']");
             _actions.MoveToElement(submitButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("button[form='create']")));
