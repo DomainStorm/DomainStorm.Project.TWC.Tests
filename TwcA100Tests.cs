@@ -33,7 +33,12 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(0)]
-        public async Task TwcA100_01()
+        public async Task TwcA100_01To11()
+        {
+            await TwcM100();
+            await TwcQ100();
+        }
+        public async Task TwcM100()
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
 
@@ -117,10 +122,7 @@ namespace DomainStorm.Project.TWC.Tests
             });
             That(TestHelper.WaitStormTableUpload(_driver, "div.table-responsive td[data-field='playListStatus'] span")!.Text, Is.EqualTo("核准"));
         }
-
-        [Test]
-        [Order(1)]
-        public async Task TwcA100_02To11()
+        public async Task TwcQ100()
         {
             await TwcA100_02();
             await TwcA100_03();
@@ -135,10 +137,19 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA100_02()
         {
-            await TestHelper.Login(_driver, "meizi", TestHelper.Password!);
-
             var logout = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("a[href='./logout']")));
-            That(logout.Text, Is.EqualTo("logout"));
+            _actions.MoveToElement(logout).Click().Perform();
+
+            var usernameElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
+            usernameElement.SendKeys("meizi");
+
+            var passwordElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
+            passwordElement.SendKeys(TestHelper.Password!);
+
+            var submitButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
+            _actions.MoveToElement(submitButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
         }
         public async Task TwcA100_03()
         {
@@ -301,6 +312,13 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcA100_28();
             await TwcA100_29();
             await TwcA100_30();
+            await TwcA100_31();
+            await TwcA100_32();
+            await TwcA100_33();
+            await TwcA100_34();
+            await TwcA100_35();
+            await TwcA100_36();
+            await TwcA100_37();
         }
         public async Task TwcA100_12()
         {
@@ -314,7 +332,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA100_14()
         {
-            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            await TestHelper.Login(_driver, "4e03", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
@@ -372,7 +390,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
 
             var signName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.sign-name > span")));
-            That(signName.Text, Is.EqualTo("張博文"));
+            That(signName.Text, Is.EqualTo("李麗花"));
         }
         public async Task TwcA100_18()
         {
@@ -542,12 +560,10 @@ namespace DomainStorm.Project.TWC.Tests
         {
             var sendButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[title='Send']")));
             _actions.MoveToElement(sendButton).Click().Perform();
-
-            //var hintContent = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("rz-dialog-wrapper h5")));
-            //That(hintContent.Text, Is.EqualTo("填寫完成，視窗將自動關閉...！"));
         }
         public async Task TwcA100_29()
         {
+            Thread.Sleep(3000);
             _driver.Close();
         }
         public async Task TwcA100_30()
@@ -561,24 +577,18 @@ namespace DomainStorm.Project.TWC.Tests
             That(logingButton.Text, Is.EqualTo("登入"));
         }
 
-        [Test]
-        [Order(3)]
-        public async Task TwcA100_31To37()
-        {
-            await TwcA100_31();
-            await TwcA100_32();
-            await TwcA100_33();
-            await TwcA100_34();
-            await TwcA100_35();
-            await TwcA100_36();
-            await TwcA100_37();
-        }
         public async Task TwcA100_31()
         {
-            await TestHelper.Login(_driver, "meizi", TestHelper.Password!);
+            var usernameElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
+            usernameElement.SendKeys("meizi");
 
-            var logout = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("a[href='./logout']")));
-            That(logout.Text, Is.EqualTo("logout"));
+            var passwordElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
+            passwordElement.SendKeys(TestHelper.Password!);
+
+            var submitButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
+            _actions.MoveToElement(submitButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
         }
         public async Task TwcA100_32()
         {
@@ -626,21 +636,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             var takeDownButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-button:nth-child(2)");
             _actions.MoveToElement(takeDownButton).Click().Perform();
-
-            var hintContent = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("p.rz-dialog-confirm-message")));
-            That(hintContent.Text, Is.EqualTo("確認是否要下架？"));
         }
         public async Task TwcA100_37()
         {
-            var confirmButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-confirm-buttons > button")));
-            _actions.MoveToElement(confirmButton).Click().Perform();
-
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-dialog-confirm-buttons > button")));
-
-            var takeDownCheck = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-align-items-normal > button")));
+            var takeDownCheck = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-wrapper button")));
             _actions.MoveToElement(takeDownCheck).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-align-items-normal > button")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-dialog-wrapper button")));
 
             var date = TestHelper.WaitStormTableUpload(_driver, "td[data-field='planDisableDate'] span");
             That(date!.Text, Is.Not.Empty);
