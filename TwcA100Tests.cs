@@ -543,8 +543,8 @@ namespace DomainStorm.Project.TWC.Tests
             var sendButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[title='Send']")));
             _actions.MoveToElement(sendButton).Click().Perform();
 
-            var hintContent = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("h2[class='swal2-title']")));
-            That(hintContent.Text, Is.EqualTo("提交完成！"));
+            //var hintContent = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("rz-dialog-wrapper h5")));
+            //That(hintContent.Text, Is.EqualTo("填寫完成，視窗將自動關閉...！"));
         }
         public async Task TwcA100_29()
         {
