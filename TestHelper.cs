@@ -10,11 +10,8 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
-using AngleSharp.Dom;
-using System.Xml.Linq;
-using static System.Collections.Specialized.BitVector32;
-
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
 {
@@ -215,9 +212,26 @@ public class TestHelper
 
         return Task.CompletedTask;
     }
+    public static void ChangeUser(IWebDriver webDriver, string userName)
+    {
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        Actions actions = new Actions(webDriver);
+
+        var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
+        usernameElement.SendKeys(userName);
+
+        var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
+        passwordElement.SendKeys(TestHelper.Password!);
+
+        var submitButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
+        actions.MoveToElement(submitButton).Click().Perform();
+
+        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
+    }
+
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
         Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
         Console.WriteLine(webDriver.PageSource);
