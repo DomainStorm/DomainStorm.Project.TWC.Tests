@@ -10,8 +10,8 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
-
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
 {
@@ -89,6 +89,7 @@ public class TestHelper
         }
     }
     private static string? _applyCaseNo;
+    private static string? _applyEmailAddr;
     public static string? ApplyCaseNo
     {
         get
@@ -147,7 +148,7 @@ public class TestHelper
         var response = await client.PostAsync<TokenResponse>(request);
         return response?.Access_token ?? throw new InvalidOperationException("Failed to get access token.");
     }
-    public static async Task<HttpStatusCode> CreateForm(string accessToken, string apiUrl, string jsonFilePath)
+    public static async Task<HttpStatusCode> CreateForm(string accessToken, string apiUrl, string jsonFilePath, bool modifyApplyDate = false)
     {
         var client = new RestClient(apiUrl);
         var request = new RestRequest
@@ -160,6 +161,13 @@ public class TestHelper
         using var r = new StreamReader(jsonFilePath);
         var json = await r.ReadToEndAsync();
         var update = JsonConvert.DeserializeObject<WaterForm>(json)!;
+
+        if (modifyApplyDate)
+        {
+            DateTime ApplyDate = DateTime.Now.AddDays(-2);
+            string formattedApplyDate = ApplyDate.ToString("yyyy-MM-dd");
+            update.ApplyDate = formattedApplyDate;
+        }
 
         _applyCaseNo = DateTime.Now.ToString("yyyyMMddHHmmss");
         update.ApplyCaseNo = _applyCaseNo;
@@ -178,7 +186,6 @@ public class TestHelper
     public static Task Login(IWebDriver webDriver, string userId, string password)
     {
         ((IJavaScriptExecutor)webDriver).ExecuteScript($"window.location.href = '{LoginUrl}';");
-        //webDriver.Navigate().GoToUrl(LoginUrl);
 
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
@@ -205,6 +212,23 @@ public class TestHelper
 
         return Task.CompletedTask;
     }
+    public static void ChangeUser(IWebDriver webDriver, string userName)
+    {
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        Actions actions = new Actions(webDriver);
+
+        var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
+        usernameElement.SendKeys(userName);
+
+        var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
+        passwordElement.SendKeys(TestHelper.Password!);
+
+        var submitButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
+        actions.MoveToElement(submitButton).Click().Perform();
+
+        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
+    }
+
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
@@ -240,7 +264,7 @@ public class TestHelper
     {
         string targetUrl = webDriver.Url;
 
-        WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
         wait.Until(webDriver => webDriver.Url != targetUrl);
 
         string[] segments = webDriver.Url.Split('/');
@@ -322,17 +346,17 @@ public class TestHelper
 
 public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
-        return _wait.Until(driver =>
+        return wait.Until(driver =>
         {
             IWebElement e = null;
 
-            _wait.Until(_ =>
+            wait.Until(_ =>
             {
                 try
                 {
-                    var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                    var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
 
                     if (stormTable != null)
                     {
@@ -340,60 +364,86 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
                         return true;
                     }
                 }
+
                 catch
                 {
+                    return false;
                 }
+
                 return false;
             });
+
             return e;
         });
     }
 
     public static IWebElement? WaitStormEditTableUpload(IWebDriver webDriver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-        return _wait.Until(_ =>
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+
+        return wait.Until(_ =>
         {
             IWebElement e = null;
 
-            _wait.Until(_ =>
+            wait.Until(_ =>
             {
-                var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
-                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
                 try
                 {
-                    e = stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
-                    return true;
+                    var stormEditTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                    var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+
+                    if (stormTable != null)
+                    {
+                        e = stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
+
+                        return true;
+                    }
                 }
+
                 catch
                 {
+                    return false;
                 }
+
                 return false;
             });
+
             return e;
         });
     }
 
-    public static IWebElement? WaitStormCardUpload(IWebDriver webDriver, string css1, string css2)
+    public static IWebElement? FindShadowRootElement(IWebDriver webDriver, string css)
     {
-        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        return _wait.Until(_ =>
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        var action = new Actions(webDriver);
+
+        return wait.Until(_ =>
         {
             IWebElement e = null;
 
-            _wait.Until(_ =>
+            wait.Until(_ =>
             {
                 try
                 {
-                    var stormCard = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css1)));
-                    e = stormCard.GetShadowRoot().FindElement(By.CssSelector(css2));
-                    return true;
+                    var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+                    var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+
+                    if (stormTreeView != null)
+                    {
+                        e = stormTreeView.GetShadowRoot().FindElement(By.CssSelector(css));
+
+                        return true;
+                    }
                 }
+
                 catch
                 {
+                    return false;
                 }
+
                 return false;
             });
+
             return e;
         });
     }
@@ -404,19 +454,9 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
         var element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
 
         action.MoveToElement(element).Perform();
+        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(css)));
 
         return element;
-    }
-    public static string GetChineseMonth(int month)
-    {
-        string[] chineseMonths = { "一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二" };
-
-        if (month >= 1 && month <= 12)
-        {
-            return chineseMonths[month - 1];
-        }
-
-        return string.Empty;
     }
 }
 public class WaterForm
@@ -427,6 +467,12 @@ public class WaterForm
     public string? WaterNo { get; set; }
     public string? TypeChange { get; set; }
     public string? UserCode { get; set; }
+    public string? ChangeAddress { get; set; }
+    public string? CancelPayAccount { get; set; }
+    public string? CancelEbill { get; set; }
+    public string? ApplyEbill { get; set; }
+    public string? CancelSmsBill { get; set; }
+    public string? ApplyEmailAddr { get; set; }
     public string? DeviceLocation { get; set; }
     public string? Applicant { get; set; }
     public string? IdNo { get; set; }
