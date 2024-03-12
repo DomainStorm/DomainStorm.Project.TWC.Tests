@@ -95,9 +95,6 @@ namespace DomainStorm.Project.TWC.Tests
             var scanButton = TestHelper.FindAndMoveToElement(_driver, "[headline='掃描拍照'] button:nth-child(2)");
             scanButton.Click();
 
-            //var scanSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dz-success-mark")));
-            //That(scanSuccess, Is.Not.Null, "未上傳");
-            
             var scanImg = TestHelper.FindAndMoveToElement(_driver, "storm-upload [alt='證件_005.tiff']");
             That(scanImg, Is.Not.Null, "尚未上傳完成");
         }
