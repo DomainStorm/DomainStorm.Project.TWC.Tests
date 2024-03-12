@@ -493,11 +493,27 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
                 return stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
             }
         },
+        { "stormToolbar", () =>
+            {
+                var stormEditTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                var stormToolbar = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar"));
+                return stormToolbar.GetShadowRoot().FindElement(By.CssSelector(css));
+            }
+        },
         { "stormTreeView", () =>
             {
                 var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
                 var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
                 return stormTreeView.GetShadowRoot().FindElement(By.CssSelector(css));
+            }
+        },
+        { "confirmDelete", () =>
+            {
+                var stormEditTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                return rows.Count == 1 ? stormTable : null;
             }
         }
     };
