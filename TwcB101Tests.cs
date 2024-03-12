@@ -100,7 +100,13 @@ namespace DomainStorm.Project.TWC.Tests
             var confirmButton = TestHelper.FindAndMoveToElement(_driver, "[class='swal2-actions'] button");
             confirmButton.Click();
 
-            var deleted = TestHelper.FindShadowElement(_driver, "confirmDelete", "span");
+            _wait.Until(driver =>
+            {
+                var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                return rows.Count == 1;
+            });
             That(TestHelper.FindShadowElement(_driver, "stormEditTable", "span").Text, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
         }
         public async Task TwcB101_05()

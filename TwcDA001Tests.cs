@@ -60,6 +60,7 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
+            Thread.Sleep(1000);
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 

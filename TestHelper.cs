@@ -507,14 +507,6 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
                 var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
                 return stormTreeView.GetShadowRoot().FindElement(By.CssSelector(css));
             }
-        },
-        { "confirmDelete", () =>
-            {
-                var stormEditTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
-                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
-                return rows.Count == 1 ? stormTable : null;
-            }
         }
     };
         var element = wait.Until((_) =>
