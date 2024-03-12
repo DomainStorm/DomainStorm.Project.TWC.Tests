@@ -96,7 +96,7 @@
 //            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
 //            _actions.MoveToElement(href).Click().Perform();
 
-//            var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
+//            var checkButton = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
 //            _actions.MoveToElement(checkButton).Click().Perform();
 
 //            That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));
@@ -105,7 +105,7 @@
 
 //        public async Task TwcE101_06()
 //        {
-//            var submitButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info");
+//            var submitButton = TestHelper.FindAndMoveToElement(_driver, "button.btn.bg-gradient-info");
 //            _actions.MoveToElement(submitButton).Click().Perform();
 
 //            var hintTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container h5")));
@@ -125,7 +125,7 @@
 
 //        public async Task TwcE101_08()
 //        {
-//            var confirmButton = TestHelper.FindAndMoveElement(_driver, "div.swal2-popup > div.swal2-actions > button.swal2-confirm");
+//            var confirmButton = TestHelper.FindAndMoveToElement(_driver, "div.swal2-popup > div.swal2-actions > button.swal2-confirm");
 //            _actions.MoveToElement(confirmButton).Click().Perform();
 
 //            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
@@ -164,7 +164,7 @@
 
 //        public async Task TwcE101_10()
 //        {
-//            var createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
+//            var createAttachmentButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='file'] button");
 //            _actions.MoveToElement(createAttachmentButton).Click().Perform();
 
 //            var attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
@@ -176,7 +176,7 @@
 
 //        public async Task TwcE101_11()
 //        {
-//            var submitButton = TestHelper.FindAndMoveElement(_driver, "div.d-flex.justify-content-end.mt-4 button[name='button']");
+//            var submitButton = TestHelper.FindAndMoveToElement(_driver, "div.d-flex.justify-content-end.mt-4 button[name='button']");
 //            _actions.MoveToElement(submitButton).Click().Perform();
 
 //            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
@@ -188,9 +188,9 @@
 //            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
 //            _actions.MoveToElement(href).Click().Perform();
 
-//            var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
+//            var checkButton = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
 
-//            var submitButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info");
+//            var submitButton = TestHelper.FindAndMoveToElement(_driver, "button.btn.bg-gradient-info");
 //            _actions.MoveToElement(submitButton).Click().Perform();
 
 //            var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
@@ -213,19 +213,19 @@
 
 //            _driver.SwitchTo().DefaultContent();
 
-//            var 消費性用水服務契約 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
+//            var 消費性用水服務契約 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
 //            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[id='contract_1'] > div.d-flex > div.form-check > input")));
 //            That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
 
-//            var 公司個人資料保護告知事項 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
+//            var 公司個人資料保護告知事項 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
 //            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[id='contract_2'] > div.d-flex > div.form-check > input")));
 //            That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
 
-//            var 公司營業章程 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
+//            var 公司營業章程 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
 //            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[id='contract_3'] > div.d-flex > div.form-check > input")));
 //            That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
 
-//            var attachmentName = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] > div > a");
+//            var attachmentName = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='file'] > div > a");
 //            That(attachmentName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 //        }
 
@@ -244,18 +244,18 @@
 
 //            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
 
-//            var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
+//            var applyDateBegin = TestHelper.FindAndMoveToElement(_driver, "[label='受理日期起']");
 //            var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
 //            _actions.MoveToElement(input).Click().Perform();
 
-//            var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
+//            var select = TestHelper.FindAndMoveToElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
 //            var applyMonthBegin = new SelectElement(select);
 //            applyMonthBegin.SelectByText("六月");
 
-//            var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='六月 3, 2023']");
+//            var applyDayBegin = TestHelper.FindAndMoveToElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='六月 3, 2023']");
 //            _actions.MoveToElement(applyDayBegin).Click().Perform();
 
-//            var search = TestHelper.FindAndMoveElement(_driver, "storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button");
+//            var search = TestHelper.FindAndMoveToElement(_driver, "storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button");
 //            _actions.MoveToElement(search).Click().Perform();
 
 //            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell span"), Is.Not.Null);
@@ -269,7 +269,7 @@
 //            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
 //            _actions.MoveToElement(href).Click().Perform();
 
-//            var attachmentName = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] > div > a");
+//            var attachmentName = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='file'] > div > a");
 //            That(attachmentName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 //        }
 

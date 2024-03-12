@@ -90,7 +90,7 @@ namespace DomainStorm.Project.TWC.Tests
             editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor h6")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].style.color = 'rgb(230, 0, 0)';", editorInput);
 
-            var createButton = TestHelper.FindAndMoveElement(_driver, "button[form='create']");
+            var createButton = TestHelper.FindAndMoveToElement(_driver, "button[form='create']");
             _actions.MoveToElement(createButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增公告']")));
@@ -244,7 +244,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcN100_16()
         {
-            var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
+            var logout = TestHelper.FindAndMoveToElement(_driver, "storm-tooltip > div > a[href='./logout']");
             _actions.MoveToElement(logout).Click().Perform();
         }
         public async Task TwcN100_17()

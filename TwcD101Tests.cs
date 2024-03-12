@@ -87,14 +87,14 @@ namespace DomainStorm.Project.TWC.Tests
             var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
             _actions.MoveToElement(href).Click().Perform();
 
-            var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
+            var checkButton = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
             _actions.MoveToElement(checkButton).Click().Perform();
 
             That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcD101_06()
         {
-            var submitButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='受理登記'] button");
+            var submitButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='受理登記'] button");
             _actions.MoveToElement(submitButton).Click().Perform();
 
             var hintTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container h5")));
@@ -102,7 +102,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcD101_07()
         {
-            var confirmButton = TestHelper.FindAndMoveElement(_driver, "div.swal2-actions button");
+            var confirmButton = TestHelper.FindAndMoveToElement(_driver, "div.swal2-actions button");
             _actions.MoveToElement(confirmButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.swal2-actions button")));
@@ -110,18 +110,18 @@ namespace DomainStorm.Project.TWC.Tests
             var href = TestHelper.FindShadowRootElement(_driver, "[href='#credential']");
             _actions.MoveToElement(href).Click().Perform();
 
-            var scanButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='credential'] button:nth-child(2)");
+            var scanButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='credential'] button:nth-child(2)");
             _actions.MoveToElement(scanButton).Click().Perform();
 
             var scanSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dz-success-mark")));
             That(scanSuccess, Is.Not.Null, "未上傳");
 
-            var scanImg = TestHelper.FindAndMoveElement(_driver, "div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img");
+            var scanImg = TestHelper.FindAndMoveToElement(_driver, "div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img");
             That(scanImg, Is.Not.Null, "尚未上傳完成");
         }
         public async Task TwcD101_08()
         {
-            var submitButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='受理登記'] button");
+            var submitButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='受理登記'] button");
             _actions.MoveToElement(submitButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='受理登記'] button")));
@@ -140,16 +140,16 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var 消費性用水服務契約 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
+            var 消費性用水服務契約 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
             That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var 公司個人資料保護告知事項 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
+            var 公司個人資料保護告知事項 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
             That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var 公司營業章程 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
+            var 公司營業章程 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
             That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var img = TestHelper.FindAndMoveElement(_driver, "storm-card:nth-child(6) > img");
+            var img = TestHelper.FindAndMoveToElement(_driver, "storm-card:nth-child(6) > img");
             That(img, Is.Not.Null);
         }
 
@@ -174,7 +174,7 @@ namespace DomainStorm.Project.TWC.Tests
             string formattedApplyDateBegin = "2023-06-03";
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginInput);
 
-            var search = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='綜合查詢'] button");
+            var search = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='綜合查詢'] button");
             _actions.MoveToElement(search).Click().Perform();
 
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] span"), Is.Not.Null);
@@ -187,7 +187,7 @@ namespace DomainStorm.Project.TWC.Tests
             var href = TestHelper.FindShadowRootElement(_driver, "[href='#credential']");
             _actions.MoveToElement(href).Click().Perform();
 
-            var img = TestHelper.FindAndMoveElement(_driver, "storm-card:nth-child(6) > img");
+            var img = TestHelper.FindAndMoveToElement(_driver, "storm-card:nth-child(6) > img");
             That(img, Is.Not.Null);
         }
         public async Task TwcD101_12()

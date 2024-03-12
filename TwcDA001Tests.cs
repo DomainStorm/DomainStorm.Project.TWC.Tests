@@ -68,7 +68,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcDA001_04()
         {
-            var createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
+            var createAttachmentButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='file'] button");
             _actions.MoveToElement(createAttachmentButton).Click().Perform();
 
             var attachmentOne = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
@@ -82,7 +82,7 @@ namespace DomainStorm.Project.TWC.Tests
                 return attachmentName!.GetAttribute("value") == "twcweb_01_1_夾帶附件1.pdf";
             });
 
-            var submitButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='新增檔案'] button");
+            var submitButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='新增檔案'] button");
             _actions.MoveToElement(submitButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增檔案'] button")));
@@ -111,14 +111,14 @@ namespace DomainStorm.Project.TWC.Tests
             var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
             _actions.MoveToElement(href).Click().Perform();
 
-            var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
+            var checkButton = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
             _actions.MoveToElement(checkButton).Click().Perform();
 
             That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcDA001_08()
         {
-            var submitButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
+            var submitButton = TestHelper.FindAndMoveToElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
             _actions.MoveToElement(submitButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
@@ -137,7 +137,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
+            var logout = TestHelper.FindAndMoveToElement(_driver, "storm-tooltip > div > a[href='./logout']");
             _actions.MoveToElement(logout).Click().Perform();
 
             var usernameElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
@@ -162,7 +162,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcDA001_11()
         {
-            var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
+            var logout = TestHelper.FindAndMoveToElement(_driver, "storm-tooltip > div > a[href='./logout']");
             _actions.MoveToElement(logout).Click().Perform();
 
             var usernameElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
@@ -181,7 +181,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcDA001_12()
         {
-            var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
+            var logout = TestHelper.FindAndMoveToElement(_driver, "storm-tooltip > div > a[href='./logout']");
             _actions.MoveToElement(logout).Click().Perform();
 
             var usernameElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));

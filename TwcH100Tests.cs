@@ -65,7 +65,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
 
-            var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體庫'] button");
+            var addFileButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='媒體庫'] button");
             _actions.MoveToElement(addFileButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體庫'] button")));
@@ -76,7 +76,7 @@ namespace DomainStorm.Project.TWC.Tests
             var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
             That(fileName.GetAttribute("value"), Is.EqualTo("testmedia.mp4"));
 
-            var submitButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='新增檔案'] button");
+            var submitButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='新增檔案'] button");
             _actions.MoveToElement(submitButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增檔案'] button")));
@@ -84,7 +84,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcH100_01_02()
         {
-            var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體庫'] button");
+            var addFileButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='媒體庫'] button");
             _actions.MoveToElement(addFileButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體庫'] button")));
@@ -99,7 +99,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroupDurationInput = stormInputGroupDuration.GetShadowRoot().FindElement(By.CssSelector("div input"));
             stormInputGroupDurationInput.SendKeys("10");
 
-            var submitButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='新增檔案'] button");
+            var submitButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='新增檔案'] button");
             _actions.MoveToElement(submitButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增檔案'] button")));
@@ -117,7 +117,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcH100_03()
         {
-            var addListButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='節目單管理'] button");
+            var addListButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='節目單管理'] button");
             _actions.MoveToElement(addListButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='節目單管理'] button")));
@@ -128,7 +128,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcH100_04()
         {
-            var addMediaButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='新增節目單'] button");
+            var addMediaButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='新增節目單'] button");
             _actions.MoveToElement(addMediaButton).Click().Perform();
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack > storm-table")));
@@ -141,7 +141,7 @@ namespace DomainStorm.Project.TWC.Tests
             });
             _actions.MoveToElement(selectedRows).Click().Perform();
 
-            var addButton = TestHelper.FindAndMoveElement(_driver, "span.rz-button-box");
+            var addButton = TestHelper.FindAndMoveToElement(_driver, "span.rz-button-box");
             _actions.MoveToElement(addButton).Click().Perform();
         }
         public async Task TwcH100_05()
@@ -153,7 +153,7 @@ namespace DomainStorm.Project.TWC.Tests
             var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor")));
             editorInput.SendKeys("新增測試");
 
-            var createButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='新增節目單'] button[form='create']");
+            var createButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='新增節目單'] button[form='create']");
             _actions.MoveToElement(createButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增節目單']")));
@@ -166,7 +166,7 @@ namespace DomainStorm.Project.TWC.Tests
             var viewButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button");
             _actions.MoveToElement(viewButton).Click().Perform();
 
-            var closeButton = TestHelper.FindAndMoveElement(_driver, "div.rz-stack button");
+            var closeButton = TestHelper.FindAndMoveToElement(_driver, "div.rz-stack button");
             _actions.MoveToElement(closeButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-carousel")));
@@ -181,7 +181,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcH100_08()
         {
-            var deleteButton = TestHelper.FindAndMoveElement(_driver, "div.rz-stack button");
+            var deleteButton = TestHelper.FindAndMoveToElement(_driver, "div.rz-stack button");
             _actions.MoveToElement(deleteButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack button")));
@@ -237,7 +237,7 @@ namespace DomainStorm.Project.TWC.Tests
             var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor")));
             editorInput.SendKeys("跑馬燈測試");
 
-            var createButton = TestHelper.FindAndMoveElement(_driver, "button[form='create']");
+            var createButton = TestHelper.FindAndMoveToElement(_driver, "button[form='create']");
             _actions.MoveToElement(createButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增節目單']")));
@@ -254,7 +254,7 @@ namespace DomainStorm.Project.TWC.Tests
             var videoAutoPlay = stormCarousel.GetShadowRoot().FindElement(By.CssSelector("video[autoplay]"));
             That(videoAutoPlay, Is.Not.Null, "影片正在撥放");
 
-            var closeButton = TestHelper.FindAndMoveElement(_driver, "div.rz-stack button");
+            var closeButton = TestHelper.FindAndMoveToElement(_driver, "div.rz-stack button");
             _actions.MoveToElement(closeButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-carousel")));
@@ -266,7 +266,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='修改節目單']")));
 
-            var submitButton = TestHelper.FindAndMoveElement(_driver, "button[form='create']");
+            var submitButton = TestHelper.FindAndMoveToElement(_driver, "button[form='create']");
             _actions.MoveToElement(submitButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("button[form='create']")));
@@ -293,7 +293,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcH100_18()
         {
-            var searchButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='節目單審核'] button");
+            var searchButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='節目單審核'] button");
             _actions.MoveToElement(searchButton).Click().Perform();
         }
         public async Task TwcH100_19()
@@ -301,7 +301,7 @@ namespace DomainStorm.Project.TWC.Tests
             var auditButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button:nth-child(3)");
             _actions.MoveToElement(auditButton).Click().Perform();
 
-            var approvalButton = TestHelper.FindAndMoveElement(_driver, "div.rz-stack button");
+            var approvalButton = TestHelper.FindAndMoveToElement(_driver, "div.rz-stack button");
             _actions.MoveToElement(approvalButton).Click().Perform();
 
             _wait.Until(driver => {

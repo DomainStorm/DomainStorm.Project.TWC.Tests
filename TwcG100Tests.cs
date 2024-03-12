@@ -206,7 +206,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().DefaultContent();
 
-            var 消費性用水服務契約 = TestHelper.FindAndMoveElement(_driver, "input[id='消費性用水服務契約']");
+            var 消費性用水服務契約 = TestHelper.FindAndMoveToElement(_driver, "input[id='消費性用水服務契約']");
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='消費性用水服務契約']")));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
@@ -222,7 +222,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcG100_12()
         {
-            var 公司個人資料保護告知事項 = TestHelper.FindAndMoveElement(_driver, "input[id='公司個人資料保護告知事項']");
+            var 公司個人資料保護告知事項 = TestHelper.FindAndMoveToElement(_driver, "input[id='公司個人資料保護告知事項']");
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司個人資料保護告知事項']")));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
@@ -237,7 +237,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcG100_13()
         {
-            var 公司營業章程 = TestHelper.FindAndMoveElement(_driver, "input[id='公司營業章程']");
+            var 公司營業章程 = TestHelper.FindAndMoveToElement(_driver, "input[id='公司營業章程']");
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司營業章程']")));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
@@ -262,7 +262,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
-            var signImg = TestHelper.FindAndMoveElement(_driver, "div.dz-image > img[alt='簽名_001.tiff']");
+            var signImg = TestHelper.FindAndMoveToElement(_driver, "div.dz-image > img[alt='簽名_001.tiff']");
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dz-image > img[alt='簽名_001.tiff']")));
             That(signImg, Is.Not.Null);
         }
@@ -271,10 +271,10 @@ namespace DomainStorm.Project.TWC.Tests
             var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='credential'] > form > div > div > button.btn-primary")));
             _actions.MoveToElement(scanButton).Click().Perform();
 
-            var scanSuccess = TestHelper.FindAndMoveElement(_driver, "div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark");
+            var scanSuccess = TestHelper.FindAndMoveToElement(_driver, "div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark");
             That(scanSuccess, Is.Not.Null, "未上傳");
 
-            var scanImg = TestHelper.FindAndMoveElement(_driver, "div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img");
+            var scanImg = TestHelper.FindAndMoveToElement(_driver, "div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img");
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img")));
             That(scanImg, Is.Not.Null, "尚未上傳完成");
 

@@ -63,7 +63,7 @@ namespace DomainStorm.Project.TWC.Tests
                 var pageCount = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
                 That(pageCount!.Text, Is.EqualTo("共 0 筆"));
 
-                var createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
+                var createAttachmentButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='file'] button");
                 _actions.MoveToElement(createAttachmentButton).Click().Perform();
 
                 var attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
@@ -72,7 +72,7 @@ namespace DomainStorm.Project.TWC.Tests
                 var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
                 That(attachmentName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
-                var submitButton = TestHelper.FindAndMoveElement(_driver, "div.d-flex.justify-content-end.mt-4 button[name='button']");
+                var submitButton = TestHelper.FindAndMoveToElement(_driver, "div.d-flex.justify-content-end.mt-4 button[name='button']");
                 _actions.MoveToElement(submitButton).Click().Perform();
 
                 _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
@@ -81,12 +81,12 @@ namespace DomainStorm.Project.TWC.Tests
                 var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
                 _actions.MoveToElement(href).Click().Perform();
 
-                var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
+                var checkButton = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
                 _actions.MoveToElement(checkButton).Click().Perform();
 
                 That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));
 
-                submitButton = TestHelper.FindAndMoveElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
+                submitButton = TestHelper.FindAndMoveToElement(_driver, "button.btn.bg-gradient-info.m-0.ms-2");
                 _actions.MoveToElement(submitButton).Click().Perform();
 
                 _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("button.btn.bg-gradient-info.m-0.ms-2")));
@@ -122,15 +122,15 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
+            var applyDateBegin = TestHelper.FindAndMoveToElement(_driver, "[label='受理日期起']");
             var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
             _actions.MoveToElement(input).Click().Perform();
 
-            var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
+            var select = TestHelper.FindAndMoveToElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
             var applyMonthBegin = new SelectElement(select);
             applyMonthBegin.SelectByText("三月");
 
-            var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='三月 6, 2023']");
+            var applyDayBegin = TestHelper.FindAndMoveToElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='三月 6, 2023']");
             _actions.MoveToElement(applyDayBegin).Click().Perform();
 
             var search = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
