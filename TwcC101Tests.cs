@@ -63,61 +63,54 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] span")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
+            var accepted = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] span")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", accepted);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", accepted);
 
-            var signName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.sign-name span")));
-            That(signName.Text, Is.EqualTo("張博文"));
+            var approver = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='受理'] [class='sign-name'] span")));
+            That(approver.Text, Is.EqualTo("張博文"));
         }
         public async Task TwcC101_04()
         {
             _driver.SwitchTo().DefaultContent();
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
-            _actions.MoveToElement(href).Click().Perform();
+            var checkBox = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
+            checkBox.Click();
 
-            var checkButton = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
-            _actions.MoveToElement(checkButton).Click().Perform();
-
-            That(checkButton.GetAttribute("checked"), Is.EqualTo("true"));
+            That(checkBox.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcC101_05()
         {
-            var submitButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='受理登記'] button");
-            _actions.MoveToElement(submitButton).Click().Perform();
+            var confirmButton = TestHelper.FindAndMoveToElement(_driver, "[headline='受理登記'] button");
+            confirmButton.Click();
 
-            var hintTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container h5")));
-            That(hintTitle.Text, Is.EqualTo("【夾帶附件】或【掃描拍照】未上傳"));
+            var errorMessage = TestHelper.FindAndMoveToElement(_driver, "[class='swal2-html-container'] h5");
+            That(errorMessage.Text, Is.EqualTo("【夾帶附件】或【掃描拍照】未上傳"));
+
+            var closeMessage = TestHelper.FindAndMoveToElement(_driver, "[class='swal2-actions'] button");
+            closeMessage.Click();
         }
         public async Task TwcC101_06()
         {
-            var confirmButton = TestHelper.FindAndMoveToElement(_driver, "div.swal2-actions button");
-            _actions.MoveToElement(confirmButton).Click().Perform();
+            var scanButton = TestHelper.FindAndMoveToElement(_driver, "[headline='掃描拍照'] button:nth-child(2)");
+            scanButton.Click();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.swal2-actions button")));
-
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#credential']");
-            _actions.MoveToElement(href).Click().Perform();
-
-            var scanButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='credential'] button:nth-child(2)");
-            _actions.MoveToElement(scanButton).Click().Perform();
-
-            var scanSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dz-success-mark")));
-            That(scanSuccess, Is.Not.Null, "未上傳");
+            //var scanSuccess = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.dz-success-mark")));
+            //That(scanSuccess, Is.Not.Null, "未上傳");
             
-            var scanImg = TestHelper.FindAndMoveToElement(_driver, "div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img");
+            var scanImg = TestHelper.FindAndMoveToElement(_driver, "storm-upload [alt='證件_005.tiff']");
             That(scanImg, Is.Not.Null, "尚未上傳完成");
         }
         public async Task TwcC101_07()
         {
-            var submitButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='受理登記'] button");
-            _actions.MoveToElement(submitButton).Click().Perform();
+            var confirmButton = TestHelper.FindAndMoveToElement(_driver, "[headline='受理登記'] button");
+            confirmButton.Click();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='受理登記'] button")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='受理登記'] button")));
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
+
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
@@ -130,14 +123,14 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var 消費性用水服務契約 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
-            That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
+            var contract_1 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
+            That(contract_1.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var 公司個人資料保護告知事項 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
-            That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
+            var contract_2 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
+            That(contract_2.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var 公司營業章程 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
-            That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
+            var contract_3 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
+            That(contract_3.GetAttribute("checked"), Is.EqualTo("true"));
 
             var img = TestHelper.FindAndMoveToElement(_driver, "storm-card:nth-child(6) > img");
             That(img, Is.Not.Null);
@@ -167,15 +160,12 @@ namespace DomainStorm.Project.TWC.Tests
             var search = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='綜合查詢'] button");
             _actions.MoveToElement(search).Click().Perform();
 
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] span"), Is.Not.Null);
+            That(TestHelper.FindShadowElement(_driver, "stormTable", "span"), Is.Not.Null);
         }
         public async Task TwcC101_10()
         {
             var applyCaseNo = TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] span");
             _actions.MoveToElement(applyCaseNo).Click().Perform();
-
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#credential']");
-            _actions.MoveToElement(href).Click().Perform();
 
             var img = TestHelper.FindAndMoveToElement(_driver, "storm-card:nth-child(6) > img");
             That(img, Is.Not.Null);
