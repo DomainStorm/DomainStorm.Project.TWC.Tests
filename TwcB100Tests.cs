@@ -117,150 +117,151 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
+            var accepted = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] span")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", accepted);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", accepted);
             Thread.Sleep(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
+            accepted = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", accepted);
 
-            var signName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.sign-name > span")));
-            That(signName.Text, Is.EqualTo("張博文"));
+            var approver = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='受理'] [class='sign-name'] span")));
+            That(approver.Text, Is.EqualTo("張博文"));
         }
         public async Task TwcB100_07()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().DefaultContent();
 
-            var 消費性用水服務契約 = TestHelper.FindAndMoveToElement(_driver, "input[id='消費性用水服務契約']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='消費性用水服務契約']")));
+            var contract_1 = TestHelper.FindAndMoveToElement(_driver, "[id='消費性用水服務契約']");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='消費性用水服務契約']")));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().DefaultContent();
 
-            消費性用水服務契約 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='消費性用水服務契約']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
+            contract_1 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='消費性用水服務契約']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", contract_1);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
-            消費性用水服務契約 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='消費性用水服務契約']")));
-            That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
+            contract_1 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='消費性用水服務契約']")));
+            That(contract_1.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcB100_08()
         {
-            var 公司個人資料保護告知事項 = TestHelper.FindAndMoveToElement(_driver, "input[id='公司個人資料保護告知事項']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司個人資料保護告知事項']")));
+            var contract_2 = TestHelper.FindAndMoveToElement(_driver, "[id='公司個人資料保護告知事項']");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='公司個人資料保護告知事項']")));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
-            公司個人資料保護告知事項 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司個人資料保護告知事項']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
+            contract_2 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='公司個人資料保護告知事項']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", contract_2);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
-            公司個人資料保護告知事項 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司個人資料保護告知事項']")));
-            That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
+            contract_2 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='公司個人資料保護告知事項']")));
+            That(contract_2.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcB100_09()
         {
-            var 公司營業章程 = TestHelper.FindAndMoveToElement(_driver, "input[id='公司營業章程']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司營業章程']")));
+            var contract_3 = TestHelper.FindAndMoveToElement(_driver, "[id='公司營業章程']");
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='公司營業章程']")));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
-            公司營業章程 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司營業章程']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司營業章程);
+            contract_3 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='公司營業章程']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", contract_3);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
-            公司營業章程 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司營業章程']")));
-            That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
+            contract_3 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[id='公司營業章程']")));
+            That(contract_3.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcB100_10()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
-            var signButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='signature'] button.btn-primary")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", signButton);
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView();", signButton);
+            var signature = TestHelper.FindAndMoveToElement(_driver, "[id='signature'] button:nth-child(2)");
+            signature.Click();
 
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dz-image > img[alt='簽名_001.tiff']")));
+            //var signButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='signature'] button.btn-primary")));
+            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", signButton);
+            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView();", signButton);
+
+            var img = TestHelper.FindAndMoveToElement(_driver, "img[alt='簽名_001.tiff']");
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
-            var signImg = TestHelper.FindAndMoveToElement(_driver, "div.dz-image > img[alt='簽名_001.tiff']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dz-image > img[alt='簽名_001.tiff']")));
-            That(signImg, Is.Not.Null);
+            img = TestHelper.FindAndMoveToElement(_driver, "img[alt='簽名_001.tiff']");
+            That(img, Is.Not.Null);
         }
         public async Task TwcB100_11()
         {
-            var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='credential'] > form > div > div > button.btn-primary")));
-            _actions.MoveToElement(scanButton).Click().Perform();
+            var scanButton = TestHelper.FindAndMoveToElement(_driver, "[headline='掃描拍照'] button:nth-child(2)");
+            scanButton.Click();
 
-            var scanSuccess = TestHelper.FindAndMoveToElement(_driver, "div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-success-mark");
-            That(scanSuccess, Is.Not.Null, "未上傳");
-
-            var scanImg = TestHelper.FindAndMoveToElement(_driver, "div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img")));
+            var scanImg = TestHelper.FindAndMoveToElement(_driver, "storm-upload [alt='證件_005.tiff']");
             That(scanImg, Is.Not.Null, "尚未上傳完成");
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropzone-container > div.dropzone > div:nth-child(6) > div.dz-image > img")));
+            scanImg = TestHelper.FindAndMoveToElement(_driver, "storm-upload [alt='證件_005.tiff']");
             That(scanImg, Is.Not.Null, "尚未上傳完成");
         }
         public async Task TwcB100_12()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
-            var attachmentButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='file'] > div.float-end > button")));
-            _actions.MoveToElement(attachmentButton).Click().Perform();
+            var attachmentTab = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
+            That(attachmentTab.Text, Is.EqualTo("新增文件"));
 
-            var fileOne = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
-            TestHelper.UploadFile(_driver, fileOne, "input.dz-hidden-input:nth-of-type(3)");
+            var addAttachment = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
+            addAttachment.Click();
 
-            var fileTwo = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件2.pdf");
-            TestHelper.UploadFile(_driver, fileTwo, "input.dz-hidden-input:nth-of-type(3)");
+            var attachment1 = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
+            TestHelper.UploadFile(_driver, attachment1, "input.dz-hidden-input:nth-of-type(3)");
+
+            var attachment2 = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件2.pdf");
+            TestHelper.UploadFile(_driver, attachment2, "input.dz-hidden-input:nth-of-type(3)");
 
             _wait.Until(driver =>
             {
-                var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
+                var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[headline='新增檔案'] storm-input-group")));
                 return attachmentName!.GetAttribute("value") == "twcweb_01_1_夾帶附件1.pdf,twcweb_01_1_夾帶附件2.pdf";
             });
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            var upload = TestHelper.FindAndMoveToElement(_driver, "[headline='新增檔案'] button");
+            upload.Click();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
-
-            var attachmentName = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
-            That(attachmentName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf,twcweb_01_1_夾帶附件2.pdf"));
-
-            var fileCount = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
-            _wait.Until(driver => fileCount!.Text == "顯示第 1 至 2 筆，共 2 筆");
-            That(fileCount!.Text, Is.EqualTo("顯示第 1 至 2 筆，共 2 筆"));
+            _wait.Until(driver =>
+            {
+                var target = TestHelper.FindShadowElement(_driver, "stormEditTable", "div.table-pageInfo");
+                return target!.Text == "顯示第 1 至 2 筆，共 2 筆";
+            });
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
-            fileCount = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
-            _wait.Until(driver => fileCount!.Text == "顯示第 1 至 2 筆，共 2 筆");
-            That(fileCount!.Text, Is.EqualTo("顯示第 1 至 2 筆，共 2 筆"));
+            _wait.Until(driver =>
+            {
+                var target = TestHelper.FindShadowElement(_driver, "stormEditTable", "div.table-pageInfo");
+                return target!.Text == "顯示第 1 至 2 筆，共 2 筆";
+            });
         }
         public async Task TwcB100_13()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button[type='submit']")));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            var confirmButton = TestHelper.FindAndMoveToElement(_driver, "[headline='受理登記'] button");
+            confirmButton.Click();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("button[type='submit']")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='受理登記'] button")));
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
+
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
