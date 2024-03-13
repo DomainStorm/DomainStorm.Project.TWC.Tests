@@ -102,6 +102,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcD101_07()
         {
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[class='swal2-actions'] button")));
+
             var scanButton = TestHelper.FindAndMoveToElement(_driver, "[headline='掃描拍照'] button:nth-child(2)");
             scanButton.Click();
 
@@ -173,6 +175,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             var applyCaseNo = TestHelper.FindShadowElement(_driver, "stormTable", "td[data-field='applyCaseNo'] span");
             _actions.MoveToElement(applyCaseNo).Click().Perform();
+            Thread.Sleep(1000);
 
             var img = TestHelper.FindAndMoveToElement(_driver, "storm-card:nth-child(6) > img");
             That(img, Is.Not.Null);

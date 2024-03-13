@@ -64,9 +64,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var checkAll = TestHelper.FindShadowElement(_driver, "stormTable", "[aria-label='Check All']");
             checkAll.Click();
-            
             Thread.Sleep(500);
-            //That(checkAll.GetAttribute("checked"), Is.EqualTo("true"));
 
             var applicant = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("button")));
             applicant.Click();

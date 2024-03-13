@@ -94,6 +94,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcF101_06()
         {
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[class='swal2-actions'] button")));
+
             var attachmentTab = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
             That(attachmentTab.Text, Is.EqualTo("新增文件"));
         }
@@ -188,8 +190,9 @@ namespace DomainStorm.Project.TWC.Tests
         {
             var applyCaseNo = TestHelper.FindShadowElement(_driver, "stormTable", "td[data-field='applyCaseNo'] span");
             _actions.MoveToElement(applyCaseNo).Click().Perform();
+            Thread.Sleep(1000);
 
-            var attachmentName = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] a");
+            var attachmentName = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='夾帶附件'] a");
             That(attachmentName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
         public async Task TwcF101_13()
