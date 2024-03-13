@@ -187,10 +187,6 @@ namespace DomainStorm.Project.TWC.Tests
             var signature = TestHelper.FindAndMoveToElement(_driver, "[id='signature'] button:nth-child(2)");
             signature.Click();
 
-            //var signButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[id='signature'] button.btn-primary")));
-            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", signButton);
-            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView();", signButton);
-
             var img = TestHelper.FindAndMoveToElement(_driver, "img[alt='簽名_001.tiff']");
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
