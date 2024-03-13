@@ -422,25 +422,12 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
 
             wait.Until(_ =>
             {
-                try
-                {
-                    var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
-                    var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+                var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+                var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
 
-                    if (stormTreeView != null)
-                    {
-                        e = stormTreeView.GetShadowRoot().FindElement(By.CssSelector(css));
+                e = stormTreeView.GetShadowRoot().FindElement(By.CssSelector(css));
 
-                        return true;
-                    }
-                }
-
-                catch
-                {
-                    return false;
-                }
-
-                return false;
+                return e != null;  // 如果找到元素，則返回 true，結束循環
             });
 
             return e;
@@ -461,11 +448,12 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
         var action = new Actions(webDriver);
+        IWebElement? element = null;
 
-        var element = wait.Until((_) =>
+        wait.Until(_ =>
         {
-            var e = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
-            return e;
+            element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
+            return element != null;
         });
 
         action.MoveToElement(element).Perform();
@@ -473,6 +461,7 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
 
         return element;
     }
+
     public static IWebElement FindShadowElement(IWebDriver webDriver, string condition, string css)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
@@ -509,12 +498,15 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
             }
         }
     };
-        var element = wait.Until((_) =>
+        IWebElement element = null;
+
+        wait.Until(_ =>
         {
             var actionFunc = conditionActions[condition];
-            var e = actionFunc();
-            return e;
+            element = actionFunc();
+            return element != null;
         });
+
         action.MoveToElement(element).Perform();
 
         return element;
