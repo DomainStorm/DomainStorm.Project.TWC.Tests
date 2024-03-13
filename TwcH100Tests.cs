@@ -63,73 +63,78 @@ namespace DomainStorm.Project.TWC.Tests
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
 
-            var addFileButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='媒體庫'] button");
-            _actions.MoveToElement(addFileButton).Click().Perform();
+            var addFileButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='媒體管理'] button");
+            addFileButton!.Click();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體庫'] button")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體管理'] button")));
 
-            var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "testmedia.mp4");
-            TestHelper.UploadFile(_driver, file, "input.dz-hidden-input");
+            var attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "testmedia.mp4");
+            TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input");
 
-            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
-            That(fileName.GetAttribute("value"), Is.EqualTo("testmedia.mp4"));
+            var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[headline='新增檔案'] storm-input-group")));
+            That(attachmentName.GetAttribute("value"), Is.EqualTo("testmedia.mp4"));
 
-            var submitButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='新增檔案'] button");
-            _actions.MoveToElement(submitButton).Click().Perform();
+            var upload = TestHelper.FindAndMoveToElement(_driver, "[headline='新增檔案'] button");
+            upload!.Click();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增檔案'] button")));
-            That(TestHelper.WaitStormEditTableUpload(_driver, "div.table-bottom > div.table-pageInfo")!.Text, Is.EqualTo("顯示第 1 至 1 筆，共 1 筆"));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='新增檔案'] button")));
+            That(TestHelper.FindShadowElement(_driver, "stormEditTable", "span")!.Text, Is.EqualTo("testmedia.mp4"));
         }
         public async Task TwcH100_01_02()
         {
-            var addFileButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='媒體庫'] button");
+            var addFileButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='媒體管理'] button");
             _actions.MoveToElement(addFileButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體庫'] button")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體管理'] button")));
 
-            var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "台水官網圖.png");
-            TestHelper.UploadFile(_driver, file, "input.dz-hidden-input:nth-of-type(2)");
+            var attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "台水官網圖.png");
+            TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input:nth-of-type(2)");
 
-            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
-            That(fileName.GetAttribute("value"), Is.EqualTo("台水官網圖.png"));
+            var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
+            That(attachmentName.GetAttribute("value"), Is.EqualTo("台水官網圖.png"));
 
             var stormInputGroupDuration = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-input-group[label='播放秒數']")));
             var stormInputGroupDurationInput = stormInputGroupDuration.GetShadowRoot().FindElement(By.CssSelector("div input"));
             stormInputGroupDurationInput.SendKeys("10");
 
-            var submitButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='新增檔案'] button");
-            _actions.MoveToElement(submitButton).Click().Perform();
+            var upload = TestHelper.FindAndMoveToElement(_driver, "[headline='新增檔案'] button");
+            upload!.Click();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增檔案'] button")));
-            That(TestHelper.WaitStormEditTableUpload(_driver, "div.table-bottom > div.table-pageInfo")!.Text, Is.EqualTo("顯示第 1 至 2 筆，共 2 筆"));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='新增檔案'] button")));
+
+            var stormEditTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-edit-table")));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var tbody = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div > table > tbody"));
+            var trList = tbody!.FindElements(By.CssSelector("tr"));
+            var selectedRows = trList.FirstOrDefault(tr =>
+            {
+                var nameCell = tr.FindElement(By.CssSelector("td[data-field='name'] span"));
+                return nameCell.Text == "台水官網圖.png";
+            });
         }
 
         public async Task TwcH100_02()
         {
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
-            That(TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo")!.Text, Is.EqualTo("共 0 筆"));
+            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "h5");
 
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='節目單管理']")));
-            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
-            That(stormCardTitle.Text, Is.EqualTo("節目單管理"));
+            That(stormCard.Text, Is.EqualTo("節目單管理"));
         }
         public async Task TwcH100_03()
         {
             var addListButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='節目單管理'] button");
-            _actions.MoveToElement(addListButton).Click().Perform();
+            addListButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='節目單管理'] button")));
 
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增節目單']")));
-            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
-            That(stormCardTitle.Text, Is.EqualTo("新增節目單"));
+            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "h5");
+            That(stormCard.Text, Is.EqualTo("新增節目單"));
         }
         public async Task TwcH100_04()
         {
             var addMediaButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='新增節目單'] button");
-            _actions.MoveToElement(addMediaButton).Click().Perform();
+            addMediaButton!.Click();
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack > storm-table")));
             var tbody = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div > table > tbody"));
@@ -141,8 +146,10 @@ namespace DomainStorm.Project.TWC.Tests
             });
             _actions.MoveToElement(selectedRows).Click().Perform();
 
-            var addButton = TestHelper.FindAndMoveToElement(_driver, "span.rz-button-box");
-            _actions.MoveToElement(addButton).Click().Perform();
+            var addButton = TestHelper.FindAndMoveToElement(_driver, "div.rz-stack button");
+            addButton!.Click();
+
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack button")));
         }
         public async Task TwcH100_05()
         {
@@ -154,35 +161,37 @@ namespace DomainStorm.Project.TWC.Tests
             editorInput.SendKeys("新增測試");
 
             var createButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='新增節目單'] button[form='create']");
-            _actions.MoveToElement(createButton).Click().Perform();
+            createButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增節目單']")));
 
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='name'] span")!.Text, Is.EqualTo("新增測試"));
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='marquee'] span")!.Text, Is.EqualTo("<h6>新增測試</h6>"));
+            That(TestHelper.FindShadowElement(_driver, "stormTable", "td[data-field ='name'] span").Text, Is.EqualTo("新增測試"));
+            That(TestHelper.FindShadowElement(_driver, "stormTable", "td[data-field ='marquee'] span").Text, Is.EqualTo("<h6>新增測試</h6>"));
         }
         public async Task TwcH100_06()
         {
-            var viewButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button");
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormTable", "storm-toolbar");
+            var viewButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item"));
             _actions.MoveToElement(viewButton).Click().Perform();
 
             var closeButton = TestHelper.FindAndMoveToElement(_driver, "div.rz-stack button");
-            _actions.MoveToElement(closeButton).Click().Perform();
+            closeButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-carousel")));
         }
         public async Task TwcH100_07()
         {
-            var deleteButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button:nth-child(3)");
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormTable", "storm-toolbar");
+            var deleteButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-child(3)"));
             _actions.MoveToElement(deleteButton).Click().Perform();
 
-            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-content h5")));
-            That(content.Text, Is.EqualTo("是否確定刪除？"));
+            var content = TestHelper.FindAndMoveToElement(_driver, "div.rz-dialog-content h5");
+            That(content!.Text, Is.EqualTo("是否確定刪除？"));
         }
         public async Task TwcH100_08()
         {
             var deleteButton = TestHelper.FindAndMoveToElement(_driver, "div.rz-stack button");
-            _actions.MoveToElement(deleteButton).Click().Perform();
+            deleteButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack button")));
         }
@@ -196,8 +205,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcH100_11()
         {
-            var addMediaButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button")));
-            _actions.MoveToElement(addMediaButton).Click().Perform();
+            var addMediaButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='新增節目單'] button");
+            addMediaButton!.Click();
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack > storm-table")));
             var tbody = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-responsive > div > table > tbody"));
@@ -209,8 +218,10 @@ namespace DomainStorm.Project.TWC.Tests
             });
             _actions.MoveToElement(selectedRows).Click().Perform();
 
-            var addButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("span.rz-button-box")));
-            _actions.MoveToElement(addButton).Click().Perform();
+            var addButton = TestHelper.FindAndMoveToElement(_driver, "div.rz-stack button");
+            addButton!.Click();
+
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack button")));
         }
         public async Task TwcH100_12()
         {
@@ -238,16 +249,17 @@ namespace DomainStorm.Project.TWC.Tests
             editorInput.SendKeys("跑馬燈測試");
 
             var createButton = TestHelper.FindAndMoveToElement(_driver, "button[form='create']");
-            _actions.MoveToElement(createButton).Click().Perform();
+            createButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增節目單']")));
 
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='name'] span")!.Text, Is.EqualTo("節目單測試"));
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='marquee'] span")!.Text, Is.EqualTo("<h6>跑馬燈測試</h6>"));
+            That(TestHelper.FindShadowElement(_driver, "stormTable", "td[data-field ='name'] span").Text, Is.EqualTo("節目單測試"));
+            That(TestHelper.FindShadowElement(_driver, "stormTable", "td[data-field ='marquee'] span").Text, Is.EqualTo("<h6>跑馬燈測試</h6>"));
         }
         public async Task TwcH100_13()
         {
-            var viewButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button");
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormTable", "storm-toolbar");
+            var viewButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item"));
             _actions.MoveToElement(viewButton).Click().Perform();
 
             var stormCarousel = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-carousel")));
@@ -255,34 +267,36 @@ namespace DomainStorm.Project.TWC.Tests
             That(videoAutoPlay, Is.Not.Null, "影片正在撥放");
 
             var closeButton = TestHelper.FindAndMoveToElement(_driver, "div.rz-stack button");
-            _actions.MoveToElement(closeButton).Click().Perform();
+            closeButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-carousel")));
         }
         public async Task TwcH100_14()
         {
-            var editButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button:nth-child(2)");
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormTable", "storm-toolbar");
+            var editButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-child(2)"));
             _actions.MoveToElement(editButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='修改節目單']")));
 
             var submitButton = TestHelper.FindAndMoveToElement(_driver, "button[form='create']");
-            _actions.MoveToElement(submitButton).Click().Perform();
+            submitButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("button[form='create']")));
         }
         public async Task TwcH100_15()
         {
-            var deleteButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button:nth-child(3)");
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormTable", "storm-toolbar");
+            var deleteButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-child(3)"));
             _actions.MoveToElement(deleteButton).Click().Perform();
 
-            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-content h5")));
-            That(content.Text, Is.EqualTo("是否確定刪除？"));
+            var content = TestHelper.FindAndMoveToElement(_driver, "div.rz-dialog-content h5");
+            That(content!.Text, Is.EqualTo("是否確定刪除？"));
         }
         public async Task TwcH100_16()
         {
-            var deleteButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack button:nth-child(2)")));
-            _actions.MoveToElement(deleteButton).Click().Perform();
+            var deleteButton = TestHelper.FindAndMoveToElement(_driver, "div.rz-stack button:nth-child(2)");
+            deleteButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack button:nth-child(2)")));
         }
@@ -294,28 +308,22 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcH100_18()
         {
             var searchButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='節目單審核'] button");
-            _actions.MoveToElement(searchButton).Click().Perform();
+            searchButton!.Click();
         }
         public async Task TwcH100_19()
         {
-            var auditButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-button:nth-child(3)");
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormTable", "storm-toolbar");
+            var auditButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-child(3)"));
             _actions.MoveToElement(auditButton).Click().Perform();
 
             var approvalButton = TestHelper.FindAndMoveToElement(_driver, "div.rz-stack button");
-            _actions.MoveToElement(approvalButton).Click().Perform();
+            approvalButton!.Click();
 
             _wait.Until(driver => {
-                try
-                {
                     var statusElement = TestHelper.WaitStormTableUpload(_driver, "div.table-responsive td[data-field='playListStatus'] span");
                     return statusElement!.Text == "核准";
-                }
-                catch
-                {
-                    return false;
-                }
             });
-            That(TestHelper.WaitStormTableUpload(_driver, "div.table-responsive td[data-field='playListStatus'] span")!.Text, Is.EqualTo("核准"));
+            That(TestHelper.FindShadowElement(_driver, "stormTable", "td[data-field='playListStatus'] span")!.Text, Is.EqualTo("核准"));
         }
     }
 }

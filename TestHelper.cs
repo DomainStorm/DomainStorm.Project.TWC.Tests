@@ -433,34 +433,24 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
             return e;
         });
     }
-    //public static IWebElement FindAndMoveToElement(IWebDriver webDriver, string css)
-    //{
-    //    var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-    //    var action = new Actions(webDriver);
-    //    var element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
-
-    //    action.MoveToElement(element).Perform();
-    //    wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(css)));
-
-    //    return element;
-    //}
-    public static IWebElement FindAndMoveToElement(IWebDriver webDriver, string css)
+    public static IWebElement? FindAndMoveToElement(IWebDriver webDriver, string css)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
         var action = new Actions(webDriver);
-        IWebElement? element = null;
+        IWebElement? e = null;
 
         wait.Until(_ =>
         {
-            element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
-            return element != null;
+            e = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
+            return e != null;  // 如果找到元素，則返回 true，結束循環
         });
 
-        action.MoveToElement(element).Perform();
+        action.MoveToElement(e).Perform();
         wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(css)));
 
-        return element;
+        return e;
     }
+
 
     public static IWebElement FindShadowElement(IWebDriver webDriver, string condition, string css)
     {
@@ -503,7 +493,14 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
                 var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
                 return stormTreeView.GetShadowRoot().FindElement(By.CssSelector(css));
             }
+        },
+        { "stormCard", () =>
+            {
+                var stormCard = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card")));
+                return stormCard.GetShadowRoot().FindElement(By.CssSelector(css));
+            }
         }
+
     };
         IWebElement element = null;
 
