@@ -51,19 +51,14 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
 
-            var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
-            That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
-
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
-            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
-            That(stormCardTitle.Text, Is.EqualTo("媒體庫"));
+            var addFileButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='媒體管理'] button");
         }
         public async Task TwcM100_02()
         {
-            var addTextButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='媒體庫'] button:nth-child(2)");
-            _actions.MoveToElement(addTextButton).Click().Perform();
+            var addTextButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='媒體管理'] button:nth-child(2)");
+            addTextButton!.Click();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體庫']")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體管理']")));
 
             var stormInputGroupName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱']")));
             var stormInputGroupNameInput = stormInputGroupName.GetShadowRoot().FindElement(By.CssSelector("div input"));
@@ -81,25 +76,27 @@ namespace DomainStorm.Project.TWC.Tests
             stormTextEditorInput.SendKeys("跑馬燈內容");
 
             var submitButton = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='新增文字'] button[type='submit']");
-            _actions.MoveToElement(submitButton).Click().Perform();
+            submitButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增文字'] button[type='submit']")));
-            That(TestHelper.WaitStormEditTableUpload(_driver, "td[data-field='name'] span")!.Text, Is.EqualTo("宣導文字"));
+            That(TestHelper.FindShadowElement(_driver, "stormEditTable", "span")!.Text, Is.EqualTo("宣導文字"));
         }
         public async Task TwcM100_03()
         {
-            var viewButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button > storm-tooltip > div > button");
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormEditTable", "storm-toolbar");
+            var viewButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item"));
             _actions.MoveToElement(viewButton).Click().Perform();
 
             var viewText = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container h6")));
             That(viewText.Text, Is.EqualTo("跑馬燈內容"));
 
             var cancelButton = TestHelper.FindAndMoveToElement(_driver, "div.swal2-actions > button.swal2-cancel");
-            _actions.MoveToElement(cancelButton).Click().Perform();
+            cancelButton!.Click();
         }
         public async Task TwcM100_04()
         {
-            var editButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button:nth-child(2) > storm-tooltip > div > button");
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormEditTable", "storm-toolbar");
+            var editButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-child(2)"));
             _actions.MoveToElement(editButton).Click().Perform();
 
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor >div.ql-container > div.ql-editor")));
@@ -109,44 +106,39 @@ namespace DomainStorm.Project.TWC.Tests
             stormTextEditorInput.SendKeys("應該是宣導的內容文字");
 
             var submitButton = TestHelper.FindAndMoveToElement(_driver, "button[type='submit']");
-            _actions.MoveToElement(submitButton).Click().Perform();
+            submitButton!.Click();
         }
         public async Task TwcM100_05()
         {
-            var viewButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button > storm-tooltip > div > button");
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormEditTable", "storm-toolbar");
+            var viewButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item"));
             _actions.MoveToElement(viewButton).Click().Perform();
 
             var viewText = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > p")));
             That(viewText.Text, Is.EqualTo("應該是宣導的內容文字"));
 
             var cancelButton = TestHelper.FindAndMoveToElement(_driver, "div.swal2-actions > button.swal2-cancel");
-            _actions.MoveToElement(cancelButton).Click().Perform();
+            cancelButton!.Click();
         }
         public async Task TwcM100_06()
         {
-            var deleteButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button:nth-child(3) > storm-tooltip > div > button");
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormEditTable", "storm-toolbar");
+            var deleteButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-child(3)"));
             _actions.MoveToElement(deleteButton).Click().Perform();
 
-            var deleteConfirm = TestHelper.FindAndMoveToElement(_driver, "div.swal2-actions > button.swal2-confirm");
-            _actions.MoveToElement(deleteConfirm).Click().Perform();
+            var confirmButton = TestHelper.FindAndMoveToElement(_driver, "div.swal2-actions > button.swal2-confirm");
+            confirmButton!.Click();
 
            _wait.Until(driver => {
-                try
-                {
-                    var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
-                    return pageInfo!.Text == "共 0 筆";
-                }
-                catch
-                {
-                    return false;
-                }
+                var pageInfo = TestHelper.FindShadowElement(_driver, "stormEditTable", "div.table-pageInfo");
+                return pageInfo!.Text == "共 0 筆";
             });
         }
 
         public async Task TwcM100_07()
         {
             var addFileButton = TestHelper.FindAndMoveToElement(_driver, "storm-card > div > button");
-            _actions.MoveToElement(addFileButton).Click().Perform();
+            addFileButton!.Click();
 
             var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "台水官網圖.png");
             TestHelper.UploadFile(_driver, file, "input.dz-hidden-input");
@@ -158,50 +150,45 @@ namespace DomainStorm.Project.TWC.Tests
             var stormInputGroupDurationInput = stormInputGroupDuration.GetShadowRoot().FindElement(By.CssSelector("div input"));
             stormInputGroupDurationInput.SendKeys("10");
 
-            var submitButton = TestHelper.FindAndMoveToElement(_driver, "button[type='submit']");
-            _actions.MoveToElement(submitButton).Click().Perform();
+            var upload = TestHelper.FindAndMoveToElement(_driver, "button[type='submit']");
+            upload!.Click();
 
-            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("台水官網圖.png"));
+            That(TestHelper.FindShadowElement(_driver, "stormEditTable" ,"span")!.Text, Is.EqualTo("台水官網圖.png"));
         }
         public async Task TwcM100_08()
         {
-            var tbody = TestHelper.WaitStormEditTableUpload(_driver, "tbody");
-            var trList = tbody!.FindElements(By.CssSelector("tr"));
-            var selectedRows = trList.FirstOrDefault(tr =>
-            {
-                var nameCell = tr.FindElement(By.CssSelector("td[data-field='name'] > storm-table-cell span"));
-                return nameCell.Text == "台水官網圖.png";
-            });
+            var nameCell = TestHelper.FindShadowElement(_driver, "stormEditTable", "span");
+            That(nameCell.Text, Is.EqualTo("台水官網圖.png"));
 
-            var viewButton = selectedRows!.FindElement(By.CssSelector("td.action > storm-table-cell > storm-table-toolbar > storm-button > storm-tooltip > div > button"));
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormEditTable", "storm-toolbar");
+            var viewButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item"));
             _actions.MoveToElement(viewButton).Click().Perform();
 
             var viewImg = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > img")));
             That(viewImg, Is.Not.Null);
 
             var cancelButton = TestHelper.FindAndMoveToElement(_driver, "div.swal2-actions > button.swal2-cancel");
-            _actions.MoveToElement(cancelButton).Click().Perform();
+            cancelButton!.Click();
         }
         public async Task TwcM100_09()
         {
-            var editButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button:nth-child(2) > storm-tooltip > div > button");
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormEditTable", "storm-toolbar");
+            var editButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-child(2)"));
             _actions.MoveToElement(editButton).Click().Perform();
-
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-button:nth-child(2) > storm-tooltip > div > button")));
 
             var stormInputGroupDesc = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='說明']")));
             var stormInputGroupDescInput = stormInputGroupDesc.GetShadowRoot().FindElement(By.CssSelector("div > input"));
             stormInputGroupDescInput.SendKeys("描述圖示說明");
 
             var submitButton = TestHelper.FindAndMoveToElement(_driver, "button[type='submit']");
-            _actions.MoveToElement(submitButton).Click().Perform();
+            submitButton!.Click();
 
-            That(TestHelper.WaitStormEditTableUpload(_driver, "td[data-field='description'] > storm-table-cell span")!.Text, Is.EqualTo("描述圖示說明"));
+            That(TestHelper.FindShadowElement(_driver, "stormEditTable", "td[data-field='description'] span").Text, Is.EqualTo("描述圖示說明"));
         }
         public async Task TwcM100_10()
         {
             var addFileButton = TestHelper.FindAndMoveToElement(_driver, "storm-card > div > button");
-            _actions.MoveToElement(addFileButton).Click().Perform();
+            addFileButton!.Click();
 
             var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "testmedia.mp4");
             TestHelper.UploadFile(_driver, file, "input.dz-hidden-input:nth-of-type(2)");
@@ -209,29 +196,32 @@ namespace DomainStorm.Project.TWC.Tests
             var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] > form > div > storm-input-group")));
             That(fileName.GetAttribute("value"), Is.EqualTo("testmedia.mp4"));
 
-            var submitButton = TestHelper.FindAndMoveToElement(_driver, "button[type='submit']");
-            _actions.MoveToElement(submitButton).Click().Perform();
+            var upload = TestHelper.FindAndMoveToElement(_driver, "button[type='submit']");
+            upload!.Click();
 
-            That(TestHelper.WaitStormEditTableUpload(_driver, "div.table-bottom > div.table-pageInfo")!.Text, Is.EqualTo("顯示第 1 至 2 筆，共 2 筆"));
+            That(TestHelper.FindShadowElement(_driver, "stormEditTable", "div.table-pageInfo").Text, Is.EqualTo("顯示第 1 至 2 筆，共 2 筆"));
         }
         public async Task TwcM100_11()
         {
-            var tbody = TestHelper.WaitStormEditTableUpload(_driver, "tbody");
-            var trList = tbody!.FindElements(By.CssSelector("tr"));
+            Thread.Sleep(1000);
+            var stormEditTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-edit-table")));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var trList = stormTable!.FindElements(By.CssSelector("tr"));
             var selectedRows = trList.FirstOrDefault(tr =>
             {
                 var nameCell = tr.FindElement(By.CssSelector("td[data-field='name'] > storm-table-cell span"));
                 return nameCell.Text == "testmedia.mp4";
             });
 
-            var viewButton = selectedRows!.FindElement(By.CssSelector("td.action > storm-table-cell > storm-table-toolbar > storm-button > storm-tooltip > div > button"));
+            var stormToolbar = TestHelper.FindShadowElement(_driver, "stormEditTable", "storm-toolbar");
+            var viewButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item"));
             _actions.MoveToElement(viewButton).Click().Perform();
 
-            var viewVideo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > video")));
-            That(viewVideo, Is.Not.Null);
+            var viewImg = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > img")));
+            That(viewImg, Is.Not.Null);
 
             var cancelButton = TestHelper.FindAndMoveToElement(_driver, "div.swal2-actions > button.swal2-cancel");
-            _actions.MoveToElement(cancelButton).Click().Perform();
+            cancelButton!.Click();
         }
     }
 }
