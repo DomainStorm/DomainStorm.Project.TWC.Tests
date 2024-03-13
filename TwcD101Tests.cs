@@ -164,14 +164,14 @@ namespace DomainStorm.Project.TWC.Tests
             string formattedApplyDateBegin = "2023-06-03";
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginInput);
 
-            var search = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='綜合查詢'] button");
+            var search = TestHelper.FindAndMoveToElement(_driver, "[headline='綜合查詢'] button");
             _actions.MoveToElement(search).Click().Perform();
 
             That(TestHelper.FindShadowElement(_driver, "stormTable", "span"), Is.Not.Null);
         }
         public async Task TwcD101_11()
         {
-            var applyCaseNo = TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] span");
+            var applyCaseNo = TestHelper.FindShadowElement(_driver, "stormTable", "td[data-field='applyCaseNo'] span");
             _actions.MoveToElement(applyCaseNo).Click().Perform();
 
             var img = TestHelper.FindAndMoveToElement(_driver, "storm-card:nth-child(6) > img");
