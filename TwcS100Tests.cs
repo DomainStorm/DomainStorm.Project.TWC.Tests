@@ -257,7 +257,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginInput);
 
             var search = TestHelper.FindAndMoveToElement(_driver, "[headline='綜合查詢'] button");
-            _actions.MoveToElement(search).Click().Perform();
+            search.Click();
 
             That(TestHelper.FindShadowElement(_driver, "stormTable", "p").Text, Is.EqualTo("沒有找到符合的結果"));
         }

@@ -482,6 +482,13 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
                 return stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
             }
         },
+        { "stormPagination", () =>
+            {
+                var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                var stormPagination = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-pagination"));
+                return stormPagination.GetShadowRoot().FindElement(By.CssSelector(css));
+            }
+        },
         { "stormToolbar", () =>
             {
                 var stormEditTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
