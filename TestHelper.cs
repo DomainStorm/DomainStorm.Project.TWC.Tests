@@ -223,8 +223,8 @@ public class TestHelper
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
         passwordElement.SendKeys(TestHelper.Password!);
 
-        var submitButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
-        actions.MoveToElement(submitButton).Click().Perform();
+        var login = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
+        actions.MoveToElement(login).Click().Perform();
 
         wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
     }

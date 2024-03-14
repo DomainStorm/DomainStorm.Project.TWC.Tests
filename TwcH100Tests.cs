@@ -320,7 +320,7 @@ namespace DomainStorm.Project.TWC.Tests
             approvalButton!.Click();
 
             _wait.Until(driver => {
-                    var statusElement = TestHelper.WaitStormTableUpload(_driver, "div.table-responsive td[data-field='playListStatus'] span");
+                    var statusElement = TestHelper.FindShadowElement(_driver, "stormTable", "td[data-field='playListStatus'] span");
                     return statusElement!.Text == "核准";
             });
             That(TestHelper.FindShadowElement(_driver, "stormTable", "td[data-field='playListStatus'] span")!.Text, Is.EqualTo("核准"));
