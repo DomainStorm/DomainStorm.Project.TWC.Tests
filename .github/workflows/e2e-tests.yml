@@ -114,8 +114,8 @@ jobs:
           # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcG100Tests --no-build --verbosity normal
           # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcG101Tests --no-build --verbosity normal
           # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcH100Tests --no-build --verbosity normal
-          # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcM100Tests --no-build --verbosity normal
-          dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcN100Tests --no-build --verbosity normal
+          dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcM100Tests --no-build --verbosity normal
+          # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcN100Tests --no-build --verbosity normal
           # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcP100Tests --no-build --verbosity normal
           # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcQ100Tests --no-build --verbosity normal
           # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcRA001Tests --no-build --verbosity normal

@@ -175,6 +175,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormToolbar = TestHelper.FindShadowElement(_driver, "stormEditTable", "storm-toolbar");
             var editButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-child(2)"));
             _actions.MoveToElement(editButton).Click().Perform();
+            Thread.Sleep(1000);
 
             var stormInputGroupDesc = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='說明']")));
             var stormInputGroupDescInput = stormInputGroupDesc.GetShadowRoot().FindElement(By.CssSelector("div > input"));
