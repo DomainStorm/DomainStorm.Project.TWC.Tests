@@ -65,49 +65,54 @@ namespace DomainStorm.Project.TWC.Tests
         {
             await TestHelper.Login(_driver, "meizi", TestHelper.Password!);
 
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='系統公告']")));
-            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
-            That(stormCardTitle.Text, Is.EqualTo("系統公告"));
+            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "h5");
+            That(stormCard.Text, Is.EqualTo("系統公告"));
         }
 
         public async Task TwcQ100_02()
         {
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/questionnaire/create");
 
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增問卷']")));
-            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
-            That(stormCardTitle.Text, Is.EqualTo("新增問卷"));
+            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "h5");
+            That(stormCard.Text, Is.EqualTo("新增問卷"));
         }
         public async Task TwcQ100_03()
         {
             var nameStormInputGroup = TestHelper.FindAndMoveToElement(_driver, "storm-input-group[label='問卷名稱']");
-            var nameInput = nameStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var nameInput = nameStormInputGroup!.GetShadowRoot().FindElement(By.CssSelector("input"));
             nameInput.SendKeys("這是問卷名稱");
 
             var descriptionStormInputGroup = TestHelper.FindAndMoveToElement(_driver, "storm-input-group[label='問卷頁首說明']");
-            var descriptionInput = descriptionStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var descriptionInput = descriptionStormInputGroup!.GetShadowRoot().FindElement(By.CssSelector("input"));
             descriptionInput.SendKeys("這是問卷頁首說明");
 
             var textStormInputGroup = TestHelper.FindAndMoveToElement(_driver, "storm-input-group[label='問卷結尾文字']");
-            var textInput = textStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var textInput = textStormInputGroup!.GetShadowRoot().FindElement(By.CssSelector("input"));
             textInput.SendKeys("這是問卷結尾文字");
 
-            var nextPageButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("form > div:nth-child(1) > div > div.button-row > button")));
-            _actions.MoveToElement(nextPageButton).Click().Perform();
+            var nextPageButton = TestHelper.FindAndMoveToElement(_driver, "form > div:nth-child(1) > div > div.button-row > button");
+            nextPageButton!.Click();
+            //var nextPageButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("form > div:nth-child(1) > div > div.button-row > button")));
+            //_actions.MoveToElement(nextPageButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div[slot='0']")));
 
-            var contentTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[slot='1'] h5")));
-            That(contentTitle.Text, Is.EqualTo("建立題目"));
+            var slotTitle = TestHelper.FindAndMoveToElement(_driver, "div[slot='1'] h5");
+            That(slotTitle!.Text, Is.EqualTo("建立題目"));
+
+            //var contentTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[slot='1'] h5")));
+            //That(contentTitle.Text, Is.EqualTo("建立題目"));
         }
         public async Task TwcQ100_04()
         {
-            var createButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("form.multisteps-form__form > div:nth-child(2) > div.multisteps-form__content > div[slot='1'] > div.row > div.col >div.text-end > button")));
-            _actions.MoveToElement(createButton).Click().Perform();
+            var createButton = TestHelper.FindAndMoveToElement(_driver, "form.multisteps-form__form > div:nth-child(2) > div.multisteps-form__content > div[slot='1'] > div.row > div.col >div.text-end > button");
+            createButton!.Click();
 
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增題目']")));
-            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("h5"));
-            That(stormCardTitle.Text, Is.EqualTo("新增題目"));
+            //var createButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("form.multisteps-form__form > div:nth-child(2) > div.multisteps-form__content > div[slot='1'] > div.row > div.col >div.text-end > button")));
+            //_actions.MoveToElement(createButton).Click().Perform();
+
+            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "h5");
+            That(stormCard.Text, Is.EqualTo("新增題目"));
         }
         public async Task TwcQ100_05()
         {

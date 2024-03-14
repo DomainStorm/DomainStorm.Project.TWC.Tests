@@ -217,7 +217,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
             var signature = TestHelper.FindAndMoveToElement(_driver, "[id='signature'] button:nth-child(2)");
-            signature.Click();
+            signature!.Click();
 
             var img = TestHelper.FindAndMoveToElement(_driver, "img[alt='簽名_001.tiff']");
 
@@ -229,7 +229,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcD100_12()
         {
             var scanButton = TestHelper.FindAndMoveToElement(_driver, "[headline='掃描拍照'] button:nth-child(2)");
-            scanButton.Click();
+            scanButton!.Click();
 
             var scanImg = TestHelper.FindAndMoveToElement(_driver, "storm-upload [alt='證件_005.tiff']");
             That(scanImg, Is.Not.Null, "尚未上傳完成");
@@ -244,10 +244,10 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
             var attachmentTab = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-            That(attachmentTab.Text, Is.EqualTo("新增文件"));
+            That(attachmentTab!.Text, Is.EqualTo("新增文件"));
 
             var addAttachment = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-            addAttachment.Click();
+            addAttachment!.Click();
 
             var attachment1 = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, attachment1, "input.dz-hidden-input:nth-of-type(3)");
@@ -262,7 +262,7 @@ namespace DomainStorm.Project.TWC.Tests
             });
 
             var upload = TestHelper.FindAndMoveToElement(_driver, "[headline='新增檔案'] button");
-            upload.Click();
+            upload!.Click();
 
             _wait.Until(driver =>
             {
@@ -283,7 +283,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
             var confirmButton = TestHelper.FindAndMoveToElement(_driver, "[headline='受理登記'] button");
-            confirmButton.Click();
+            confirmButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='受理登記'] button")));
 

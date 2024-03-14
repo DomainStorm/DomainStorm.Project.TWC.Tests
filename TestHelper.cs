@@ -496,8 +496,8 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
         },
         { "stormCard", () =>
             {
-                var stormCard = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card")));
-                return stormCard.GetShadowRoot().FindElement(By.CssSelector(css));
+                var stormCard = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
+                return stormCard.GetShadowRoot().FindElement(By.CssSelector("h5"));
             }
         }
 

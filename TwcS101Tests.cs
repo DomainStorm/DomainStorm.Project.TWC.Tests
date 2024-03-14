@@ -61,10 +61,10 @@ namespace DomainStorm.Project.TWC.Tests
                 _driver.SwitchTo().DefaultContent();
 
                 var attachmentTab = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-                That(attachmentTab.Text, Is.EqualTo("新增文件"));
+                That(attachmentTab!.Text, Is.EqualTo("新增文件"));
 
                 var addAttachment = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-                addAttachment.Click();
+                addAttachment!.Click();
 
                 var attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
                 TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input:nth-of-type(3)");
@@ -73,16 +73,16 @@ namespace DomainStorm.Project.TWC.Tests
                 That(attachmentName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
                 var upload = TestHelper.FindAndMoveToElement(_driver, "[headline='新增檔案'] button");
-                upload.Click();
+                upload!.Click();
 
                 _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='新增檔案'] button")));
                 That(TestHelper.FindShadowElement(_driver, "stormEditTable", "span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
                 var checkBox = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
-                checkBox.Click();
+                checkBox!.Click();
 
                 var confirmButton = TestHelper.FindAndMoveToElement(_driver, "[headline='受理登記'] button");
-                confirmButton.Click();
+                confirmButton!.Click();
 
                 _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='受理登記'] button")));
 
@@ -126,7 +126,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginInput);
 
             var search = TestHelper.FindAndMoveToElement(_driver, "[headline='綜合查詢'] button");
-            search.Click();
+            search!.Click();
 
             var pageInfo = TestHelper.FindShadowElement(_driver, "stormTable", "div.table-pageInfo");
             That(pageInfo!.Text, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
@@ -134,7 +134,6 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcS101_03()
         {
             var nextPage = TestHelper.FindShadowElement(_driver, "stormPagination", "ul > li:nth-child(3) > a");
-            //var nextPage = stormPagination.GetShadowRoot().FindElement(By.CssSelector("ul > li:nth-child(3) > a"));
             _actions.MoveToElement(nextPage).Click().Perform();
 
             _wait.Until(driver =>
@@ -150,7 +149,6 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcS101_04()
         {
             var backPage = TestHelper.FindShadowElement(_driver, "stormPagination", "ul > li > a");
-            //var backPage = stormPagination.GetShadowRoot().FindElement(By.CssSelector("ul > li > a"));
             _actions.MoveToElement(backPage).Click().Perform();
 
             _wait.Until(driver =>

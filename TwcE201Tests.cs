@@ -75,7 +75,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcE201_05()
         {
             var addAttachment = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-            addAttachment.Click();
+            addAttachment!.Click();
 
             var attachment1 = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, attachment1, "input.dz-hidden-input:nth-of-type(2)");
@@ -90,7 +90,7 @@ namespace DomainStorm.Project.TWC.Tests
             });
 
             var upload = TestHelper.FindAndMoveToElement(_driver, "[headline='新增檔案'] button");
-            upload.Click();
+            upload!.Click();
 
             _wait.Until(driver =>
             {

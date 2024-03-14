@@ -65,12 +65,12 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
 
             var attachmentTab = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-            That(attachmentTab.Text, Is.EqualTo("新增文件"));
+            That(attachmentTab!.Text, Is.EqualTo("新增文件"));
         }
         public async Task TwcDA001_04()
         {
             var addAttachment = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-            addAttachment.Click();
+            addAttachment!.Click();
 
             var attachment1 = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, attachment1, "input.dz-hidden-input:nth-of-type(3)");
@@ -84,7 +84,7 @@ namespace DomainStorm.Project.TWC.Tests
             });
 
             var upload = TestHelper.FindAndMoveToElement(_driver, "[headline='新增檔案'] button");
-            upload.Click();
+            upload!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='新增檔案'] button")));
             That(TestHelper.FindShadowElement(_driver, "stormEditTable", "span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
@@ -105,14 +105,14 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             var checkBox = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
-            checkBox.Click();
+            checkBox!.Click();
 
             That(checkBox.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcDA001_08()
         {
             var confirmButton = TestHelper.FindAndMoveToElement(_driver, "[headline='受理登記'] button");
-            confirmButton.Click();
+            confirmButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='受理登記'] button")));
 
@@ -132,7 +132,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             var logout = TestHelper.FindAndMoveToElement(_driver, "storm-tooltip > div > a[href='./logout']");
-            logout.Click();
+            logout!.Click();
 
             var usernameElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
             usernameElement.SendKeys("live");
@@ -141,18 +141,18 @@ namespace DomainStorm.Project.TWC.Tests
             passwordElement.SendKeys(TestHelper.Password!);
 
             var login = TestHelper.FindAndMoveToElement(_driver, "button");
-            login.Click();
+            login!.Click();
         }
         public async Task TwcDA001_10()
         {
             var Taichung = TestHelper.FindAndMoveToElement(_driver, "text[data-unformatted='台中服務所']");
-            That(Taichung.Text, Is.EqualTo("台中服務所"));
+            That(Taichung!.Text, Is.EqualTo("台中服務所"));
 
             var Dali = TestHelper.FindAndMoveToElement(_driver, "text[data-unformatted='大里服務所']");
-            That(Dali.Text, Is.EqualTo("大里服務所"));
+            That(Dali!.Text, Is.EqualTo("大里服務所"));
 
             var Caotun = TestHelper.FindAndMoveToElement(_driver, "text[data-unformatted='草屯營運所']");
-            That(Caotun.Text, Is.EqualTo("草屯營運所"));
+            That(Caotun!.Text, Is.EqualTo("草屯營運所"));
         }
         public async Task TwcDA001_11()
         {
@@ -176,7 +176,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcDA001_12()
         {
             var logout = TestHelper.FindAndMoveToElement(_driver, "storm-tooltip > div > a[href='./logout']");
-            logout.Click();
+            logout!.Click();
 
             var usernameElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
             usernameElement.SendKeys("eugene313");
@@ -185,7 +185,7 @@ namespace DomainStorm.Project.TWC.Tests
             passwordElement.SendKeys(TestHelper.Password!);
 
             var login = TestHelper.FindAndMoveToElement(_driver, "button");
-            login.Click();
+            login!.Click();
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
 

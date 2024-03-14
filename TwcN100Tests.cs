@@ -63,7 +63,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/systemannouncement");
 
-            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "h5");
+            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "[headline='公告管理']");
             That(stormCard.Text, Is.EqualTo("公告管理"));
         }
         public async Task TwcN100_03()
@@ -73,7 +73,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='公告管理']")));
 
-            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "h5");
+            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "[headline='新增公告']");
             That(stormCard.Text, Is.EqualTo("新增公告"));
         }
         public async Task TwcN100_04()
@@ -133,7 +133,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='公告管理']")));
 
-            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "h5");
+            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "[headline='修改公告']");
             That(stormCard.Text, Is.EqualTo("修改公告"));
         }
         public async Task TwcN100_09()
@@ -259,6 +259,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcN100_18()
         {
+            var logout = TestHelper.FindAndMoveToElement(_driver, "storm-tooltip > div > a[href='./logout']");
+
             var systemannouncement = TestHelper.FindAndMoveToElement(_driver, "[headline='系統公告'] h6");
             That(systemannouncement!.Text, Is.EqualTo("測試公告自動下架"));
         }

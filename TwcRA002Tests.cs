@@ -57,7 +57,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             var addAttachment = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-            addAttachment.Click();
+            addAttachment!.Click();
 
             var attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input:nth-of-type(3)");
@@ -66,16 +66,16 @@ namespace DomainStorm.Project.TWC.Tests
             That(attachmentName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             var upload = TestHelper.FindAndMoveToElement(_driver, "[headline='新增檔案'] button");
-            upload.Click();
+            upload!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='新增檔案'] button")));
             That(TestHelper.FindShadowElement(_driver, "stormEditTable", "span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             var checkBox = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
-            checkBox.Click();
+            checkBox!.Click();
 
             var confirmButton = TestHelper.FindAndMoveToElement(_driver, "[headline='受理登記'] button");
-            confirmButton.Click();
+            confirmButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='受理登記'] button")));
 
@@ -93,7 +93,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             var logout = TestHelper.FindAndMoveToElement(_driver, "storm-tooltip > div > a[href='./logout']");
-            logout.Click();
+            logout!.Click();
 
             //tw491 建立表單
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
@@ -106,7 +106,7 @@ namespace DomainStorm.Project.TWC.Tests
             passwordElement.SendKeys(TestHelper.Password!);
 
             var login = TestHelper.FindAndMoveToElement(_driver, "button");
-            login.Click();
+            login!.Click();
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
@@ -124,7 +124,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             addAttachment = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-            addAttachment.Click();
+            addAttachment!.Click();
 
             attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input:nth-of-type(3)");
@@ -133,16 +133,16 @@ namespace DomainStorm.Project.TWC.Tests
             That(attachmentName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             upload = TestHelper.FindAndMoveToElement(_driver, "[headline='新增檔案'] button");
-            upload.Click();
+            upload!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='新增檔案'] button")));
             That(TestHelper.FindShadowElement(_driver, "stormEditTable", "span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             checkBox = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
-            checkBox.Click();
+            checkBox!.Click();
 
             confirmButton = TestHelper.FindAndMoveToElement(_driver, "[headline='受理登記'] button");
-            confirmButton.Click();
+            confirmButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='受理登記'] button")));
 
@@ -160,7 +160,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             logout = TestHelper.FindAndMoveToElement(_driver, "storm-tooltip > div > a[href='./logout']");
-            logout.Click();
+            logout!.Click();
 
             //ning53 建立表單
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
@@ -173,7 +173,7 @@ namespace DomainStorm.Project.TWC.Tests
             passwordElement.SendKeys(TestHelper.Password!);
 
             login = TestHelper.FindAndMoveToElement(_driver, "button");
-            login.Click();
+            login!.Click();
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
@@ -191,7 +191,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             addAttachment = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-            addAttachment.Click();
+            addAttachment!.Click();
 
             attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input:nth-of-type(3)");
@@ -200,16 +200,16 @@ namespace DomainStorm.Project.TWC.Tests
             That(attachmentName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             upload = TestHelper.FindAndMoveToElement(_driver, "[headline='新增檔案'] button");
-            upload.Click();
+            upload!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='新增檔案'] button")));
             That(TestHelper.FindShadowElement(_driver, "stormEditTable", "span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             checkBox = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
-            checkBox.Click();
+            checkBox!.Click();
 
             confirmButton = TestHelper.FindAndMoveToElement(_driver, "[headline='受理登記'] button");
-            confirmButton.Click();
+            confirmButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='受理登記'] button")));
 
@@ -258,13 +258,13 @@ namespace DomainStorm.Project.TWC.Tests
             Thread.Sleep(1000);
 
             var attachmentTab = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-            That(attachmentTab.Text, Is.EqualTo("新增文件"));
+            That(attachmentTab!.Text, Is.EqualTo("新增文件"));
         }
 
         public async Task TwcRA002_05()
         {
             var addAttachment = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-            addAttachment.Click();
+            addAttachment!.Click();
 
             var attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input:nth-of-type(3)");
@@ -276,7 +276,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcRA002_06()
         {
             var upload = TestHelper.FindAndMoveToElement(_driver, "[headline='新增檔案'] button");
-            upload.Click();
+            upload!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='新增檔案'] button")));
             That(TestHelper.FindShadowElement(_driver, "stormEditTable", "span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
@@ -299,7 +299,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             var checkBox = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
-            checkBox.Click();
+            checkBox!.Click();
 
             That(checkBox.GetAttribute("checked"), Is.EqualTo("true"));
         }
@@ -307,7 +307,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcRA002_09()
         {
             var confirmButton = TestHelper.FindAndMoveToElement(_driver, "[headline='受理登記'] button");
-            confirmButton.Click();
+            confirmButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='受理登記'] button")));
 

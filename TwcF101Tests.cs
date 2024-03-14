@@ -77,32 +77,32 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             var checkBox = TestHelper.FindAndMoveToElement(_driver, "[id='用印或代送件只需夾帶附件']");
-            checkBox.Click();
+            checkBox!.Click();
 
             That(checkBox.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcF101_05()
         {
             var confirmButton = TestHelper.FindAndMoveToElement(_driver, "[headline='受理登記'] button");
-            confirmButton.Click();
+            confirmButton!.Click();
 
             var errorMessage = TestHelper.FindAndMoveToElement(_driver, "[class='swal2-html-container'] h5");
-            That(errorMessage.Text, Is.EqualTo("【夾帶附件】或【掃描拍照】未上傳"));
+            That(errorMessage!.Text, Is.EqualTo("【夾帶附件】或【掃描拍照】未上傳"));
 
             var closeMessage = TestHelper.FindAndMoveToElement(_driver, "[class='swal2-actions'] button");
-            closeMessage.Click();
+            closeMessage!.Click();
         }
         public async Task TwcF101_06()
         {
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[class='swal2-actions'] button")));
 
             var attachmentTab = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-            That(attachmentTab.Text, Is.EqualTo("新增文件"));
+            That(attachmentTab!.Text, Is.EqualTo("新增文件"));
         }
         public async Task TwcF101_07()
         {
             var addAttachment = TestHelper.FindAndMoveToElement(_driver, "[headline='夾帶附件'] button");
-            addAttachment.Click();
+            addAttachment!.Click();
 
             var attachment = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, attachment, "input.dz-hidden-input:nth-of-type(3)");
@@ -113,7 +113,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcF101_08()
         {
             var upload = TestHelper.FindAndMoveToElement(_driver, "[headline='新增檔案'] button");
-            upload.Click();
+            upload!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='新增檔案'] button")));
             That(TestHelper.FindShadowElement(_driver, "stormEditTable", "span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
@@ -121,7 +121,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcF101_09()
         {
             var confirmButton = TestHelper.FindAndMoveToElement(_driver, "[headline='受理登記'] button");
-            confirmButton.Click();
+            confirmButton!.Click();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("[headline='受理登記'] button")));
 
@@ -146,18 +146,18 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             var contract_1 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
-            That(contract_1.GetAttribute("checked"), Is.EqualTo("true"));
+            That(contract_1!.GetAttribute("checked"), Is.EqualTo("true"));
 
             var contract_2 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
-            That(contract_2.GetAttribute("checked"), Is.EqualTo("true"));
+            That(contract_2!.GetAttribute("checked"), Is.EqualTo("true"));
 
             var contract_3 = TestHelper.FindAndMoveToElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
-            That(contract_3.GetAttribute("checked"), Is.EqualTo("true"));
+            That(contract_3!.GetAttribute("checked"), Is.EqualTo("true"));
 
             var confirmButton = TestHelper.FindAndMoveToElement(_driver, "[type='submit']");
 
             var attachmentName = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='夾帶附件'] a");
-            That(attachmentName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(attachmentName!.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
 
         [Test]
@@ -182,7 +182,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginInput);
 
             var search = TestHelper.FindAndMoveToElement(_driver, "[headline='綜合查詢'] button");
-            search.Click();
+            search!.Click();
 
             That(TestHelper.FindShadowElement(_driver, "stormTable", "span"), Is.Not.Null);
         }
@@ -193,7 +193,7 @@ namespace DomainStorm.Project.TWC.Tests
             Thread.Sleep(1000);
 
             var attachmentName = TestHelper.FindAndMoveToElement(_driver, "storm-card[headline='夾帶附件'] a");
-            That(attachmentName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(attachmentName!.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
         public async Task TwcF101_13()
         {

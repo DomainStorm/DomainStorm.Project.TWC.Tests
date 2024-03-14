@@ -117,8 +117,8 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcH100_02()
         {
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
-            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "h5");
 
+            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "[headline='節目單管理']");
             That(stormCard.Text, Is.EqualTo("節目單管理"));
         }
         public async Task TwcH100_03()
@@ -128,7 +128,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='節目單管理'] button")));
 
-            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "h5");
+            var stormCard = TestHelper.FindShadowElement(_driver, "stormCard", "[headline='新增節目單']");
             That(stormCard.Text, Is.EqualTo("新增節目單"));
         }
         public async Task TwcH100_04()
