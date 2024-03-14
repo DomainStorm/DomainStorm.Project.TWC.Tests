@@ -259,7 +259,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcN100_18()
         {
-            var systemannouncement = TestHelper.FindAndMoveToElement(_driver, "div.flex-column h6");
+            var systemannouncement = TestHelper.FindAndMoveToElement(_driver, "[headline='系統公告'] h6");
             That(systemannouncement!.Text, Is.EqualTo("測試公告自動下架"));
         }
     }
