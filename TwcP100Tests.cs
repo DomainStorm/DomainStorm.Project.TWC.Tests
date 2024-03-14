@@ -47,7 +47,7 @@
 //        {
 //            await TestHelper.Login(_driver, "meizi", TestHelper.Password!);
 
-//            var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
+//            var logout = TestHelper.FindAndMoveToElement(_driver, "storm-tooltip > div > a[href='./logout']");
 //            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-tooltip > div > a[href='./logout']")));
 //            That(logout, Is.Not.Null);
 //        }
@@ -88,7 +88,7 @@
 //            var passwordInput = password.GetShadowRoot().FindElement(By.CssSelector("div > input"));
 //            passwordInput.SendKeys("password" + Keys.Tab);
 
-//            var createButton = TestHelper.FindAndMoveElement(_driver, "button[type='submit']");
+//            var createButton = TestHelper.FindAndMoveToElement(_driver, "button[type='submit']");
 //            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[type='submit']")));
 //            _actions.MoveToElement(createButton).Click().Perform();
 //        }
@@ -102,7 +102,7 @@
 //        }
 //        public async Task TwcP100_05()
 //        {
-//            var createButton = TestHelper.FindAndMoveElement(_driver, "button[type='button']");
+//            var createButton = TestHelper.FindAndMoveToElement(_driver, "button[type='button']");
 //            _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[type='button']")));
 //            _actions.MoveToElement(createButton).Click().Perform();
 
@@ -112,7 +112,7 @@
 //        }
 //        public async Task TwcP100_06()
 //        {
-//            var dropdown = TestHelper.FindAndMoveElement(_driver, "div.dropdown-select");
+//            var dropdown = TestHelper.FindAndMoveToElement(_driver, "div.dropdown-select");
 //            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.dropdown-select")));
 //            _actions.MoveToElement(dropdown).Click().Perform();
 
@@ -131,7 +131,7 @@
 //            _actions.MoveToElement(questionnaireAdministrator).Click().Perform();
 //            _actions.SendKeys(Keys.Tab).Perform();
 
-//            var saveButton = TestHelper.FindAndMoveElement(_driver, "storm-button[type='submit']");
+//            var saveButton = TestHelper.FindAndMoveToElement(_driver, "storm-button[type='submit']");
 //            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-button[type='submit']")));
 //            _actions.MoveToElement(saveButton).Click().Perform();
 
@@ -147,13 +147,13 @@
 //            _actions.MoveToElement(roleName).Click().Perform();
 //            _actions.SendKeys(Keys.Tab).Perform();
 
-//            var saveButton = TestHelper.FindAndMoveElement(_driver, "storm-button[type='submit']");
+//            var saveButton = TestHelper.FindAndMoveToElement(_driver, "storm-button[type='submit']");
 //            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-button[type='submit']")));
 //            _actions.MoveToElement(saveButton).Click().Perform();
 //        }
 //        public async Task TwcP100_08()
 //        {
-//            var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
+//            var logout = TestHelper.FindAndMoveToElement(_driver, "storm-tooltip > div > a[href='./logout']");
 //            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-tooltip > div > a[href='./logout']")));
 //            _actions.MoveToElement(logout).Click().Perform();
 //        }

@@ -89,7 +89,7 @@ public class TestHelper
         }
     }
     private static string? _applyCaseNo;
-    private static string? _applyEmailAddr;
+    //private static string? _applyEmailAddr;
     public static string? ApplyCaseNo
     {
         get
@@ -223,19 +223,19 @@ public class TestHelper
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
         passwordElement.SendKeys(TestHelper.Password!);
 
-        var submitButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
-        actions.MoveToElement(submitButton).Click().Perform();
+        var login = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
+        actions.MoveToElement(login).Click().Perform();
 
         wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
     }
 
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
 
-        Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
-        Console.WriteLine(webDriver.PageSource);
-        Console.WriteLine("::endgroup::");
+        //Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
+        //Console.WriteLine(webDriver.PageSource);
+        //Console.WriteLine("::endgroup::");
 
         wait.Until(_ =>
         {
@@ -252,7 +252,6 @@ public class TestHelper
         wait.Until(_ =>
         {
             var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            Thread.Sleep(500);
             element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
             return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
         });
@@ -297,7 +296,7 @@ public class TestHelper
             File.Delete(filePath);
         }
 
-        var downloadButton = FindAndMoveElement(webDriver, css);
+        var downloadButton = FindAndMoveToElement(webDriver, css);
         downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
         _actions.MoveToElement(downloadButton).Click().Perform();
 
@@ -423,41 +422,117 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
 
             wait.Until(_ =>
             {
-                try
-                {
-                    var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
-                    var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+                var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+                var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
 
-                    if (stormTreeView != null)
-                    {
-                        e = stormTreeView.GetShadowRoot().FindElement(By.CssSelector(css));
+                e = stormTreeView.GetShadowRoot().FindElement(By.CssSelector(css));
 
-                        return true;
-                    }
-                }
-
-                catch
-                {
-                    return false;
-                }
-
-                return false;
+                return e != null;  // 如果找到元素，則返回 true，結束循環
             });
 
             return e;
         });
     }
-    public static IWebElement FindAndMoveElement(IWebDriver webDriver, string css)
+    public static IWebElement? FindAndMoveToElement(IWebDriver webDriver, string css)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
         var action = new Actions(webDriver);
-        var element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
+        IWebElement? e = null;
+
+        wait.Until(_ =>
+        {
+            e = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
+            return e != null;  // 如果找到元素，則返回 true，結束循環
+        });
+
+        action.MoveToElement(e).Perform();
+        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(css)));
+
+        return e;
+    }
+
+
+    public static IWebElement FindShadowElement(IWebDriver webDriver, string condition, string css)
+    {
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var action = new Actions(webDriver);
+
+        Dictionary<string, Func<IWebElement>> conditionActions = new Dictionary<string, Func<IWebElement>>()
+    {
+        { "stormEditTable", () =>
+            {
+                var stormEditTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                return stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
+            }
+        },
+        { "stormTable", () =>
+            {
+                var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                return stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
+            }
+        },
+        { "stormPagination", () =>
+            {
+                var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                var stormPagination = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-pagination"));
+                return stormPagination.GetShadowRoot().FindElement(By.CssSelector(css));
+            }
+        },
+        { "stormToolbar", () =>
+            {
+                var stormEditTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                var stormToolbar = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar"));
+                return stormToolbar.GetShadowRoot().FindElement(By.CssSelector(css));
+            }
+        },
+        { "stormTreeView", () =>
+            {
+                var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+                var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+                return stormTreeView.GetShadowRoot().FindElement(By.CssSelector(css));
+            }
+        },
+        { "stormCard", () =>
+            {
+                var stormCard = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
+                return stormCard.GetShadowRoot().FindElement(By.CssSelector("h5"));
+            }
+        }
+
+    };
+        IWebElement element = null;
+
+        wait.Until(_ =>
+        {
+            var actionFunc = conditionActions[condition];
+            element = actionFunc();
+            return element != null;
+        });
 
         action.MoveToElement(element).Perform();
-        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(css)));
 
         return element;
     }
+    public static IWebElement FindStormCardElement(IWebDriver webDriver, string headlineCss, string css)
+    {
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var action = new Actions(webDriver);
+
+        var element = wait.Until((_) =>
+        {
+            var stormCard = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(headlineCss)));
+
+            var e = stormCard.GetShadowRoot().FindElement(By.CssSelector(css));
+            return e;
+        });
+
+        action.MoveToElement(element).Perform();
+
+        return element;
+    }
+
 }
 public class WaterForm
 {
