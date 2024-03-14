@@ -218,11 +218,11 @@ namespace DomainStorm.Project.TWC.Tests
             var viewButton = stormToolbar.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item"));
             _actions.MoveToElement(viewButton).Click().Perform();
 
-            var viewImg = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > img")));
-            That(viewImg, Is.Not.Null);
+            var video = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > video")));
+            That(video, Is.Not.Null);
 
-            var cancelButton = TestHelper.FindAndMoveToElement(_driver, "div.swal2-actions > button.swal2-cancel");
-            cancelButton!.Click();
+            var closeButton = TestHelper.FindAndMoveToElement(_driver, "div.swal2-actions > button.swal2-cancel");
+            closeButton!.Click();
         }
     }
 }

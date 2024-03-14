@@ -87,8 +87,8 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
-            That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+            var applyCaseNo = TestHelper.FindAndMoveToElement(_driver, "[sti-apply-case-no]");
+            That(applyCaseNo!.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             _driver.SwitchTo().DefaultContent();
 
@@ -154,8 +154,8 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
-            That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+            applyCaseNo = TestHelper.FindAndMoveToElement(_driver, "[sti-apply-case-no]");
+            That(applyCaseNo!.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 
         [Test]
@@ -253,8 +253,8 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
-            That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+            var applyCaseNo = TestHelper.FindAndMoveToElement(_driver, "[sti-apply-case-no]");
+            That(applyCaseNo!.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 
         [Test]

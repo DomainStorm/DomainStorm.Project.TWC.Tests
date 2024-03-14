@@ -288,8 +288,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             var contentTitle = TestHelper.FindAndMoveToElement(_driver, "div.multisteps-form__content div[slot='2'] h5");
             That(contentTitle!.Text, Is.EqualTo("問卷預覽"));
-            //var contentTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.multisteps-form__content div[slot='2'] h5")));
-            //That(contentTitle.Text, Is.EqualTo("問卷預覽"));
         }
         public async Task TwcA100_10()
         {
@@ -349,7 +347,6 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             var applyCaseNo = TestHelper.FindAndMoveToElement(_driver, "[sti-apply-case-no]");
-            //_wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
             That(applyCaseNo!.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
         public async Task TwcA100_16()
@@ -543,18 +540,15 @@ namespace DomainStorm.Project.TWC.Tests
         {
             var nextPageButton = TestHelper.FindAndMoveToElement(_driver, "div.multisteps-form__content > div.button-row > button");
             nextPageButton!.Click();
-            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", nextPageButton);
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.multisteps-form__content > div.button-row > button")));
 
             var contentTitle = TestHelper.FindAndMoveToElement(_driver, "div[slot='1']");
-            //_wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[slot='1']")));
             That(contentTitle!.Text, Is.EqualTo("填寫無誤後，提交問卷"));
         }
         public async Task TwcA100_28()
         {
             var sendButton = TestHelper.FindAndMoveToElement(_driver, "button[title='Send']");
-            //_wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[title='Send']")));
             sendButton!.Click();
         }
         public async Task TwcA100_29()
