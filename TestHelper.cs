@@ -10,8 +10,6 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using System;
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
 {
