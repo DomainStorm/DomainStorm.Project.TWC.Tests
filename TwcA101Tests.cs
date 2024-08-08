@@ -56,8 +56,8 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
-            _actions.MoveToElement(href).Click().Perform();
+            var element = TestHelper.FindNavigationBySpan(_driver, "受理登記");
+            _actions.MoveToElement(element).Click().Perform();
 
             var abandonButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] button:nth-child(2)");
             _actions.MoveToElement(abandonButton).Click().Perform();
@@ -130,8 +130,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA101_10()
         {
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
-            _actions.MoveToElement(href).Click().Perform();
+            var element = TestHelper.FindNavigationBySpan(_driver, "受理登記");
+            _actions.MoveToElement(element).Click().Perform();
 
             var checkBox = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
             _actions.MoveToElement(checkBox).Click().Perform();
@@ -184,17 +184,17 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var 消費性用水服務契約 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
-            That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
+            var waterServiceAgreement = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
+            That(waterServiceAgreement.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var 公司個人資料保護告知事項 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
-            That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
+            var dataProtectionNotice = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
+            That(dataProtectionNotice.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var 公司營業章程 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
-            That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
+            var companyRegulations = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
+            That(companyRegulations.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            _actions.MoveToElement(href).Click().Perform();
+            var element = TestHelper.FindNavigationBySpan(_driver, "夾帶附件");
+            _actions.MoveToElement(element).Click().Perform();
 
             var attachmentName = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='夾帶附件'] a");
             That(attachmentName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));

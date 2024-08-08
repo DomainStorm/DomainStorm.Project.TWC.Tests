@@ -242,8 +242,9 @@ public class TestHelper
         });
 
         var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
-        var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
-        searchInput.SendKeys(applyCaseNo);
+        var stormInputGroup = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-input-group"));
+        var keyInput = stormInputGroup.FindElement(By.CssSelector("input"));
+        keyInput.SendKeys(applyCaseNo);
 
         IWebElement? element = null;
 
@@ -407,6 +408,43 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
             });
 
             return e;
+        });
+    }
+    public static IWebElement? FindNavigationBySpan(IWebDriver webDriver, string spanText)
+    {
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var action = new Actions(webDriver);
+
+        return wait.Until(driver =>
+        {
+            // 定位到 storm-tree-view 的 ShadowRoot
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+
+            if (stormTreeView != null)
+            {
+                var treeShadowRoot = stormTreeView.GetShadowRoot();
+
+                // 查找所有 storm-tree-node 元素
+                var treeNodes = treeShadowRoot.FindElements(By.CssSelector("storm-tree-node"));
+
+                foreach (var treeNode in treeNodes)
+                {
+                    // 查找每個 storm-tree-node 中的 a 標籤的所有 span 標籤
+                    var spans = treeNode.FindElements(By.CssSelector("a span"));
+
+                    foreach (var span in spans)
+                    {
+                        // 檢查 span 標籤的文本是否包含指定的文本
+                        if (span.Text.Contains(spanText))
+                        {
+                            return span; // 返回第一个匹配的 span 元素
+                        }
+                    }
+                }
+            }
+
+            return null;
         });
     }
 
