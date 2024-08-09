@@ -84,7 +84,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
             _actions.MoveToElement(href).Click().Perform();
 
             var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
@@ -107,7 +107,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.swal2-actions button")));
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#credential']");
+            var href = TestHelper.FindNavigationBySpan(_driver, "掃描拍照");
             _actions.MoveToElement(href).Click().Perform();
 
             var scanButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='credential'] button:nth-child(2)");
@@ -140,14 +140,14 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var 消費性用水服務契約 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
-            That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
+            var waterServiceAgreement = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_1'] > div.d-flex > div.form-check > input");
+            That(waterServiceAgreement.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var 公司個人資料保護告知事項 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
-            That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
+            var dataProtectionNotice = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
+            That(dataProtectionNotice.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var 公司營業章程 = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
-            That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
+            var companyRegulation = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
+            That(companyRegulation.GetAttribute("checked"), Is.EqualTo("true"));
 
             var img = TestHelper.FindAndMoveElement(_driver, "storm-card:nth-child(6) > img");
             That(img, Is.Not.Null);
@@ -168,8 +168,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
 
-            var applyDateBegin = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期起']")));
-            var applyDateBeginInput = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var applyDateBeginInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期起'] input")));
 
             string formattedApplyDateBegin = "2023-06-03";
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginInput);
@@ -184,7 +183,7 @@ namespace DomainStorm.Project.TWC.Tests
             var applyCaseNo = TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] span");
             _actions.MoveToElement(applyCaseNo).Click().Perform();
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#credential']");
+            var href = TestHelper.FindNavigationBySpan(_driver, "掃描拍照");
             _actions.MoveToElement(href).Click().Perform();
 
             var img = TestHelper.FindAndMoveElement(_driver, "storm-card:nth-child(6) > img");
