@@ -56,8 +56,8 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var element = TestHelper.FindNavigationBySpan(_driver, "受理登記");
-            _actions.MoveToElement(element).Click().Perform();
+            var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
+            _actions.MoveToElement(href).Click().Perform();
 
             var abandonButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='finished'] button:nth-child(2)");
             _actions.MoveToElement(abandonButton).Click().Perform();
@@ -130,8 +130,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA101_10()
         {
-            var element = TestHelper.FindNavigationBySpan(_driver, "受理登記");
-            _actions.MoveToElement(element).Click().Perform();
+            var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
+            _actions.MoveToElement(href).Click().Perform();
 
             var checkBox = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
             _actions.MoveToElement(checkBox).Click().Perform();
@@ -190,11 +190,11 @@ namespace DomainStorm.Project.TWC.Tests
             var dataProtectionNotice = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_2'] > div.d-flex > div.form-check > input");
             That(dataProtectionNotice.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var companyRegulations = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
-            That(companyRegulations.GetAttribute("checked"), Is.EqualTo("true"));
+            var companyRegulation = TestHelper.FindAndMoveElement(_driver, "storm-card[id='contract_3'] > div.d-flex > div.form-check > input");
+            That(companyRegulation.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var element = TestHelper.FindNavigationBySpan(_driver, "夾帶附件");
-            _actions.MoveToElement(element).Click().Perform();
+            var href = TestHelper.FindNavigationBySpan(_driver, "夾帶附件");
+            _actions.MoveToElement(href).Click().Perform();
 
             var attachmentName = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='夾帶附件'] a");
             That(attachmentName.GetAttribute("download"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
