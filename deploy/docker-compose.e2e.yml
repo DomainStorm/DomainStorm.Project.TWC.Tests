@@ -43,7 +43,9 @@ services:
   domainstorm.jwtauthapi:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=JwtAuthEventDb;User Id=sa;Password=Pass@word;  
+      DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=JwtAuthEventDb;User Id=sa;Password=Pass@word;
+    volumes:
+      - "./appsettings/jwtauthapi/appsettings.TWC.json:/app/appsettings.Development.json"       
     depends_on:   
       sqlserver:
         condition: service_healthy  
@@ -51,9 +53,12 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       DomainStorm_SqlServerOptions__ConnectionString: Server=sqlserver;Database=OpenIddict;User Id=sa;Password=Pass@word;
+      DomainStorm_Login__Use: LDAP
+    volumes:
+      - "./appsettings/openidprovider/appsettings.TWC.json:/app/appsettings.Development.json"   
     depends_on:
       sqlserver:
-          condition: service_healthy    
+          condition: service_healthy  
   domainstorm.project.twc.web:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
@@ -68,7 +73,9 @@ services:
   domainstorm.resourceapi:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=ResourceEventDb;User Id=sa;Password=Pass@word;  
+      DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=ResourceEventDb;User Id=sa;Password=Pass@word;
+    volumes:
+      - "./appsettings/resourceapi/appsettings.TWC.json:/app/appsettings.Development.json"  
     depends_on:   
       sqlserver:
         condition: service_healthy        
