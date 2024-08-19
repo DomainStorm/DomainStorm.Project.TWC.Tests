@@ -44,6 +44,9 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcDA001_07();
             await TwcDA001_08();
             await TwcDA001_09();
+            await TwcDA001_10();
+            await TwcDA001_11();
+            await TwcDA001_12();
         }
         public async Task TwcDA001_01()
         {
@@ -68,6 +71,9 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcDA001_04()
         {
+            var href = TestHelper.FindNavigationBySpan(_driver, "夾帶附件");
+            _actions.MoveToElement(href).Click().Perform();
+
             var createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
             _actions.MoveToElement(createAttachmentButton).Click().Perform();
 
@@ -108,7 +114,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
             _actions.MoveToElement(href).Click().Perform();
 
             var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
@@ -151,6 +157,9 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcDA001_10()
         {
+            var iframeElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(iframeElement);
+
             var formatTextOne = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("text[data-unformatted='台中服務所']")));
             That(formatTextOne.Text, Is.EqualTo("台中服務所"));
 
@@ -162,6 +171,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcDA001_11()
         {
+            _driver.SwitchTo().DefaultContent();
+
             var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
             _actions.MoveToElement(logout).Click().Perform();
 
@@ -176,11 +187,16 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
 
+            var iframeElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(iframeElement);
+
             var formatText = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("text[data-unformatted='澎湖營運所']")));
             That(formatText.Text, Is.EqualTo("澎湖營運所"));
         }
         public async Task TwcDA001_12()
         {
+            _driver.SwitchTo().DefaultContent();
+
             var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
             _actions.MoveToElement(logout).Click().Perform();
 
