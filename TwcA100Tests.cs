@@ -35,8 +35,8 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(0)]
         public async Task TwcA100_01To37()
         {
-            await TwcH100();
-            await TwcQ100();
+            //await TwcH100();
+            //await TwcQ100();
             await TwcA100_12();
             await TwcA100_13();
             await TwcA100_14();

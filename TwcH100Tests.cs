@@ -63,12 +63,12 @@ namespace DomainStorm.Project.TWC.Tests
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體管理']")));
 
-            var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體庫'] button");
+            var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體管理'] button");
             _actions.MoveToElement(addFileButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體庫'] button")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體管理'] button")));
 
             var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "testmedia.mp4");
             TestHelper.UploadFile(_driver, file, "input.dz-hidden-input");
@@ -84,10 +84,10 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcH100_01_02()
         {
-            var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體庫'] button");
+            var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體管理'] button");
             _actions.MoveToElement(addFileButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體庫'] button")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體管理'] button")));
 
             var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "台水官網圖.png");
             TestHelper.UploadFile(_driver, file, "input.dz-hidden-input:nth-of-type(2)");
@@ -95,8 +95,7 @@ namespace DomainStorm.Project.TWC.Tests
             var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
             That(fileName.GetAttribute("value"), Is.EqualTo("台水官網圖.png"));
 
-            var stormInputGroupDuration = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-input-group[label='播放秒數']")));
-            var stormInputGroupDurationInput = stormInputGroupDuration.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var stormInputGroupDurationInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-input-group[label='播放秒數'] input")));
             stormInputGroupDurationInput.SendKeys("10");
 
             var submitButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='新增檔案'] button");
