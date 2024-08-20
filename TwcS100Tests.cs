@@ -33,10 +33,21 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(0)]
-        public async Task TwcS100_01To02()
+        public async Task TwcS100_01To13()
         {
             await TwcS100_01();
             await TwcS100_02();
+            await TwcS100_03();
+            await TwcS100_04();
+            await TwcS100_05();
+            await TwcS100_06();
+            await TwcS100_07();
+            await TwcS100_08();
+            await TwcS100_09();
+            await TwcS100_10();
+            await TwcS100_11();
+            await TwcS100_12();
+            await TwcS100_13();
         }
         public async Task TwcS100_01()
         {
@@ -80,7 +91,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
             _actions.MoveToElement(href).Click().Perform();
 
             var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
@@ -114,19 +125,6 @@ namespace DomainStorm.Project.TWC.Tests
             That(button.Text, Is.EqualTo("登入"));
         }
 
-        [Test]
-        [Order(1)]
-        public async Task TwcS100_03To10()
-        {
-            await TwcS100_03();
-            await TwcS100_04();
-            await TwcS100_05();
-            await TwcS100_06();
-            await TwcS100_07();
-            await TwcS100_08();
-            await TwcS100_09();
-            await TwcS100_10();
-        }
         public async Task TwcS100_03()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
@@ -139,7 +137,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcS100_05()
         {
-            await TestHelper.Login(_driver, "tw491", TestHelper.Password!);
+            TestHelper.ChangeUser(_driver, "tw491");
+
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
@@ -150,6 +149,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcS100_06()
         {
+            await Task.Delay(500);
+
             var createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
             _actions.MoveToElement(createAttachmentButton).Click().Perform();
 
@@ -169,7 +170,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcS100_08()
         {
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#person']");
+            var href = TestHelper.FindNavigationBySpan(_driver, "營運系統整合資訊");
             _actions.MoveToElement(href).Click().Perform();
 
             _driver.SwitchTo().Frame(0);
@@ -185,7 +186,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
             _actions.MoveToElement(href).Click().Perform();
 
             var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
@@ -211,22 +212,24 @@ namespace DomainStorm.Project.TWC.Tests
             That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 
-        [Test]
-        [Order(2)]
-        public async Task TwcS100_11To13()
-        {
-            await TwcS100_11();
-            await TwcS100_12();
-            await TwcS100_13();
-        }
         public async Task TwcS100_11()
         {
-            await TestHelper.Login(_driver, "tw491", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
-            var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
-            _actions.MoveToElement(input).Click().Perform();
+            var applyDateBeginInput = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起'] input");
+            _actions.MoveToElement(applyDateBeginInput).Click().Perform();
+
+            int currentYear = DateTime.Now.Year;
+            int targetYear = 2023; // 目標年份
+            int clicksNeeded = targetYear - currentYear;
+
+            // 點擊下箭頭來選擇目標年份
+            var arrowDownElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar span.arrowDown")));
+            for (int i = 0; i < Math.Abs(clicksNeeded); i++)
+            {
+                Thread.Sleep(1000);
+                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", arrowDownElement);
+            }
 
             var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
             var applyMonthBegin = new SelectElement(select);
@@ -252,17 +255,28 @@ namespace DomainStorm.Project.TWC.Tests
             var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
             _actions.MoveToElement(logout).Click().Perform();
 
-            await TestHelper.Login(_driver, "4e03", TestHelper.Password!);
+            TestHelper.ChangeUser(_driver, "4e03");
+
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            var stormDropdown = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-sidenav > aside > ul > li > storm-dropdown > div > a > div > div > span")));
-            That(stormDropdown.GetAttribute("innerText"), Is.EqualTo("草屯營運所業務股 - 業務員"));
+            var stormDropdown = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-dropdown span")));
+            That(stormDropdown.Text, Is.EqualTo("草屯營運所業務股 - 業務員"));
         }
         public async Task TwcS100_13()
         {
-            var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
-            var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
-            _actions.MoveToElement(input).Click().Perform();
+            var applyDateBeginInput = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起'] input");
+            _actions.MoveToElement(applyDateBeginInput).Click().Perform();
+
+            int currentYear = DateTime.Now.Year;
+            int targetYear = 2023; // 目標年份
+            int clicksNeeded = targetYear - currentYear;
+
+            var arrowDownElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar span.arrowDown")));
+            for (int i = 0; i < Math.Abs(clicksNeeded); i++)
+            {
+                Thread.Sleep(1000);
+                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", arrowDownElement);
+            }
 
             var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
             var applyMonthBegin = new SelectElement(select);

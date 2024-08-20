@@ -410,6 +410,7 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
             return e;
         });
     }
+
     public static IWebElement? FindNavigationBySpan(IWebDriver webDriver, string spanText)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
