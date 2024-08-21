@@ -273,7 +273,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
             var stormDropdown = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-dropdown span")));
-            That(stormDropdown.Text, Is.EqualTo("草屯營運所業務股 - 業務員"));
+            That(stormDropdown.GetAttribute("innerText"), Is.EqualTo("草屯營運所業務股 - 業務員"));
         }
         public async Task TwcS100_13()
         {
