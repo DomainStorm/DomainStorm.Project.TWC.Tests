@@ -33,21 +33,10 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(0)]
-        public async Task TwcS100_01To13()
+        public async Task TwcS100_01To02()
         {
             await TwcS100_01();
             await TwcS100_02();
-            await TwcS100_03();
-            await TwcS100_04();
-            await TwcS100_05();
-            await TwcS100_06();
-            await TwcS100_07();
-            await TwcS100_08();
-            await TwcS100_09();
-            await TwcS100_10();
-            await TwcS100_11();
-            await TwcS100_12();
-            await TwcS100_13();
         }
         public async Task TwcS100_01()
         {
@@ -125,6 +114,19 @@ namespace DomainStorm.Project.TWC.Tests
             That(button.Text, Is.EqualTo("登入"));
         }
 
+        [Test]
+        [Order(1)]
+        public async Task TwcS100_03To10()
+        {
+            await TwcS100_03();
+            await TwcS100_04();
+            await TwcS100_05();
+            await TwcS100_06();
+            await TwcS100_07();
+            await TwcS100_08();
+            await TwcS100_09();
+            await TwcS100_10();
+        }
         public async Task TwcS100_03()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
@@ -137,7 +139,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcS100_05()
         {
-            TestHelper.ChangeUser(_driver, "tw491");
+            await TestHelper.Login(_driver, "tw491", TestHelper.Password!);
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
@@ -212,23 +214,34 @@ namespace DomainStorm.Project.TWC.Tests
             That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 
+        [Test]
+        [Order(2)]
+        public async Task TwcS100_11To13()
+        {
+            await TwcS100_11();
+            await TwcS100_12();
+            await TwcS100_13();
+        }
         public async Task TwcS100_11()
         {
+            await TestHelper.Login(_driver, "tw491", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
+
+            int clicksNeeded = await TestHelper.CalculateClicksNeeded(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-S100_bmTransferApply.json"), "applyDate");
 
             var applyDateBeginInput = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起'] input");
             _actions.MoveToElement(applyDateBeginInput).Click().Perform();
+            await Task.Delay(1000);
 
-            int currentYear = DateTime.Now.Year;
-            int targetYear = 2023; // 目標年份
-            int clicksNeeded = targetYear - currentYear;
+            // 移動到年份等待箭頭出現
+            var arrowDownElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//div[contains(@class, 'flatpickr-calendar')]//span[contains(@class, 'arrowDown')]")));
+            _actions.MoveToElement(arrowDownElement).Perform();
+            await Task.Delay(1000);
 
-            // 點擊下箭頭來選擇目標年份
-            var arrowDownElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar span.arrowDown")));
+            // 根據資料年份差距點選次數
             for (int i = 0; i < Math.Abs(clicksNeeded); i++)
             {
-                Thread.Sleep(1000);
-                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", arrowDownElement);
+                _actions.MoveToElement(arrowDownElement).Click().Perform();
             }
 
             var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
@@ -264,18 +277,21 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcS100_13()
         {
+            int clicksNeeded = await TestHelper.CalculateClicksNeeded(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-S100_bmTransferApply.json"), "applyDate");
+
             var applyDateBeginInput = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起'] input");
             _actions.MoveToElement(applyDateBeginInput).Click().Perform();
+            await Task.Delay(1000);
 
-            int currentYear = DateTime.Now.Year;
-            int targetYear = 2023; // 目標年份
-            int clicksNeeded = targetYear - currentYear;
+            // 移動到年份等待箭頭出現
+            var arrowDownElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//div[contains(@class, 'flatpickr-calendar')]//span[contains(@class, 'arrowDown')]")));
+            _actions.MoveToElement(arrowDownElement).Perform();
+            await Task.Delay(1000);
 
-            var arrowDownElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.flatpickr-calendar span.arrowDown")));
+            // 根據資料年份差距點選次數
             for (int i = 0; i < Math.Abs(clicksNeeded); i++)
             {
-                Thread.Sleep(1000);
-                ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", arrowDownElement);
+                _actions.MoveToElement(arrowDownElement).Click().Perform();
             }
 
             var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
