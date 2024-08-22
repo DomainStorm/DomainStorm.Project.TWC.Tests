@@ -11,6 +11,7 @@ using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
 using Newtonsoft.Json.Linq;
+using static NUnit.Framework.Assert;
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
 {
@@ -294,6 +295,35 @@ public class TestHelper
 
         return uuid;
     }
+
+    public static void ClickElementInNewWindow(IWebDriver driver, string cssSelector, int initialWindowIndex, int newWindowIndex)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
+        // 切換到初始窗口並重置iframe上下文
+        driver.SwitchTo().Window(driver.WindowHandles[initialWindowIndex]);
+        driver.SwitchTo().DefaultContent();
+
+        // 查找並等待元素可見
+        var element = FindAndMoveElement(driver, cssSelector);
+        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(cssSelector)));
+
+        // 切換到新窗口
+        driver.SwitchTo().Window(driver.WindowHandles[newWindowIndex]);
+
+        // 查找並點擊元素
+        element = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(cssSelector)));
+        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", element);
+
+        // 切換回初始窗口
+        driver.SwitchTo().Window(driver.WindowHandles[initialWindowIndex]);
+
+        // 驗證元素是否被選中
+        element = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(cssSelector)));
+        That(element.GetAttribute("checked"), Is.EqualTo("true"));
+    }
+
+
     public static void UploadFile(IWebDriver webDriver, string filePath, string css)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
@@ -366,7 +396,7 @@ public class TestHelper
         }
     }
 
-public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
+    public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
@@ -433,6 +463,7 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
             return e;
         });
     }
+
 
     public static IWebElement? FindNavigationBySpan(IWebDriver webDriver, string spanText)
     {
