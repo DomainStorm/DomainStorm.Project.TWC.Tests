@@ -98,4 +98,4 @@ jobs:
       - name: Test
         run: |
           # dotnet test --filter FullyQualifiedName~Tests --no-build --verbosity normal
-          dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcD100Tests --no-build --verbosity normal
+          dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcE100Tests --no-build --verbosity normal
