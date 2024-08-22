@@ -231,7 +231,7 @@ public class TestHelper
 
         return Task.CompletedTask;
     }
-    public static void ChangeUser(IWebDriver webDriver, string userName)
+    public static Task ChangeUser(IWebDriver webDriver, string userName)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
         Actions actions = new Actions(webDriver);
@@ -246,6 +246,8 @@ public class TestHelper
         actions.MoveToElement(submitButton).Click().Perform();
 
         wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
+
+        return Task.CompletedTask;
     }
 
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
