@@ -96,7 +96,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var idNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-trustee-id-no] > input")));
             idNoInput.SendKeys("A123456789" + Keys.Tab);
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             idNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-trustee-id-no] > input")));
             idNoInput.SendKeys(Keys.Tab);
@@ -115,7 +115,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='申請電子帳單勾選']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiApplyEmail);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiApplyEmail);
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
@@ -136,7 +136,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stiIdentificationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[id='檢附證件'] > input")));
             stiIdentificationInput.SendKeys("BBB" + Keys.Tab);
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             stiIdentificationInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[id='檢附證件'] > input")));
             stiIdentificationInput.SendKeys(Keys.Tab);
@@ -159,7 +159,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stiNoteInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-note] > input")));
             stiNoteInput.SendKeys("備註內容" + Keys.Tab);
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             stiNoteInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-note] > input")));
             stiNoteInput.SendKeys(Keys.Tab);
@@ -190,7 +190,7 @@ namespace DomainStorm.Project.TWC.Tests
             var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
@@ -203,52 +203,15 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcG100_11()
         {
-            _driver.SwitchTo().Window(_driver.WindowHandles[0]);
-            _driver.SwitchTo().DefaultContent();
-
-            var 消費性用水服務契約 = TestHelper.FindAndMoveElement(_driver, "input[id='消費性用水服務契約']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='消費性用水服務契約']")));
-
-            _driver.SwitchTo().Window(_driver.WindowHandles[1]);
-            _driver.SwitchTo().DefaultContent();
-
-            消費性用水服務契約 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='消費性用水服務契約']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
-
-            _driver.SwitchTo().Window(_driver.WindowHandles[0]);
-
-            消費性用水服務契約 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='消費性用水服務契約']")));
-            That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
+            TestHelper.ClickElementInNewWindow(_driver, "input[id='消費性用水服務契約']", 0, 1);
         }
         public async Task TwcG100_12()
         {
-            var 公司個人資料保護告知事項 = TestHelper.FindAndMoveElement(_driver, "input[id='公司個人資料保護告知事項']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司個人資料保護告知事項']")));
-
-            _driver.SwitchTo().Window(_driver.WindowHandles[1]);
-
-            公司個人資料保護告知事項 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司個人資料保護告知事項']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
-
-            _driver.SwitchTo().Window(_driver.WindowHandles[0]);
-
-            公司個人資料保護告知事項 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司個人資料保護告知事項']")));
-            That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
+            TestHelper.ClickElementInNewWindow(_driver, "input[id='公司個人資料保護告知事項']", 0, 1);
         }
         public async Task TwcG100_13()
         {
-            var 公司營業章程 = TestHelper.FindAndMoveElement(_driver, "input[id='公司營業章程']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司營業章程']")));
-
-            _driver.SwitchTo().Window(_driver.WindowHandles[1]);
-
-            公司營業章程 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司營業章程']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司營業章程);
-
-            _driver.SwitchTo().Window(_driver.WindowHandles[0]);
-
-            公司營業章程 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司營業章程']")));
-            That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
+            TestHelper.ClickElementInNewWindow(_driver, "input[id='公司營業章程']", 0, 1);
         }
         public async Task TwcG100_14()
         {
@@ -347,11 +310,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stiEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
             stiEmailInput.SendKeys("aaa@bbb.ccc" + Keys.Tab);
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             var stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
             stiEmailTelNoInput.SendKeys("02-12345678" + Keys.Tab);
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
@@ -367,7 +330,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().DefaultContent();
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
             _actions.MoveToElement(href).Click().Perform();
 
             var submitButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button[type='submit']")));
