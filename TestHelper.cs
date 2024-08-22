@@ -183,26 +183,6 @@ public class TestHelper
 
         return response.StatusCode;
     }
-    public static async Task<string> ReadJsonFileAsync(string jsonFilePath, string fieldName)
-    {
-        using var reader = new StreamReader(jsonFilePath);
-        string jsonContent = await reader.ReadToEndAsync();
-
-        JObject jsonObject = JObject.Parse(jsonContent);
-        JToken? fieldValue = jsonObject[fieldName];
-
-        return fieldValue!.ToString();
-    }
-    public static async Task<int> CalculateClicksNeeded(string filePath, string fieldName)
-    {
-        var targetApplyDate = await ReadJsonFileAsync(filePath, fieldName);
-
-        var dateTime = DateTime.Parse(targetApplyDate);
-        int targetYear = dateTime.Year;
-        int currentYear = DateTime.Now.Year;
-
-        return targetYear - currentYear;
-    }
     public static Task Login(IWebDriver webDriver, string userId, string password)
     {
         ((IJavaScriptExecutor)webDriver).ExecuteScript($"window.location.href = '{LoginUrl}';");

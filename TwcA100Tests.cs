@@ -35,8 +35,8 @@ namespace DomainStorm.Project.TWC.Tests
         [Order(0)]
         public async Task TwcA100_01To37()
         {
-            //await TwcH100();
-            //await TwcQ100();
+            await TwcH100();
+            await TwcQ100();
             await TwcA100_12();
             await TwcA100_13();
             await TwcA100_14();
@@ -68,12 +68,12 @@ namespace DomainStorm.Project.TWC.Tests
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體管理']")));
 
-            var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體庫'] button");
+            var addFileButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體管理'] button");
             _actions.MoveToElement(addFileButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體庫'] button")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體管理'] button")));
 
             var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "testmedia.mp4");
             TestHelper.UploadFile(_driver, file, "input.dz-hidden-input");
@@ -190,16 +190,13 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA100_04()
         {
-            var nameStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='問卷名稱']")));
-            var nameInput = nameStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var nameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='問卷名稱'] input")));
             nameInput.SendKeys("測試名稱" + Keys.Tab);
 
-            var descriptionStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='問卷頁首說明']")));
-            var descriptionInput = descriptionStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var descriptionInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='問卷頁首說明'] input")));
             descriptionInput.SendKeys("測試頁首說明" + Keys.Tab);
 
-            var textStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='問卷結尾文字']")));
-            var textInput = textStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var textInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='問卷結尾文字'] input")));
             textInput.SendKeys("測試問卷結尾文字" + Keys.Tab);
 
             var nextPageButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("form.multisteps-form__form > div:nth-child(1) div.button-row button.bg-gradient-dark")));
@@ -225,8 +222,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcA100_06()
         {
-            var contentStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目']")));
-            var contentInput = contentStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var contentInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目'] input")));
             contentInput.SendKeys("題目1");
 
             var optionSelect = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-select[label='選項數量'] > div.choices")));
@@ -235,16 +231,13 @@ namespace DomainStorm.Project.TWC.Tests
             var optionValue = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div[data-value='3']")));
             _actions.MoveToElement(optionValue).Click().Perform();
 
-            var optionOneStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1']")));
-            var optionOneInput = optionOneStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var optionOneInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1'] input")));
             optionOneInput.SendKeys("同意" + Keys.Tab);
 
-            var optionTwoStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2']")));
-            var optionTwoInput = optionTwoStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var optionTwoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2'] input")));
             optionTwoInput.SendKeys("普通" + Keys.Tab);
 
-            var optionThreeStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3']")));
-            var optionThreeInput = optionThreeStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var optionThreeInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3'] input")));
             optionThreeInput.SendKeys("不同意" + Keys.Tab);
 
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.float-end > button")));
@@ -259,8 +252,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA100_08()
         {
-            var contentStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目']")));
-            var contentInput = contentStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var contentInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目'] input")));
             contentInput.SendKeys("題目2");
 
             var optionSelect = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-select[label='選項數量'] > div.choices")));
@@ -269,16 +261,13 @@ namespace DomainStorm.Project.TWC.Tests
             var optionValue = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div[data-value='3']")));
             _actions.MoveToElement(optionValue).Click().Perform();
 
-            var optionOneStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1']")));
-            var optionOneInput = optionOneStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var optionOneInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1'] input")));
             optionOneInput.SendKeys("同意" + Keys.Tab);
 
-            var optionTwoStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2']")));
-            var optionTwoInput = optionTwoStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var optionTwoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2'] input")));
             optionTwoInput.SendKeys("普通" + Keys.Tab);
 
-            var optionThreeStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3']")));
-            var optionThreeInput = optionThreeStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var optionThreeInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3'] input")));
             optionThreeInput.SendKeys("不同意" + Keys.Tab);
 
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.float-end > button")));
@@ -364,7 +353,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var idNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-trustee-id-no] > input")));
             idNoInput.SendKeys("A123456789" + Keys.Tab);
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             idNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-trustee-id-no] > input")));
             idNoInput.SendKeys(Keys.Tab);
@@ -382,7 +371,7 @@ namespace DomainStorm.Project.TWC.Tests
             var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='受理'] > span")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
-            Thread.Sleep(1000);
+            await Task.Delay(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
@@ -395,52 +384,15 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA100_18()
         {
-            _driver.SwitchTo().Window(_driver.WindowHandles[0]);
-            _driver.SwitchTo().DefaultContent();
-
-            var 消費性用水服務契約 = TestHelper.FindAndMoveElement(_driver, "input[id='消費性用水服務契約']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='消費性用水服務契約']")));
-
-            _driver.SwitchTo().Window(_driver.WindowHandles[1]);
-            _driver.SwitchTo().DefaultContent();
-
-            消費性用水服務契約 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='消費性用水服務契約']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 消費性用水服務契約);
-
-            _driver.SwitchTo().Window(_driver.WindowHandles[0]);
-
-            消費性用水服務契約 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='消費性用水服務契約']")));
-            That(消費性用水服務契約.GetAttribute("checked"), Is.EqualTo("true"));
+            TestHelper.ClickElementInNewWindow(_driver, "input[id='消費性用水服務契約']", 0, 1);
         }
         public async Task TwcA100_19()
         {
-            var 公司個人資料保護告知事項 = TestHelper.FindAndMoveElement(_driver, "input[id='公司個人資料保護告知事項']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司個人資料保護告知事項']")));
-
-            _driver.SwitchTo().Window(_driver.WindowHandles[1]);
-
-            公司個人資料保護告知事項 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司個人資料保護告知事項']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司個人資料保護告知事項);
-
-            _driver.SwitchTo().Window(_driver.WindowHandles[0]);
-
-            公司個人資料保護告知事項 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司個人資料保護告知事項']")));
-            That(公司個人資料保護告知事項.GetAttribute("checked"), Is.EqualTo("true"));
+            TestHelper.ClickElementInNewWindow(_driver, "input[id='公司個人資料保護告知事項']", 0, 1);
         }
         public async Task TwcA100_20()
         {
-            var 公司營業章程 = TestHelper.FindAndMoveElement(_driver, "input[id='公司營業章程']");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司營業章程']")));
-
-            _driver.SwitchTo().Window(_driver.WindowHandles[1]);
-
-            公司營業章程 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司營業章程']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", 公司營業章程);
-
-            _driver.SwitchTo().Window(_driver.WindowHandles[0]);
-
-            公司營業章程 = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[id='公司營業章程']")));
-            That(公司營業章程.GetAttribute("checked"), Is.EqualTo("true"));
+            TestHelper.ClickElementInNewWindow(_driver, "input[id='公司營業章程']", 0, 1);
         }
         public async Task TwcA100_21()
         {
@@ -536,8 +488,8 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/questionnaire/now");
 
-            var questionnaireTiele = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("h3")));
-            That(questionnaireTiele.Text, Is.EqualTo("用水設備各種異動服務申請滿意度問卷調查"));
+            var questionnaireTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("h3")));
+            That(questionnaireTitle.Text, Is.EqualTo("用水設備各種異動服務申請滿意度問卷調查"));
         }
         public async Task TwcA100_26()
         {
@@ -592,7 +544,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA100_33()
         {
-            var deleteButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-button:nth-child(4)");
+            var deleteButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-toolbar-item:nth-child(4)");
             _actions.MoveToElement(deleteButton).Click().Perform();
 
             var hintContent = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack > h5")));
@@ -615,7 +567,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.swal2-actions > button")));
 
-            var chartButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-button:nth-child(3)");
+            var chartButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-toolbar-item:nth-child(3)");
             _actions.MoveToElement(chartButton).Click().Perform();
 
             var stormChart = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-chart")));
@@ -626,7 +578,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/questionnaire");
 
-            var takeDownButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-button:nth-child(2)");
+            var takeDownButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-toolbar-item:nth-child(2)");
             _actions.MoveToElement(takeDownButton).Click().Perform();
         }
         public async Task TwcA100_37()

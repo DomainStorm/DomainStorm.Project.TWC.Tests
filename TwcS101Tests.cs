@@ -122,29 +122,10 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            int clicksNeeded = await TestHelper.CalculateClicksNeeded(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"), "applyDate");
+            var applyDateBeginInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期起'] input")));
 
-            var applyDateBeginInput = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起'] input");
-            _actions.MoveToElement(applyDateBeginInput).Click().Perform();
-            await Task.Delay(1000);
-
-            // 移動到年份等待箭頭出現
-            var arrowDownElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//div[contains(@class, 'flatpickr-calendar')]//span[contains(@class, 'arrowDown')]")));
-            _actions.MoveToElement(arrowDownElement).Perform();
-            await Task.Delay(1000);
-
-            // 根據資料年份差距點選次數
-            for (int i = 0; i < Math.Abs(clicksNeeded); i++)
-            {
-                _actions.MoveToElement(arrowDownElement).Click().Perform();
-            }
-
-            var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
-            var applyMonthBegin = new SelectElement(select);
-            applyMonthBegin.SelectByText("三月");
-
-            var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='三月 6, 2023']");
-            _actions.MoveToElement(applyDayBegin).Click().Perform();
+            string formattedApplyDateBegin = "2023-03-06";
+            ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginInput);
 
             var search = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(search).Click().Perform();
