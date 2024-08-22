@@ -56,9 +56,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().DefaultContent();
 
-            //var href = TestHelper.FindShadowRootElement(_driver, "[href='#file']");
-            //_actions.MoveToElement(href).Click().Perform();
-
             var createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
             _actions.MoveToElement(createAttachmentButton).Click().Perform();
 
@@ -74,7 +71,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
             _actions.MoveToElement(href).Click().Perform();
 
             var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
@@ -102,7 +99,7 @@ namespace DomainStorm.Project.TWC.Tests
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
             statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-S100_bmTransferApply.json"));
 
-            await TestHelper.Login(_driver, "tw491", TestHelper.Password!);
+            await TestHelper.ChangeUser(_driver, "tw491");
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
@@ -133,7 +130,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
-            href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
             _actions.MoveToElement(href).Click().Perform();
 
             checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
@@ -161,7 +158,7 @@ namespace DomainStorm.Project.TWC.Tests
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
             statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-RA001_bmTransferApply.json"));
 
-            await TestHelper.Login(_driver, "ning53", TestHelper.Password!);
+            await TestHelper.ChangeUser(_driver, "ning53");
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
@@ -192,7 +189,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
             That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
-            href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
             _actions.MoveToElement(href).Click().Perform();
 
             checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
@@ -249,6 +246,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcRA002_05()
         {
+            await Task.Delay(500);
             var createAttachmentButton = TestHelper.FindAndMoveElement(_driver, "storm-card[id='file'] button");
             _actions.MoveToElement(createAttachmentButton).Click().Perform();
 
@@ -284,7 +282,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+            var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
             _actions.MoveToElement(href).Click().Perform();
 
             var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
