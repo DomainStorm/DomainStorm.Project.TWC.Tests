@@ -12,6 +12,8 @@ using System.Data.SqlClient;
 using Dapper;
 using Newtonsoft.Json.Linq;
 using static NUnit.Framework.Assert;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using System;
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
 {
@@ -276,7 +278,7 @@ public class TestHelper
         return uuid;
     }
 
-    public static void ClickElementInNewWindow(IWebDriver driver, string cssSelector, int initialWindowIndex, int newWindowIndex)
+    public static void ClickElementInNewWindow(IWebDriver driver, string xpathSelector, int initialWindowIndex, int newWindowIndex)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
 
@@ -285,24 +287,46 @@ public class TestHelper
         driver.SwitchTo().DefaultContent();
 
         // 查找並等待元素可見
-        var element = FindAndMoveElement(driver, cssSelector);
-        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(cssSelector)));
+        var element = FindAndMoveElement(driver, xpathSelector);
+        wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathSelector)));
 
         // 切換到新窗口
         driver.SwitchTo().Window(driver.WindowHandles[newWindowIndex]);
 
         // 查找並點擊元素
-        element = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(cssSelector)));
+        element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathSelector)));
         ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", element);
 
         // 切換回初始窗口
         driver.SwitchTo().Window(driver.WindowHandles[initialWindowIndex]);
 
         // 驗證元素是否被選中
-        element = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(cssSelector)));
+        element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathSelector)));
         That(element.GetAttribute("checked"), Is.EqualTo("true"));
     }
 
+    public static void ClickElementInWindow(IWebDriver driver, string xpath, int windowIndex)
+    {
+        var _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        var _actions = new Actions(driver);
+
+        driver.SwitchTo().Window(driver.WindowHandles[windowIndex]);
+        driver.SwitchTo().DefaultContent();
+
+        var element = _wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
+        _actions.MoveToElement(element).Click().Perform();
+    }
+    public static void HoverOverElementInWindow(IWebDriver driver, string xpath, int windowIndex)
+    {
+        var _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        var _actions = new Actions(driver);
+
+        driver.SwitchTo().Window(driver.WindowHandles[windowIndex]);
+        driver.SwitchTo().DefaultContent();
+
+        var element = _wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
+        _actions.MoveToElement(element).Perform();
+    }
 
     public static void UploadFile(IWebDriver webDriver, string filePath, string css)
     {
