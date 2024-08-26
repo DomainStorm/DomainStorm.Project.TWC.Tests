@@ -650,7 +650,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(hintContent.Text, Is.EqualTo("已有問卷資料不得刪除"));
 
             var checkButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
-            _actions.MoveToElement(checkButton).Click().Perform();
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", checkButton);
         }
         public async Task TwcA100_35()
         {
