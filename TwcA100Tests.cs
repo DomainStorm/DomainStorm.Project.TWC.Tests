@@ -56,8 +56,9 @@ namespace DomainStorm.Project.TWC.Tests
             fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-input-group[@label='名稱']//input[@name='Name']")));
             That(fileName.GetAttribute("value"), Is.EqualTo("testmedia.mp4"));
 
-            var upload = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='上傳']")));
-            _actions.MoveToElement(upload).Click().Perform();
+            var upload = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[text()='上傳']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", upload);
+            //_actions.MoveToElement(upload).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[text()='上傳']")));
             That(TestHelper.WaitStormEditTableUpload(_driver, "div.table-bottom > div.table-pageInfo")!.Text, Is.EqualTo("顯示第 1 至 1 筆，共 1 筆"));
@@ -96,8 +97,9 @@ namespace DomainStorm.Project.TWC.Tests
             var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[contains(@class, 'ql-editor')]")));
             editorInput.SendKeys("跑馬燈測試" + Keys.Tab);
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='確定']")));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[text()='確定']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
+            //_actions.MoveToElement(submitButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='節目單管理']")));
             That(TestHelper.WaitStormTableUpload(_driver, "div.table-bottom > div.table-pageInfo")!.Text, Is.EqualTo("顯示第 1 至 1 筆，共 1 筆"));
@@ -180,9 +182,9 @@ namespace DomainStorm.Project.TWC.Tests
             });
 
             // 驗證元素值
-            Assert.That(nameInput.GetAttribute("value"), Is.EqualTo("測試名稱"));
-            Assert.That(descriptionInput.GetAttribute("value"), Is.EqualTo("測試頁首說明"));
-            Assert.That(textInput.GetAttribute("value"), Is.EqualTo("測試問卷結尾文字"));
+            That(nameInput.GetAttribute("value"), Is.EqualTo("測試名稱"));
+            That(descriptionInput.GetAttribute("value"), Is.EqualTo("測試頁首說明"));
+            That(textInput.GetAttribute("value"), Is.EqualTo("測試問卷結尾文字"));
 
             var nextPage = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[@title='Next'][1]")));
             _actions.MoveToElement(nextPage).Click().Perform();
@@ -192,8 +194,9 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA100_05()
         {
-            var addQuestion = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[@data-bs-target='#createMultipleChoice']")));
-            _actions.MoveToElement(addQuestion).Click().Perform();
+            var addQuestion = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[@data-bs-target='#createMultipleChoice']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", addQuestion);
+            //_actions.MoveToElement(addQuestion).Click().Perform();
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='新增題目']")));
         }
@@ -244,9 +247,9 @@ namespace DomainStorm.Project.TWC.Tests
                 return value == "不同意";
             });
 
-            Assert.That(optionOneInput.GetAttribute("value"), Is.EqualTo("同意"));
-            Assert.That(optionTwoInput.GetAttribute("value"), Is.EqualTo("普通"));
-            Assert.That(optionThreeInput.GetAttribute("value"), Is.EqualTo("不同意"));
+            That(optionOneInput.GetAttribute("value"), Is.EqualTo("同意"));
+            That(optionTwoInput.GetAttribute("value"), Is.EqualTo("普通"));
+            That(optionThreeInput.GetAttribute("value"), Is.EqualTo("不同意"));
 
             var submitButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='加入']")));
             _actions.MoveToElement(submitButton).Click().Perform();
@@ -256,8 +259,9 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcA100_07()
         {
-            var addQuestion = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[@data-bs-target='#createMultipleChoice']")));
-            _actions.MoveToElement(addQuestion).Click().Perform();
+            var addQuestion = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[@data-bs-target='#createMultipleChoice']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", addQuestion);
+            //_actions.MoveToElement(addQuestion).Click().Perform();
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='新增題目']")));
         }
@@ -308,9 +312,9 @@ namespace DomainStorm.Project.TWC.Tests
                 return value == "不同意";
             });
 
-            Assert.That(optionOneInput.GetAttribute("value"), Is.EqualTo("同意"));
-            Assert.That(optionTwoInput.GetAttribute("value"), Is.EqualTo("普通"));
-            Assert.That(optionThreeInput.GetAttribute("value"), Is.EqualTo("不同意"));
+            That(optionOneInput.GetAttribute("value"), Is.EqualTo("同意"));
+            That(optionTwoInput.GetAttribute("value"), Is.EqualTo("普通"));
+            That(optionThreeInput.GetAttribute("value"), Is.EqualTo("不同意"));
 
             var submitButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='加入']")));
             _actions.MoveToElement(submitButton).Click().Perform();
@@ -482,7 +486,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
             var signButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[text()='簽名']")));
-            _actions.MoveToElement(signButton).Click().Perform();
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", signButton);
 
             _wait.Until(driver =>
             {
@@ -559,7 +563,10 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[@class='col-sm-7']")));
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
+
+            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-apply-case-no]")));
             That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 

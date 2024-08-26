@@ -29,8 +29,11 @@ public class TestHelper
         option.AddArgument("--disable-web-security");
         option.AddArgument("--ignore-certificate-errors");
 
-        if (GetChromeConfig().Headless)
+        if (GetChromeConfig().Headless) 
+        {
             option.AddArgument("--headless");
+            option.AddArgument("--start-maximized");
+        }
 
         var downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         option.AddUserProfilePreference("download.default_directory", downloadDirectory);
