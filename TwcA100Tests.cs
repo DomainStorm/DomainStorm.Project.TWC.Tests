@@ -102,11 +102,6 @@ namespace DomainStorm.Project.TWC.Tests
             var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[contains(@class, 'ql-editor')]")));
             editorInput.SendKeys("跑馬燈測試" + Keys.Tab);
 
-            Console.WriteLine($"::group::");
-            Console.WriteLine($"---------Current URL: {_driver.Url}---------");
-            Console.WriteLine(_driver.PageSource);
-            Console.WriteLine("::endgroup::");
-
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
 
@@ -121,6 +116,11 @@ namespace DomainStorm.Project.TWC.Tests
                 var element = driver.FindElement(By.XPath("//storm-card[@headline='節目單管理']"));
                 return element != null;
             });
+
+            Console.WriteLine($"::group::");
+            Console.WriteLine($"---------Current URL: {_driver.Url}---------");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::");
             That(TestHelper.WaitStormTableUpload(_driver, "div.table-bottom > div.table-pageInfo")!.Text, Is.EqualTo("顯示第 1 至 1 筆，共 1 筆"));
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist/approve");
