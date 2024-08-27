@@ -136,7 +136,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var attachmentName = TestHelper.FindAndMoveElement(_driver, "//storm-input-group[@label='名稱']//input");
+                var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-input-group[@label='名稱']//input")));
                 return attachmentName!.GetAttribute("value") == "twcweb_01_1_夾帶附件1.pdf";
             });
         }
@@ -210,15 +210,12 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             var waterServiceAgreement = TestHelper.FindAndMoveElement(_driver, "//input[@id='消費性用水服務契約']");
-            _actions.MoveToElement(waterServiceAgreement).Perform();
             That(waterServiceAgreement.GetAttribute("checked"), Is.EqualTo("true"));
 
             var dataProtectionNotice = TestHelper.FindAndMoveElement(_driver, "//input[@id='公司個人資料保護告知事項']");
-            _actions.MoveToElement(dataProtectionNotice).Perform();
             That(dataProtectionNotice.GetAttribute("checked"), Is.EqualTo("true"));
 
             var companyRegulation = TestHelper.FindAndMoveElement(_driver, "//input[@id='公司營業章程']");
-            _actions.MoveToElement(companyRegulation).Perform();
             That(companyRegulation.GetAttribute("checked"), Is.EqualTo("true"));
 
             var href = TestHelper.FindNavigationBySpan(_driver, "夾帶附件");

@@ -215,7 +215,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-               var attachmentName = TestHelper.FindAndMoveElement(_driver, "//storm-input-group[@label='名稱']//input");
+               var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-input-group[@label='名稱']//input")));
                 return attachmentName!.GetAttribute("value") == "twcweb_01_1_夾帶附件1.pdf,twcweb_01_1_夾帶附件2.pdf";
             });
 
