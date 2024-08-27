@@ -98,8 +98,8 @@ namespace DomainStorm.Project.TWC.Tests
             editorInput.SendKeys("跑馬燈測試" + Keys.Tab);
 
             var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[text()='確定']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
             //_actions.MoveToElement(submitButton).Click().Perform();
+            submitButton.Click();
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='節目單管理']")));
             That(TestHelper.WaitStormTableUpload(_driver, "div.table-bottom > div.table-pageInfo")!.Text, Is.EqualTo("顯示第 1 至 1 筆，共 1 筆"));
@@ -403,14 +403,14 @@ namespace DomainStorm.Project.TWC.Tests
         
         public async Task TwcA100_15()
         {
-            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[@class='col-sm-7']")));
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
+
+            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-apply-case-no]")));
             That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
         public async Task TwcA100_16()
         {
-            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-            _driver.SwitchTo().Frame(0);
-
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
