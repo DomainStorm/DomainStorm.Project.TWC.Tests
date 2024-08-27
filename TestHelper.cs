@@ -338,7 +338,7 @@ public class TestHelper
         lastHiddenInput.SendKeys(filePath);
     }
 
-    public static bool DownloadFileAndVerify(IWebDriver webDriver, string fileName, string css)
+    public static bool DownloadFileAndVerify(IWebDriver webDriver, string fileName, string xpath)
     {
         WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
         Actions _actions = new Actions(webDriver);
@@ -356,8 +356,8 @@ public class TestHelper
             File.Delete(filePath);
         }
 
-        var downloadButton = FindAndMoveElement(webDriver, css);
-        downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
+        var downloadButton = FindAndMoveElement(webDriver, xpath);
+        downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(xpath)));
         _actions.MoveToElement(downloadButton).Click().Perform();
 
         Console.WriteLine($"-----檢查檔案完整路徑|: {filePath}-----");
