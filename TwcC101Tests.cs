@@ -161,7 +161,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(1)]
+        [Order(2)]
         public async Task TwcC101_09To11()
         {
             await TwcC101_09();
