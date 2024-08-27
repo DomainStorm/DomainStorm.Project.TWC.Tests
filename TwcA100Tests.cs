@@ -42,7 +42,13 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='媒體管理']")));
+
+            _wait.Until(driver =>
+            {
+                var element = driver.FindElement(By.XPath("//storm-card[@headline='媒體管理']"));
+                return element != null;
+            });
+            //_wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='媒體管理']")));
 
             var addFile = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='新增檔案']")));
             _actions.MoveToElement(addFile).Click().Perform();
@@ -58,7 +64,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             var upload = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[text()='上傳']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", upload);
-            //_actions.MoveToElement(upload).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[text()='上傳']")));
             That(TestHelper.WaitStormEditTableUpload(_driver, "div.table-bottom > div.table-pageInfo")!.Text, Is.EqualTo("顯示第 1 至 1 筆，共 1 筆"));
