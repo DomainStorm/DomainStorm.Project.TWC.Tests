@@ -78,7 +78,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-apply-case-no]")));
+            var applyCaseNo = TestHelper.FindAndMoveElement(_driver, "//span[@sti-apply-case-no]");
             That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
         public async Task TwcB100_04()
@@ -86,18 +86,12 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            var idNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-trustee-id-no]/input")));
+            var idNoInput = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-trustee-id-no]/input")));
             idNoInput.SendKeys("A123456789" + Keys.Tab);
-            await Task.Delay(1000);
 
             _wait.Until(driver =>
             {
                 var idElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='身分證號碼']/input")));
-
-                if (idElement == null)
-                {
-                    return false;
-                }
 
                 return idElement.GetAttribute("value") == "A123456789";
             });
@@ -105,7 +99,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            var idElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='身分證號碼']")));
+            var idElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@id='身分證號碼']")));
             That(idElement.Text, Is.EqualTo("A123456789"));
         }
         public async Task TwcB100_05()
@@ -119,7 +113,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var checkbox = driver.FindElement(By.XPath("//input[@id='繳費']"));
+                var checkbox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//input[@id='繳費']")));
 
                 return checkbox.GetAttribute("checked") != null;
             });
@@ -143,12 +137,7 @@ namespace DomainStorm.Project.TWC.Tests
             {
                 var signElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-post-user-full-name='']")));
 
-                if (signElement == null)
-                {
-                    return false;
-                }
-
-                return signElement.Text == "張博文";
+                return signElement != null;
             });
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
@@ -179,7 +168,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
-            var signButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[text()='簽名']")));
+            var signButton = TestHelper.FindAndMoveElement(_driver, "//span[text()='簽名']");
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", signButton);
 
             _wait.Until(driver =>

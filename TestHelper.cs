@@ -545,14 +545,14 @@ public class TestHelper
             return e;
         });
     }
-    public static IWebElement FindAndMoveElement(IWebDriver webDriver, string css)
+    public static IWebElement FindAndMoveElement(IWebDriver webDriver, string xpath)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
         var action = new Actions(webDriver);
-        var element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
+        var element = wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
 
         action.MoveToElement(element).Perform();
-        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(css)));
+        wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpath)));
 
         return element;
     }

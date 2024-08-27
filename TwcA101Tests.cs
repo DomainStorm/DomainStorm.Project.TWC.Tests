@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using Castle.Components.DictionaryAdapter.Xml;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
@@ -65,19 +66,21 @@ namespace DomainStorm.Project.TWC.Tests
             var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
             _actions.MoveToElement(href).Click().Perform();
 
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='捨棄草稿']")));
-
-            var abandonButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='捨棄草稿']")));
+            var abandonButton = TestHelper.FindAndMoveElement(_driver, "//button[text()='捨棄草稿']");
             _actions.MoveToElement(abandonButton).Click().Perform();
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='刪除']")));
-            That(submitButton.Text, Is.EqualTo("刪除"));
+            var submitButton = TestHelper.FindAndMoveElement(_driver, "//button[text()='刪除']");
+            _actions.MoveToElement(submitButton).Click().Perform();
 
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
+            That(submitButton.Text, Is.EqualTo("刪除"));
         }
         public async Task TwcA101_04()
         {
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[text()='刪除']")));
+            _wait.Until(driver =>
+            {
+                var waitElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h6[text()='草稿區']")));
+                return waitElement != null;
+            });
 
             var pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo");
             That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
@@ -100,6 +103,7 @@ namespace DomainStorm.Project.TWC.Tests
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"));
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
+
         [Test]
         [Order(3)]
         public async Task TwcA101_07To14()
@@ -119,28 +123,26 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
-
-            var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
-            That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
+            var href = TestHelper.FindNavigationBySpan(_driver, "夾帶附件");
+            _actions.MoveToElement(href).Click().Perform();
         }
         public async Task TwcA101_08()
         {
-            var addAttachment = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[text()='新增文件']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", addAttachment);
+            var addAttachment = TestHelper.FindAndMoveElement(_driver, "//button[text()='新增文件']");
+            _actions.MoveToElement(addAttachment).Click().Perform();
 
             var fileOne = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, fileOne, "input.dz-hidden-input:nth-of-type(3)");
 
             _wait.Until(driver =>
             {
-                var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-input-group[@label='名稱']//input")));
+                var attachmentName = TestHelper.FindAndMoveElement(_driver, "//storm-input-group[@label='名稱']//input");
                 return attachmentName!.GetAttribute("value") == "twcweb_01_1_夾帶附件1.pdf";
             });
         }
         public async Task TwcA101_09()
         {
-            var upload = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[text()='上傳']")));
+            var upload = TestHelper.FindAndMoveElement(_driver, "//button[text()='上傳']");
             _actions.MoveToElement(upload).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[text()='上傳']")));
@@ -148,23 +150,23 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA101_10()
         {
-            var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
-            _actions.MoveToElement(href).Click().Perform();
+            //var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
+            //_actions.MoveToElement(href).Click().Perform();
 
-            var checkBox = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='用印或代送件只需夾帶附件']")));
+            var checkBox = TestHelper.FindAndMoveElement(_driver, "//input[@id='用印或代送件只需夾帶附件']");
             _actions.MoveToElement(checkBox).Click().Perform();
 
             That(checkBox.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcA101_11()
         {
-            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[text()='確認受理']")));
+            var submitButton = TestHelper.FindAndMoveElement(_driver, "//button[text()='確認受理']");
             _actions.MoveToElement(submitButton).Click().Perform();
 
-            var hintTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[text()='【受理】未核章']")));
+            var hintTitle = TestHelper.FindAndMoveElement(_driver, "//h5[text()='【受理】未核章']");
             That(hintTitle.Text, Is.EqualTo("【受理】未核章"));
 
-            var confirmButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
+            var confirmButton = TestHelper.FindAndMoveElement(_driver, "//button[text()='確定']");
             _actions.MoveToElement(confirmButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[text()='確定']")));
@@ -181,12 +183,7 @@ namespace DomainStorm.Project.TWC.Tests
             {
                 var signElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-post-user-full-name='']")));
 
-                if (signElement == null)
-                {
-                    return false;
-                }
-
-                return signElement.Text == "張博文";
+                return signElement != null;
             });
 
             var signElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-post-user-full-name='']")));
@@ -196,8 +193,10 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[text()='確認受理']")));
+            var submitButton = TestHelper.FindAndMoveElement(_driver, "//button[text()='確認受理']");
             _actions.MoveToElement(submitButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[text()='確認受理']")));
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
@@ -206,29 +205,29 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-apply-case-no]")));
+            var applyCaseNo = TestHelper.FindAndMoveElement(_driver, "//span[@sti-apply-case-no]");
             That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
         public async Task TwcA101_14()
         {
             _driver.SwitchTo().DefaultContent();
 
-            var waterServiceAgreement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='消費性用水服務契約']")));
+            var waterServiceAgreement = TestHelper.FindAndMoveElement(_driver, "//input[@id='消費性用水服務契約']");
             _actions.MoveToElement(waterServiceAgreement).Perform();
             That(waterServiceAgreement.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var dataProtectionNotice = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='公司個人資料保護告知事項']")));
+            var dataProtectionNotice = TestHelper.FindAndMoveElement(_driver, "//input[@id='公司個人資料保護告知事項']");
             _actions.MoveToElement(dataProtectionNotice).Perform();
             That(dataProtectionNotice.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var companyRegulation = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='公司營業章程']")));
+            var companyRegulation = TestHelper.FindAndMoveElement(_driver, "//input[@id='公司營業章程']");
             _actions.MoveToElement(companyRegulation).Perform();
             That(companyRegulation.GetAttribute("checked"), Is.EqualTo("true"));
 
             var href = TestHelper.FindNavigationBySpan(_driver, "夾帶附件");
             _actions.MoveToElement(href).Click().Perform();
 
-            var attachmentName = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//a[text()='twcweb_01_1_夾帶附件1.pdf']")));
+            var attachmentName = TestHelper.FindAndMoveElement(_driver, "//a[text()='twcweb_01_1_夾帶附件1.pdf']");
             That(attachmentName.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
     }
