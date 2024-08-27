@@ -103,7 +103,7 @@ namespace DomainStorm.Project.TWC.Tests
             Console.WriteLine("::endgroup::");
 
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
 
             Console.WriteLine($"::group::");
             Console.WriteLine($"---------Current URL: {_driver.Url}---------");
