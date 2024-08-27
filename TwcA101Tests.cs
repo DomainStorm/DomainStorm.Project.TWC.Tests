@@ -150,9 +150,6 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcA101_10()
         {
-            //var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
-            //_actions.MoveToElement(href).Click().Perform();
-
             var checkBox = TestHelper.FindAndMoveElement(_driver, "//input[@id='用印或代送件只需夾帶附件']");
             _actions.MoveToElement(checkBox).Click().Perform();
 

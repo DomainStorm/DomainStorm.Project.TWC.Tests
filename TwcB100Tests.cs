@@ -169,7 +169,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
             var signButton = TestHelper.FindAndMoveElement(_driver, "//span[text()='簽名']");
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", signButton);
+            _actions.MoveToElement(signButton).Click().Perform();
 
             _wait.Until(driver =>
             {
@@ -181,12 +181,11 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
             var signElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//img[@alt='簽名_001.tiff']")));
-            _actions.MoveToElement(signElement).Perform();
             That(signElement, Is.Not.Null);
         }
         public async Task TwcB100_11()
         {
-            var scanButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[text()='啟動掃描證件']")));
+            var scanButton = TestHelper.FindAndMoveElement(_driver, "//span[text()='啟動掃描證件']");
             _actions.MoveToElement(scanButton).Click().Perform();
 
             _wait.Until(driver =>
@@ -205,7 +204,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
-            var addAttachment = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[text()='新增文件']")));
+            var addAttachment = TestHelper.FindAndMoveElement(_driver, "//button[text()='新增文件']");
             _actions.MoveToElement(addAttachment).Click().Perform();
 
             var fileOne = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
@@ -216,11 +215,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-input-group[@label='名稱']//input")));
+               var attachmentName = TestHelper.FindAndMoveElement(_driver, "//storm-input-group[@label='名稱']//input");
                 return attachmentName!.GetAttribute("value") == "twcweb_01_1_夾帶附件1.pdf,twcweb_01_1_夾帶附件2.pdf";
             });
 
-            var upload = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[text()='上傳']")));
+            var upload = TestHelper.FindAndMoveElement(_driver, "//button[text()='上傳']");
             _actions.MoveToElement(upload).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[text()='上傳']")));
@@ -239,7 +238,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[text()='確認受理']")));
+            var submitButton = TestHelper.FindAndMoveElement(_driver, "//button[text()='確認受理']");
             _actions.MoveToElement(submitButton).Click().Perform();
 
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
@@ -249,7 +248,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-apply-case-no]")));
+            var applyCaseNo = TestHelper.FindAndMoveElement(_driver, "//span[@sti-apply-case-no]");
             That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
     }
