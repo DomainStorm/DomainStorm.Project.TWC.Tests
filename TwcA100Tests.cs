@@ -269,8 +269,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA100_07()
         {
             var addQuestion = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[@data-bs-target='#createMultipleChoice']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", addQuestion);
-            //_actions.MoveToElement(addQuestion).Click().Perform();
+            _actions.MoveToElement(addQuestion).Click().Perform();
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='新增題目']")));
         }
