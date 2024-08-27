@@ -20,9 +20,9 @@ namespace DomainStorm.Project.TWC.Tests
         [SetUp] // 在每個測試方法之前執行的方法
         public void Setup()
         {
-            _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            _actions = new Actions(_driver);
+                _driver = TestHelper.GetNewChromeDriver();
+                _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+                _actions = new Actions(_driver);
         }
 
         [TearDown] // 在每個測試方法之後執行的方法
@@ -102,9 +102,8 @@ namespace DomainStorm.Project.TWC.Tests
             Console.WriteLine(_driver.PageSource);
             Console.WriteLine("::endgroup::");
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[text()='確定']")));
-            //_actions.MoveToElement(submitButton).Click().Perform();
-            submitButton.Click();
+            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
+            _actions.MoveToElement(submitButton).Click().Perform();
 
             Console.WriteLine($"::group::");
             Console.WriteLine($"---------Current URL: {_driver.Url}---------");
