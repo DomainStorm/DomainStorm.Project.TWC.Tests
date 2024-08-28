@@ -283,12 +283,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcE100_16()
         {
-            _wait.Until(driver =>
-            {
-                var checkbox = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='中結']")));
-
-                return checkbox.GetAttribute("checked") != null;
-            });
+            var checkbox = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='中結']")));
+            That(checkbox.GetAttribute("checked"), Is.Not.Null);
         }
     }
 }

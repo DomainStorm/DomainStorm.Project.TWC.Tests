@@ -298,19 +298,11 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcD100_16()
         {
-            _wait.Until(driver =>
-            {
-                var checkbox = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='中結']")));
+            var checkStiEnd = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='中結']")));
+            That(checkStiEnd.GetAttribute("checked"), Is.Not.Null);
 
-                return checkbox.GetAttribute("checked") != null;
-            });
-
-            _wait.Until(driver =>
-            {
-                var checkbox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//input[@id='繳費']")));
-
-                return checkbox.GetAttribute("checked") != null;
-            });
+            var checkStiPay = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='繳費']")));
+            That(checkStiPay.GetAttribute("checked"), Is.Not.Null);
         }
     }
 }
