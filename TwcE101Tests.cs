@@ -171,9 +171,6 @@ namespace DomainStorm.Project.TWC.Tests
             {
                 var phoneElement = driver.FindElement(By.XPath("//span[@id='電子帳單聯絡電話']/input"));
                 return phoneElement != null;
-                //var phoneElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='電子帳單聯絡電話']/input")));
-
-                //return phoneElement.GetAttribute("value") == "02-12345678";
             });
 
             var phoneElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='電子帳單聯絡電話']/input")));

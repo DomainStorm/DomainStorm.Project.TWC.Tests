@@ -158,6 +158,14 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcDA001_10()
         {
             await TestHelper.Login(_driver, "live", TestHelper.Password!);
+
+            _wait.Until(driver =>
+            {
+
+                var iframeElement = driver.FindElement(By.XPath("//iframe"));
+                return iframeElement != null;
+            });
+
             var iframeElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(iframeElement);
 
@@ -176,6 +184,14 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcDA001_11()
         {
             await TestHelper.Login(_driver, "alarmsue", TestHelper.Password!);
+
+            _wait.Until(driver =>
+            {
+
+                var iframeElement = driver.FindElement(By.XPath("//iframe"));
+                return iframeElement != null;
+            });
+
             var iframeElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(iframeElement);
 
@@ -188,6 +204,14 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcDA001_12()
         {
             await TestHelper.Login(_driver, "eugene313", TestHelper.Password!);
+
+            _wait.Until(driver =>
+            {
+
+                var iframeElement = driver.FindElement(By.XPath("//iframe"));
+                return iframeElement != null;
+            });
+
             var iframeElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(iframeElement);
 
