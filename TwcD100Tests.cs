@@ -102,6 +102,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
+            await Task.Delay(500);
 
             var idElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@id='身分證號碼']")));
             That(idElement.Text, Is.EqualTo("A123456789"));
@@ -109,19 +110,22 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcD100_05()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
-            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            var stiNoteInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-note] > input")));
+            var stiNoteInput = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]/input")));
             stiNoteInput.SendKeys("備註內容" + Keys.Tab);
-            await Task.Delay(1000);
 
-            stiNoteInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-note] > input")));
-            stiNoteInput.SendKeys(Keys.Tab);
+            _wait.Until(driver =>
+            {
+                var stiNote = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-note]/input")));
+
+                return stiNote.GetAttribute("value") == "備註內容";
+            });
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
-            var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-note]")));
+
+            var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[text()='備註內容']")));
             That(stiNote.Text, Is.EqualTo("備註內容"));
         }
         public async Task TwcD100_06()
@@ -289,7 +293,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcD100_15()
         {
-            var stiNote = TestHelper.FindAndMoveElement(_driver, "//span[text()='備註內容']");
+            var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[text()='備註內容']")));
             That(stiNote.Text, Is.EqualTo("備註內容"));
         }
         public async Task TwcD100_16()

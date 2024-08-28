@@ -100,7 +100,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            var idElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@id='身分證號碼']")));
+            var idElement = TestHelper.FindAndMoveElement(_driver, "//span[@id='身分證號碼']");
             That(idElement.Text, Is.EqualTo("A123456789"));
         }
         public async Task TwcC100_05()
