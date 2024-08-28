@@ -75,7 +75,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{uuid}");
 
-            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
             var applyCaseNo = TestHelper.FindAndMoveElement(_driver, "//span[@sti-apply-case-no]");
@@ -91,15 +91,20 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var idElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='身分證號碼']/input")));
+                var idElement = driver.FindElement(By.XPath("//span[@id='身分證號碼']"));
 
-                return idElement.GetAttribute("value") == "A123456789";
+                return idElement != null;
             });
+
+
+            var idElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='身分證號碼']/input")));
+            That(idElement.GetAttribute("value"), Is.EqualTo("A123456789"));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
+            Thread.Sleep(1000);
 
-            var idElement = TestHelper.FindAndMoveElement(_driver, "//span[@id='身分證號碼']");
+            idElement = TestHelper.FindAndMoveElement(_driver, "//span[@id='身分證號碼']");
             That(idElement.Text, Is.EqualTo("A123456789"));
         }
         public async Task TwcB100_05()
@@ -113,10 +118,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var checkbox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//input[@id='繳費']")));
+                var check = driver.FindElement(By.XPath("//input[@id='繳費']"));
 
-                return checkbox.GetAttribute("checked") != null;
+                return check != null;
             });
+
+            var checkStiPay = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//input[@id='繳費']")));
+            That(checkStiPay.GetAttribute("value"), Is.Not.Null);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);

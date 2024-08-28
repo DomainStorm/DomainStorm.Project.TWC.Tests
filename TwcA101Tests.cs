@@ -40,16 +40,19 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcA101_01();
             await TwcA101_02();
         }
+
         public async Task TwcA101_01()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
+
         public async Task TwcA101_02()
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json"));
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
+
         [Test]
         [Order(1)]
         public async Task TwcA101_03To04()
@@ -57,33 +60,49 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcA101_03();
             await TwcA101_04();
         }
+
         public async Task TwcA101_03()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
-            _actions.MoveToElement(href).Click().Perform();
-
-            var abandonButton = TestHelper.FindAndMoveElement(_driver, "//button[text()='捨棄草稿']");
-            _actions.MoveToElement(abandonButton).Click().Perform();
-
-            var submitButton = TestHelper.FindAndMoveElement(_driver, "//button[text()='刪除']");
-            _actions.MoveToElement(submitButton).Click().Perform();
-
-            That(submitButton.Text, Is.EqualTo("刪除"));
-        }
-        public async Task TwcA101_04()
-        {
-            _wait.Until(driver =>
+            _wait.Until(_ =>
             {
-                var waitElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h6[text()='草稿區']")));
-                return waitElement != null;
+                var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+                return stormVerticalNavigation != null;
             });
 
-            var pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo");
-            That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var href = stormTreeView.GetShadowRoot().FindElement(By.CssSelector("storm-tree-node:nth-of-type(5) span"));
+            _actions.MoveToElement(href).Click().Perform();
+
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card#finished")));
+
+            var discardButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '捨棄草稿')]")));
+            _actions.MoveToElement(discardButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h2[text()='是否刪除？']")));
+
+            var deleteButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '刪除')]")));
+            That(deleteButton.Text, Is.EqualTo("刪除"));
+        }
+
+        public async Task TwcA101_04()
+        {
+            var deleteButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '刪除')]")));
+            _actions.MoveToElement(deleteButton).Click().Perform();
+
+            _wait.Until(_ =>
+            {
+                var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                return stormTable != null;
+            });
+
+            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+            var result = stormTable.GetShadowRoot().FindElement(By.CssSelector("p"));
+            That(result.Text, Is.EqualTo("沒有找到符合的結果"));
         }
 
         [Test]
@@ -123,50 +142,86 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var href = TestHelper.FindNavigationBySpan(_driver, "夾帶附件");
+            _wait.Until(_ =>
+            {
+                var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+                return stormVerticalNavigation != null;
+            });
+
+            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+            var href = stormTreeView
+                .GetShadowRoot()
+                .FindElement(By.CssSelector("storm-tree-node:nth-of-type(4) > .list-group > storm-tree-node:nth-of-type(2) span"));
             _actions.MoveToElement(href).Click().Perform();
+
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card#file")));
         }
         public async Task TwcA101_08()
         {
-            var addAttachment = TestHelper.FindAndMoveElement(_driver, "//button[text()='新增文件']");
-            _actions.MoveToElement(addAttachment).Click().Perform();
+            var addFileButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '新增文件')]")));
+            _actions.MoveToElement(addFileButton).Click().Perform();
+
+            _wait.Until(_ =>
+            {
+                var stormcard = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增檔案']")));
+                return stormcard != null;
+            });
+
+            var stormcard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案']")));
+            var headline = stormcard.GetShadowRoot().FindElement(By.CssSelector("h5"));
 
             var fileOne = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, fileOne, "input.dz-hidden-input:nth-of-type(3)");
 
             _wait.Until(driver =>
             {
-                var attachmentName = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-input-group[@label='名稱']//input")));
-                return attachmentName!.GetAttribute("value") == "twcweb_01_1_夾帶附件1.pdf";
+                var input = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-input-group[label='名稱'] input")));
+                return input != null;
             });
+
+            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
+            That(fileName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
         public async Task TwcA101_09()
         {
-            var upload = TestHelper.FindAndMoveElement(_driver, "//button[text()='上傳']");
+            var upload = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '上傳')]")));
             _actions.MoveToElement(upload).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[text()='上傳']")));
-            That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[contains(text(), '上傳')]")));
+
+            _wait.Until(_ =>
+            {
+                var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                return stormEditTable != null;
+            });
+
+            var stormEditTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-edit-table")));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            var fileName = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-cell span"));
+            That(fileName.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+
+            //That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
         public async Task TwcA101_10()
         {
-            var checkBox = TestHelper.FindAndMoveElement(_driver, "//input[@id='用印或代送件只需夾帶附件']");
+            var checkBox = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#用印或代送件只需夾帶附件")));
             _actions.MoveToElement(checkBox).Click().Perform();
 
             That(checkBox.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcA101_11()
         {
-            var submitButton = TestHelper.FindAndMoveElement(_driver, "//button[text()='確認受理']");
+            var submitButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確認受理')]")));
             _actions.MoveToElement(submitButton).Click().Perform();
 
-            var hintTitle = TestHelper.FindAndMoveElement(_driver, "//h5[text()='【受理】未核章']");
-            That(hintTitle.Text, Is.EqualTo("【受理】未核章"));
+            var hint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '【受理】未核章')]")));
+            That(hint.Text, Is.EqualTo("【受理】未核章"));
 
-            var confirmButton = TestHelper.FindAndMoveElement(_driver, "//button[text()='確定']");
-            _actions.MoveToElement(confirmButton).Click().Perform();
+            var closeButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確定')]")));
+            _actions.MoveToElement(closeButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[text()='確定']")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[contains(text(), '確定')]")));
         }
         public async Task TwcA101_12()
         {
@@ -178,7 +233,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var signElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-post-user-full-name='']")));
+                var signElement = driver.FindElement(By.XPath("//span[@sti-post-user-full-name='']"));
 
                 return signElement != null;
             });
@@ -198,6 +253,13 @@ namespace DomainStorm.Project.TWC.Tests
             var targetUrl = $"{TestHelper.BaseUrl}/unfinished";
             _wait.Until(ExpectedConditions.UrlContains(targetUrl));
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
+
+            _wait.Until(driver =>
+            {
+                var iframeElement = driver.FindElement(By.XPath("//iframe"));
+
+                return iframeElement != null;
+            });
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);

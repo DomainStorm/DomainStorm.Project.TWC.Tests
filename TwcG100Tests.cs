@@ -33,10 +33,26 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(0)]
-        public async Task TwcG100_01To24()
+        public async Task TwcG100_01To02()
         {
             await TwcG100_01();
             await TwcG100_02();
+        }
+        public async Task TwcG100_01()
+        {
+            TestHelper.AccessToken = await TestHelper.GetAccessToken();
+            That(TestHelper.AccessToken, Is.Not.Empty);
+        }
+        public async Task TwcG100_02()
+        {
+            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmMilitaryApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-G100_bmMilitaryApply.json"));
+            That(statusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        [Order(1)]
+        public async Task TwcG100_03To24()
+        {
             await TwcG100_03();
             await TwcG100_04();
             await TwcG100_05();
@@ -60,16 +76,6 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcG100_23();
             await TwcG100_24();
         }
-        public async Task TwcG100_01()
-        {
-            TestHelper.AccessToken = await TestHelper.GetAccessToken();
-            That(TestHelper.AccessToken, Is.Not.Empty);
-        }
-        public async Task TwcG100_02()
-        {
-            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmMilitaryApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-G100_bmMilitaryApply.json"));
-            That(statusCode, Is.EqualTo(HttpStatusCode.OK));
-        }
         public async Task TwcG100_03()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
@@ -77,7 +83,6 @@ namespace DomainStorm.Project.TWC.Tests
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
             var uuid = TestHelper.GetLastSegmentFromUrl(_driver);
-
             ((IJavaScriptExecutor)_driver).ExecuteScript("window.open();");
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{uuid}");
@@ -85,71 +90,73 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-apply-case-no]")));
+            var applyCaseNo = TestHelper.FindAndMoveElement(_driver, "//span[@sti-apply-case-no]");
             That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
         public async Task TwcG100_04()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
-            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
-            var idNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-trustee-id-no] > input")));
+            var idNoInput = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-trustee-id-no]/input")));
             idNoInput.SendKeys("A123456789" + Keys.Tab);
-            await Task.Delay(1000);
 
-            idNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-trustee-id-no] > input")));
-            idNoInput.SendKeys(Keys.Tab);
+            _wait.Until(driver =>
+            {
+                var idElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='身分證號碼']/input")));
+
+                return idElement.GetAttribute("value") == "A123456789";
+            });
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            var idNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-trustee-id-no]")));
-            That(idNo.Text, Is.EqualTo("A123456789"));
+            var idElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='身分證號碼']")));
+            That(idElement.Text, Is.EqualTo("A123456789"));
         }
         public async Task TwcG100_05()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            var stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='申請電子帳單勾選']")));
+            var stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='申請電子帳單勾選']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiApplyEmail);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiApplyEmail);
-            await Task.Delay(1000);
+
+            _wait.Until(driver =>
+            {
+                var checkbox = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//input[@id='申請電子帳單勾選']")));
+
+                return checkbox.GetAttribute("checked") != null;
+            });
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("input[id='申請電子帳單勾選']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiApplyEmail);
-
-            That(stiApplyEmail.GetAttribute("checked"), Is.EqualTo("true"));
+            var checkElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//input[@id='申請電子帳單勾選']")));
+            That(checkElement.GetAttribute("checked"), Is.Not.Null);
         }
         public async Task TwcG100_06()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            var stiIdentificationChoose = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("input[value='撫卹令或撫卹金分領證書']")));
+            var stiIdentificationChoose = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@value='撫卹令或撫卹金分領證書']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiIdentificationChoose);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiIdentificationChoose);
 
-            var stiIdentificationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[id='檢附證件'] > input")));
+            var stiIdentificationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='檢附證件']/input")));
             stiIdentificationInput.SendKeys("BBB" + Keys.Tab);
-            await Task.Delay(1000);
-
-            stiIdentificationInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[id='檢附證件'] > input")));
-            stiIdentificationInput.SendKeys(Keys.Tab);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            var stiIdentification = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[id='檢附證件']")));
+            var stiIdentification = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='檢附證件']")));
             That(stiIdentification.Text, Is.EqualTo("BBB"));
         }
         public async Task TwcG100_07()
         {
-            var stiOverApply = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-over-apply]")));
+            var stiOverApply = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//[@sti-over-apply]")));
             That(stiOverApply.Text, Is.EqualTo("否"));
         }
         public async Task TwcG100_08()
