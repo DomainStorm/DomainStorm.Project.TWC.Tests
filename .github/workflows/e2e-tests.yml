@@ -100,3 +100,4 @@ jobs:
           # dotnet test --filter FullyQualifiedName~Tests --no-build --verbosity normal 
           # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcA100Tests --no-build --verbosity normal
           dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcA101Tests --no-build --verbosity normal
+          dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcB101Tests --no-build --verbosity normal
