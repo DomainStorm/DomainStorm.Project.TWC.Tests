@@ -11,7 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "方案項目", "方案項�
 		.github\workflows\e2e-tests-TwcB101.yml = .github\workflows\e2e-tests-TwcB101.yml
 		.github\workflows\e2e-tests-TwcC101.yml = .github\workflows\e2e-tests-TwcC101.yml
 		.github\workflows\e2e-tests-TwcD101.yml = .github\workflows\e2e-tests-TwcD101.yml
-		.github\workflows\e2e-tests.yml = .github\workflows\e2e-tests.yml
+		.github\workflows\e2e-tests-TwcDA001.yml = .github\workflows\e2e-tests-TwcDA001.yml
+		.github\workflows\e2e-tests-TwcE101.yml = .github\workflows\e2e-tests-TwcE101.yml
+		.github\workflows\e2e-tests-TwcE201.yml = .github\workflows\e2e-tests-TwcE201.yml
 	EndProjectSection
 EndProject
 Global

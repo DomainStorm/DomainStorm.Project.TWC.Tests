@@ -152,6 +152,8 @@ namespace DomainStorm.Project.TWC.Tests
             var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[contains(text(), '確認受理')]")));
             _actions.MoveToElement(submitButton).Click().Perform();
 
+            //死一次
+
             _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/unfinished"));
 
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
