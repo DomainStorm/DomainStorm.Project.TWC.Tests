@@ -113,6 +113,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var hint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '【夾帶附件】或【掃描拍照】未上傳')]")));
             That(hint.Text, Is.EqualTo("【夾帶附件】或【掃描拍照】未上傳"));
+            Thread.Sleep(1000);
 
             var closeButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確定')]")));
             _actions.MoveToElement(closeButton).Click().Perform();

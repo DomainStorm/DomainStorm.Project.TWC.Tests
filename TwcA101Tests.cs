@@ -228,6 +228,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var hint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '【受理】未核章')]")));
             That(hint.Text, Is.EqualTo("【受理】未核章"));
+            Thread.Sleep(1000);
 
             var closeButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確定')]")));
             _actions.MoveToElement(closeButton).Click().Perform();
