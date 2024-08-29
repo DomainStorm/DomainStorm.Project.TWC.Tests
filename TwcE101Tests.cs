@@ -219,6 +219,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/unfinished"));
 
+            //function url 後 基礎元素出來 
+
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
             _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
