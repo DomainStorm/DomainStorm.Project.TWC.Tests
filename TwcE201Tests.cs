@@ -86,6 +86,13 @@ namespace DomainStorm.Project.TWC.Tests
                 return stormTable != null;
             });
 
+            _wait.Until(driver =>
+            {
+                var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                return rows.Count == 2;
+            });
+
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
             var firstWaterNo = stormTable.GetShadowRoot().FindElement(By.CssSelector("tr:nth-of-type(1) td[data-field='waterNo'] span"));
             That(firstWaterNo.Text, Is.EqualTo("41101220338"));
