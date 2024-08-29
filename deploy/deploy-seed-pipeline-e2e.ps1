@@ -7,15 +7,12 @@ Import-Module -Name ./power-shell/modules/Add-RoleToPost -Force
 Import-Module -Name ./power-shell/modules/Add-Function -Force
 Import-Module -Name ./power-shell/modules/Add-RoleToFunction -Force
 Import-Module -Name ./power-shell/modules/Add-Template -Force
-
-./deploy-seed-kong.ps1
-
-./deploy-template.ps1
-
 Import-Module -Name ./power-shell/modules/Import-Department -Force
 Import-Module -Name ./power-shell/modules/Import-User -Force
 Import-Module -Name ./power-shell/modules/Import-Post -Force
 Import-Module -Name ./power-shell/modules/Import-PostRole -Force
+
+./deploy-seed-kong.ps1
 
 $location = Get-Location
 
@@ -34,3 +31,5 @@ Write-Host "----- Import-Post process end -----" -ForegroundColor Blue
 Write-Host "----- Import-PostRole process start -----" -ForegroundColor Blue
 Import-PostRole -FileFullPath $location/import/postrole_dev.csv
 Write-Host "----- Import-PostRole process end -----" -ForegroundColor Blue
+
+./deploy-template.ps1
