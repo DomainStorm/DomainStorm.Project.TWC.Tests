@@ -211,8 +211,6 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             var fileName = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-cell span"));
             That(fileName.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
-
-            //That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
         public async Task TwcA101_10()
         {
@@ -246,7 +244,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var spanElement = _driver.FindElement(By.CssSelector("span[sti-post-user-full-name='']"));
+                var spanElement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-post-user-full-name='']")));
 
                 return spanElement != null;
             });
@@ -265,12 +263,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var iframeElement = _wait.Until(driver =>
-            {
-                return driver.FindElement(By.CssSelector("iframe"));
-            });
-
-            _driver.SwitchTo().Frame(iframeElement);
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
 
             var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
             That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
@@ -278,20 +272,20 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcA101_14()
         {
             _driver.SwitchTo().DefaultContent();
-
-            var waterServiceAgreement = _driver.FindElement(By.CssSelector("#消費性用水服務契約"));
+            
+            var waterServiceAgreement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#消費性用水服務契約")));
             _actions.MoveToElement(waterServiceAgreement).Perform();
             That(waterServiceAgreement.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var dataProtectionNotice = _driver.FindElement(By.CssSelector("#公司個人資料保護告知事項"));
+            var dataProtectionNotice = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#公司個人資料保護告知事項")));
             _actions.MoveToElement(dataProtectionNotice).Perform();
             That(dataProtectionNotice.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var companyRegulation = _driver.FindElement(By.CssSelector("#公司營業章程"));
+            var companyRegulation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#公司營業章程")));
             _actions.MoveToElement(companyRegulation).Perform();
             That(companyRegulation.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var fileName = _driver.FindElement(By.CssSelector("a[download='twcweb_01_1_夾帶附件1.pdf']"));
+            var fileName = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("a[download='twcweb_01_1_夾帶附件1.pdf']")));
             _actions.MoveToElement(fileName).Perform();
             That(fileName.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }

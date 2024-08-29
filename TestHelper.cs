@@ -340,40 +340,34 @@ public class TestHelper
 
     public static bool DownloadFileAndVerify(IWebDriver webDriver, string fileName, string xpath)
     {
-        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
-        Actions _actions = new Actions(webDriver);
-        var _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
+        var actions = new Actions(webDriver);
+        var downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+        var filePath = Path.Combine(downloadDirectory, fileName);
 
-        if (!Directory.Exists(_downloadDirectory))
-        {
-            Directory.CreateDirectory(_downloadDirectory);
-        }
-
-        var filePath = Path.Combine(_downloadDirectory, fileName);
+        Directory.CreateDirectory(downloadDirectory);
 
         if (File.Exists(filePath))
         {
             File.Delete(filePath);
         }
 
-        var downloadButton = FindAndMoveElement(webDriver, xpath);
-        downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath(xpath)));
-        _actions.MoveToElement(downloadButton).Click().Perform();
+        var downloadButton = wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
+        actions.MoveToElement(downloadButton).Click().Perform();
 
-        Console.WriteLine($"-----檢查檔案完整路徑|: {filePath}-----");
-
-        _wait.Until(webDriver =>
+        wait.Until(driver =>
         {
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-            foreach (var fn in Directory.GetFiles(_downloadDirectory))
+            foreach (var file in Directory.GetFiles(downloadDirectory))
             {
-                Console.WriteLine($"-----filename: {fn}-----");
+                Console.WriteLine($"-----filename: {file}-----");
             }
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
             return File.Exists(filePath);
         });
+
         return File.Exists(filePath);
     }
+
 
     public static void CleanDb()
     {

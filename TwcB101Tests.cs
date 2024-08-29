@@ -211,12 +211,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var iframeElement = _wait.Until(driver =>
-            {
-                return driver.FindElement(By.CssSelector("iframe"));
-            });
-
-            _driver.SwitchTo().Frame(iframeElement);
+            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _driver.SwitchTo().Frame(0);
 
             var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
             That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
@@ -225,21 +221,21 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var waterServiceAgreement = _driver.FindElement(By.CssSelector("#消費性用水服務契約"));
+            var waterServiceAgreement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#消費性用水服務契約")));
             _actions.MoveToElement(waterServiceAgreement).Perform();
             That(waterServiceAgreement.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var dataProtectionNotice = _driver.FindElement(By.CssSelector("#公司個人資料保護告知事項"));
+            var dataProtectionNotice = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#公司個人資料保護告知事項")));
             _actions.MoveToElement(dataProtectionNotice).Perform();
             That(dataProtectionNotice.GetAttribute("checked"), Is.EqualTo("true"));
 
-            var companyRegulation = _driver.FindElement(By.CssSelector("#公司營業章程"));
+            var companyRegulation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#公司營業章程")));
             _actions.MoveToElement(companyRegulation).Perform();
             That(companyRegulation.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcB101_10()
         {
-            var fileName = _driver.FindElement(By.CssSelector("a[download='twcweb_01_1_夾帶附件2.pdf']"));
+            var fileName = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("a[download='twcweb_01_1_夾帶附件2.pdf']")));
             _actions.MoveToElement(fileName).Perform();
             That(fileName.Text, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
         }
