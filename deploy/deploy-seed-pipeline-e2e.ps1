@@ -13,6 +13,7 @@ Import-Module -Name ./power-shell/modules/Import-Post -Force
 Import-Module -Name ./power-shell/modules/Import-PostRole -Force
 
 ./deploy-seed-kong.ps1
+./deploy-template.ps1
 
 $location = Get-Location
 
@@ -32,4 +33,3 @@ Write-Host "----- Import-PostRole process start -----" -ForegroundColor Blue
 Import-PostRole -FileFullPath $location/import/postrole_dev.csv
 Write-Host "----- Import-PostRole process end -----" -ForegroundColor Blue
 
-./deploy-template.ps1
