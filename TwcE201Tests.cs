@@ -3,6 +3,7 @@ using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Net;
+using System.Reflection;
 using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
@@ -20,27 +21,35 @@ namespace DomainStorm.Project.TWC.Tests
         [SetUp]
         public void Setup()
         {
-            _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            _actions = new Actions(_driver);
+            var testMethod = TestContext.CurrentContext.Test.MethodName;
+            var methodInfo = typeof(TwcE201Tests).GetMethod(testMethod);
+            var noBrowser = methodInfo?.GetCustomAttribute<NoBrowserAttribute>() != null;
+
+            if (!noBrowser)
+            {
+                _driver = TestHelper.GetNewChromeDriver();
+                _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+                _actions = new Actions(_driver);
+            }
         }
 
         [TearDown]
         public void TearDown()
         {
-            _driver.Quit();
+            if (_driver != null)
+            {
+                _driver.Quit();
+            }
         }
 
         [Test]
         [Order(0)]
-        public async Task TwcE201_01To06()
+        [NoBrowser]
+        public async Task TwcE201_01To03()
         {
             await TwcE201_01();
             await TwcE201_02();
             await TwcE201_03();
-            await TwcE201_04();
-            await TwcE201_05();
-            await TwcE201_06();
         }
         public async Task TwcE201_01()
         {
@@ -56,6 +65,15 @@ namespace DomainStorm.Project.TWC.Tests
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirmbground", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-E201_bmTransferApply_bground2.json"));
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        [Order(1)]
+        public async Task TwcE201_04To06()
+        {
+            await TwcE201_04();
+            await TwcE201_05();
+            await TwcE201_06();
         }
         public async Task TwcE201_04()
         {
