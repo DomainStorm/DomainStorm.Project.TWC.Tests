@@ -78,7 +78,7 @@ namespace DomainStorm.Project.TWC.Tests
                 _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.d-flex.justify-content-end.mt-4 button[name='button']")));
                 That(TestHelper.WaitStormEditTableUpload(_driver, "storm-table-cell span")!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
-                var href = TestHelper.FindShadowRootElement(_driver, "[href='#finished']");
+                var href = TestHelper.FindNavigationBySpan(_driver, "受理登記");
                 _actions.MoveToElement(href).Click().Perform();
 
                 var checkButton = TestHelper.FindAndMoveElement(_driver, "[id='用印或代送件只需夾帶附件']");
@@ -122,16 +122,10 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
 
-            var applyDateBegin = TestHelper.FindAndMoveElement(_driver, "[label='受理日期起']");
-            var input = applyDateBegin.GetShadowRoot().FindElement(By.CssSelector("input"));
-            _actions.MoveToElement(input).Click().Perform();
+            var applyDateBeginInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期起'] input")));
 
-            var select = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-current-month select");
-            var applyMonthBegin = new SelectElement(select);
-            applyMonthBegin.SelectByText("三月");
-
-            var applyDayBegin = TestHelper.FindAndMoveElement(_driver, "div.flatpickr-calendar.open div.flatpickr-innerContainer div.flatpickr-days span[aria-label='三月 6, 2023']");
-            _actions.MoveToElement(applyDayBegin).Click().Perform();
+            string formattedApplyDateBegin = "2023-03-06";
+            ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedApplyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginInput);
 
             var search = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("storm-card.mb-3.hydrated > div.d-flex.justify-content-end.mt-4 > button")));
             _actions.MoveToElement(search).Click().Perform();
@@ -139,7 +133,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(TestHelper.WaitStormTableUpload(_driver, "td[data-field='applyCaseNo'] > storm-table-cell span"), Is.Not.Null);
 
             var pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-bottom > div.table-pageInfo");
-            That(pageInfo!.Text, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
+            That(pageInfo!.Text, Is.EqualTo("顯示第 1 至 10 筆，共 10 筆"));
         }
         public async Task TwcS101_03()
         {

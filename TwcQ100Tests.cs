@@ -80,16 +80,13 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcQ100_03()
         {
-            var nameStormInputGroup = TestHelper.FindAndMoveElement(_driver, "storm-input-group[label='問卷名稱']");
-            var nameInput = nameStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var nameInput = TestHelper.FindAndMoveElement(_driver, "storm-input-group[label='問卷名稱'] input");
             nameInput.SendKeys("這是問卷名稱");
 
-            var descriptionStormInputGroup = TestHelper.FindAndMoveElement(_driver, "storm-input-group[label='問卷頁首說明']");
-            var descriptionInput = descriptionStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var descriptionInput = TestHelper.FindAndMoveElement(_driver, "storm-input-group[label='問卷頁首說明'] input");
             descriptionInput.SendKeys("這是問卷頁首說明");
 
-            var textStormInputGroup = TestHelper.FindAndMoveElement(_driver, "storm-input-group[label='問卷結尾文字']");
-            var textInput = textStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var textInput = TestHelper.FindAndMoveElement(_driver, "storm-input-group[label='問卷結尾文字'] input");
             textInput.SendKeys("這是問卷結尾文字");
 
             var nextPageButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("form > div:nth-child(1) > div > div.button-row > button")));
@@ -111,8 +108,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcQ100_05()
         {
-            var contentStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目']")));
-            var contentInput = contentStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var contentInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目'] input")));
             contentInput.SendKeys("整體而言，我對本次活動非常滿意");
 
             var optionSelect = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-select[label='選項數量'] >div.choices")));
@@ -121,20 +117,16 @@ namespace DomainStorm.Project.TWC.Tests
             var optionValue = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[data-value='5']")));
             _actions.MoveToElement(optionValue).Click().Perform();
 
-            var optionOneStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1']")));
-            var optionOneInput = optionOneStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionOneInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1'] input")));
             optionOneInput.SendKeys("非常同意");
 
-            var optionTwoStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2']")));
-            var optionTwoInput = optionTwoStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionTwoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2'] input")));
             optionTwoInput.SendKeys("同意");
 
-            var optionThreeStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3']")));
-            var optionThreeInput = optionThreeStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionThreeInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3'] input")));
             optionThreeInput.SendKeys("普通");
 
-            var optionFourStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 4']")));
-            var optionFourInput = optionFourStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionFourInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 4'] input")));
             optionFourInput.SendKeys("不同意");
 
             var addButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.float-end > button")));
@@ -145,8 +137,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcQ100_06()
         {
-            var optionFiveStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 5']")));
-            var optionFiveInput = optionFiveStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionFiveInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 5'] input")));
             optionFiveInput.SendKeys("非常不同意");
 
             var addButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.float-end > button")));
@@ -175,8 +166,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcQ100_08()
         {
-            var contentStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目']")));
-            var contentInput = contentStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var contentInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目'] input")));
             contentInput.SendKeys("本次活動內容對我有幫助");
 
             var optionSelect = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-select[label='選項數量'] >div.choices")));
@@ -185,24 +175,19 @@ namespace DomainStorm.Project.TWC.Tests
             var optionValue = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[data-value='5']")));
             _actions.MoveToElement(optionValue).Click().Perform();
 
-            var optionOneStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1']")));
-            var optionOneInput = optionOneStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionOneInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1'] input")));
             optionOneInput.SendKeys("非常同意");
 
-            var optionTwoStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2']")));
-            var optionTwoInput = optionTwoStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionTwoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2'] input")));
             optionTwoInput.SendKeys("同意");
 
-            var optionThreeStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3']")));
-            var optionThreeInput = optionThreeStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionThreeInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3'] input")));
             optionThreeInput.SendKeys("普通");
 
-            var optionFourStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 4']")));
-            var optionFourInput = optionFourStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionFourInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 4'] input")));
             optionFourInput.SendKeys("不同意");
 
-            var optionFiveStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 5']")));
-            var optionFiveInput = optionFiveStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionFiveInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 5'] input")));
             optionFiveInput.SendKeys("非常不同意");
 
             var addButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.float-end > button")));
@@ -231,8 +216,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcQ100_10()
         {
-            var contentStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目']")));
-            var contentInput = contentStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var contentInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目'] input")));
             contentInput.SendKeys("本次活動讓我收穫豐富");
 
             var optionSelect = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-select[label='選項數量'] >div.choices")));
@@ -241,24 +225,19 @@ namespace DomainStorm.Project.TWC.Tests
             var optionValue = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div[data-value='5']")));
             _actions.MoveToElement(optionValue).Click().Perform();
 
-            var optionOneStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1']")));
-            var optionOneInput = optionOneStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionOneInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1'] input")));
             optionOneInput.SendKeys("非常同意");
 
-            var optionTwoStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2']")));
-            var optionTwoInput = optionTwoStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionTwoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2'] input")));
             optionTwoInput.SendKeys("同意");
 
-            var optionThreeStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3']")));
-            var optionThreeInput = optionThreeStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionThreeInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3'] input")));
             optionThreeInput.SendKeys("普通");
 
-            var optionFourStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 4']")));
-            var optionFourInput = optionFourStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionFourInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 4'] input")));
             optionFourInput.SendKeys("不同意");
 
-            var optionFiveStormInputGroup = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 5']")));
-            var optionFiveInput = optionFiveStormInputGroup.GetShadowRoot().FindElement(By.CssSelector("input"));
+            var optionFiveInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 5'] input")));
             optionFiveInput.SendKeys("非常不同意");
 
             var addButton = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("div.float-end > button")));
@@ -326,7 +305,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcQ100_15()
         {
-            var takeDownButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-button:nth-child(2)");
+            var takeDownButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-toolbar-item:nth-of-type(2)");
             _actions.MoveToElement(takeDownButton).Click().Perform();
 
             var checkButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack button")));
@@ -339,23 +318,18 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack button:nth-child(2)")));
 
-            //var checkButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-dialog-content button")));
-            //_actions.MoveToElement(checkButton).Click().Perform();
-
-            //_wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-dialog-content > div > button")));
-
             var planDisableDate = TestHelper.WaitStormTableUpload(_driver, "td[data-field='planDisableDate'] span");
             That(planDisableDate!.Text, Is.EqualTo("-"));
         }
         public async Task TwcQ100_17()
         {
-            var takeDownButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-button:nth-child(2)");
+            var takeDownButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field='__action_6'] storm-toolbar-item:nth-child(2)");
             _actions.MoveToElement(takeDownButton).Click().Perform();
 
             DateTime currentDateTime = DateTime.Now;
 
             var expiryDate = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='下架日期']")));
-            var expiryDateInput = expiryDate.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var expiryDateInput = expiryDate.GetShadowRoot().FindElement(By.CssSelector("div "));
 
             string formattedExpiryDate = currentDateTime.ToString("yyyy-MM-dd");
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedExpiryDate}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", expiryDateInput);

@@ -1,9 +1,12 @@
-name: E2E Tests
+name: E2E Tests TwcD101
 
 on:
   push:
     branches:
       - 'master'
+  pull_request:
+    branches:
+      - '**'
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
@@ -35,10 +38,8 @@ jobs:
             echo "SignalR_EndPoint=http://${{ env.IP_ADDRESS }}:8000/hubUrl" >> $GITHUB_ENV
             ping -c 5 ${{ env.IP_ADDRESS }}
 
-      - name: Run Docker Compose and Seed
-        run: | 
-            pwsh -File deploy/deploy-e2e.ps1
-            pwsh -File deploy/deploy-seed-pipeline-e2e.ps1    
+      - name: Run Docker Compose
+        run: pwsh -File deploy/deploy-e2e.ps1 
                 
       #- name: Display Container Env
       #  run: docker exec resourceapi printenv
@@ -75,6 +76,9 @@ jobs:
       #  run: | 
       #    docker logs twcweb
 
+      - name: Run Seed
+        run: pwsh -File deploy/deploy-seed-pipeline-e2e.ps1
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
@@ -93,13 +97,4 @@ jobs:
       #  run: | 
       #    curl -L -i http://127.0.0.1:8000/jwtauthapi/swagger/index.html       
       - name: Test
-        run: |
-          # dotnet test --filter FullyQualifiedName~Tests --no-build --verbosity normal 
-          # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcA100Tests --no-build --verbosity normal
-          # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcA101Tests --no-build --verbosity normal
-          # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcB101Tests --no-build --verbosity normal
-          # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcC101Tests --no-build --verbosity normal
-          # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcD101Tests --no-build --verbosity normal
-          # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcDA001Tests --no-build --verbosity normal
-          # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcE101Tests --no-build --verbosity normal
-          # dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcE201Tests --no-build --verbosity normal
+        run: dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcD101Tests --no-build --verbosity normal

@@ -10,6 +10,8 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
+using Newtonsoft.Json.Linq;
+using static NUnit.Framework.Assert;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
 namespace DomainStorm.Project.TWC.Tests;
@@ -27,8 +29,11 @@ public class TestHelper
         option.AddArgument("--disable-web-security");
         option.AddArgument("--ignore-certificate-errors");
 
-        if (GetChromeConfig().Headless)
+        if (GetChromeConfig().Headless) 
+        {
             option.AddArgument("--headless");
+            option.AddArgument("--start-maximized");
+        }
 
         var downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         option.AddUserProfilePreference("download.default_directory", downloadDirectory);
@@ -212,7 +217,7 @@ public class TestHelper
 
         return Task.CompletedTask;
     }
-    public static void ChangeUser(IWebDriver webDriver, string userName)
+    public static Task ChangeUser(IWebDriver webDriver, string userName)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
         Actions actions = new Actions(webDriver);
@@ -227,6 +232,8 @@ public class TestHelper
         actions.MoveToElement(submitButton).Click().Perform();
 
         wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
+
+        return Task.CompletedTask;
     }
 
     public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
@@ -244,8 +251,9 @@ public class TestHelper
         });
 
         var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
-        var searchInput = stormTable.GetShadowRoot().FindElement(By.Id("search"));
-        searchInput.SendKeys(applyCaseNo);
+        var stormInputGroup = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-input-group"));
+        var keyInput = stormInputGroup.FindElement(By.CssSelector("input"));
+        keyInput.SendKeys(applyCaseNo);
 
         IWebElement? element = null;
 
@@ -272,6 +280,57 @@ public class TestHelper
 
         return uuid;
     }
+
+    public static void ClickElementInNewWindow(IWebDriver driver, string xpathSelector, int initialWindowIndex, int newWindowIndex)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
+        // 切換到初始窗口並重置iframe上下文
+        driver.SwitchTo().Window(driver.WindowHandles[initialWindowIndex]);
+        driver.SwitchTo().DefaultContent();
+
+        // 查找並等待元素可見
+        var element = FindAndMoveElement(driver, xpathSelector);
+        wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathSelector)));
+
+        // 切換到新窗口
+        driver.SwitchTo().Window(driver.WindowHandles[newWindowIndex]);
+
+        // 查找並點擊元素
+        element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathSelector)));
+        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", element);
+
+        // 切換回初始窗口
+        driver.SwitchTo().Window(driver.WindowHandles[initialWindowIndex]);
+
+        // 驗證元素是否被選中
+        element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathSelector)));
+        That(element.GetAttribute("checked"), Is.EqualTo("true"));
+    }
+
+    public static void ClickElementInWindow(IWebDriver driver, string xpath, int windowIndex)
+    {
+        var _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        var _actions = new Actions(driver);
+
+        driver.SwitchTo().Window(driver.WindowHandles[windowIndex]);
+        driver.SwitchTo().DefaultContent();
+
+        var element = _wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
+        _actions.MoveToElement(element).Click().Perform();
+    }
+    public static void HoverOverElementInWindow(IWebDriver driver, string xpath, int windowIndex)
+    {
+        var _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        var _actions = new Actions(driver);
+
+        driver.SwitchTo().Window(driver.WindowHandles[windowIndex]);
+        driver.SwitchTo().DefaultContent();
+
+        var element = _wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
+        _actions.MoveToElement(element).Perform();
+    }
+
     public static void UploadFile(IWebDriver webDriver, string filePath, string css)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
@@ -279,42 +338,36 @@ public class TestHelper
         lastHiddenInput.SendKeys(filePath);
     }
 
-    public static bool DownloadFileAndVerify(IWebDriver webDriver, string fileName, string css)
+    public static bool DownloadFileAndVerify(IWebDriver webDriver, string fileName, string xpath)
     {
-        WebDriverWait _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
-        Actions _actions = new Actions(webDriver);
-        var _downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
+        var actions = new Actions(webDriver);
+        var downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+        var filePath = Path.Combine(downloadDirectory, fileName);
 
-        if (!Directory.Exists(_downloadDirectory))
-        {
-            Directory.CreateDirectory(_downloadDirectory);
-        }
-
-        var filePath = Path.Combine(_downloadDirectory, fileName);
+        Directory.CreateDirectory(downloadDirectory);
 
         if (File.Exists(filePath))
         {
             File.Delete(filePath);
         }
 
-        var downloadButton = FindAndMoveElement(webDriver, css);
-        downloadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector(css)));
-        _actions.MoveToElement(downloadButton).Click().Perform();
+        var downloadButton = wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
+        actions.MoveToElement(downloadButton).Click().Perform();
 
-        Console.WriteLine($"-----檢查檔案完整路徑|: {filePath}-----");
-
-        _wait.Until(webDriver =>
+        wait.Until(driver =>
         {
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles-----");
-            foreach (var fn in Directory.GetFiles(_downloadDirectory))
+            foreach (var file in Directory.GetFiles(downloadDirectory))
             {
-                Console.WriteLine($"-----filename: {fn}-----");
+                Console.WriteLine($"-----filename: {file}-----");
             }
-            Console.WriteLine($"-----{_downloadDirectory} GetFiles end-----");
+
             return File.Exists(filePath);
         });
+
         return File.Exists(filePath);
     }
+
 
     public static void CleanDb()
     {
@@ -344,7 +397,7 @@ public class TestHelper
         }
     }
 
-public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
+    public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
 
@@ -412,6 +465,45 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
         });
     }
 
+
+    public static IWebElement? FindNavigationBySpan(IWebDriver webDriver, string spanText)
+    {
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        var action = new Actions(webDriver);
+
+        return wait.Until(driver =>
+        {
+            // 定位到 storm-tree-view 的 ShadowRoot
+            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
+            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
+
+            if (stormTreeView != null)
+            {
+                var treeShadowRoot = stormTreeView.GetShadowRoot();
+
+                // 查找所有 storm-tree-node 元素
+                var treeNodes = treeShadowRoot.FindElements(By.CssSelector("storm-tree-node"));
+
+                foreach (var treeNode in treeNodes)
+                {
+                    // 查找每個 storm-tree-node 中的 a 標籤的所有 span 標籤
+                    var spans = treeNode.FindElements(By.CssSelector("a span"));
+
+                    foreach (var span in spans)
+                    {
+                        // 檢查 span 標籤的文本是否包含指定的文本
+                        if (span.Text.Contains(spanText))
+                        {
+                            return span; // 返回第一个匹配的 span 元素
+                        }
+                    }
+                }
+            }
+
+            return null;
+        });
+    }
+
     public static IWebElement? FindShadowRootElement(IWebDriver webDriver, string css)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
@@ -447,14 +539,14 @@ public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css
             return e;
         });
     }
-    public static IWebElement FindAndMoveElement(IWebDriver webDriver, string css)
+    public static IWebElement FindAndMoveElement(IWebDriver webDriver, string xpath)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
         var action = new Actions(webDriver);
-        var element = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
+        var element = wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
 
         action.MoveToElement(element).Perform();
-        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector(css)));
+        wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpath)));
 
         return element;
     }

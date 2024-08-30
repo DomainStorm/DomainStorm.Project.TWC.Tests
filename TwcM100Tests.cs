@@ -32,7 +32,7 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(0)]
-        public async Task TwcM100_01To06()
+        public async Task TwcM100_01To11()
         {
             await TwcM100_01();
             await TwcM100_02();
@@ -54,27 +54,24 @@ namespace DomainStorm.Project.TWC.Tests
             var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
             That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
 
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體庫']")));
+            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體管理']")));
             var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
-            That(stormCardTitle.Text, Is.EqualTo("媒體庫"));
+            That(stormCardTitle.Text, Is.EqualTo("媒體管理"));
         }
         public async Task TwcM100_02()
         {
-            var addTextButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體庫'] button:nth-child(2)");
+            var addTextButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體管理'] button:nth-child(2)");
             _actions.MoveToElement(addTextButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體庫']")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體管理']")));
 
-            var stormInputGroupName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱']")));
-            var stormInputGroupNameInput = stormInputGroupName.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var stormInputGroupNameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
             stormInputGroupNameInput.SendKeys("宣導文字");
 
-            var stormInputGroupDesc = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='說明']")));
-            var stormInputGroupDescInput = stormInputGroupDesc.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var stormInputGroupDescInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='說明'] input")));
             stormInputGroupDescInput.SendKeys("宣導說明文字");
 
-            var stormInputGroupDuration = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='播放秒數']")));
-            var stormInputGroupDurationInput = stormInputGroupDuration.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var stormInputGroupDurationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='播放秒數'] input")));
             stormInputGroupDurationInput.SendKeys("10");
 
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
@@ -88,7 +85,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcM100_03()
         {
-            var viewButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button > storm-tooltip > div > button");
+            var viewButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-toolbar-item > storm-button > button");
             _actions.MoveToElement(viewButton).Click().Perform();
 
             var viewText = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container h6")));
@@ -99,8 +96,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcM100_04()
         {
-            var editButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button:nth-child(2) > storm-tooltip > div > button");
-            _actions.MoveToElement(editButton).Click().Perform();
+            var editButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-toolbar-item:nth-of-type(2) > storm-button > button");
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", editButton);
 
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor >div.ql-container > div.ql-editor")));
             stormTextEditorInput.Clear();
@@ -113,7 +110,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcM100_05()
         {
-            var viewButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button > storm-tooltip > div > button");
+            var viewButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-toolbar-item > storm-button > button");
             _actions.MoveToElement(viewButton).Click().Perform();
 
             var viewText = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > p")));
@@ -124,11 +121,13 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcM100_06()
         {
-            var deleteButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button:nth-child(3) > storm-tooltip > div > button");
-            _actions.MoveToElement(deleteButton).Click().Perform();
+            var deleteButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-toolbar-item:nth-of-type(3) > storm-button > button");
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", deleteButton);
 
-            var deleteConfirm = TestHelper.FindAndMoveElement(_driver, "div.swal2-actions > button.swal2-confirm");
-            _actions.MoveToElement(deleteConfirm).Click().Perform();
+            var confirmButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-actions button.swal2-confirm")));
+            That(confirmButton.Text, Is.EqualTo("刪除"));
+
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", confirmButton);
 
            _wait.Until(driver => {
                 try
@@ -154,8 +153,7 @@ namespace DomainStorm.Project.TWC.Tests
             var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案'] storm-input-group")));
             That(fileName.GetAttribute("value"), Is.EqualTo("台水官網圖.png"));
 
-            var stormInputGroupDuration = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='播放秒數']")));
-            var stormInputGroupDurationInput = stormInputGroupDuration.GetShadowRoot().FindElement(By.CssSelector("div input"));
+            var stormInputGroupDurationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='播放秒數'] input")));
             stormInputGroupDurationInput.SendKeys("10");
 
             var submitButton = TestHelper.FindAndMoveElement(_driver, "button[type='submit']");
@@ -173,7 +171,7 @@ namespace DomainStorm.Project.TWC.Tests
                 return nameCell.Text == "台水官網圖.png";
             });
 
-            var viewButton = selectedRows!.FindElement(By.CssSelector("td.action > storm-table-cell > storm-table-toolbar > storm-button > storm-tooltip > div > button"));
+            var viewButton = selectedRows!.FindElement(By.CssSelector("storm-toolbar-item > storm-button > button"));
             _actions.MoveToElement(viewButton).Click().Perform();
 
             var viewImg = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > img")));
@@ -184,13 +182,12 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcM100_09()
         {
-            var editButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-button:nth-child(2) > storm-tooltip > div > button");
-            _actions.MoveToElement(editButton).Click().Perform();
+            var editButton = TestHelper.WaitStormEditTableUpload(_driver, "storm-toolbar-item:nth-of-type(2) > storm-button > button");
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", editButton);
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-button:nth-child(2) > storm-tooltip > div > button")));
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-toolbar-item:nth-of-type(2) > storm-button > button")));
 
-            var stormInputGroupDesc = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='說明']")));
-            var stormInputGroupDescInput = stormInputGroupDesc.GetShadowRoot().FindElement(By.CssSelector("div > input"));
+            var stormInputGroupDescInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='說明'] input")));
             stormInputGroupDescInput.SendKeys("描述圖示說明");
 
             var submitButton = TestHelper.FindAndMoveElement(_driver, "button[type='submit']");
@@ -224,7 +221,7 @@ namespace DomainStorm.Project.TWC.Tests
                 return nameCell.Text == "testmedia.mp4";
             });
 
-            var viewButton = selectedRows!.FindElement(By.CssSelector("td.action > storm-table-cell > storm-table-toolbar > storm-button > storm-tooltip > div > button"));
+            var viewButton = selectedRows!.FindElement(By.CssSelector("storm-toolbar-item > storm-button > button"));
             _actions.MoveToElement(viewButton).Click().Perform();
 
             var viewVideo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.swal2-html-container > video")));

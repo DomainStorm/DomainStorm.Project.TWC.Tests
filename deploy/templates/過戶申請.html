@@ -51,9 +51,9 @@
                                         <input type="checkbox" checked disabled>
                                         <span>取消代繳帳號</span>
                                     </span>
-                                    <span id="取消原電子帳單" class="d-none">
+                                    <span id="取消前用戶電子帳單" class="d-none">
                                         <input type="checkbox" checked disabled>
-                                        <span>取消原電子帳單</span>
+                                        <span>取消前用戶電子帳單</span>
                                     </span>
                                     <span id="申請電子帳單" class="d-none">
                                         <input type="checkbox" checked disabled>
@@ -65,7 +65,7 @@
                                     </span>
                                     <span class="d-none">
                                         <span sti-cancel-pay-account id="取消代繳帳號value"></span>
-                                        <span sti-cancel-ebill id="取消原電子帳單value"></span>
+                                        <span sti-cancel-ebill id="取消前用戶電子帳單value"></span>
                                         <span sti-apply-ebill id="申請電子帳單value"></span>
                                         <span sti-cancel-sms-bill id="取消簡訊帳單value"></span>
                                     </span>
@@ -159,6 +159,23 @@
                             </tr>
                             <tr>
                                 <td class="title width-18half">
+                                    <span>
+                                        <input id="申請電子帳單勾選" type="checkbox" disabled>
+                                        <span id="申請電子帳單勾選value" class="d-none" sti-apply-email></span>
+                                        <span>申請電子帳單</span>
+                                    </span>
+                                </td>
+                                <td class="title width-18half">
+                                    <span>Email</span>
+                                    <br>
+                                    <span class="font-xs">(同時為您的會員帳號)</span>
+                                </td>
+                                <td colspan="5">
+                                    <span sti-apply-email-addr></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="title width-18half">
                                     <span>用戶聲明</span>
                                 </td>
                                 <td colspan="5">
@@ -176,37 +193,17 @@
                         <tbody>
                             <tr>
                                 <td class="title2 width-18half">
-                                    <span>
-                                        <input id="申請電子帳單勾選" type="checkbox">
-                                        <span id="申請電子帳單勾選value" class="d-none" sti-apply-email></span>
-                                        <span>申請電子帳單</span>
-                                    </span>
+                                    <span>電子帳單申請人</span>
                                 </td>
-                                <td class="title2 width-12">
-                                    <span>
-                                        <span class="red">*</span>
-                                        <span>Email</span>
-                                        <br>
-                                        <span class="font-xs">(同時為您的會員帳號)</span>
-                                    </span>
+                                <td colspan="2">
+                                    <span id="電子帳單申請人" data-class="InputSelectBlock" sti-email-applicant></span>
                                 </td>
-                                <td>
-                                    <span id="電子帳單Email" data-class="InputSelectBlock" sti-email></span>
-                                </td>
-                                <td class="title2 width-12">
+                                <td class="title2 width-18half">
                                     <span class="red">*</span>
                                     <span>聯絡電話</span>
                                 </td>
                                 <td colspan="2">
                                     <span id="電子帳單聯絡電話" data-class="InputSelectBlock" sti-email-tel-no></span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="title2 width-18half">
-                                    <span>電子帳單申請人</span>
-                                </td>
-                                <td colspan="5">
-                                    <span id="電子帳單申請人" data-class="InputSelectBlock" sti-email-applicant></span>
                                 </td>
                             </tr>
                             <tr>
@@ -540,7 +537,7 @@
             window.addEventListener('load', function() {
                 let changeAddress = document.getElementById('併案變更通訊地址value').innerText
                 let cancelPayAccount = document.getElementById('取消代繳帳號value').innerText
-                let cancelEbill = document.getElementById('取消原電子帳單value').innerText
+                let cancelEbill = document.getElementById('取消前用戶電子帳單value').innerText
                 let applyEbill = document.getElementById('申請電子帳單value').innerText
                 let cancelSmsBill = document.getElementById('取消簡訊帳單value').innerText
                 let end = document.getElementById('中結value').innerText
@@ -554,7 +551,7 @@
                     document.getElementById('取消代繳帳號').classList.remove('d-none')
                 }
                 if(compareValue(cancelEbill)) {
-                    document.getElementById('取消原電子帳單').classList.remove('d-none')
+                    document.getElementById('取消前用戶電子帳單').classList.remove('d-none')
                 }
                 if(compareValue(applyEbill)) {
                     document.getElementById('申請電子帳單').classList.remove('d-none')
@@ -612,19 +609,6 @@
                 this.dispatchEvent(ev)
             }
 
-            function onApplyEmailChange(name, targetEditor, getEditorByIdFunction){
-                let applyEmailCheckbox = document.getElementById('申請電子帳單勾選')
-                let applyEmailValue = document.getElementById('申請電子帳單勾選value')
-
-                applyEmailValue.innerText = applyEmailCheckbox.checked
-
-                if (applyEmailCheckbox.checked) {
-                    applyEmailCheckbox.setAttribute('checked', '')
-                }else{
-                    applyEmailCheckbox.removeAttribute('checked')
-                }
-            }
-
             async function getDateTime() {
                 const dateApi = 'https://localhost:9003/api/datetime/now'
                 const res = await fetch(dateApi)
@@ -637,12 +621,6 @@
             {
                 "唯讀": {
                     "iOverrides": [
-                        {
-                            "iOverride": "SetProperty",
-                            "target": "申請電子帳單勾選",
-                            "name": "disabled",
-                            "value": "disabled"
-                        },
                         {
                             "iOverride": "SetProperty",
                             "target": "中結",
@@ -662,11 +640,6 @@
                 },
                 "編輯": {
                     "iOverrides": [
-                        {
-                            "iOverride": "AddChild",
-                            "relativeTo": "電子帳單Email",
-                            "target": "<input type='text' class='form-control width-95'>"
-                        },
                         {
                             "iOverride": "AddChild",
                             "relativeTo": "電子帳單聯絡電話",
@@ -739,12 +712,6 @@
                             "iOverride": "AddChild",
                             "relativeTo": "註記",
                             "target": "<input type='text' class='form-control width-95'>"
-                        },
-                        {
-                            "iOverride": "SetEventHandler",
-                            "target": "申請電子帳單勾選",
-                            "name": "change",
-                            "handler": "onApplyEmailChange"
                         }
                     ]
                 }
