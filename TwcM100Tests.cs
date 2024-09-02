@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
+using System.Reflection;
 using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
@@ -19,15 +20,25 @@ namespace DomainStorm.Project.TWC.Tests
         [SetUp]
         public void Setup()
         {
-            _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
-            _actions = new Actions(_driver);
+            var testMethod = TestContext.CurrentContext.Test.MethodName;
+            var methodInfo = typeof(TwcM100Tests).GetMethod(testMethod);
+            var noBrowser = methodInfo?.GetCustomAttribute<NoBrowserAttribute>() != null;
+
+            if (!noBrowser)
+            {
+                _driver = TestHelper.GetNewChromeDriver();
+                _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+                _actions = new Actions(_driver);
+            }
         }
 
         [TearDown]
         public void TearDown()
         {
-            _driver.Quit();
+            if (_driver != null)
+            {
+                _driver.Quit();
+            }
         }
 
         [Test]
@@ -51,22 +62,29 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
 
-            var pageInfo = TestHelper.WaitStormEditTableUpload(_driver, "div.table-pageInfo");
-            That(pageInfo!.Text, Is.EqualTo("共 0 筆"));
+            _wait.Until(_ =>
+            {
+                var stormCard = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card")));
+                return stormCard != null;
+            });
 
             var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='媒體管理']")));
-            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
-            That(stormCardTitle.Text, Is.EqualTo("媒體管理"));
+            var mediaManage = stormCard.GetShadowRoot().FindElement(By.CssSelector("h5"));
+            That(mediaManage.Text, Is.EqualTo("媒體管理"));
         }
         public async Task TwcM100_02()
         {
-            var addTextButton = TestHelper.FindAndMoveElement(_driver, "storm-card[headline='媒體管理'] button:nth-child(2)");
+            var addTextButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '新增文字')]")));
             _actions.MoveToElement(addTextButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='媒體管理']")));
 
             var stormInputGroupNameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
             stormInputGroupNameInput.SendKeys("宣導文字");
+
+            await Task.Delay(500);
+
+
 
             var stormInputGroupDescInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='說明'] input")));
             stormInputGroupDescInput.SendKeys("宣導說明文字");

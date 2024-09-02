@@ -15,6 +15,7 @@ using static NUnit.Framework.Assert;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
 using AngleSharp.Dom;
+using NUnit.Framework.Constraints;
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
 {
@@ -234,12 +235,9 @@ public class TestHelper
 
         wait.Until(driver =>
         {
-            var element = driver.FindElement(By.CssSelector("storm-table"));
-            return element != null;
+            var stormTable = driver.FindElement(By.CssSelector("storm-table"));
+            return stormTable != null;
         });
-
-        var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-        var applyCaseNo = stormTable.GetShadowRoot().FindElement(By.CssSelector("th[data-field='applyCaseNo']"));
 
         return Task.CompletedTask;
     }
@@ -276,10 +274,12 @@ public class TestHelper
         //var action = new Actions(webDriver);
         //action.MoveToElement(element).Click().Perform();
 
-        var stormTable = webDriver.FindElement(By.CssSelector("storm-table"));
-        var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
-
-        var applyCaseNo = applyCaseNoElements.FirstOrDefault(element => element.Text == caseNo);
+        var applyCaseNo = wait.Until(driver =>
+        {
+            var stormTable = webDriver.FindElement(By.CssSelector("storm-table"));
+            var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
+            return applyCaseNoElements.FirstOrDefault(element => element.Text == caseNo);
+        });
         action.MoveToElement(applyCaseNo).Click().Perform();
 
         return Task.CompletedTask;
