@@ -104,12 +104,13 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/draft"));
 
-            var stormTable = _wait.Until(_driver =>
+            _wait.Until(_driver =>
             {
                 var element = _driver.FindElement(By.CssSelector("storm-table"));
-                return element;
+                return element != null;
             });
 
+            var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
             var result = stormTable.GetShadowRoot().FindElement(By.CssSelector("p"));
             That(result.Text, Is.EqualTo("沒有找到符合的結果"));
         }
