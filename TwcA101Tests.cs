@@ -152,7 +152,7 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.Draft(_driver);
             await TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            var addFileButton = _wait.Until(driver =>
+            _wait.Until(driver =>
             {
                 var element = driver.FindElement(By.XPath("//button[contains(text(), '新增文件')]"));
 
@@ -164,6 +164,7 @@ namespace DomainStorm.Project.TWC.Tests
                 return element.Displayed ? element : null;
             });
 
+            var addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增文件')]")));
             That(addFileButton!.Displayed, Is.True);
         }
         public async Task TwcA101_08()
@@ -171,7 +172,7 @@ namespace DomainStorm.Project.TWC.Tests
             var addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增文件')]")));
             _actions.MoveToElement(addFileButton).Click().Perform();
 
-            var stormcard = _wait.Until(driver =>
+            _wait.Until(driver =>
             {
                 var element = driver.FindElement(By.CssSelector("storm-card[headline='新增檔案']"));
 
@@ -197,13 +198,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[contains(text(), '上傳')]")));
 
-            var stormEditTable = _wait.Until(driver =>
+            _wait.Until(driver =>
             {
                 var element = driver.FindElement(By.CssSelector("storm-edit-table"));
 
                 return element;
             });
 
+            var stormEditTable = _driver.FindElement(By.CssSelector("storm-edit-table"));
             var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             var fileName = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-cell span"));
             That(fileName.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));

@@ -45,23 +45,22 @@ namespace DomainStorm.Project.TWC.Tests
         [Test]
         [Order(0)]
         [NoBrowser]
-        public async Task TwcB101_01To02()
-        {
-            await TwcB101_01();
-            await TwcB101_02();
-        }
         public async Task TwcB101_01()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
+
+        [Test]
+        [Order(1)]
+        [NoBrowser]
         public async Task TwcB101_02()
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmRecoverApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-B101_bmRecoverApply.json"));
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
         [Test]
-        [Order(1)]
+        [Order(2)]
         public async Task TwcB101_03To10()
         {
             await TwcB101_03();
@@ -76,37 +75,34 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcB101_03()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
+            await TestHelper.Draft(_driver);
+            await TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            _wait.Until(_ =>
+            var addFileButton = _wait.Until(driver =>
             {
-                var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
-                return stormVerticalNavigation != null;
+                var element = driver.FindElement(By.XPath("//button[contains(text(), '新增文件')]"));
+
+                if (!element.Displayed)
+                {
+                    _actions.MoveToElement(element).Perform();
+                }
+
+                return element.Displayed ? element : null;
             });
 
-            var stormVerticalNavigation = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-vertical-navigation")));
-            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-            var href = stormTreeView
-                .GetShadowRoot()
-                .FindElement(By.CssSelector("storm-tree-node:nth-of-type(4) > .list-group > storm-tree-node:nth-of-type(2) span"));
-            _actions.MoveToElement(href).Click().Perform();
-
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card#file")));
+            That(addFileButton!.Displayed, Is.True);
         }
         public async Task TwcB101_04()
         {
-            var addFileButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '新增文件')]")));
+            var addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增文件')]")));
             _actions.MoveToElement(addFileButton).Click().Perform();
 
-            _wait.Until(_ =>
+            var stormcard = _wait.Until(driver =>
             {
-                var stormcard = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增檔案']")));
-                return stormcard != null;
-            });
+                var element = driver.FindElement(By.CssSelector("storm-card[headline='新增檔案']"));
 
-            var stormcard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案']")));
-            var headline = stormcard.GetShadowRoot().FindElement(By.CssSelector("h5"));
+                return element;
+            });
 
             var fileOne = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
             TestHelper.UploadFile(_driver, fileOne, "input.dz-hidden-input:nth-of-type(3)");
@@ -117,8 +113,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var input = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-input-group[label='名稱'] input")));
-                return input.GetAttribute("value").Contains("twcweb_01_1_夾帶附件1.pdf,twcweb_01_1_夾帶附件2.pdf");
+                var input = _driver.FindElement(By.CssSelector("storm-input-group[label='名稱'] input"));
+                return input != null;
             });
 
             var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
