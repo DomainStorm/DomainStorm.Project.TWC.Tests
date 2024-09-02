@@ -118,7 +118,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
 
             var addFileButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[contains(text(), '新增文件')]")));
-            _actions.MoveToElement(addFileButton).Click().Perform();
+            _actions.MoveToElement(addFileButton).Perform();
         }
 
         public async Task TwcE101_06()
