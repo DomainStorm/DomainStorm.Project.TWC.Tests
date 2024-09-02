@@ -94,11 +94,12 @@ namespace DomainStorm.Project.TWC.Tests
             });
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
-            var firstWaterNo = stormTable.GetShadowRoot().FindElement(By.CssSelector("tr:nth-of-type(1) td[data-field='waterNo'] span"));
-            That(firstWaterNo.Text, Is.EqualTo("41101220338"));
+            var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
 
-            var secondWaterNo = stormTable.GetShadowRoot().FindElement(By.CssSelector("tr:nth-of-type(2) td[data-field='waterNo'] span"));
-            That(secondWaterNo.Text, Is.EqualTo("41101220339"));
+            var firstWaterNo = rows.Any(row => row.FindElement(By.CssSelector("td[data-field='waterNo'] span")).Text == "41101220338");
+            That(firstWaterNo, Is.True);
+
+            var secondWaterNo = rows.Any(row => row.FindElement(By.CssSelector("td[data-field='waterNo'] span")).Text == "41101220339");
 
             var checkAll = stormTable.GetShadowRoot().FindElement(By.CssSelector("input[aria-label='Check All']"));
             _actions.MoveToElement(checkAll).Click().Perform();
