@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using static NUnit.Framework.Assert;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
+using AngleSharp.Dom;
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
 {
@@ -151,7 +152,11 @@ public class TestHelper
         request.AddParameter("scope", "template_read post_read serialNumber_write dublinCore_write");
 
         var response = await client.PostAsync<TokenResponse>(request);
-        return response?.Access_token ?? throw new InvalidOperationException("Failed to get access token.");
+        var accessToken = response?.Access_token ?? throw new InvalidOperationException("Failed to get access token.");
+
+        Console.WriteLine($"Access Token: {accessToken}");
+
+        return accessToken;
     }
     public static async Task<HttpStatusCode> CreateForm(string accessToken, string apiUrl, string jsonFilePath, bool modifyApplyDate = false)
     {
@@ -188,21 +193,24 @@ public class TestHelper
 
         return response.StatusCode;
     }
+
     public static Task Login(IWebDriver webDriver, string userId, string password)
     {
-        ((IJavaScriptExecutor)webDriver).ExecuteScript($"window.location.href = '{LoginUrl}';");
-
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        var action = new Actions(webDriver);
 
-        Console.WriteLine($"::group::Login---------{LoginUrl}---------");
-        Console.WriteLine($"---------{LoginUrl}---------");
-        Console.WriteLine(webDriver.PageSource);
-        Console.WriteLine("::endgroup::");
+        webDriver.Navigate().GoToUrl(LoginUrl);
+        //((IJavaScriptExecutor)webDriver).ExecuteScript($"window.location.href = '{LoginUrl}';");
+
+        //Console.WriteLine($"::group::Login---------{LoginUrl}---------");
+        //Console.WriteLine($"---------{LoginUrl}---------");
+        //Console.WriteLine(webDriver.PageSource);
+        //Console.WriteLine("::endgroup::");
         wait.Until(ExpectedConditions.UrlContains("account"));
 
-        Console.WriteLine($"::group::Login---------{webDriver.Url}---------");
-        Console.WriteLine(webDriver.PageSource);
-        Console.WriteLine("::endgroup::");
+        //Console.WriteLine($"::group::Login---------{webDriver.Url}---------");
+        //Console.WriteLine(webDriver.PageSource);
+        //Console.WriteLine("::endgroup::");
 
         var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
         var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
@@ -211,12 +219,72 @@ public class TestHelper
         passwordElement.SendKeys(password);
 
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
-        button.Click();
+        //button.Click();
+        action.MoveToElement(button).Click().Perform();
 
         wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
 
         return Task.CompletedTask;
     }
+    public static Task Draft(IWebDriver driver)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+
+        driver.Navigate().GoToUrl($@"{BaseUrl}/draft");
+
+        wait.Until(driver =>
+        {
+            var element = driver.FindElement(By.CssSelector("storm-table"));
+            return element != null;
+        });
+
+        var stormTable = driver.FindElement(By.CssSelector("storm-table"));
+        var applyCaseNo = stormTable.GetShadowRoot().FindElement(By.CssSelector("th[data-field='applyCaseNo']"));
+
+        return Task.CompletedTask;
+    }
+
+    public static Task ClickRow(IWebDriver webDriver, string caseNo)
+    {
+        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        var action = new Actions(webDriver);
+
+        //Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
+        //Console.WriteLine(webDriver.PageSource);
+        //Console.WriteLine("::endgroup::");
+
+        wait.Until(driver =>
+        {
+            var stormTable = driver.FindElement(By.CssSelector("storm-table"));
+            return stormTable != null;
+        });
+
+        //var stormInputGroup = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-input-group"));
+        //var keyInput = stormInputGroup.FindElement(By.CssSelector("input"));
+        //keyInput.SendKeys(applyCaseNo);
+
+        //IWebElement? element = null;
+
+        //wait.Until(_ =>
+        //{
+        //    var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+        //    Thread.Sleep(500);
+        //    element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
+        //    return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
+        //});
+
+        //var action = new Actions(webDriver);
+        //action.MoveToElement(element).Click().Perform();
+
+        var stormTable = webDriver.FindElement(By.CssSelector("storm-table"));
+        var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
+
+        var applyCaseNo = applyCaseNoElements.FirstOrDefault(element => element.Text == caseNo);
+        action.MoveToElement(applyCaseNo).Click().Perform();
+
+        return Task.CompletedTask;
+    }
+
     public static Task ChangeUser(IWebDriver webDriver, string userName)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
@@ -236,38 +304,6 @@ public class TestHelper
         return Task.CompletedTask;
     }
 
-    public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
-    {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-
-        Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
-        Console.WriteLine(webDriver.PageSource);
-        Console.WriteLine("::endgroup::");
-
-        wait.Until(_ =>
-        {
-            var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-            return stormTable != null;
-        });
-
-        var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
-        var stormInputGroup = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-input-group"));
-        var keyInput = stormInputGroup.FindElement(By.CssSelector("input"));
-        keyInput.SendKeys(applyCaseNo);
-
-        IWebElement? element = null;
-
-        wait.Until(_ =>
-        {
-            var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            Thread.Sleep(500);
-            element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
-            return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
-        });
-
-        var action = new Actions(webDriver);
-        action.MoveToElement(element).Click().Perform();
-    }
     public static string GetLastSegmentFromUrl(IWebDriver webDriver)
     {
         string targetUrl = webDriver.Url;
