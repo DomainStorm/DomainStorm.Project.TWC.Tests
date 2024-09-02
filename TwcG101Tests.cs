@@ -3,6 +3,7 @@ using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Net;
+using System.Reflection;
 using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
@@ -20,23 +21,50 @@ namespace DomainStorm.Project.TWC.Tests
         [SetUp]
         public void Setup()
         {
-            _driver = TestHelper.GetNewChromeDriver();
-            _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(20));
-            _actions = new Actions(_driver);
+            var testMethod = TestContext.CurrentContext.Test.MethodName;
+            var methodInfo = typeof(TwcG101Tests).GetMethod(testMethod);
+            var noBrowser = methodInfo?.GetCustomAttribute<NoBrowserAttribute>() != null;
+
+            if (!noBrowser)
+            {
+                _driver = TestHelper.GetNewChromeDriver();
+                _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+                _actions = new Actions(_driver);
+            }
         }
 
         [TearDown]
         public void TearDown()
         {
-            _driver.Quit();
+            if (_driver != null)
+            {
+                _driver.Quit();
+            }
         }
 
         [Test]
         [Order(0)]
-        public async Task TwcG101_01To16()
+        [NoBrowser]
+        public async Task TwcG101_01To02()
         {
             await TwcG101_01();
             await TwcG101_02();
+        }
+        public async Task TwcG101_01()
+        {
+            TestHelper.AccessToken = await TestHelper.GetAccessToken();
+            That(TestHelper.AccessToken, Is.Not.Empty);
+        }
+        public async Task TwcG101_02()
+        {
+            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmMilitaryApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-G101_bmMilitaryApply.json"));
+            That(statusCode, Is.EqualTo(HttpStatusCode.OK));
+        }
+
+        [Test]
+        [Order(1)]
+        public async Task TwcG101_03To16()
+        {
             await TwcG101_03();
             await TwcG101_04();
             await TwcG101_05();
@@ -51,16 +79,6 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcG101_14();
             await TwcG101_15();
             await TwcG101_16();
-        }
-        public async Task TwcG101_01()
-        {
-            TestHelper.AccessToken = await TestHelper.GetAccessToken();
-            That(TestHelper.AccessToken, Is.Not.Empty);
-        }
-        public async Task TwcG101_02()
-        {
-            HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmMilitaryApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-G101_bmMilitaryApply.json"));
-            That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
         public async Task TwcG101_03()
         {

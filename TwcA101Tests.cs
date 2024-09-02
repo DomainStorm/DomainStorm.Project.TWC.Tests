@@ -94,6 +94,7 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(discardButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h2[text()='是否刪除？']")));
+            Thread.Sleep(1000);
 
             var deleteButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '刪除')]")));
             That(deleteButton.Text, Is.EqualTo("刪除"));
