@@ -100,6 +100,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(firstWaterNo, Is.True);
 
             var secondWaterNo = rows.Any(row => row.FindElement(By.CssSelector("td[data-field='waterNo'] span")).Text == "41101220339");
+            That(secondWaterNo, Is.True);
 
             var checkAll = stormTable.GetShadowRoot().FindElement(By.CssSelector("input[aria-label='Check All']"));
             _actions.MoveToElement(checkAll).Click().Perform();
