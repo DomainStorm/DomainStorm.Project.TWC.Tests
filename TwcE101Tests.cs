@@ -45,17 +45,15 @@ namespace DomainStorm.Project.TWC.Tests
         [Test]
         [Order(0)]
         [NoBrowser]
-        public async Task TwcE101_01To02()
-        {
-            await TwcE101_01();
-            await TwcE101_02();
-        }
         public async Task TwcE101_01()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
 
+        [Test]
+        [Order(1)]
+        [NoBrowser]
         public async Task TwcE101_02()
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-E101_bmTransferApply.json"));
@@ -63,8 +61,8 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(1)]
-        public async Task TwcE101_03To12()
+        [Order(2)]
+        public async Task TwcE101_03To11()
         {
             await TwcE101_03();
             await TwcE101_04();
@@ -75,25 +73,28 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcE101_09();
             await TwcE101_10();
             await TwcE101_11();
-            await TwcE101_12();
         }
         public async Task TwcE101_03()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft");
-            TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
+            await TestHelper.NavigateAndWait(_driver, "/draft");
+            await TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
+            _wait.Until(driver =>
+            {
+                var element = driver.FindElement(By.CssSelector("iframe"));
+                return element != null;
+            });
+
             _driver.SwitchTo().Frame(0);
 
             var stiEnd = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#中結")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiEnd);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiEnd);
 
-            _wait.Until(driver => stiEnd.GetAttribute("checked") == "true");
+            _wait.Until(_driver => stiEnd.Selected);
 
-            var checkStiEnd = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#中結")));
-            That(checkStiEnd.GetAttribute("checked"), Is.EqualTo("true"));
+            That(stiEnd.Selected);
         }
 
         public async Task TwcE101_04()
@@ -117,30 +118,84 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var addFileButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[contains(text(), '新增文件')]")));
-            _actions.MoveToElement(addFileButton).Perform();
+            var checkBox = _driver.FindElement(By.CssSelector("#用印或代送件只需夾帶附件"));
+            _actions.MoveToElement(checkBox).Click().Perform();
+
+            _wait.Until(_driver => checkBox.Selected);
+
+            That(checkBox.Selected);
         }
 
         public async Task TwcE101_06()
         {
-            var addFileButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '新增文件')]")));
-            _actions.MoveToElement(addFileButton).Click().Perform();
+            var submitButton = _driver.FindElement(By.XPath("//button[contains(text(), '確認受理')]"));
+            _actions.MoveToElement(submitButton).Click().Perform();
 
-            _wait.Until(_ =>
-            {
-                var stormcard = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增檔案']")));
-                return stormcard != null;
-            });
+            var hint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '【夾帶附件】或【掃描拍照】未上傳')]")));
+            That(hint.Text, Is.EqualTo("【夾帶附件】或【掃描拍照】未上傳"));
 
-            var stormcard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增檔案']")));
-            var headline = stormcard.GetShadowRoot().FindElement(By.CssSelector("h5"));
+            var closeButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '確定')]")));
+            _actions.MoveToElement(closeButton).Click().Perform();
 
-            var fileOne = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
-            TestHelper.UploadFile(_driver, fileOne, "input.dz-hidden-input:nth-of-type(3)");
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[contains(text(), '確定')]")));
+        }
+
+        public async Task TwcE101_07()
+        {
+            _driver.SwitchTo().Frame(0);
+
+            var phoneInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-email-tel-no] input")));
+            phoneInput.SendKeys("02-12345678");
 
             _wait.Until(driver =>
             {
-                var input = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-input-group[label='名稱'] input")));
+                Thread.Sleep(1000);
+                var phoneInput = driver.FindElement(By.CssSelector("span[sti-email-tel-no] input"));
+                return phoneInput.GetAttribute("value") == "02-12345678";
+            });
+
+            var phoneElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-email-tel-no] input")));
+            That(phoneElement.GetAttribute("value"), Is.EqualTo("02-12345678"));
+        }
+
+        public async Task TwcE101_08()
+        {
+            _driver.SwitchTo().DefaultContent();
+
+            _wait.Until(_driver =>
+            {
+                var element = _driver.FindElement(By.XPath("//button[contains(text(), '新增文件')]"));
+
+                if (!element.Displayed)
+                {
+                    _actions.MoveToElement(element).Perform();
+                }
+
+                return element.Displayed ? element : null;
+            });
+
+            var addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增文件')]")));
+            That(addFileButton!.Displayed, Is.True);
+        }
+
+        public async Task TwcE101_09()
+        {
+            var addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增文件')]")));
+            _actions.MoveToElement(addFileButton).Click().Perform();
+
+            _wait.Until(driver =>
+            {
+                var element = driver.FindElement(By.CssSelector("storm-card[headline='新增檔案']"));
+
+                return element;
+            });
+
+            var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "twcweb_01_1_夾帶附件1.pdf");
+            TestHelper.UploadFile(_driver, file, "input.dz-hidden-input:nth-of-type(3)");
+
+            _wait.Until(_driver =>
+            {
+                var input = _driver.FindElement(By.CssSelector("storm-input-group[label='名稱'] input"));
                 return input != null;
             });
 
@@ -148,7 +203,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(fileName.GetAttribute("value"), Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
 
-        public async Task TwcE101_07()
+        public async Task TwcE101_10()
         {
             var upload = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '上傳')]")));
             _actions.MoveToElement(upload).Click().Perform();
@@ -167,91 +222,74 @@ namespace DomainStorm.Project.TWC.Tests
             That(fileName.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
 
-        public async Task TwcE101_08()
-        {
-            var checkBox = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#用印或代送件只需夾帶附件")));
-            _actions.MoveToElement(checkBox).Click().Perform();
-
-            _wait.Until(driver => checkBox.GetAttribute("checked") == "true");
-
-            That(checkBox.GetAttribute("checked"), Is.EqualTo("true"));
-        }
-
-        public async Task TwcE101_09()
-        {
-            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[contains(text(), '確認受理')]")));
-            _actions.MoveToElement(submitButton).Click().Perform();
-
-            var hint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '【聯絡電話】未填寫')]")));
-            That(hint.Text, Is.EqualTo("【聯絡電話】未填寫"));
-            Thread.Sleep(1000);
-
-            var closeButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確定')]")));
-            _actions.MoveToElement(closeButton).Click().Perform();
-
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[contains(text(), '確定')]")));
-        }
-
-        public async Task TwcE101_10()
-        {
-            _driver.SwitchTo().Frame(0);
-
-            var phoneInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-email-tel-no] input")));
-            phoneInput.SendKeys("02-12345678");
-
-            _wait.Until(driver =>
-            {
-                Thread.Sleep(1000);
-                var phoneInput = driver.FindElement(By.CssSelector("span[sti-email-tel-no] input"));
-                return phoneInput.GetAttribute("value") == "02-12345678";
-            });
-
-            var phoneElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-email-tel-no] input")));
-            That(phoneElement.GetAttribute("value"), Is.EqualTo("02-12345678"));
-        }
-
         public async Task TwcE101_11()
         {
-            _driver.SwitchTo().DefaultContent();
-
-            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[contains(text(), '確認受理')]")));
+            var submitButton = _driver.FindElement(By.XPath("//button[contains(text(), '確認受理')]"));
             _actions.MoveToElement(submitButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/unfinished"));
 
-            //function url 後 基礎元素出來 
+            await TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
 
-            TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
+            _wait.Until(driver =>
+            {
+                var element = driver.FindElement(By.CssSelector("iframe"));
+                return element != null;
+            });
 
-            _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
             _driver.SwitchTo().Frame(0);
 
             var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
             That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
         }
 
+        [Test]
+        [Order(3)]
+
         public async Task TwcE101_12()
         {
-            var phone = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-email-tel-no]")));
-            That(phone.Text, Is.EqualTo("02-12345678"));
+            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            await TestHelper.NavigateAndWait(_driver, "/unfinished");
+            await TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
+
+            _wait.Until(driver =>
+            {
+                var element = driver.FindElement(By.CssSelector("iframe"));
+                return element != null;
+            });
+
+            _driver.SwitchTo().Frame(0);
+
+            var phoneNumber = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#電子帳單聯絡電話")));
+            That(phoneNumber.Text,Is.EqualTo("02-12345678"));
+
+            var stiEnd = _driver.FindElement(By.CssSelector("#中結"));
+            That(stiEnd.Selected);
+
+            var stiPostUserFullName = _driver.FindElement(By.CssSelector("span[sti-post-user-full-name]"));
+            That(stiPostUserFullName.Text, Is.EqualTo("張博文"));
 
             _driver.SwitchTo().DefaultContent();
 
-            var waterServiceAgreement = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#消費性用水服務契約")));
+            var waterServiceAgreement = _driver.FindElement(By.CssSelector("#消費性用水服務契約"));
             _actions.MoveToElement(waterServiceAgreement).Perform();
-            That(waterServiceAgreement.GetAttribute("checked"), Is.EqualTo("true"));
+            That(waterServiceAgreement.Selected);
 
-            var dataProtectionNotice = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#公司個人資料保護告知事項")));
+            var dataProtectionNotice = _driver.FindElement(By.CssSelector("#公司個人資料保護告知事項"));
             _actions.MoveToElement(dataProtectionNotice).Perform();
-            That(dataProtectionNotice.GetAttribute("checked"), Is.EqualTo("true"));
+            That(dataProtectionNotice.Selected);
 
-            var companyRegulation = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#公司營業章程")));
+            var companyRegulation = _driver.FindElement(By.CssSelector("#公司營業章程"));
             _actions.MoveToElement(companyRegulation).Perform();
-            That(companyRegulation.GetAttribute("checked"), Is.EqualTo("true"));
+            That(companyRegulation.Selected);
+
+            var fileName = _driver.FindElement(By.CssSelector("a[download='twcweb_01_1_夾帶附件1.pdf']"));
+            _actions.MoveToElement(fileName).Perform();
+            That(fileName.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
         }
 
         [Test]
-        [Order(2)]
+        [Order(4)]
         public async Task TwcE101_13To15()
         {
             await TwcE101_13();
@@ -272,17 +310,17 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='查詢']")));
 
             var applyDateBegin = "2023-06-03";
-            var applyDateBeginSelect = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期起'] input")));
+            var applyDateBeginSelect = _driver.FindElement(By.CssSelector("storm-input-group[label='受理日期起'] input"));
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{applyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginSelect);
 
-            var searchButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='查詢']")));
+            var searchButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='查詢']")));
             _actions.MoveToElement(searchButton).Click().Perform();
 
-            var applyCaseNo = _wait.Until(driver =>
+            var applyCaseNo = _wait.Until(_driver =>
             {
-                var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-                var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='applyCaseNo'] span"));
-                return element.Displayed ? element : null;
+                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
+                return applyCaseNoElements.FirstOrDefault(element => element.Text == TestHelper.ApplyCaseNo);
             });
 
             That(applyCaseNo!.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
@@ -290,9 +328,15 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcE101_14()
         {
-            var stormtable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-            var applyCaseNo = stormtable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='applyCaseNo'] span"));
-            _actions.MoveToElement(applyCaseNo).Click().Perform();
+            await TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
+
+            _wait.Until(driver =>
+            {
+                var element = driver.FindElement(By.CssSelector("iframe"));
+                return element != null;
+            });
+
+            _driver.SwitchTo().DefaultContent();
 
             var fileName = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("a[download='twcweb_01_1_夾帶附件1.pdf']")));
             _actions.MoveToElement(fileName).Perform();
