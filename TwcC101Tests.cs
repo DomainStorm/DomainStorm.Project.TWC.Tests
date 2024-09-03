@@ -202,7 +202,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcC101_09()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
+            await TestHelper.NavigateAndWait(_driver, "/search");
 
             _wait.Until(_ =>
             {

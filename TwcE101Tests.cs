@@ -245,7 +245,6 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(3)]
-
         public async Task TwcE101_12()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
@@ -299,7 +298,7 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcE101_13()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/search");
+            await TestHelper.NavigateAndWait(_driver, "/search");
 
             _wait.Until(_ =>
             {

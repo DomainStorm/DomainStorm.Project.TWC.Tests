@@ -163,6 +163,16 @@ namespace DomainStorm.Project.TWC.Tests
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '確認夾帶')]")));
             _actions.MoveToElement(submitButton).Click().Perform();
 
+            //等待畫面渲染
+            await Task.Delay(1000);
+
+            _wait.Until(driver =>
+            {
+                var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                return rows.Count == 2;
+            });
+
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
             var firstFileSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("tr:nth-of-type(1) td[data-field='attached'] i"));
             That(firstFileSpan.Text, Is.EqualTo("attach_file"));
