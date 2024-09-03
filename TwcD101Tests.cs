@@ -203,7 +203,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(2)]
+        [Order(4)]
         public async Task TwcD101_10To12()
         {
             await TwcD101_10();
