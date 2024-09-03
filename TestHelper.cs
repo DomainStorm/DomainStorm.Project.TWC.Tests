@@ -227,11 +227,11 @@ public class TestHelper
 
         return Task.CompletedTask;
     }
-    public static Task Draft(IWebDriver driver)
+    public static Task NavigateAndWait(IWebDriver driver, string pageUrl)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
 
-        driver.Navigate().GoToUrl($@"{BaseUrl}/draft");
+        driver.Navigate().GoToUrl($@"{BaseUrl}{pageUrl}");
 
         wait.Until(driver =>
         {
@@ -388,7 +388,7 @@ public class TestHelper
             File.Delete(filePath);
         }
 
-        var downloadButton = wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
+        var downloadButton = webDriver.FindElement(By.XPath(xpath));
         actions.MoveToElement(downloadButton).Click().Perform();
 
         wait.Until(driver =>
