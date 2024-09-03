@@ -107,7 +107,7 @@ namespace DomainStorm.Project.TWC.Tests
             var checkBox = _driver.FindElement(By.CssSelector("#用印或代送件只需夾帶附件"));
             _actions.MoveToElement(checkBox).Click().Perform();
 
-            _wait.Until(_driver => checkBox.Selected);
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#用印或代送件只需夾帶附件")));
 
             That(checkBox.Selected);
         }

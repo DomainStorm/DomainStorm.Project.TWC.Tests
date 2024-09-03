@@ -89,7 +89,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiEnd);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiEnd);
 
-            _wait.Until(_driver => stiEnd.Selected);
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#中結")));
 
             That(stiEnd.Selected);
         }
@@ -113,10 +113,10 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
 
-            var checkBox = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#用印或代送件只需夾帶附件")));
+            var checkBox = _driver.FindElement(By.CssSelector("#用印或代送件只需夾帶附件"));
             _actions.MoveToElement(checkBox).Click().Perform();
 
-            _wait.Until(_driver => checkBox.Selected);
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#用印或代送件只需夾帶附件")));
 
             That(checkBox.Selected);
         }
