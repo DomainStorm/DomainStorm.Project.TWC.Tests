@@ -102,11 +102,12 @@ namespace DomainStorm.Project.TWC.Tests
             var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '刪除')]")));
             _actions.MoveToElement(deleteButton).Click().Perform();
 
+            _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/draft"));
+
             _wait.Until(_driver =>
             {
-                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/draft"));
-
-                var element = _driver.FindElement(By.CssSelector("storm-table"));
+                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                var element = stormTable.GetShadowRoot().FindElement(By.CssSelector("p"));
                 return element != null;
             });
 
