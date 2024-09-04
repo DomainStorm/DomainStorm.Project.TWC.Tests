@@ -180,5 +180,37 @@ namespace DomainStorm.Project.TWC.Tests
             var secondFileSpan = stormTable.GetShadowRoot().FindElement(By.CssSelector("tr:nth-of-type(2) td[data-field='attached'] i"));
             That(secondFileSpan.Text, Is.EqualTo("attach_file"));
         }
+
+        [Test]
+        [Order(4)]
+        public async Task TwcE201_07()
+        {
+            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            await TestHelper.NavigateAndWait(_driver, "/search");
+
+            _wait.Until(_ =>
+            {
+                var stormCard = _driver.FindElement(By.CssSelector("storm-card"));
+                return stormCard != null;
+            });
+
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='查詢']")));
+
+            var applyDateBegin = "2023-06-30";
+            var applyDateBeginSelect = _driver.FindElement(By.CssSelector("storm-input-group[label='受理日期起'] input"));
+            ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{applyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginSelect);
+
+            var searchButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='查詢']")));
+            _actions.MoveToElement(searchButton).Click().Perform();
+
+            var applyCaseNo = _wait.Until(_driver =>
+            {
+                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
+                return applyCaseNoElements.FirstOrDefault(element => element.Text == TestHelper.ApplyCaseNo);
+            });
+
+            That(applyCaseNo!.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+        }
     }
 }
