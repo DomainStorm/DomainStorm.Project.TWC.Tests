@@ -1,5 +1,4 @@
-﻿using NSubstitute.Exceptions;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
@@ -21,7 +20,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
                 _driver = TestHelper.GetNewChromeDriver();
-                _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+                _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
                 _actions = new Actions(_driver);
         }
 
@@ -232,7 +231,10 @@ namespace DomainStorm.Project.TWC.Tests
             await Task.Delay(1000);
 
             var submitButton = _driver.FindElement(By.XPath("//button[contains(text(), '確定')]"));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            _actions.MoveToElement(submitButton).Perform();
+
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確定')]")));
+            _actions.Click(submitButton).Perform();
 
             _wait.Until(_ =>
             {
