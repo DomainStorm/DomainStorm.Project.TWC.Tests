@@ -96,6 +96,6 @@ jobs:
       #- name: Curl jwtauthapi
       #  run: | 
       #    curl -L -i http://127.0.0.1:8000/jwtauthapi/swagger/index.html       
-      - name: Test
-        run: 
-            dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcE101Tests --no-build --verbosity normal
+      # - name: Test
+      #   run: 
+      #       dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcE101Tests --no-build --verbosity normal

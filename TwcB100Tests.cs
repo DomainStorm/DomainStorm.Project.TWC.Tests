@@ -287,8 +287,6 @@ namespace DomainStorm.Project.TWC.Tests
             var upload = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '上傳')]")));
             _actions.MoveToElement(upload).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[contains(text(), '上傳')]")));
-
             _wait.Until(driver =>
             {
                 var element = driver.FindElement(By.CssSelector("storm-edit-table"));

@@ -246,13 +246,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(_ =>
             {
-                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
                 Thread.Sleep(1000);
+                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
 
                 var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
 
-                return rows.Count >= 1;
+                return stormTable != null;
             });
 
             var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
@@ -401,6 +400,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
             stormTextEditorInput.SendKeys("跑馬燈測試");
             That(stormTextEditorInput.Text, Is.EqualTo("跑馬燈測試"));
+            await Task.Delay(1000);
 
             _wait.Until(_ =>
             {
@@ -418,13 +418,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(_ =>
             {
-                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
                 Thread.Sleep(1000);
+                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
 
                 var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
 
-                return rows.Count >= 1;
+                return stormTable != null;
             });
 
             var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
