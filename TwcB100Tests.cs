@@ -127,7 +127,7 @@ namespace DomainStorm.Project.TWC.Tests
                 return idElement != null;
             });
 
-            idElement = TestHelper.FindAndMoveElement(_driver, "//span[@id='身分證號碼']");
+            idElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@id='身分證號碼']")));
             That(idElement.Text, Is.EqualTo("A123456789"));
         }
         public async Task TwcB100_05()
@@ -141,6 +141,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#繳費")));
             That(stiPay.Selected);
+            await Task.Delay(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
@@ -163,6 +164,7 @@ namespace DomainStorm.Project.TWC.Tests
 
                 return signElement != null;
             });
+            await Task.Delay(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
@@ -209,6 +211,7 @@ namespace DomainStorm.Project.TWC.Tests
 
                 return signElement != null;
             });
+            await Task.Delay(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
@@ -234,6 +237,7 @@ namespace DomainStorm.Project.TWC.Tests
 
                 return imgElement != null;
             });
+            await Task.Delay(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
@@ -289,9 +293,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var element = driver.FindElement(By.CssSelector("storm-edit-table"));
+                var stormEditTable = driver.FindElement(By.CssSelector("storm-edit-table"));
+                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                var fileRows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
 
-                return element;
+                return fileRows.Count >= 2;
             });
 
             var stormEditTable = _driver.FindElement(By.CssSelector("storm-edit-table"));
