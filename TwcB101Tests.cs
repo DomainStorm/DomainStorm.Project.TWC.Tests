@@ -79,13 +79,9 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(driver =>
             {
                 var element = driver.FindElement(By.XPath("//button[contains(text(), '新增文件')]"));
+                _actions.MoveToElement(element).Perform();
 
-                if (!element.Displayed)
-                {
-                    _actions.MoveToElement(element).Perform();
-                }
-
-                return element.Displayed ? element : null;
+                return element.Displayed;
             });
 
             var addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增文件')]")));

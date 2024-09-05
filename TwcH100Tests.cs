@@ -395,7 +395,10 @@ namespace DomainStorm.Project.TWC.Tests
             That(stormTextEditorInput.Text, Is.EqualTo("跑馬燈測試"));
 
             var submitButton = _driver.FindElement(By.XPath("//button[contains(text(), '確定')]"));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            _actions.MoveToElement(submitButton).Perform();
+
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確定')]")));
+            _actions.Click(submitButton).Perform();
 
             _wait.Until(_ =>
             {

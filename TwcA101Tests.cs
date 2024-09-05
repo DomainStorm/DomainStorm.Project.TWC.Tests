@@ -79,11 +79,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(driver =>
             {
                 var element = driver.FindElement(By.XPath("//button[contains(text(), '捨棄草稿')]"));
-
-                if (!element.Displayed)
-                {
-                    _actions.MoveToElement(element).Perform();
-                }
+                _actions.MoveToElement(element).Perform();
 
                 return element != null;
             });
