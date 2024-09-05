@@ -230,10 +230,18 @@ namespace DomainStorm.Project.TWC.Tests
             That(stormTextEditorInput.Text, Is.EqualTo("新增測試"));
             await Task.Delay(1000);
 
-            var submitButton = _driver.FindElement(By.XPath("//button[contains(text(), '確定')]"));
-            _actions.MoveToElement(submitButton).Perform();
+            _wait.Until(_ =>
+            {
+                var submitButton = _driver.FindElement(By.XPath("//button[contains(text(), '確定')]"));
+                _actions.MoveToElement(submitButton).Perform();
 
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確定')]")));
+                _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確定')]")));
+                Thread.Sleep(1000);
+
+                return submitButton.Displayed;
+            });
+                
+            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '確定')]")));
             _actions.Click(submitButton).Perform();
 
             _wait.Until(_ =>
@@ -394,10 +402,18 @@ namespace DomainStorm.Project.TWC.Tests
             stormTextEditorInput.SendKeys("跑馬燈測試");
             That(stormTextEditorInput.Text, Is.EqualTo("跑馬燈測試"));
 
-            var submitButton = _driver.FindElement(By.XPath("//button[contains(text(), '確定')]"));
-            _actions.MoveToElement(submitButton).Perform();
+            _wait.Until(_ =>
+            {
+                var submitButton = _driver.FindElement(By.XPath("//button[contains(text(), '確定')]"));
+                _actions.MoveToElement(submitButton).Perform();
 
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確定')]")));
+                _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確定')]")));
+                Thread.Sleep(1000);
+
+                return submitButton.Displayed;
+            });
+
+            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '確定')]")));
             _actions.Click(submitButton).Perform();
 
             _wait.Until(_ =>
