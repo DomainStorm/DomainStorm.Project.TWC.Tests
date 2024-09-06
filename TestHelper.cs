@@ -319,9 +319,13 @@ public class TestHelper
                     return stormTable != null;
                 });
 
-                var applyCaseNo = wait.Until(driver =>
+                var applyCaseNo = wait.Until( driver =>
                 {
                     var stormTable = webDriver.FindElement(By.CssSelector("storm-table"));
+                    var input = stormTable.GetShadowRoot().FindElement(By.CssSelector("input"));
+                    input.SendKeys(caseNo + Keys.Enter);
+                    Thread.Sleep(3000);
+
                     var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
                     return applyCaseNoElements.FirstOrDefault(element => element.Text == caseNo);
                 });
