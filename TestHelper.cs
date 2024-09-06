@@ -220,7 +220,6 @@ public class TestHelper
         passwordElement.SendKeys(password);
 
         var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
-        //button.Click();
         action.MoveToElement(button).Click().Perform();
 
         wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
@@ -242,48 +241,6 @@ public class TestHelper
         return Task.CompletedTask;
     }
 
-    //public static Task ClickRow(IWebDriver webDriver, string caseNo)
-    //{
-    //    var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-    //    var action = new Actions(webDriver);
-
-    //    //Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
-    //    //Console.WriteLine(webDriver.PageSource);
-    //    //Console.WriteLine("::endgroup::");
-
-    //    wait.Until(driver =>
-    //    {
-    //        var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-    //        return stormTable != null;
-    //    });
-
-    //    var stormInputGroup = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-input-group"));
-    //    var keyInput = stormInputGroup.FindElement(By.CssSelector("input"));
-    //    keyInput.SendKeys(applyCaseNo);
-
-    //    IWebElement? element = null;
-
-    //    wait.Until(_ =>
-    //    {
-    //        var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-    //        Thread.Sleep(500);
-    //        element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
-    //        return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
-    //    });
-
-    //    var action = new Actions(webDriver);
-    //    action.MoveToElement(element).Click().Perform();
-
-    //    var applyCaseNo = wait.Until(driver =>
-    //    {
-    //        var stormTable = webDriver.FindElement(By.CssSelector("storm-table"));
-    //        var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
-    //        return applyCaseNoElements.FirstOrDefault(element => element.Text == caseNo);
-    //    });
-    //    action.MoveToElement(applyCaseNo).Click().Perform();
-
-    //    return Task.CompletedTask;
-    //}
     public static void ScrollToElement(IWebDriver driver, By by)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
@@ -307,25 +264,32 @@ public class TestHelper
         {
             try
             {
+                // 確保 storm-table 元素存在
                 wait.Until(driver =>
                 {
                     var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-
                     if (driver.PageSource.Contains("Page Not Found") || string.IsNullOrWhiteSpace(driver.PageSource))
                     {
                         throw new Exception("頁面為空白，系統可能掛掉。");
                     }
-
                     return stormTable != null;
                 });
 
-                var applyCaseNo = wait.Until( driver =>
+                // 確保輸入框可見並可用
+                var stormTableElement = wait.Until(driver =>
                 {
-                    var stormTable = webDriver.FindElement(By.CssSelector("storm-table"));
-                    var input = stormTable.GetShadowRoot().FindElement(By.CssSelector("input"));
-                    input.SendKeys(caseNo + Keys.Enter);
-                    Thread.Sleep(3000);
+                    var stormTable = driver.FindElement(By.CssSelector("storm-table"));
+                    var input = stormTable.GetShadowRoot().FindElement(By.CssSelector("input[placeholder='請輸入關鍵字']"));
+                    return input;
+                });
 
+                stormTableElement.Clear();
+                stormTableElement.SendKeys(caseNo + Keys.Enter);
+
+                // 等待表格中顯示相關的行
+                var applyCaseNo = wait.Until(driver =>
+                {
+                    var stormTable = driver.FindElement(By.CssSelector("storm-table"));
                     var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
                     return applyCaseNoElements.FirstOrDefault(element => element.Text == caseNo);
                 });
