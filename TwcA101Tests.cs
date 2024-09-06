@@ -36,10 +36,11 @@ namespace DomainStorm.Project.TWC.Tests
         [TearDown]
         public void TearDown()
         {
-            if (_driver != null)
-            {
-                _driver.Quit();
-            }
+            //if (_driver != null)
+            //{
+            //    _driver.Quit();
+            //}
+            _driver?.Quit();
         }
 
         [Test]
@@ -92,6 +93,34 @@ namespace DomainStorm.Project.TWC.Tests
             var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '刪除')]")));
             That(deleteButton.Text, Is.EqualTo("刪除"));
         }
+
+        //public async Task TwcA101_03()
+        //{
+        //    await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+        //    await TestHelper.NavigateAndWait(_driver, "/draft");
+        //    await TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
+
+        //    _wait.Until(driver =>
+        //    {
+        //        var element = driver.FindElement(By.XPath("//button[contains(text(), '捨棄草稿')]"));
+        //        _actions.MoveToElement(element).Perform();
+
+        //        return element.Displayed;
+        //    });
+
+        //    var discardButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '捨棄草稿')]")));
+        //    _actions.Click(discardButton).Perform();
+
+        //    _wait.Until(driver =>
+        //    {
+        //        var element = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h2[text()='是否刪除？']")));
+        //        var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='刪除']")));
+        //        return element != null && deleteButton != null;
+        //    });
+
+        //    var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '刪除')]")));
+        //    That(deleteButton.Text, Is.EqualTo("刪除"));
+        //}
 
         public async Task TwcA101_04()
         {

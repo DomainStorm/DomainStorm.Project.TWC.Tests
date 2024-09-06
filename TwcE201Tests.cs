@@ -22,7 +22,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             var testMethod = TestContext.CurrentContext.Test.MethodName;
-            var methodInfo = typeof(TwcE201Tests).GetMethod(testMethod);
+            var methodInfo = typeof(TwcE201Tests).GetMethod(testMethod!);
             var noBrowser = methodInfo?.GetCustomAttribute<NoBrowserAttribute>() != null;
 
             if (!noBrowser)
@@ -36,33 +36,34 @@ namespace DomainStorm.Project.TWC.Tests
         [TearDown]
         public void TearDown()
         {
-            if (_driver != null)
-            {
-                _driver.Quit();
-            }
+            //if (_driver != null)
+            //{
+            //    _driver.Quit();
+            //}
+            _driver?.Quit();
         }
 
         [Test]
         [Order(0)]
         [NoBrowser]
+        public async Task TwcE201_01To03()
+        {
+            await TwcE201_01();
+            await TwcE201_02();
+            await TwcE201_03();
+        }
         public async Task TwcE201_01()
         {
             TestHelper.AccessToken = await TestHelper.GetAccessToken();
             That(TestHelper.AccessToken, Is.Not.Empty);
         }
 
-        [Test]
-        [Order(1)]
-        [NoBrowser]
         public async Task TwcE201_02()
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirmbground", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-E201_bmTransferApply_bground.json"));
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
         }
 
-        [Test]
-        [Order(2)]
-        [NoBrowser]
         public async Task TwcE201_03()
         {
             HttpStatusCode statusCode = await TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirmbground", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-E201_bmTransferApply_bground2.json"));
@@ -70,7 +71,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(3)]
+        [Order(1)]
         public async Task TwcE201_04To06()
         {
             await TwcE201_04();
@@ -182,7 +183,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(4)]
+        [Order(2)]
         public async Task TwcE201_07()
         {
             await TestHelper.Login(_driver, "0511", TestHelper.Password!);

@@ -106,7 +106,7 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(checkBox).Click().Perform();
 
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#用印或代送件只需夾帶附件")));
-
+             
             That(checkBox.Selected);
         }
         public async Task TwcC101_05()

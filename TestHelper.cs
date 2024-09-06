@@ -242,48 +242,119 @@ public class TestHelper
         return Task.CompletedTask;
     }
 
-    public static Task ClickRow(IWebDriver webDriver, string caseNo)
+    //public static Task ClickRow(IWebDriver webDriver, string caseNo)
+    //{
+    //    var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+    //    var action = new Actions(webDriver);
+
+    //    //Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
+    //    //Console.WriteLine(webDriver.PageSource);
+    //    //Console.WriteLine("::endgroup::");
+
+    //    wait.Until(driver =>
+    //    {
+    //        var stormTable = driver.FindElement(By.CssSelector("storm-table"));
+    //        return stormTable != null;
+    //    });
+
+    //    var stormInputGroup = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-input-group"));
+    //    var keyInput = stormInputGroup.FindElement(By.CssSelector("input"));
+    //    keyInput.SendKeys(applyCaseNo);
+
+    //    IWebElement? element = null;
+
+    //    wait.Until(_ =>
+    //    {
+    //        var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
+    //        Thread.Sleep(500);
+    //        element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
+    //        return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
+    //    });
+
+    //    var action = new Actions(webDriver);
+    //    action.MoveToElement(element).Click().Perform();
+
+    //    var applyCaseNo = wait.Until(driver =>
+    //    {
+    //        var stormTable = webDriver.FindElement(By.CssSelector("storm-table"));
+    //        var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
+    //        return applyCaseNoElements.FirstOrDefault(element => element.Text == caseNo);
+    //    });
+    //    action.MoveToElement(applyCaseNo).Click().Perform();
+
+    //    return Task.CompletedTask;
+    //}
+    public static void ScrollToElement(IWebDriver driver, By by)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        IWebElement element = wait.Until(drv =>
+        {
+            var foundElement = drv.FindElements(by).FirstOrDefault();
+            return foundElement!;
+        });
+        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
+        wait.Until(ExpectedConditions.ElementIsVisible(by));
+    }
+
+    public static async Task ClickRow(IWebDriver webDriver, string caseNo)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
         var action = new Actions(webDriver);
+        int retryCount = 3; // 最大重試次數
+        bool isElementFound = false;
 
-        //Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
-        //Console.WriteLine(webDriver.PageSource);
-        //Console.WriteLine("::endgroup::");
-
-        wait.Until(driver =>
+        for (int attempt = 0; attempt < retryCount; attempt++)
         {
-            var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-            return stormTable != null;
-        });
+            try
+            {
+                wait.Until(driver =>
+                {
+                    var stormTable = driver.FindElement(By.CssSelector("storm-table"));
 
-        //var stormInputGroup = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-input-group"));
-        //var keyInput = stormInputGroup.FindElement(By.CssSelector("input"));
-        //keyInput.SendKeys(applyCaseNo);
+                    if (driver.PageSource.Contains("Page Not Found") || string.IsNullOrWhiteSpace(driver.PageSource))
+                    {
+                        throw new Exception("頁面為空白，系統可能掛掉。");
+                    }
 
-        //IWebElement? element = null;
+                    return stormTable != null;
+                });
 
-        //wait.Until(_ =>
-        //{
-        //    var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-        //    Thread.Sleep(500);
-        //    element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
-        //    return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
-        //});
+                var applyCaseNo = wait.Until(driver =>
+                {
+                    var stormTable = webDriver.FindElement(By.CssSelector("storm-table"));
+                    var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
+                    return applyCaseNoElements.FirstOrDefault(element => element.Text == caseNo);
+                });
 
-        //var action = new Actions(webDriver);
-        //action.MoveToElement(element).Click().Perform();
+                if (applyCaseNo != null)
+                {
+                    action.MoveToElement(applyCaseNo).Click().Perform();
+                    isElementFound = true;
+                    break;
+                }
+            }
+            catch (NoSuchElementException)
+            {
+                Console.WriteLine("未找到元素，嘗試刷新...");
+                webDriver.Navigate().Refresh();
+                await Task.Delay(3000);
+            }
+            catch (WebDriverTimeoutException)
+            {
+                Console.WriteLine("等待超時，重新嘗試...");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"錯誤訊息：{ex.Message}");
+            }
+        }
 
-        var applyCaseNo = wait.Until(driver =>
+        if (!isElementFound)
         {
-            var stormTable = webDriver.FindElement(By.CssSelector("storm-table"));
-            var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
-            return applyCaseNoElements.FirstOrDefault(element => element.Text == caseNo);
-        });
-        action.MoveToElement(applyCaseNo).Click().Perform();
-
-        return Task.CompletedTask;
+            throw new Exception("目標元素未找到。");
+        }
     }
+
 
     public static Task ChangeUser(IWebDriver webDriver, string userName)
     {
@@ -315,33 +386,6 @@ public class TestHelper
         string uuid = segments[^1];
 
         return uuid;
-    }
-
-    public static void ClickElementInNewWindow(IWebDriver driver, string xpathSelector, int initialWindowIndex, int newWindowIndex)
-    {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-
-        // 切換到初始窗口並重置iframe上下文
-        driver.SwitchTo().Window(driver.WindowHandles[initialWindowIndex]);
-        driver.SwitchTo().DefaultContent();
-
-        // 查找並等待元素可見
-        var element = FindAndMoveElement(driver, xpathSelector);
-        wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathSelector)));
-
-        // 切換到新窗口
-        driver.SwitchTo().Window(driver.WindowHandles[newWindowIndex]);
-
-        // 查找並點擊元素
-        element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathSelector)));
-        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", element);
-
-        // 切換回初始窗口
-        driver.SwitchTo().Window(driver.WindowHandles[initialWindowIndex]);
-
-        // 驗證元素是否被選中
-        element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathSelector)));
-        That(element.GetAttribute("checked"), Is.EqualTo("true"));
     }
 
     public static void ClickElementInWindow(IWebDriver driver, string xpath, int windowIndex)
