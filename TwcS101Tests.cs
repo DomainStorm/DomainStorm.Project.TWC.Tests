@@ -52,6 +52,7 @@ namespace DomainStorm.Project.TWC.Tests
 
                 _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("iframe")));
                 _driver.SwitchTo().Frame(0);
+                await Task.Delay(1000);
 
                 var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#accept-sign")));
                 ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
@@ -186,6 +187,21 @@ namespace DomainStorm.Project.TWC.Tests
             {
                 var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
                 return stormTable != null;
+            });
+
+            await _wait.Until(async _ =>
+            {
+                var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+                var pageInfo = stormTable.FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
+                var text = pageInfo.Text;
+
+                if (text == "顯示第 1 至 10 筆，共 15 筆")
+                {
+                    return true;
+                }
+
+                await Task.Delay(500);
+                return false;
             });
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
