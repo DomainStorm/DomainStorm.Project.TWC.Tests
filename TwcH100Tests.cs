@@ -228,29 +228,18 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
             stormTextEditorInput.SendKeys("新增測試");
             That(stormTextEditorInput.Text, Is.EqualTo("新增測試"));
-            await Task.Delay(1000);
 
-            _wait.Until(_ =>
-            {
-                var submitButton = _driver.FindElement(By.XPath("//button[contains(text(), '確定')]"));
-                _actions.MoveToElement(submitButton).Perform();
+            var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
+            _actions.MoveToElement(submitButton).Click().Perform();
 
-                _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確定')]")));
-                Thread.Sleep(1000);
-
-                return submitButton.Displayed;
-            });
-                
-            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '確定')]")));
-            _actions.Click(submitButton).Perform();
-
+            _wait.Until(ExpectedConditions.UrlMatches($"{TestHelper.BaseUrl}/playlist"));
             Thread.Sleep(1000);
-            _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
 
             _wait.Until(driver =>
             {
                 var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-                return stormTable != null;
+                var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
+                return name.Text == "新增測試";
             });
 
             var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
@@ -399,27 +388,15 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
             stormTextEditorInput.SendKeys("跑馬燈測試");
             That(stormTextEditorInput.Text, Is.EqualTo("跑馬燈測試"));
-            await Task.Delay(1000);
+
+            var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
+            _actions.MoveToElement(submitButton).Click().Perform();
+
+            Thread.Sleep(1000);
+            _wait.Until(ExpectedConditions.UrlMatches($"{TestHelper.BaseUrl}/playlist"));
 
             _wait.Until(_ =>
             {
-                var submitButton = _driver.FindElement(By.XPath("//button[contains(text(), '確定')]"));
-                _actions.MoveToElement(submitButton).Perform();
-
-                _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[contains(text(), '確定')]")));
-                Thread.Sleep(1000);
-
-                return submitButton.Displayed;
-            });
-
-            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '確定')]")));
-            _actions.Click(submitButton).Perform();
-
-            _wait.Until(_ =>
-            {
-                Thread.Sleep(1000);
-                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
-
                 var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
 
                 return stormTable != null;

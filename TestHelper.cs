@@ -32,7 +32,7 @@ public class TestHelper
         option.AddArgument("--disable-web-security");
         option.AddArgument("--ignore-certificate-errors");
 
-        if (GetChromeConfig().Headless) 
+        if (GetChromeConfig().Headless)
         {
             option.AddArgument("--headless");
             option.AddArgument("--start-maximized");
@@ -205,7 +205,7 @@ public class TestHelper
 
         for (int attempt = 0; attempt < retryCount; attempt++)
         {
-            try 
+            try
             {
                 webDriver.Navigate().GoToUrl(LoginUrl);
 
@@ -294,18 +294,6 @@ public class TestHelper
         {
             throw new Exception("導航到指定頁面失敗。");
         }
-    }
-
-    public static void ScrollToElement(IWebDriver driver, By by)
-    {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        IWebElement element = wait.Until(drv =>
-        {
-            var foundElement = drv.FindElements(by).FirstOrDefault();
-            return foundElement!;
-        });
-        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
-        wait.Until(ExpectedConditions.ElementIsVisible(by));
     }
 
     public static async Task ClickRow(IWebDriver webDriver, string caseNo)
@@ -559,94 +547,45 @@ public class TestHelper
         });
     }
 
-    public static IWebElement? FindNavigationBySpan(IWebDriver webDriver, string spanText)
+    public class WaterForm
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        var action = new Actions(webDriver);
-
-        return wait.Until(driver =>
-        {
-            // 定位到 storm-tree-view 的 ShadowRoot
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
-            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-
-            if (stormTreeView != null)
-            {
-                var treeShadowRoot = stormTreeView.GetShadowRoot();
-
-                // 查找所有 storm-tree-node 元素
-                var treeNodes = treeShadowRoot.FindElements(By.CssSelector("storm-tree-node"));
-
-                foreach (var treeNode in treeNodes)
-                {
-                    // 查找每個 storm-tree-node 中的 a 標籤的所有 span 標籤
-                    var spans = treeNode.FindElements(By.CssSelector("a span"));
-
-                    foreach (var span in spans)
-                    {
-                        // 檢查 span 標籤的文本是否包含指定的文本
-                        if (span.Text.Contains(spanText))
-                        {
-                            return span; // 返回第一个匹配的 span 元素
-                        }
-                    }
-                }
-            }
-
-            return null;
-        });
+        public string? ApplyCaseNo { get; set; }
+        public string? ApplyDate { get; set; }
+        public string? OperatingArea { get; set; }
+        public string? WaterNo { get; set; }
+        public string? TypeChange { get; set; }
+        public string? UserCode { get; set; }
+        public string? ChangeAddress { get; set; }
+        public string? CancelPayAccount { get; set; }
+        public string? CancelEbill { get; set; }
+        public string? ApplyEbill { get; set; }
+        public string? CancelSmsBill { get; set; }
+        public string? ApplyEmailAddr { get; set; }
+        public string? DeviceLocation { get; set; }
+        public string? Applicant { get; set; }
+        public string? IdNo { get; set; }
+        public string? Unino { get; set; }
+        public string? TelNo { get; set; }
+        public string? MobileNo { get; set; }
+        public string? PipeDiameter { get; set; }
+        public string? WaterType { get; set; }
+        public string? ScoreSheet { get; set; }
+        public string? WaterBuildLic { get; set; }
+        public string? WaterUseLic { get; set; }
+        public string? BillAddress { get; set; }
     }
-
-    public static IWebElement FindAndMoveElement(IWebDriver webDriver, string xpath)
+    public class TestConfig
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        var action = new Actions(webDriver);
-        var element = wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
-
-        action.MoveToElement(element).Perform();
-        wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpath)));
-
-        return element;
+        public string? BaseUrl { get; set; }
+        public string? TokenUrl { get; set; }
+        public string? LoginUrl { get; set; }
+        public string? AccessToken { get; set; }
+        public string? ApplyCaseNo { get; set; }
+        public string? Password { get; set; }
     }
-}
-public class WaterForm
-{
-    public string? ApplyCaseNo { get; set; }
-    public string? ApplyDate { get; set; }
-    public string? OperatingArea { get; set; }
-    public string? WaterNo { get; set; }
-    public string? TypeChange { get; set; }
-    public string? UserCode { get; set; }
-    public string? ChangeAddress { get; set; }
-    public string? CancelPayAccount { get; set; }
-    public string? CancelEbill { get; set; }
-    public string? ApplyEbill { get; set; }
-    public string? CancelSmsBill { get; set; }
-    public string? ApplyEmailAddr { get; set; }
-    public string? DeviceLocation { get; set; }
-    public string? Applicant { get; set; }
-    public string? IdNo { get; set; }
-    public string? Unino { get; set; }
-    public string? TelNo { get; set; }
-    public string? MobileNo { get; set; }
-    public string? PipeDiameter { get; set; }
-    public string? WaterType { get; set; }
-    public string? ScoreSheet { get; set; }
-    public string? WaterBuildLic { get; set; }
-    public string? WaterUseLic { get; set; }
-    public string? BillAddress { get; set; }
-}
-public class TestConfig
-{
-    public string? BaseUrl { get; set; }
-    public string? TokenUrl { get; set; }
-    public string? LoginUrl { get; set; }
-    public string? AccessToken { get; set; }
-    public string? ApplyCaseNo { get; set; }
-    public string? Password { get; set; }
-}
-public class ChromeConfig
-{
-    public bool Headless { get; set; }
-    public bool CleanDbable { get; set; }
+    public class ChromeConfig
+    {
+        public bool Headless { get; set; }
+        public bool CleanDbable { get; set; }
+    }
 }

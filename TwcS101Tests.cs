@@ -152,7 +152,8 @@ namespace DomainStorm.Project.TWC.Tests
                 return element != null;
             });
 
-            var pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-bottom > div.table-pageInfo");
+            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+            var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
             That(pageInfo!.Text, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
         }
 
