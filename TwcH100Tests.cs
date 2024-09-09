@@ -244,11 +244,11 @@ namespace DomainStorm.Project.TWC.Tests
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '確定')]")));
             _actions.Click(submitButton).Perform();
 
+            Thread.Sleep(1000);
+            _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
+
             _wait.Until(driver =>
             {
-                Thread.Sleep(1000);
-                driver.Url.Contains($"{TestHelper.BaseUrl}/playlist");
-
                 var stormTable = driver.FindElement(By.CssSelector("storm-table"));
                 return stormTable != null;
             });
@@ -317,11 +317,11 @@ namespace DomainStorm.Project.TWC.Tests
             var submitButton = _driver.FindElement(By.XPath("//span[contains(text(), '刪除')]"));
             _actions.MoveToElement(submitButton).Click().Perform();
 
+            Thread.Sleep(1000);
+            _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
+
             _wait.Until(_ =>
             {
-                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
-                Thread.Sleep(1000);
-
                 var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
                 var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
 
