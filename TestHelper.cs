@@ -16,6 +16,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
 using AngleSharp.Dom;
 using NUnit.Framework.Constraints;
+using OpenQA.Selenium.DevTools.V113.Preload;
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
 {
@@ -195,50 +196,104 @@ public class TestHelper
         return response.StatusCode;
     }
 
-    public static Task Login(IWebDriver webDriver, string userId, string password)
+    public static async Task Login(IWebDriver webDriver, string userId, string password)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
         var action = new Actions(webDriver);
+        int retryCount = 3;
+        bool isLoginSuccessful = false;
 
-        webDriver.Navigate().GoToUrl(LoginUrl);
-        //((IJavaScriptExecutor)webDriver).ExecuteScript($"window.location.href = '{LoginUrl}';");
+        for (int attempt = 0; attempt < retryCount; attempt++)
+        {
+            try 
+            {
+                webDriver.Navigate().GoToUrl(LoginUrl);
 
-        //Console.WriteLine($"::group::Login---------{LoginUrl}---------");
-        //Console.WriteLine($"---------{LoginUrl}---------");
-        //Console.WriteLine(webDriver.PageSource);
-        //Console.WriteLine("::endgroup::");
-        wait.Until(ExpectedConditions.UrlContains("account"));
+                //Console.WriteLine($"::group::Login---------{LoginUrl}---------");
+                //Console.WriteLine($"---------{LoginUrl}---------");
+                //Console.WriteLine(webDriver.PageSource);
+                //Console.WriteLine("::endgroup::");
+                wait.Until(ExpectedConditions.UrlContains("account"));
 
-        //Console.WriteLine($"::group::Login---------{webDriver.Url}---------");
-        //Console.WriteLine(webDriver.PageSource);
-        //Console.WriteLine("::endgroup::");
+                //Console.WriteLine($"::group::Login---------{webDriver.Url}---------");
+                //Console.WriteLine(webDriver.PageSource);
+                //Console.WriteLine("::endgroup::");
 
-        var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
-        var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
+                wait.Until(driver =>
+                {
+                    var usernameElement = driver.FindElement(By.CssSelector("[name=Username]"));
+                    return usernameElement != null;
+                });
 
-        usernameElement.SendKeys(userId);
-        passwordElement.SendKeys(password);
+                var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
+                var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
 
-        var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
-        action.MoveToElement(button).Click().Perform();
+                usernameElement.SendKeys(userId);
+                passwordElement.SendKeys(password);
 
-        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
+                var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
+                action.MoveToElement(button).Click().Perform();
 
-        return Task.CompletedTask;
+                wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
+
+                isLoginSuccessful = true;
+                break;
+            }
+            catch (NoSuchElementException)
+            {
+                Console.WriteLine("未找到登入元素，嘗試重試...");
+                webDriver.Navigate().Refresh();
+                await Task.Delay(1000);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"錯誤訊息：{ex.Message}");
+                break;
+            }
+            if (!isLoginSuccessful)
+            {
+                throw new Exception("登入失敗。");
+            }
+        }
     }
-    public static Task NavigateAndWait(IWebDriver driver, string pageUrl)
+    public static async Task NavigateAndWait(IWebDriver driver, string pageUrl)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        int retryCount = 3;
+        bool isNavigatedSuccessfully = false;
 
-        driver.Navigate().GoToUrl($@"{BaseUrl}{pageUrl}");
-
-        wait.Until(driver =>
+        for (int attempt = 0; attempt < retryCount; attempt++)
         {
-            var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-            return stormTable != null;
-        });
+            try
+            {
+                driver.Navigate().GoToUrl($@"{BaseUrl}{pageUrl}");
 
-        return Task.CompletedTask;
+                wait.Until(driver =>
+                {
+                    var stormSideNav = driver.FindElement(By.CssSelector("storm-sidenav"));
+                    return stormSideNav != null;
+                });
+
+                isNavigatedSuccessfully = true;
+                break;
+            }
+            catch (NoSuchElementException)
+            {
+                Console.WriteLine("未找到 storm-sidenav 元素，嘗試重試...");
+                driver.Navigate().Refresh();
+                await Task.Delay(1000);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"錯誤訊息：{ex.Message}");
+                break;
+            }
+        }
+
+        if (!isNavigatedSuccessfully)
+        {
+            throw new Exception("導航到指定頁面失敗。");
+        }
     }
 
     public static void ScrollToElement(IWebDriver driver, By by)
@@ -257,14 +312,13 @@ public class TestHelper
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
         var action = new Actions(webDriver);
-        int retryCount = 3; // 最大重試次數
+        int retryCount = 3;
         bool isElementFound = false;
 
         for (int attempt = 0; attempt < retryCount; attempt++)
         {
             try
             {
-                // 確保 storm-table 元素存在
                 wait.Until(driver =>
                 {
                     var stormTable = driver.FindElement(By.CssSelector("storm-table"));
@@ -275,7 +329,6 @@ public class TestHelper
                     return stormTable != null;
                 });
 
-                // 確保輸入框可見並可用
                 var stormTableElement = wait.Until(driver =>
                 {
                     var stormTable = driver.FindElement(By.CssSelector("storm-table"));
@@ -286,7 +339,6 @@ public class TestHelper
                 stormTableElement.Clear();
                 stormTableElement.SendKeys(caseNo + Keys.Enter);
 
-                // 等待表格中顯示相關的行
                 var applyCaseNo = wait.Until(driver =>
                 {
                     var stormTable = driver.FindElement(By.CssSelector("storm-table"));
@@ -305,15 +357,12 @@ public class TestHelper
             {
                 Console.WriteLine("未找到元素，嘗試刷新...");
                 webDriver.Navigate().Refresh();
-                await Task.Delay(3000);
-            }
-            catch (WebDriverTimeoutException)
-            {
-                Console.WriteLine("等待超時，重新嘗試...");
+                await Task.Delay(1000);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"錯誤訊息：{ex.Message}");
+                break;
             }
         }
 
@@ -322,7 +371,6 @@ public class TestHelper
             throw new Exception("目標元素未找到。");
         }
     }
-
 
     public static Task ChangeUser(IWebDriver webDriver, string userName)
     {
@@ -416,7 +464,6 @@ public class TestHelper
         return File.Exists(filePath);
     }
 
-
     public static void CleanDb()
     {
         if (GetChromeConfig().CleanDbable)
@@ -444,7 +491,6 @@ public class TestHelper
             cn.Query("delete QuestionnaireFormAnswer");
         }
     }
-
     public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
@@ -513,7 +559,6 @@ public class TestHelper
         });
     }
 
-
     public static IWebElement? FindNavigationBySpan(IWebDriver webDriver, string spanText)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
@@ -552,41 +597,6 @@ public class TestHelper
         });
     }
 
-    public static IWebElement? FindShadowRootElement(IWebDriver webDriver, string css)
-    {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-        var action = new Actions(webDriver);
-
-        return wait.Until(_ =>
-        {
-            IWebElement e = null;
-
-            wait.Until(_ =>
-            {
-                try
-                {
-                    var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
-                    var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-
-                    if (stormTreeView != null)
-                    {
-                        e = stormTreeView.GetShadowRoot().FindElement(By.CssSelector(css));
-
-                        return true;
-                    }
-                }
-
-                catch
-                {
-                    return false;
-                }
-
-                return false;
-            });
-
-            return e;
-        });
-    }
     public static IWebElement FindAndMoveElement(IWebDriver webDriver, string xpath)
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));

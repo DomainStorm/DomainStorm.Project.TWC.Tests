@@ -340,7 +340,11 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(_ =>
             {
                 var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-                return stormTable != null;
+                if (stormTable == null)
+                    return false;
+
+                var fileRows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                return fileRows.Count >= 2;
             });
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
