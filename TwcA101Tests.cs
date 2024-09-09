@@ -94,34 +94,6 @@ namespace DomainStorm.Project.TWC.Tests
             That(deleteButton.Text, Is.EqualTo("刪除"));
         }
 
-        //public async Task TwcA101_03()
-        //{
-        //    await TestHelper.Login(_driver, "0511", TestHelper.Password!);
-        //    await TestHelper.NavigateAndWait(_driver, "/draft");
-        //    await TestHelper.ClickRow(_driver, TestHelper.ApplyCaseNo!);
-
-        //    _wait.Until(driver =>
-        //    {
-        //        var element = driver.FindElement(By.XPath("//button[contains(text(), '捨棄草稿')]"));
-        //        _actions.MoveToElement(element).Perform();
-
-        //        return element.Displayed;
-        //    });
-
-        //    var discardButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '捨棄草稿')]")));
-        //    _actions.Click(discardButton).Perform();
-
-        //    _wait.Until(driver =>
-        //    {
-        //        var element = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h2[text()='是否刪除？']")));
-        //        var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='刪除']")));
-        //        return element != null && deleteButton != null;
-        //    });
-
-        //    var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '刪除')]")));
-        //    That(deleteButton.Text, Is.EqualTo("刪除"));
-        //}
-
         public async Task TwcA101_04()
         {
             var deleteButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '刪除')]")));
@@ -243,10 +215,6 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#用印或代送件只需夾帶附件")));
 
             That(checkBox.Selected);
-
-            //_wait.Until(driver => checkBox.GetAttribute("checked") == "true");
-
-            //That(checkBox.GetAttribute("checked"), Is.EqualTo("true"));
         }
         public async Task TwcA101_11()
         {
