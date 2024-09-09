@@ -39,6 +39,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             for (int i = 0; i < 15; i++)
             {
+                Console.WriteLine($"Starting iteration {i + 1} of the loop.");
+
                 TestHelper.AccessToken = await TestHelper.GetAccessToken();
                 That(TestHelper.AccessToken, Is.Not.Empty);
 
