@@ -244,14 +244,16 @@ namespace DomainStorm.Project.TWC.Tests
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '確定')]")));
             _actions.Click(submitButton).Perform();
 
-            _wait.Until(_ =>
+            await _wait.Until(async driver =>
             {
-                Thread.Sleep(1000);
-                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
+                await Task.Delay(1000);
+                if (!driver.Url.Contains($"{TestHelper.BaseUrl}/playlist"))
+                {
+                    return false;
+                }
 
-                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-
-                return stormTable != null;
+                var stormTable = driver.FindElement(By.CssSelector("storm-table"));
+                return stormTable != null && stormTable.Displayed;
             });
 
             var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
