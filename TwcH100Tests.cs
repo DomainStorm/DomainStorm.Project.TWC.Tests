@@ -249,6 +249,7 @@ namespace DomainStorm.Project.TWC.Tests
             Console.WriteLine($"---------Current URL: {_driver.Url}---------");
             Console.WriteLine(_driver.PageSource);
             Console.WriteLine("::endgroup::");
+            Thread.Sleep(3000);
 
             _wait.Until(driver =>
             {
@@ -424,6 +425,7 @@ namespace DomainStorm.Project.TWC.Tests
             Console.WriteLine($"---------Current URL: {_driver.Url}---------");
             Console.WriteLine(_driver.PageSource);
             Console.WriteLine("::endgroup::");
+            Thread.Sleep(3000);
 
             _wait.Until(driver =>
             {
