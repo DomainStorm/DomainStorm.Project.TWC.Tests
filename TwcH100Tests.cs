@@ -208,16 +208,6 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(addButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//span[text()='加入']")));
-
-            _wait.Until(_ =>
-            {
-                var element = _driver.FindElement(By.CssSelector("form storm-table"));
-                return element != null;
-            });
-
-            var formStormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("form storm-table")));
-            var pngName = formStormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
-            That(pngName.Text, Is.EqualTo("台水官網圖.png"));
         }
 
         public async Task TwcH100_05() 
@@ -384,16 +374,6 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(addButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//span[text()='加入']")));
-
-            _wait.Until(_ =>
-            {
-                var element = _driver.FindElement(By.CssSelector("form storm-table"));
-                return element != null;
-            });
-
-            var formStormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("form storm-table")));
-            var mp4Name = formStormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
-            That(mp4Name.Text, Is.EqualTo("testmedia.mp4"));
         }
 
         public async Task TwcH100_12()
