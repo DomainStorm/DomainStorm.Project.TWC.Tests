@@ -206,7 +206,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             var addButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//span[contains(text(), '加入')]")));
             _actions.MoveToElement(addButton).Click().Perform();
-            await Task.Delay(1000);
+
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//span[text()='加入']")));
 
             _wait.Until(_ =>
             {
@@ -232,7 +233,12 @@ namespace DomainStorm.Project.TWC.Tests
             var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
 
-            _wait.Until(ExpectedConditions.UrlMatches($"{TestHelper.BaseUrl}/playlist"));
+            _wait.Until(driver =>
+            {
+                var element = driver.FindElement(By.XPath("//storm-card[@headline='節目單管理']"));
+                return element != null;
+            });
+
             Thread.Sleep(1000);
 
             _wait.Until(driver =>
@@ -366,7 +372,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             var addButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//span[contains(text(), '加入')]")));
             _actions.MoveToElement(addButton).Click().Perform();
-            await Task.Delay(1000);
+
+            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//span[text()='加入']")));
 
             _wait.Until(_ =>
             {
@@ -392,15 +399,13 @@ namespace DomainStorm.Project.TWC.Tests
             var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
 
-            Thread.Sleep(1000);
-            _wait.Until(ExpectedConditions.UrlMatches($"{TestHelper.BaseUrl}/playlist"));
-
-            _wait.Until(_ =>
+            _wait.Until(driver =>
             {
-                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-
-                return stormTable != null;
+                var element = driver.FindElement(By.XPath("//storm-card[@headline='節目單管理']"));
+                return element != null;
             });
+
+            Thread.Sleep(1000);
 
             var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
             var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
