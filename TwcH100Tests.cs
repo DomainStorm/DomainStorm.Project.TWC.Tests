@@ -229,8 +229,16 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
             stormTextEditorInput.SendKeys("新增測試");
             That(stormTextEditorInput.Text, Is.EqualTo("新增測試"));
+            Thread.Sleep(1000);
 
             var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
+            _wait.Until(driver =>
+            {
+                var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
+                _actions.MoveToElement(submitButton).Perform();
+                _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='確定']")));
+                return submitButton.Displayed;
+            });
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
 
             _wait.Until(driver =>
@@ -238,8 +246,6 @@ namespace DomainStorm.Project.TWC.Tests
                 var element = driver.FindElement(By.XPath("//storm-card[@headline='節目單管理']"));
                 return element != null;
             });
-
-            Thread.Sleep(1000);
 
             _wait.Until(driver =>
             {
@@ -395,8 +401,16 @@ namespace DomainStorm.Project.TWC.Tests
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
             stormTextEditorInput.SendKeys("跑馬燈測試");
             That(stormTextEditorInput.Text, Is.EqualTo("跑馬燈測試"));
+            Thread.Sleep(1000);
 
             var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
+            _wait.Until(driver =>
+            {
+                var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
+                _actions.MoveToElement(submitButton).Perform();
+                _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='確定']")));
+                return submitButton.Displayed;
+            });
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
 
             _wait.Until(driver =>
