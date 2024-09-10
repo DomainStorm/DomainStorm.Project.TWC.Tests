@@ -230,7 +230,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(stormTextEditorInput.Text, Is.EqualTo("新增測試"));
 
             var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
 
             _wait.Until(ExpectedConditions.UrlMatches($"{TestHelper.BaseUrl}/playlist"));
             Thread.Sleep(1000);
@@ -390,7 +390,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(stormTextEditorInput.Text, Is.EqualTo("跑馬燈測試"));
 
             var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
 
             Thread.Sleep(1000);
             _wait.Until(ExpectedConditions.UrlMatches($"{TestHelper.BaseUrl}/playlist"));
