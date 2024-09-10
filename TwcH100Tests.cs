@@ -231,21 +231,24 @@ namespace DomainStorm.Project.TWC.Tests
             That(stormTextEditorInput.Text, Is.EqualTo("新增測試"));
             Thread.Sleep(1000);
 
-            var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
-            _wait.Until(driver =>
-            {
-                var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
-                _actions.MoveToElement(submitButton).Perform();
-                _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='確定']")));
-                return submitButton.Displayed;
-            });
+            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
+
+            Console.WriteLine($"::group::");
+            Console.WriteLine($"---------Current URL: {_driver.Url}---------");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::");
 
             _wait.Until(driver =>
             {
                 var element = driver.FindElement(By.XPath("//storm-card[@headline='節目單管理']"));
                 return element != null;
             });
+
+            Console.WriteLine($"::group::");
+            Console.WriteLine($"---------Current URL: {_driver.Url}---------");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::");
 
             _wait.Until(driver =>
             {
@@ -403,15 +406,13 @@ namespace DomainStorm.Project.TWC.Tests
             That(stormTextEditorInput.Text, Is.EqualTo("跑馬燈測試"));
             Thread.Sleep(1000);
 
-            var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
-            _wait.Until(driver =>
-            {
-                var submitButton = _driver.FindElement(By.XPath("//button[text()='確定']"));
-                _actions.MoveToElement(submitButton).Perform();
-                _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='確定']")));
-                return submitButton.Displayed;
-            });
+            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
+
+            Console.WriteLine($"::group::");
+            Console.WriteLine($"---------Current URL: {_driver.Url}---------");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::");
 
             _wait.Until(driver =>
             {
@@ -419,7 +420,17 @@ namespace DomainStorm.Project.TWC.Tests
                 return element != null;
             });
 
-            Thread.Sleep(1000);
+            Console.WriteLine($"::group::");
+            Console.WriteLine($"---------Current URL: {_driver.Url}---------");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::");
+
+            _wait.Until(driver =>
+            {
+                var stormTable = driver.FindElement(By.CssSelector("storm-table"));
+                var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
+                return name.Text == "節目單測試";
+            });
 
             var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
             var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
