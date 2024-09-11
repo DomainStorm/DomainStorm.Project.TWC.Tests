@@ -220,11 +220,7 @@ namespace DomainStorm.Project.TWC.Tests
             Console.WriteLine(_driver.PageSource);
             Console.WriteLine("::endgroup::");
 
-            _wait.Until(driver =>
-            {
-                var element = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='節目單管理']")));
-                return element != null;
-            });
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='節目單管理']")));
 
             Console.WriteLine($"::group::");
             Console.WriteLine($"---------Current URL: {_driver.Url}---------");
@@ -383,11 +379,7 @@ namespace DomainStorm.Project.TWC.Tests
             Console.WriteLine(_driver.PageSource);
             Console.WriteLine("::endgroup::");
 
-            _wait.Until(driver =>
-            {
-                var element = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='節目單管理']")));
-                return element != null;
-            });
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='節目單管理']")));
 
             Console.WriteLine($"::group::");
             Console.WriteLine($"---------Current URL: {_driver.Url}---------");
