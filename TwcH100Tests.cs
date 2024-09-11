@@ -36,56 +36,34 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcH100_01_M100_01()
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
 
-            _wait.Until(_ =>
-            {
-                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='媒體管理']"));
-                return stormCard != null;
-            });
+            await TestHelper.NavigateAndWaitForElement(_driver, "/multimedia", By.CssSelector("storm-card[headline='媒體管理']"), 10);
 
-            var addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增檔案')]")));
-            _actions.MoveToElement(addFileButton).Click().Perform();
+            await TestHelper.WaitAndMoveToClick(_driver, By.XPath("//button[text()='新增檔案']"), 10);
+            
+            await TestHelper.UploadFileAndCheck(_driver, "台水官網圖.png", "input.dz-hidden-input");
 
-            _wait.Until(_ =>
-            {
-                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='新增檔案']"));
-                return stormCard != null;
-            });
+            await TestHelper.WaitForElement(_driver, By.CssSelector("storm-card[headline='媒體管理']"), 10);
 
-            var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "台水官網圖.png");
-            TestHelper.UploadFile(_driver, file, "input.dz-hidden-input");
+            //var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "台水官網圖.png");
+            //TestHelper.UploadFile(_driver, file, "input.dz-hidden-input");
 
-            _wait.Until(_driver =>
-            {
-                var input = _driver.FindElement(By.CssSelector("storm-input-group[label='名稱'] input"));
-                return input != null;
-            });
+            //_wait.Until(_driver =>
+            //{
+            //    var input = _driver.FindElement(By.CssSelector("storm-input-group[label='名稱'] input"));
+            //    return input != null;
+            //});
 
-            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
-            That(fileName.GetAttribute("value"), Is.EqualTo("台水官網圖.png"));
+            //var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
+            //That(fileName.GetAttribute("value"), Is.EqualTo("台水官網圖.png"));
 
-            var stormInputGroupDurationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='播放秒數'] input")));
-            stormInputGroupDurationInput.SendKeys("10");
+            //var stormInputGroupDurationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='播放秒數'] input")));
+            //stormInputGroupDurationInput.SendKeys("10");
 
-            var uploadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '上傳')]")));
-            _actions.MoveToElement(uploadButton).Click().Perform();
-
-            _wait.Until(_ =>
-            {
-                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='媒體管理']"));
-                return stormCard != null;
-            });
-
-            var element = _wait.Until(driver =>
-            {
-                var stormEditTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-edit-table")));
-                var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-                var textElement = stormTable.GetShadowRoot().FindElement(By.CssSelector("span span"));
-                return textElement.Text == "台水官網圖.png" ? textElement : null;
-            });
-
-            That(element!.Text, Is.EqualTo("台水官網圖.png"));
+            //var uploadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '上傳')]")));
+            //_actions.MoveToElement(uploadButton).Click().Perform();
+            var element = TestHelper.WaitStormEditTableWithText(_driver, "td[data-field='name'] span span", "台水官網圖.png");
+            That(element.Text, Is.EqualTo("台水官網圖.png"));
         }
 
         [Test]
@@ -93,55 +71,17 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcH100_01_M100_02()
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/multimedia");
 
-            _wait.Until(_ =>
-            {
-                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='媒體管理']"));
-                return stormCard != null;
-            });
+            await TestHelper.NavigateAndWaitForElement(_driver, "/multimedia", By.CssSelector("storm-card[headline='媒體管理']"), 10);
 
-            var addFileButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增檔案')]")));
-            _actions.MoveToElement(addFileButton).Click().Perform();
+            await TestHelper.WaitAndMoveToClick(_driver, By.XPath("//button[text()='新增檔案']"), 10);
 
-            _wait.Until(_ =>
-            {
-                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='新增檔案']"));
-                return stormCard != null;
-            });
+            await TestHelper.UploadFileAndCheck(_driver, "testmedia.mp4", "input.dz-hidden-input");
 
-            var file = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "testmedia.mp4");
-            TestHelper.UploadFile(_driver, file, "input.dz-hidden-input");
+            await TestHelper.WaitForElement(_driver, By.CssSelector("storm-card[headline='媒體管理']"), 10);
 
-            _wait.Until(_driver =>
-            {
-                var input = _driver.FindElement(By.CssSelector("storm-input-group[label='名稱'] input"));
-                return input != null;
-            });
-
-            var fileName = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
-            That(fileName.GetAttribute("value"), Is.EqualTo("testmedia.mp4"));
-
-            var uploadButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '上傳')]")));
-            _actions.MoveToElement(uploadButton).Click().Perform();
-
-            _wait.Until(_ =>
-            {
-                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='媒體管理']"));
-                return stormCard != null;
-            });
-
-            var stormEditTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-edit-table")));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
-            var selectedRow = rows.FirstOrDefault(tr =>
-            {
-                var textElement = tr.FindElement(By.CssSelector("td[data-field='name'] span span"));
-                return textElement.Text == "testmedia.mp4";
-            });
-
-            var textElement = selectedRow!.FindElement(By.CssSelector("td[data-field='name'] span span"));
-            That(textElement!.Text, Is.EqualTo("testmedia.mp4"));
+            var element = TestHelper.WaitStormEditTableWithText(_driver, "td[data-field='name'] span span", "testmedia.mp4");
+            That(element.Text, Is.EqualTo("testmedia.mp4"));
         }
 
         [Test]
