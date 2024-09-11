@@ -362,22 +362,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[contains(@class, 'ql-editor')]")));
             editorInput.SendKeys("跑馬燈測試" + Keys.Tab);
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
 
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
 
-            Console.WriteLine($"::group::");
-            Console.WriteLine($"---------Current URL: {_driver.Url}---------");
-            Console.WriteLine(_driver.PageSource);
-            Console.WriteLine("::endgroup::");
-
             _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='節目單管理']")));
-
-            Console.WriteLine($"::group::");
-            Console.WriteLine($"---------Current URL: {_driver.Url}---------");
-            Console.WriteLine(_driver.PageSource);
-            Console.WriteLine("::endgroup::");
 
             _wait.Until(driver =>
             {
