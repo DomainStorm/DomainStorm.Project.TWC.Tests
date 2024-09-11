@@ -339,21 +339,14 @@ namespace DomainStorm.Project.TWC.Tests
             var addMediaButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增媒體')]")));
             _actions.MoveToElement(addMediaButton).Click().Perform();
 
-            _wait.Until(_ =>
-            {
-                var stormTable = _driver.FindElement(By.CssSelector("div.rz-dialog storm-table"));
-                return stormTable != null;
-            });
-
-            var dialogStormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog storm-table")));
-            var tbody = dialogStormTable.GetShadowRoot().FindElement(By.CssSelector("tbody"));
+            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack storm-table")));
+            var tbody = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody"));
             var trList = tbody!.FindElements(By.CssSelector("tr"));
-            var selectedRows = trList.First(tr =>
+            var selectedRows = trList.FirstOrDefault(tr =>
             {
-                var nameCell = tr.FindElement(By.CssSelector("td[data-field='name'] span span"));
+                var nameCell = tr.FindElement(By.CssSelector("td[data-field='name'] span"));
                 return nameCell.Text == "testmedia.mp4";
             });
-
             _actions.MoveToElement(selectedRows).Click().Perform();
 
             var addButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//span[contains(text(), '加入')]")));
