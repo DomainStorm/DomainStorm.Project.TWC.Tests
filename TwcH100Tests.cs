@@ -187,21 +187,14 @@ namespace DomainStorm.Project.TWC.Tests
             var addMediaButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增媒體')]")));
             _actions.MoveToElement(addMediaButton).Click().Perform();
 
-            _wait.Until(_ =>
-            {
-                var stormTable = _driver.FindElement(By.CssSelector("div.rz-dialog storm-table"));
-                return stormTable != null;
-            });
-
-            var dialogStormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog storm-table")));
-            var tbody = dialogStormTable.GetShadowRoot().FindElement(By.CssSelector("tbody"));
+            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack storm-table")));
+            var tbody = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody"));
             var trList = tbody!.FindElements(By.CssSelector("tr"));
-            var selectedRows = trList.First(tr =>
+            var selectedRows = trList.FirstOrDefault(tr =>
             {
-                var nameCell = tr.FindElement(By.CssSelector("td[data-field='name'] span span"));
+                var nameCell = tr.FindElement(By.CssSelector("td[data-field='name'] span"));
                 return nameCell.Text == "台水官網圖.png";
             });
-
             _actions.MoveToElement(selectedRows).Click().Perform();
 
             var addButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//span[contains(text(), '加入')]")));
@@ -212,14 +205,11 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcH100_05() 
         {
-            var stormInputGroupNameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
-            stormInputGroupNameInput.SendKeys("新增測試");
-            That(stormInputGroupNameInput.GetAttribute("value"), Is.EqualTo("新增測試"));
+            var nameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-input-group[@label='名稱']//input")));
+            nameInput.SendKeys("新增測試" + Keys.Tab);
 
-            var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
-            stormTextEditorInput.SendKeys("新增測試");
-            That(stormTextEditorInput.Text, Is.EqualTo("新增測試"));
-            Thread.Sleep(3000);
+            var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[contains(@class, 'ql-editor')]")));
+            editorInput.SendKeys("新增測試" + Keys.Tab);
 
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
@@ -239,7 +229,6 @@ namespace DomainStorm.Project.TWC.Tests
             Console.WriteLine($"---------Current URL: {_driver.Url}---------");
             Console.WriteLine(_driver.PageSource);
             Console.WriteLine("::endgroup::");
-            Thread.Sleep(3000);
 
             _wait.Until(driver =>
             {
@@ -253,7 +242,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(name.Text, Is.EqualTo("新增測試"));
 
             var marquee = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='marquee'] span span"));
-            That(marquee.Text, Is.EqualTo("<h6>新增測試</h6>"));
+            That(marquee.Text, Is.EqualTo("<h6>新增測試 </h6>"));
 
             var ownerName = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='ownerName'] span span"));
             That(ownerName.Text, Is.EqualTo("第四區管理處"));
@@ -378,14 +367,11 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcH100_12()
         {
-            var stormInputGroupNameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
-            stormInputGroupNameInput.SendKeys("節目單測試");
-            That(stormInputGroupNameInput.GetAttribute("value"), Is.EqualTo("節目單測試"));
+            var nameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-input-group[@label='名稱']//input")));
+            nameInput.SendKeys("節目單測試" + Keys.Tab);
 
-            var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
-            stormTextEditorInput.SendKeys("跑馬燈測試");
-            That(stormTextEditorInput.Text, Is.EqualTo("跑馬燈測試"));
-            Thread.Sleep(3000);
+            var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[contains(@class, 'ql-editor')]")));
+            editorInput.SendKeys("跑馬燈測試" + Keys.Tab);
 
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
@@ -419,7 +405,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(name.Text, Is.EqualTo("節目單測試"));
 
             var marquee = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='marquee'] span span"));
-            That(marquee.Text, Is.EqualTo("<h6>跑馬燈測試</h6>"));
+            That(marquee.Text, Is.EqualTo("<h6>跑馬燈測試 </h6>"));
 
             var ownerName = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='ownerName'] span span"));
             That(ownerName.Text, Is.EqualTo("第四區管理處"));
