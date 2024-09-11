@@ -210,6 +210,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[contains(@class, 'ql-editor')]")));
             editorInput.SendKeys("新增測試" + Keys.Tab);
+            Thread.Sleep(1000);
 
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
@@ -221,7 +222,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var element = driver.FindElement(By.XPath("//storm-card[@headline='節目單管理']"));
+                var element = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='節目單管理']")));
                 return element != null;
             });
 
@@ -232,7 +233,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var stormTable = driver.FindElement(By.CssSelector("storm-table"));
+                var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
                 var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
                 return name.Text == "新增測試";
             });
