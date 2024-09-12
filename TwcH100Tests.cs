@@ -1,7 +1,9 @@
-﻿using OpenQA.Selenium;
+﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
+using System;
 using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
@@ -39,7 +41,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             await TestHelper.NavigateAndWaitForElement(_driver, "/multimedia", By.CssSelector("storm-card[headline='媒體管理']"), 10);
 
-            await TestHelper.WaitAndMoveToClick(_driver, By.XPath("//button[text()='新增檔案']"), 10);
+            await TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='新增檔案']"), 10);
             
             await TestHelper.UploadFileAndCheck(_driver, "台水官網圖.png", "input.dz-hidden-input");
 
@@ -74,7 +76,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             await TestHelper.NavigateAndWaitForElement(_driver, "/multimedia", By.CssSelector("storm-card[headline='媒體管理']"), 10);
 
-            await TestHelper.WaitAndMoveToClick(_driver, By.XPath("//button[text()='新增檔案']"), 10);
+            await TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='新增檔案']"), 10);
 
             await TestHelper.UploadFileAndCheck(_driver, "testmedia.mp4", "input.dz-hidden-input");
 
@@ -97,13 +99,15 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcH100_02()
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
 
-            _wait.Until(_ =>
-            {
-                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='節目單管理']"));
-                return stormCard != null;
-            });
+            await TestHelper.NavigateAndWaitForElement(_driver, "/playlist", By.CssSelector("storm-card[headline='節目單管理']"), 10);
+            //_driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
+
+            //_wait.Until(_ =>
+            //{
+            //    var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='節目單管理']"));
+            //    return stormCard != null;
+            //});
 
             var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='節目單管理']")));
             var playlistManage = stormCard.GetShadowRoot().FindElement(By.CssSelector("h5"));
@@ -112,77 +116,113 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcH100_03()
         {
-            var addListButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增節目單')]")));
-            _actions.MoveToElement(addListButton).Click().Perform();
+            var addListButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='新增節目單']"), 10);
+            //await TestHelper.WaitForElement(_driver, By.XPath("//button[text()='新增節目單']"), 10);
+            //var addListButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='新增節目單']")));
+            //_actions.MoveToElement(addListButton).Click().Perform();
 
-            _wait.Until(_ =>
-            {
-                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='新增節目單']"));
-                return stormCard != null;
-            });
+            await TestHelper.WaitForElement(_driver, By.CssSelector("storm-card[headline='新增節目單']"), 10);
+            //_wait.Until(_ =>
+            //{
+            //    var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='新增節目單']"));
+            //    return stormCard != null;
+            //});
         }
 
         public async Task TwcH100_04() 
         {
-            var addMediaButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增媒體')]")));
-            _actions.MoveToElement(addMediaButton).Click().Perform();
+            var addMediaButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='新增媒體']"), 10);
+            //await TestHelper.WaitForElement(_driver, By.XPath("//button[text()='新增媒體']"), 10);
+            //var addMediaButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='新增媒體']")));
+            //_actions.MoveToElement(addMediaButton).Click().Perform();
 
-            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack storm-table")));
-            var tbody = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody"));
-            var trList = tbody!.FindElements(By.CssSelector("tr"));
-            var selectedRows = trList.FirstOrDefault(tr =>
+            await TestHelper.WaitForElement(_driver, By.CssSelector("div.rz-stack storm-table"), 10);
+
+            var rzStormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack storm-table")));
+            var rows = rzStormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
+            var selectedRow = rows.FirstOrDefault(tr =>
             {
-                var nameCell = tr.FindElement(By.CssSelector("td[data-field='name'] span"));
-                return nameCell.Text == "台水官網圖.png";
+                var element = tr.FindElement(By.CssSelector("td[data-field='name'] span span"));
+                return element.Text == "台水官網圖.png";
             });
-            _actions.MoveToElement(selectedRows).Click().Perform();
+            _actions.MoveToElement(selectedRow).Click().Perform();
 
-            var addButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//span[contains(text(), '加入')]")));
-            _actions.MoveToElement(addButton).Click().Perform();
+            //var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack storm-table")));
+            //var tbody = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody"));
+            //var trList = tbody!.FindElements(By.CssSelector("tr"));
+            //var selectedRows = trList.FirstOrDefault(tr =>
+            //{
+            //    var nameCell = tr.FindElement(By.CssSelector("td[data-field='name'] span"));
+            //    return nameCell.Text == "台水官網圖.png";
+            //});
+            //_actions.MoveToElement(selectedRows).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//span[text()='加入']")));
+            var addButton = TestHelper.WaitAndClick(_driver, By.XPath("//span[text()='加入']"), 10);
+
+            //await TestHelper.WaitForElement(_driver, By.XPath("//span[text()='加入']"), 10);
+
+            //await TestHelper.ClickButton(_driver, By.XPath("//span[text()='加入']"));
+
+            await TestHelper.WaitElementDisappear(_driver, By.XPath("//span[text()='加入']"));
+
+            //var addButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//span[contains(text(), '加入')]")));
+            //_actions.MoveToElement(addButton).Click().Perform();
+
+            //_wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//span[text()='加入']")));
         }
 
         public async Task TwcH100_05() 
         {
-            var nameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-input-group[@label='名稱']//input")));
-            nameInput.SendKeys("新增測試" + Keys.Tab);
+            await TestHelper.EnterText(_driver, By.XPath("//storm-input-group[@label='名稱']//input"), "新增測試");
+            //var nameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-input-group[@label='名稱']//input")));
+            //nameInput.SendKeys("新增測試");
 
-            var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[contains(@class, 'ql-editor')]")));
-            editorInput.SendKeys("新增測試" + Keys.Tab);
-            Thread.Sleep(1000);
+            await TestHelper.EnterText(_driver, By.XPath("//div[@class='ql-editor']"), "新增測試");
+            //var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[contains(@class, 'ql-editor')]")));
+            //editorInput.SendKeys("新增測試");
+            //Thread.Sleep(1000);
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
+            var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
+            //var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
+            //((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
 
-            Console.WriteLine($"::group::");
-            Console.WriteLine($"---------Current URL: {_driver.Url}---------");
-            Console.WriteLine(_driver.PageSource);
-            Console.WriteLine("::endgroup::");
+            await TestHelper.WaitForElement(_driver, By.CssSelector("storm-card[headline='節目單管理']"), 10);
+            //Console.WriteLine($"::group::");
+            //Console.WriteLine($"---------Current URL: {_driver.Url}---------");
+            //Console.WriteLine(_driver.PageSource);
+            //Console.WriteLine("::endgroup::");
 
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='節目單管理']")));
+            //_wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='節目單管理']")));
 
-            Console.WriteLine($"::group::");
-            Console.WriteLine($"---------Current URL: {_driver.Url}---------");
-            Console.WriteLine(_driver.PageSource);
-            Console.WriteLine("::endgroup::");
+            //Console.WriteLine($"::group::");
+            //Console.WriteLine($"---------Current URL: {_driver.Url}---------");
+            //Console.WriteLine(_driver.PageSource);
+            //Console.WriteLine("::endgroup::");
 
-            _wait.Until(driver =>
-            {
-                var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
-                var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
-                return name.Text == "新增測試";
-            });
-
-            var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-            var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
+            var name = TestHelper.WaitStormTableWithText(_driver, "td[data-field='name'] span span", "新增測試");
             That(name.Text, Is.EqualTo("新增測試"));
 
-            var marquee = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='marquee'] span span"));
-            That(marquee.Text, Is.EqualTo("<h6>新增測試 </h6>"));
+            var marquee = TestHelper.WaitStormTableWithText(_driver, "td[data-field='marquee'] span span", "<h6>新增測試</h6>");
+            That(marquee.Text, Is.EqualTo("<h6>新增測試</h6>"));
 
-            var ownerName = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='ownerName'] span span"));
+            var ownerName = TestHelper.WaitStormTableWithText(_driver, "td[data-field='ownerName'] span span", "第四區管理處");
             That(ownerName.Text, Is.EqualTo("第四區管理處"));
+            //_wait.Until(driver =>
+            //{
+            //    var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+            //    var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
+            //    return name.Text == "新增測試";
+            //});
+
+            //var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+            //var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
+            //That(name.Text, Is.EqualTo("新增測試"));
+
+            //var marquee = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='marquee'] span span"));
+            //That(marquee.Text, Is.EqualTo("<h6>新增測試</h6>"));
+
+            //var ownerName = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='ownerName'] span span"));
+            //That(ownerName.Text, Is.EqualTo("第四區管理處"));
         }
 
         [Test]
@@ -190,20 +230,29 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcH100_06()
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
 
-            _wait.Until(_ =>
-            {
-                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-                return stormTable != null;
-            });
+            await TestHelper.NavigateAndWaitForElement(_driver, "/playlist", By.CssSelector("storm-card[headline='節目單管理']"), 10);
+            //_driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
+
+            //_wait.Until(_ =>
+            //{
+            //    var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+            //    return stormTable != null;
+            //});
+
+            var name = TestHelper.WaitStormTableWithText(_driver, "td[data-field='name'] span span", "新增測試");
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
             var viewButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(1) button"));
             _actions.MoveToElement(viewButton).Click().Perform();
 
-            var textCentet = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '新增測試')]")));
-            That(textCentet.Text, Is.EqualTo("新增測試"));
+            await TestHelper.WaitForElement(_driver, By.XPath("//h5[text()='新增測試']"), 10);
+
+            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[text()='新增測試']")));
+            That(content.Text, Is.EqualTo("新增測試"));
+
+            //var textCentet = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '新增測試')]")));
+            //That(textCentet.Text, Is.EqualTo("新增測試"));
         }
 
         [Test]
@@ -217,41 +266,50 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcH100_07()
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
 
-            _wait.Until(_ =>
-            {
-                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-                return stormTable != null;
-            });
+            await TestHelper.NavigateAndWaitForElement(_driver, "/playlist", By.CssSelector("storm-card[headline='節目單管理']"), 10);
+            //_driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
+
+            //_wait.Until(_ =>
+            //{
+            //    var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+            //    return stormTable != null;
+            //});
+            var name = TestHelper.WaitStormTableWithText(_driver, "td[data-field='name'] span span", "新增測試");
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
             var deleteButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(3) button"));
             _actions.MoveToElement(deleteButton).Click().Perform();
 
-            var hint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '是否確定刪除？')]")));
-            That(hint.Text, Is.EqualTo("是否確定刪除？"));
+            await TestHelper.WaitForElement(_driver, By.XPath("//h5[text()='是否確定刪除？']"), 10);
+
+            var check = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[text()='是否確定刪除？']")));
+            That(check.Text, Is.EqualTo("是否確定刪除？"));
         }
 
         public async Task TwcH100_08()
         {
-            var submitButton = _driver.FindElement(By.XPath("//span[contains(text(), '刪除')]"));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//span[text()='刪除']"), 10);
+            //var submitButton = _driver.FindElement(By.XPath("//span[contains(text(), '刪除')]"));
+            //_actions.MoveToElement(submitButton).Click().Perform();
 
-            Thread.Sleep(1000);
-            _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
+            var content = TestHelper.WaitStormTableWithText(_driver, "p", "沒有找到符合的結果");
+            That(content.Text, Is.EqualTo("沒有找到符合的結果"));
 
-            _wait.Until(_ =>
-            {
-                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
+            //Thread.Sleep(1000);
+            //_wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
 
-                return rows.Count == 1;
-            });
+            //_wait.Until(_ =>
+            //{
+            //    var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+            //    var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
 
-            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
-            var result = stormTable.GetShadowRoot().FindElement(By.CssSelector("p"));
-            That(result.Text, Is.EqualTo("沒有找到符合的結果"));
+            //    return rows.Count == 1;
+            //});
+
+            //var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+            //var result = stormTable.GetShadowRoot().FindElement(By.CssSelector("p"));
+            //That(result.Text, Is.EqualTo("沒有找到符合的結果"));
         }
 
         [Test]
@@ -276,54 +334,41 @@ namespace DomainStorm.Project.TWC.Tests
 
         public async Task TwcH100_11()
         {
-            var addMediaButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增媒體')]")));
-            _actions.MoveToElement(addMediaButton).Click().Perform();
+            var addMediaButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='新增媒體']"), 10);
 
-            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack storm-table")));
-            var tbody = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody"));
-            var trList = tbody!.FindElements(By.CssSelector("tr"));
-            var selectedRows = trList.FirstOrDefault(tr =>
+            await TestHelper.WaitForElement(_driver, By.CssSelector("div.rz-stack storm-table"), 10);
+
+            var rzStormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-stack storm-table")));
+            var rows = rzStormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
+            var selectedRow = rows.FirstOrDefault(tr =>
             {
-                var nameCell = tr.FindElement(By.CssSelector("td[data-field='name'] span"));
-                return nameCell.Text == "testmedia.mp4";
+                var element = tr.FindElement(By.CssSelector("td[data-field='name'] span span"));
+                return element.Text == "testmedia.mp4";
             });
-            _actions.MoveToElement(selectedRows).Click().Perform();
+            _actions.MoveToElement(selectedRow).Click().Perform();
 
-            var addButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//span[contains(text(), '加入')]")));
-            _actions.MoveToElement(addButton).Click().Perform();
+            var addButton = TestHelper.WaitAndClick(_driver, By.XPath("//span[text()='加入']"), 10);
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//span[text()='加入']")));
+            await TestHelper.WaitElementDisappear(_driver, By.XPath("//span[text()='加入']"));
         }
 
         public async Task TwcH100_12()
         {
-            var nameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-input-group[@label='名稱']//input")));
-            nameInput.SendKeys("節目單測試" + Keys.Tab);
+            await TestHelper.EnterText(_driver, By.XPath("//storm-input-group[@label='名稱']//input"), "節目單測試");
 
-            var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[contains(@class, 'ql-editor')]")));
-            editorInput.SendKeys("跑馬燈測試" + Keys.Tab);
-            Thread.Sleep(2000);
+            await TestHelper.EnterText(_driver, By.XPath("//div[@class='ql-editor']"), "跑馬燈測試");
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
+            var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增節目單']")));
+            await TestHelper.WaitForElement(_driver, By.CssSelector("storm-card[headline='節目單管理']"), 10);
 
-            _wait.Until(driver =>
-            {
-                var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
-                var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
-                return name.Text == "節目單測試";
-            });
-
-            var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-            var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
+            var name = TestHelper.WaitStormTableWithText(_driver, "td[data-field='name'] span span", "節目單測試");
             That(name.Text, Is.EqualTo("節目單測試"));
 
-            var marquee = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='marquee'] span span"));
-            That(marquee.Text, Is.EqualTo("<h6>跑馬燈測試 </h6>"));
+            var marquee = TestHelper.WaitStormTableWithText(_driver, "td[data-field='marquee'] span span", "<h6>跑馬燈測試</h6>");
+            That(marquee.Text, Is.EqualTo("<h6>跑馬燈測試</h6>"));
 
-            var ownerName = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='ownerName'] span span"));
+            var ownerName = TestHelper.WaitStormTableWithText(_driver, "td[data-field='ownerName'] span span", "第四區管理處");
             That(ownerName.Text, Is.EqualTo("第四區管理處"));
         }
 
@@ -332,43 +377,35 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcH100_13()
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
 
-            _wait.Until(_ =>
-            {
-                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-                return stormTable != null;
-            });
+            await TestHelper.NavigateAndWaitForElement(_driver, "/playlist", By.CssSelector("storm-card[headline='節目單管理']"), 10);
+
+            var name = TestHelper.WaitStormTableWithText(_driver, "td[data-field='name'] span span", "節目單測試");
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
             var viewButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(1) button"));
             _actions.MoveToElement(viewButton).Click().Perform();
 
-            var textCentet = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '節目單測試')]")));
-            That(textCentet.Text, Is.EqualTo("節目單測試"));
+            await TestHelper.WaitForElement(_driver, By.XPath("//h5[text()='節目單測試']"), 10);
+
+            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[text()='節目單測試']")));
+            That(content.Text, Is.EqualTo("節目單測試"));
         }
         [Test]
         [Order(7)]
         public async Task TwcH100_14()
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist");
 
-            _wait.Until(_ =>
-            {
-                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-                return stormTable != null;
-            });
+            await TestHelper.NavigateAndWaitForElement(_driver, "/playlist", By.CssSelector("storm-card[headline='節目單管理']"), 10);
+
+            var name = TestHelper.WaitStormTableWithText(_driver, "td[data-field='name'] span span", "節目單測試");
 
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
             var editButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(2) button"));
             _actions.MoveToElement(editButton).Click().Perform();
 
-            _wait.Until(_ =>
-            {
-                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='修改節目單']"));
-                return stormCard != null;
-            });
+            await TestHelper.WaitForElement(_driver, By.CssSelector("storm-card[headline='修改節目單']"), 10);
         }   
 
         [Test]
@@ -380,27 +417,27 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcH100_15()
         {
-            await TwcH100_07();
+            await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
+
+            await TestHelper.NavigateAndWaitForElement(_driver, "/playlist", By.CssSelector("storm-card[headline='節目單管理']"), 10);
+
+            var name = TestHelper.WaitStormTableWithText(_driver, "td[data-field='name'] span span", "節目單測試");
+
+            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+            var deleteButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(3) button"));
+            _actions.MoveToElement(deleteButton).Click().Perform();
+
+            await TestHelper.WaitForElement(_driver, By.XPath("//h5[text()='是否確定刪除？']"), 10);
+
+            var check = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[text()='是否確定刪除？']")));
+            That(check.Text, Is.EqualTo("是否確定刪除？"));
         }
         public async Task TwcH100_16()
         {
-            var submitButton = _driver.FindElement(By.XPath("//span[contains(text(), '取消')]"));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//span[text()='取消']"), 10);
 
-            _wait.Until(_ =>
-            {
-                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/playlist"));
-                Thread.Sleep(1000);
-
-                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
-
-                return rows.Count == 1;
-            });
-
-            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
-            var result = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
-            That(result.Text, Is.EqualTo("節目單測試"));
+            var content = TestHelper.WaitStormTableWithText(_driver, "td[data-field='name'] span span", "節目單測試");
+            That(content.Text, Is.EqualTo("節目單測試"));
         }
         [Test]
         [Order(9)]
@@ -413,13 +450,15 @@ namespace DomainStorm.Project.TWC.Tests
         public async Task TwcH100_17()
         {
             await TestHelper.Login(_driver, "irenewei", TestHelper.Password!);
-            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist/approve");
 
-            _wait.Until(_ =>
-            {
-                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='節目單審核']"));
-                return stormCard != null;
-            });
+            await TestHelper.NavigateAndWaitForElement(_driver, "/playlist/approve", By.CssSelector("storm-card[headline='節目單審核']"), 10);
+            //_driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist/approve");
+
+            //_wait.Until(_ =>
+            //{
+            //    var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='節目單審核']"));
+            //    return stormCard != null;
+            //});
 
             var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='節目單審核']")));
             var playlistApprove = stormCard.GetShadowRoot().FindElement(By.CssSelector("h5"));
@@ -427,6 +466,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcH100_18()
         {
+            var name = TestHelper.WaitStormTableWithText(_driver, "td[data-field='name'] span span", "節目單測試");
             //var searchButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '查詢')]")));
             //_actions.MoveToElement(searchButton).Click().Perform();
             var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
@@ -439,18 +479,25 @@ namespace DomainStorm.Project.TWC.Tests
             var approveButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(3) button"));
             _actions.MoveToElement(approveButton).Click().Perform();
 
-            var hint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '請點選審核動作')]")));
-            That(hint.Text, Is.EqualTo("請點選審核動作"));
+            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[text()='請點選審核動作']")));
+            That(content.Text, Is.EqualTo("請點選審核動作"));
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//span[contains(text(), '核准')]")));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            //var hint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '請點選審核動作')]")));
+            //That(hint.Text, Is.EqualTo("請點選審核動作"));
 
-            _wait.Until(driver =>
-            {
-                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-                var status = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='playListStatus']"));
-                return status.Text == "核准";
-            });
+            var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//span[text()='核准']"), 10);
+
+            //var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//span[contains(text(), '核准')]")));
+            //_actions.MoveToElement(submitButton).Click().Perform();
+
+            var status = TestHelper.WaitStormTableWithText(_driver, "td[data-field='playListStatus']", "核准");
+
+            //_wait.Until(driver =>
+            //{
+            //    var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+            //    var status = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='playListStatus']"));
+            //    return status.Text == "核准";
+            //});
         }
     }
 }
