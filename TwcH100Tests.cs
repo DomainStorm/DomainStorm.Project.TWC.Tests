@@ -110,6 +110,7 @@ namespace DomainStorm.Project.TWC.Tests
             var addButton = TestHelper.WaitAndClick(_driver, By.XPath("//span[text()='加入']"), 10);
 
             await TestHelper.WaitElementDisappear(_driver, By.XPath("//span[text()='加入']"));
+            Thread.Sleep(1000);
         }
         public async Task TwcH100_05() 
         {
@@ -118,7 +119,7 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.EnterText(_driver, By.XPath("//div[@class='ql-editor']"), "新增測試");
 
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
-            submitButton.Click();
+            _actions.MoveToElement(submitButton).Click().Perform();
             //var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
 
             await TestHelper.WaitForElement(_driver, By.CssSelector("storm-card[headline='節目單管理']"), 10);
@@ -220,6 +221,7 @@ namespace DomainStorm.Project.TWC.Tests
             var addButton = TestHelper.WaitAndClick(_driver, By.XPath("//span[text()='加入']"), 10);
 
             await TestHelper.WaitElementDisappear(_driver, By.XPath("//span[text()='加入']"));
+            Thread.Sleep(1000);
         }
         public async Task TwcH100_12()
         {
@@ -228,7 +230,7 @@ namespace DomainStorm.Project.TWC.Tests
             await TestHelper.EnterText(_driver, By.XPath("//div[@class='ql-editor']"), "跑馬燈測試");
 
             var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
-            submitButton.Click();
+            _actions.MoveToElement(submitButton).Click().Perform();
             //var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
 
             await TestHelper.WaitForElement(_driver, By.CssSelector("storm-card[headline='節目單管理']"), 10);
