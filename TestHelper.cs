@@ -289,6 +289,7 @@ public class TestHelper
         }
         else
         {
+            Thread.Sleep(1000);
             actions.MoveToElement(element).Perform();
             wait.Until(d => element.Displayed);
             element = wait.Until(ExpectedConditions.ElementToBeClickable(by));
@@ -329,15 +330,16 @@ public class TestHelper
 
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName);
 
-        wait.Until(driver =>
+        wait.Until(d =>
         {
             try
             {
-                var hiddenInput = wait.Until(d => d.FindElement(By.CssSelector(cssSelectorInput)));
-                return hiddenInput != null;
+                var hiddenInput = d.FindElement(By.CssSelector(cssSelectorInput));
+                return true;
             }
             catch (NoSuchElementException)
             {
+                Thread.Sleep(500);
                 return false;
             }
         });
