@@ -257,24 +257,6 @@ public class TestHelper
             }
         }
     }
-
-    public static async Task WaitAndMoveToClick(IWebDriver driver, By by, int timeoutSeconds) 
-    {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds));
-
-        await WaitForElement(driver, by, timeoutSeconds);
-
-        var element = driver.FindElement(by);
-        Actions actions = new Actions(driver);
-        actions.MoveToElement(element).Click().Perform();
-    }
-
-    public static async Task NavigateAndWaitForElement(IWebDriver driver, string url, By by, int timeoutSeconds)
-    {
-        driver.Navigate().GoToUrl($@"{BaseUrl}{url}");
-        await WaitForElement(driver, by, timeoutSeconds);
-    }
-
     public static async Task WaitForElement(IWebDriver driver, By by, int timeoutSeconds)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds));
@@ -290,6 +272,54 @@ public class TestHelper
                 return false;
             }
         });
+    }
+
+    public static async Task WaitAndClick(IWebDriver driver, By by, int timeoutSeconds) 
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds));
+        Actions actions = new Actions(driver);
+
+        await WaitForElement(driver, by, timeoutSeconds);
+
+        var element = driver.FindElement(by);
+
+        if (element.Displayed)
+        {
+            actions.MoveToElement(element).Click().Perform();
+        }
+        else
+        {
+            actions.MoveToElement(element).Perform();
+            wait.Until(d => element.Displayed);
+            element = wait.Until(ExpectedConditions.ElementToBeClickable(by));
+            actions.Click().Perform();
+        }
+    }
+
+    public static async Task EnterText(IWebDriver driver, By by, string text)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+
+        wait.Until( d =>
+        {
+            try
+            {
+                var element = d.FindElement(by);
+                element.SendKeys(text);
+                return true;
+            }
+            catch (StaleElementReferenceException)
+            {
+                Thread.Sleep(500);
+                return false;
+            }
+        });
+    }
+
+    public static async Task NavigateAndWaitForElement(IWebDriver driver, string url, By by, int timeoutSeconds)
+    {
+        driver.Navigate().GoToUrl($@"{BaseUrl}{url}");
+        await WaitForElement(driver, by, timeoutSeconds);
     }
 
     public static async Task UploadFileAndCheck(IWebDriver driver, string fileName, string cssSelectorInput)
@@ -353,6 +383,46 @@ public class TestHelper
 
             return resultElement;
         });
+    }
+
+    public static IWebElement WaitStormTableWithText(IWebDriver driver, string cssSelector, string expectedText)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+
+        return wait.Until(_ =>
+        {
+            IWebElement resultElement = null!;
+
+            var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+            var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
+            var selectedRow = rows.FirstOrDefault(tr =>
+            {
+                var element = tr.FindElement(By.CssSelector(cssSelector));
+                return element.Text == expectedText;
+            });
+
+            if (selectedRow != null)
+            {
+                resultElement = selectedRow.FindElement(By.CssSelector(cssSelector));
+            }
+
+            return resultElement;
+        });
+    }
+
+    public static async Task ClickButton(IWebDriver driver, By buttonCssSelector)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        var actions = new Actions(driver);
+
+        var button = wait.Until(ExpectedConditions.ElementToBeClickable(buttonCssSelector));
+        actions.MoveToElement(button).Click().Perform();
+    }
+
+    public static async Task WaitElementDisappear(IWebDriver driver, By elementCssSelector)
+    {
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        wait.Until(ExpectedConditions.InvisibilityOfElementLocated(elementCssSelector));
     }
 
     public static async Task NavigateAndWait(IWebDriver driver, string pageUrl)
