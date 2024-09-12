@@ -118,9 +118,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             await TestHelper.EnterText(_driver, By.XPath("//div[@class='ql-editor']"), "新增測試");
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
-            _actions.MoveToElement(submitButton).Click().Perform();
-            //var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
+            //var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
+            //_actions.MoveToElement(submitButton).Click().Perform();
+            var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
 
             await TestHelper.WaitForElement(_driver, By.CssSelector("storm-card[headline='節目單管理']"), 10);
 
@@ -229,9 +229,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             await TestHelper.EnterText(_driver, By.XPath("//div[@class='ql-editor']"), "跑馬燈測試");
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
-            _actions.MoveToElement(submitButton).Click().Perform();
-            //var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
+            //var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
+            //_actions.MoveToElement(submitButton).Click().Perform();
+            var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
 
             await TestHelper.WaitForElement(_driver, By.CssSelector("storm-card[headline='節目單管理']"), 10);
 
