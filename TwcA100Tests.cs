@@ -102,25 +102,17 @@ namespace DomainStorm.Project.TWC.Tests
             var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//div[contains(@class, 'ql-editor')]")));
             editorInput.SendKeys("跑馬燈測試" + Keys.Tab);
 
-            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", submitButton);
+            var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
+            Thread.Sleep(3000);
 
-            Console.WriteLine($"::group::");
-            Console.WriteLine($"---------Current URL: {_driver.Url}---------");
-            Console.WriteLine(_driver.PageSource);
-            Console.WriteLine("::endgroup::");
-
-            //_wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//storm-card[@headline='節目單管理']")));
-            _wait.Until(driver =>
+            var programElement = _driver.FindElements(By.CssSelector("storm-card[headline='節目單管理']")).FirstOrDefault();
+            if (programElement == null)
             {
-                var element = driver.FindElement(By.XPath("//storm-card[@headline='節目單管理']"));
-                return element != null;
-            });
+                await TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
+            }
 
-            Console.WriteLine($"::group::");
-            Console.WriteLine($"---------Current URL: {_driver.Url}---------");
-            Console.WriteLine(_driver.PageSource);
-            Console.WriteLine("::endgroup::");
+            await TestHelper.WaitForElement(_driver, By.CssSelector("storm-card[headline='節目單管理']"), 10);
+
             That(TestHelper.WaitStormTableUpload(_driver, "div.table-bottom > div.table-pageInfo")!.Text, Is.EqualTo("顯示第 1 至 1 筆，共 1 筆"));
 
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/playlist/approve");

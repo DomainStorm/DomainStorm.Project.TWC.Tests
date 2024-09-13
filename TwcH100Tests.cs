@@ -121,6 +121,13 @@ namespace DomainStorm.Project.TWC.Tests
             //var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
             //_actions.MoveToElement(submitButton).Click().Perform();
             var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
+            Thread.Sleep(3000);
+
+            var programElement = _driver.FindElements(By.CssSelector("storm-card[headline='節目單管理']")).FirstOrDefault();
+            if (programElement == null) 
+            {
+                await TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
+            }
 
             await TestHelper.WaitForElement(_driver, By.CssSelector("storm-card[headline='節目單管理']"), 10);
 
