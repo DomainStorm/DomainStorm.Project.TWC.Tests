@@ -471,64 +471,38 @@ public class TestHelper
     {
         var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
         var action = new Actions(webDriver);
-        int retryCount = 3;
-        bool isElementFound = false;
 
-        for (int attempt = 0; attempt < retryCount; attempt++)
+        wait.Until(driver =>
         {
             try
             {
-                wait.Until(driver =>
-                {
-                    var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-                    if (driver.PageSource.Contains("Page Not Found") || string.IsNullOrWhiteSpace(driver.PageSource))
-                    {
-                        throw new Exception("頁面為空白，系統可能掛掉。");
-                    }
-                    return stormTable != null;
-                });
-
-                var stormTableElement = wait.Until(driver =>
-                {
-                    var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-                    var input = stormTable.GetShadowRoot().FindElement(By.CssSelector("input[placeholder='請輸入關鍵字']"));
-                    return input;
-                });
-
-                stormTableElement.Clear();
-                stormTableElement.SendKeys(caseNo + Keys.Enter);
-
-                var applyCaseNo = wait.Until(driver =>
-                {
-                    var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-                    var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
-                    return applyCaseNoElements.FirstOrDefault(element => element.Text == caseNo);
-                });
-
-                if (applyCaseNo != null)
-                {
-                    action.MoveToElement(applyCaseNo).Click().Perform();
-                    isElementFound = true;
-                    break;
-                }
+                var stormTable = driver.FindElement(By.CssSelector("storm-table"));
+                return stormTable != null;
             }
             catch (NoSuchElementException)
             {
-                Console.WriteLine("未找到元素，嘗試刷新...");
-                webDriver.Navigate().Refresh();
-                await Task.Delay(1000);
+                Thread.Sleep(500);
+                return false;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"錯誤訊息：{ex.Message}");
-                break;
-            }
+        });
+
+        var stormTable = webDriver.FindElement(By.CssSelector("storm-table"));
+        var stormTableInput = stormTable.GetShadowRoot().FindElements(By.CssSelector("input[placeholder='請輸入關鍵字']")).FirstOrDefault();
+
+        if (stormTableInput != null)
+        {
+            stormTableInput.Clear();
+            stormTableInput.SendKeys(caseNo + Keys.Enter);
         }
 
-        if (!isElementFound)
+        var applyCaseNo = wait.Until(driver =>
         {
-            throw new Exception("目標元素未找到。");
-        }
+            var stormTable = driver.FindElement(By.CssSelector("storm-table"));
+            var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
+            return applyCaseNoElements.FirstOrDefault(element => element.Text == caseNo);
+        });
+
+        action.MoveToElement(applyCaseNo).Click().Perform();
     }
 
     public static Task ChangeUser(IWebDriver webDriver, string userName)
