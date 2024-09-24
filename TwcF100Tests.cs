@@ -186,7 +186,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcF100_07()
         {
-            await Task.Delay(1000);
+            Thread.Sleep(1000);
             TestHelper.ClickElementInWindow(_driver, "//label[@for='消費性用水服務契約']", 1);
 
             TestHelper.HoverOverElementInWindow(_driver, "//label[@for='消費性用水服務契約']", 0);

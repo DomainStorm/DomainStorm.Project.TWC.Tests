@@ -170,6 +170,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stiEnd = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='中結']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiEnd);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiEnd);
+            stiEnd.SendKeys(Keys.Tab);
 
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#中結")));
             That(stiEnd.Selected);
@@ -205,7 +206,8 @@ namespace DomainStorm.Project.TWC.Tests
             That(signElement.Text, Is.EqualTo("張博文"));
         }
         public async Task TwcE100_08()
-        {
+        {   
+            Thread.Sleep(1000);
             TestHelper.ClickElementInWindow(_driver, "//label[@for='消費性用水服務契約']", 1);
 
             TestHelper.HoverOverElementInWindow(_driver, "//label[@for='消費性用水服務契約']", 0);

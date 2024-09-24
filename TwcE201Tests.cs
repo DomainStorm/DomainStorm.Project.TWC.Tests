@@ -99,7 +99,7 @@ namespace DomainStorm.Project.TWC.Tests
             var secondWaterNo = rows.Any(row => row.FindElement(By.CssSelector("td[data-field='waterNo'] span")).Text == "41101220339");
             That(secondWaterNo, Is.True);
 
-            var checkAll = stormTable.GetShadowRoot().FindElement(By.CssSelector("input[aria-label='Check All']"));
+            var checkAll = stormTable.GetShadowRoot().FindElement(By.CssSelector("input[class='form-check-input']"));
             _actions.MoveToElement(checkAll).Click().Perform();
 
             var applicantIdButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//button[contains(text(), '申請者證件')]")));

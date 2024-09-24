@@ -177,6 +177,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stiPay = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='繳費']")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiPay);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiPay);
+            stiPay.SendKeys(Keys.Tab);
 
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#繳費")));
             That(stiPay.Selected);
@@ -217,6 +218,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public async Task TwcD100_08()
         {
+            Thread.Sleep(1000);
             TestHelper.ClickElementInWindow(_driver, "//label[@for='消費性用水服務契約']", 1);
 
             TestHelper.HoverOverElementInWindow(_driver, "//label[@for='消費性用水服務契約']", 0);
