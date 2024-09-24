@@ -120,6 +120,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             //var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[text()='確定']")));
             //_actions.MoveToElement(submitButton).Click().Perform();
+            // 比對Twc
             var submitButton = TestHelper.WaitAndClick(_driver, By.XPath("//button[text()='確定']"), 10);
             Thread.Sleep(3000);
 

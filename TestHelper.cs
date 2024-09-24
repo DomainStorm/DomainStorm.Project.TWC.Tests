@@ -10,14 +10,7 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
-using Newtonsoft.Json.Linq;
 using static NUnit.Framework.Assert;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using System;
-using AngleSharp.Dom;
-using NUnit.Framework.Constraints;
-using OpenQA.Selenium.DevTools.V113.Preload;
-using System.Xml.Linq;
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
 {
@@ -494,12 +487,13 @@ public class TestHelper
             stormTableInput.Clear();
             stormTableInput.SendKeys(caseNo + Keys.Enter);
         }
+        Thread.Sleep(1500);
 
         var applyCaseNo = wait.Until(driver =>
         {
             var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-            var applyCaseNoElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("td[data-field='applyCaseNo'] span"));
-            return applyCaseNoElements.FirstOrDefault(element => element.Text == caseNo);
+            var applyCaseNoElements = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='__radio_1']"));
+            return applyCaseNoElements;
         });
 
         action.MoveToElement(applyCaseNo).Click().Perform();
