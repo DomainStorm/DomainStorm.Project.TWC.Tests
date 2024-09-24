@@ -10,7 +10,14 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
+using Newtonsoft.Json.Linq;
 using static NUnit.Framework.Assert;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using System;
+using AngleSharp.Dom;
+using NUnit.Framework.Constraints;
+using System.Xml.Linq;
+
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
 {
@@ -432,11 +439,25 @@ public class TestHelper
             {
                 driver.Navigate().GoToUrl($@"{BaseUrl}{pageUrl}");
 
-                wait.Until(driver =>
-                {
-                    var stormSideNav = driver.FindElement(By.CssSelector("storm-sidenav"));
-                    return stormSideNav != null;
-                });
+                //wait.Until(driver =>
+                //{
+                //    var stormSideNav = driver.FindElement(By.CssSelector("storm-sidenav"));
+                //    return stormSideNav != null;
+                //});
+
+  
+                    wait.Until(driver =>
+                    {
+                        try
+                        {
+                            var stormSideNav = driver.FindElement(By.CssSelector("storm-sidenav"));
+                            return stormSideNav != null;
+                        }
+                        catch (NoSuchElementException)
+                        {
+                            return false;
+                        }
+                    });
 
                 isNavigatedSuccessfully = true;
                 break;

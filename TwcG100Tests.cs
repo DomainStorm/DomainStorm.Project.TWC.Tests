@@ -101,8 +101,15 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(driver =>
             {
-                var element = driver.FindElement(By.CssSelector("iframe"));
-                return element != null;
+                try
+                {
+                    var element = driver.FindElement(By.CssSelector("iframe"));
+                    return element != null;
+                }
+                catch (NoSuchElementException)
+                {
+                    return false;
+                }
             });
 
             _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
@@ -440,33 +447,35 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stiEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[sti-email]")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView();", stiEmail);
-            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email]")));
-            Thread.Sleep(1000);
 
-            var stiEmailInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[sti-email] > input")));
-            stiEmailInput.SendKeys("aaa@bbb.ccc" + Keys.Tab + Keys.Tab);
+            var stiEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
+            stiEmailInput.SendKeys("aaa@bbb.ccc" + Keys.Tab);
 
             _wait.Until(driver =>
             {
                 Thread.Sleep(1000);
                 var stiEmailInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email] > input")));
-                return stiEmailInput.GetAttribute("value") == "aaa@bbb.ccc";    
+                return stiEmailInput.GetAttribute("value") == "aaa@bbb.ccc";
+            });
+
+            var stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
+            stiEmailTelNoInput.SendKeys("02-12345678" + Keys.Tab);
+
+            _wait.Until(driver =>
+            {
+                Thread.Sleep(1000);
+                var stiEmailTelNoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no] > input")));
+                return stiEmailTelNoInput.GetAttribute("value") == "02-12345678";
             });
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            _wait.Until(driver =>
-            {
-                Thread.Sleep(1000);
-                var stiEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[sti-email]")));
-                return stiEmail != null;
-            });
-
-            stiEmail = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#電子帳單Email[sti-email]")));
+            stiEmail = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email]")));
             That(stiEmail.Text, Is.EqualTo("aaa@bbb.ccc"));
 
-
+            var stiEmailTelNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no]")));
+            That(stiEmailTelNo.Text, Is.EqualTo("02-12345678"));
         }
         public async Task TwcG100_19()
         {
