@@ -85,6 +85,7 @@ services:
   domainstorm.project.twc.report:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
+      DomainStorm_AutoMigrate: false
       DomainStorm_SqlDbOptions__ConnectionString: Server=sqlserver;Database=TWCWeb;User Id=sa;Password=Pass@word;
     depends_on:   
       sqlserver:
