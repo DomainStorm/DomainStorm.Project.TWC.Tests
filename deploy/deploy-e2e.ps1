@@ -56,9 +56,11 @@ function WaitForHealthy {
         Write-Host "Container $containerName did not become healthy within the specified time"
 		docker logs $containerName
         docker compose stop $containerName
+
+        throw
     }
 }
-WaitForHealthy "sqlserver"
+
 WaitForHealthy "kong"
 WaitForHealthy "elasticsearch"
 WaitForHealthy "openidconnect.com.tw"

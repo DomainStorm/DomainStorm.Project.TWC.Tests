@@ -8,25 +8,21 @@ services:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
     hostname: sqlserver
-    user: root
     environment:
       <<: *common-env
+      SA_PASSWORD: Pass@word
       ACCEPT_EULA: 'Y'
-      MSSQL_SA_PASSWORD: 'Pass@word'
-      MSSQL_DATA_DIR: /var/opt/mssql/data
-      MSSQL_PID: 'Developer' 
-      MSSQL_TCP_PORT: 1433 
     ports:
       - "1433:1433"
     volumes:
-        - ./mssql/data:/var/opt/mssql/data
-        - ./mssql/log:/var/opt/mssql/log
-        - ./mssql/secrets:/var/opt/mssql/secrets
-    healthcheck:
-      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "-PPass@word", "-Q", "select 1"]
-      interval: 10s
-      timeout: 10s
-      retries: 50           
+      - type: volume
+        source: sqlserver-volume-data
+        target: /var/opt/mssql/data 
+    # healthcheck:
+    #   test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "-PPass@word", "-Q", "select 1"]
+    #   interval: 10s
+    #   timeout: 10s
+    #   retries: 50           
     networks:
       - backend
   kong:
@@ -94,5 +90,5 @@ services:
       sqlserver:
         condition: service_healthy        
 
-# volumes:
-#   sqlserver-volume-data:      
+volumes:
+  sqlserver-volume-data:      
