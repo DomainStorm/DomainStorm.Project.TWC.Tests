@@ -8,16 +8,17 @@ services:
     image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: sqlserver
     hostname: sqlserver
+    user: root
     environment:
       <<: *common-env
       SA_PASSWORD: Pass@word
       ACCEPT_EULA: 'Y'
     ports:
-      - "5434:1433"
-    volumes:
-      - type: volume
-        source: sqlserver-volume-data
-        target: /var/opt/mssql/data 
+      - "1433:1433"
+    # volumes:
+    #   - type: volume
+    #     source: sqlserver-volume-data
+    #     target: /var/opt/mssql/data 
     healthcheck:
       test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "-PPass@word", "-Q", "select 1"]
       interval: 10s
@@ -90,5 +91,5 @@ services:
       sqlserver:
         condition: service_healthy        
 
-volumes:
-  sqlserver-volume-data:      
+# volumes:
+#   sqlserver-volume-data:      
