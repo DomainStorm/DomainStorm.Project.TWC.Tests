@@ -55,7 +55,7 @@ function WaitForHealthy {
     if ($retries -eq $maxRetries) {
         Write-Host "Container $containerName did not become healthy within the specified time"
 		docker logs $containerName
-        docker-compose stop $containerName
+        docker compose stop $containerName
     }
 }
 WaitForHealthy "kong"
