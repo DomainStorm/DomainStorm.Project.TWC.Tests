@@ -18,11 +18,11 @@ services:
       - type: volume
         source: sqlserver-volume-data
         target: /var/opt/mssql/data 
-    # healthcheck:
-    #   test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "-PPass@word", "-Q", "select 1"]
-    #   interval: 10s
-    #   timeout: 10s
-    #   retries: 50           
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "-PPass@word", "-Q", "select 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 50           
     networks:
       - backend
   kong:

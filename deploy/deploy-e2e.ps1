@@ -57,7 +57,7 @@ function WaitForHealthy {
 		docker logs $containerName
         docker compose stop $containerName
 
-        throw
+        throw "Container $containerName did not become healthy within the specified time"
     }
 }
 
