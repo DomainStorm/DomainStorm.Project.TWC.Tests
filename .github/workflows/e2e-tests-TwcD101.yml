@@ -82,7 +82,7 @@ jobs:
           
       - name: Curl 5050
         run: | 
-          curl -k -L -i https://127.0.0.1:5050  
+          curl -k -L -i http://127.0.0.1:5050  
 
       - name: Run Seed
         run: pwsh -File deploy/deploy-seed-pipeline-e2e.ps1
