@@ -79,10 +79,15 @@ jobs:
         run: | 
           docker logs sqlserver
           
-      - name: Curl 5050
+      - name: Curl openid
         run: | 
-          curl -k -L -i http://127.0.0.1:5050  
-
+          curl -k -L -i http://${{ env.IP_ADDRESS }}:8000/openid
+          
+      - name: Docker exec resourceapi Curl openid
+        run: | 
+          docker exec -i -t resourceapi /bin/bash 
+          curl -k -L -i http://${{ env.IP_ADDRESS }}:8000/openid                  
+          
       - name: Run Seed
         run: pwsh -File deploy/deploy-seed-pipeline-e2e.ps1
 
