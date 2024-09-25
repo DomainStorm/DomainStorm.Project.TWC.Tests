@@ -14,12 +14,12 @@ services:
       ACCEPT_EULA: 'Y'
     ports:
       - "1433:1433"
-    volumes:
-      - type: volume
-        source: sqlserver-volume-data
-        target: /var/opt/mssql/data 
+    # volumes:
+    #   - type: volume
+    #     source: sqlserver-volume-data
+    #     target: /var/opt/mssql/data 
     healthcheck:
-      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-Usa", "-PPass@word", "-Q", "select 1"]
+      test: /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "Pass@word" -Q "SELECT 1" -b -o /dev/null
       interval: 10s
       timeout: 10s
       retries: 50           
@@ -90,5 +90,5 @@ services:
       sqlserver:
         condition: service_healthy        
 
-volumes:
-  sqlserver-volume-data:      
+# volumes:
+#   sqlserver-volume-data:      
