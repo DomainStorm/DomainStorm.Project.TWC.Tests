@@ -92,7 +92,7 @@ jobs:
           docker exec -i resourceapi /bin/bash 
           curl -k -L -i http://${{ env.IP_ADDRESS }}:8000/openid            
 
-      - name: Run Seed-Data
+      - name: Run Seed
         run: pwsh -File deploy/deploy-seed-pipeline-e2e.ps1
 
       - name: Setup .NET
