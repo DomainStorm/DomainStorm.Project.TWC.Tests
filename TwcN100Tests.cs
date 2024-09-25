@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
+using System.Xml.Linq;
 using static NUnit.Framework.Assert;
 
 
@@ -33,26 +34,13 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(0)]
-        public async Task TwcN100_01To06()
+        public async Task TwcN100_01To05()
         {
             await TwcN100_01();
             await TwcN100_02();
             await TwcN100_03();
             await TwcN100_04();
             await TwcN100_05();
-            await TwcN100_06();
-            await TwcN100_07();
-            await TwcN100_08();
-            await TwcN100_09();
-            await TwcN100_10();
-            await TwcN100_11();
-            await TwcN100_12();
-            await TwcN100_13();
-            await TwcN100_14();
-            await TwcN100_15();
-            await TwcN100_16();
-            await TwcN100_17();
-            await TwcN100_18();
         }
         public async Task TwcN100_01()
         {
@@ -63,190 +51,372 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/systemannouncement");
 
+            _wait.Until(_ =>
+            {
+                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='公告管理']"));
+                return stormCard != null;
+            });
+
             var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='公告管理']")));
-            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
-            That(stormCardTitle.Text, Is.EqualTo("公告管理"));
+            var systemannounceManage = stormCard.GetShadowRoot().FindElement(By.CssSelector("h5"));
+            That(systemannounceManage.Text, Is.EqualTo("公告管理"));
         }
         public async Task TwcN100_03()
         {
-            var primaryButton = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
-            _actions.MoveToElement(primaryButton).Click().Perform();
+            var addSystemannounceButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增公告')]")));
+            _actions.MoveToElement(addSystemannounceButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='公告管理']")));
+            _wait.Until(_ =>
+            {
+                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='新增公告']"));
+                return stormCard != null;
+            });
 
-            var stormCard = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-card[headline='新增公告']")));
-            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
-            That(stormCardTitle.Text, Is.EqualTo("新增公告"));
+            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增公告']")));
+            var systemannounceManage = stormCard.GetShadowRoot().FindElement(By.CssSelector("h5"));
+            That(systemannounceManage.Text, Is.EqualTo("新增公告"));
         }
         public async Task TwcN100_04()
         {
-            var nameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
-            nameInput.SendKeys("公告測試");
+            var stormInputGroupNameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
+            stormInputGroupNameInput.SendKeys("公告測試");
+            That(stormInputGroupNameInput.GetAttribute("value"), Is.EqualTo("公告測試"));
 
-            var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor")));
-            editorInput.SendKeys("水籍系統將於12/20進行系統更新，造成不便敬請見諒");
 
-            editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor h6")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].style.color = 'rgb(230, 0, 0)';", editorInput);
+            var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
+            stormTextEditorInput.SendKeys("水籍系統將於12/20進行系統更新，造成不便敬請見諒");
+            That(stormTextEditorInput.Text, Is.EqualTo("水籍系統將於12/20進行系統更新，造成不便敬請見諒"));
 
-            var createButton = TestHelper.FindAndMoveElement(_driver, "button[form='create']");
-            _actions.MoveToElement(createButton).Click().Perform();
+            stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor h6")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].style.color = 'rgb(230, 0, 0)';", stormTextEditorInput);
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增公告']")));
+            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '確定')]")));
+            _actions.MoveToElement(submitButton).Click().Perform();
 
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='name'] span")!.Text, Is.EqualTo("公告測試"));
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='marquee'] span")!.Text, Is.EqualTo("<h6 style=\"color: rgb(230, 0, 0);\">水籍系統將於12/20進行系統更新，造成不便敬請見諒</h6>"));
+            _wait.Until(_ =>
+            {
+                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/systemannouncement"));
+                Thread.Sleep(1000);
+
+                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
+
+                return rows.Count >= 1;
+            });
+
+            var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+            var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
+            That(name.Text, Is.EqualTo("公告測試"));
+
+            var marquee = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='marquee'] span span"));
+            That(marquee.Text, Is.EqualTo("<h6 style=\"color: rgb(230, 0, 0);\">水籍系統將於12/20進行系統更新，造成不便敬請見諒</h6>"));
         }
         public async Task TwcN100_05()
         {
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-toolbar-item")!.Text, Is.EqualTo("visibility"));
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-toolbar-item:nth-child(2)")!.Text, Is.EqualTo("drive_file_rename_outline"));
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-toolbar-item:nth-child(3)")!.Text, Is.EqualTo("delete"));
+            var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+            var viewButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(1)"));
+            That(viewButton.Text, Is.EqualTo("visibility"));
+
+            var editButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(2)"));
+            That(editButton.Text, Is.EqualTo("drive_file_rename_outline"));
+
+            var deleteButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(3)"));
+            That(deleteButton.Text, Is.EqualTo("delete"));
+        }
+
+        [Test]
+        [Order(1)]
+        public async Task TwcN100_06To07()
+        { 
+            await TwcN100_06();
+            await TwcN100_07();
         }
         public async Task TwcN100_06()
         {
-            var viewButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-toolbar-item");
+            await TestHelper.Login(_driver, "meizi", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/systemannouncement");
+
+            _wait.Until(_ =>
+            {
+                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                return stormTable != null;
+            });
+
+            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+            var viewButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(1)"));
             _actions.MoveToElement(viewButton).Click().Perform();
 
-            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog h6")));
+            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h6[contains(text(), '水籍系統將於12/20進行系統更新，造成不便敬請見諒')]")));
             That(content.Text, Is.EqualTo("水籍系統將於12/20進行系統更新，造成不便敬請見諒"));
             That(content.GetAttribute("style"), Is.EqualTo("color: rgb(230, 0, 0);"));
         }
         public async Task TwcN100_07()
         {
-            var primaryButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-stack div.rz-stack button")));
-            _actions.MoveToElement(primaryButton).Click().Perform();
+            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//span[contains(text(), '確定')]")));
+            _actions.MoveToElement(submitButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack div.rz-stack button")));
+            _wait.Until(_ =>
+            {
+                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/systemannouncement"));
+                Thread.Sleep(1000);
+
+                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
+
+                return rows.Count == 1;
+            });
+
+            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+            var result = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
+            That(result.Text, Is.EqualTo("公告測試"));
+        }
+
+        [Test]
+        [Order(2)]
+        public async Task TwcN100_08To09()
+        {
+            await TwcN100_08();
+            await TwcN100_09();
         }
         public async Task TwcN100_08()
         {
-            var editButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-toolbar-item:nth-child(2)");
+            await TestHelper.Login(_driver, "meizi", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/systemannouncement");
+
+            _wait.Until(_ =>
+            {
+                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                return stormTable != null;
+            });
+
+            var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+            var editButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(2)"));
             _actions.MoveToElement(editButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='公告管理']")));
-
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='修改公告']")));
-            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("div h5"));
-            That(stormCardTitle.Text, Is.EqualTo("修改公告"));
+            _wait.Until(_ =>
+            {
+                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='修改公告']"));
+                return stormCard != null;
+            });
         }
         public async Task TwcN100_09()
         {
-            var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor")));
-            editorInput.Clear();
+            var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
+            stormTextEditorInput.Clear();
+            await Task.Delay(1000);
 
-            editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor")));
-            editorInput.SendKeys("水籍系統將於12/30進行系統更新，造成不便敬請見諒");
+            stormTextEditorInput.SendKeys("水籍系統將於12/30進行系統更新，造成不便敬請見諒");
+            That(stormTextEditorInput.Text, Is.EqualTo("水籍系統將於12/30進行系統更新，造成不便敬請見諒"));
 
-            var createButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[form='create']")));
-            _actions.MoveToElement(createButton).Click().Perform();
+            var submitButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '確定')]")));
+            _actions.MoveToElement(submitButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='修改公告']")));
+            _wait.Until(_ =>
+            {
+                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/systemannouncement"));
+                Thread.Sleep(1000);
+
+                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
+
+                return rows.Count == 1;
+            });
+
+            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+
+            var marquee = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='marquee'] span span"));
+            That(marquee.Text, Is.EqualTo("<p>水籍系統將於12/30進行系統更新，造成不便敬請見諒</p>"));
+        }
+
+        [Test]
+        [Order(3)]
+        public async Task TwcN100_10To11()
+        {
+            await TwcN100_10();
+            await TwcN100_11();
         }
         public async Task TwcN100_10()
         {
-            var deleteButton = TestHelper.WaitStormTableUpload(_driver, "td[data-field ='__action_8'] storm-toolbar-item:nth-child(3)");
-            _actions.MoveToElement(deleteButton).Click().Perform();
+            await TestHelper.Login(_driver, "meizi", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/systemannouncement");
 
-            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.rz-dialog-content h5")));
-            That(content.Text, Is.EqualTo("是否確定刪除？"));
+            _wait.Until(_ =>
+            {
+                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                return stormTable != null;
+            });
+
+            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+            var deleteButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(3)"));
+            _actions.MoveToElement(deleteButton).Click().Perform();;
+
+            var hint = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '是否確定刪除？')]")));
+            That(hint.Text, Is.EqualTo("是否確定刪除？"));
         }
         public async Task TwcN100_11()
         {
-            var primaryButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("div.rz-stack div.rz-stack button")));
-            _actions.MoveToElement(primaryButton).Click().Perform();
+            var submitButton = _driver.FindElement(By.XPath("//span[contains(text(), '刪除')]"));
+            _actions.MoveToElement(submitButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.rz-stack div.rz-stack button")));
+            _wait.Until(_ =>
+            {
+                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/systemannouncement"));
+                Thread.Sleep(1000);
 
-            _wait.Until(driver => {
-                try
-                {
-                    var pageInfo = TestHelper.WaitStormTableUpload(_driver, "div.table-pageInfo");
-                    return pageInfo!.Text == "共 0 筆";
-                }
-                catch
-                {
-                    return false;
-                }
+                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
+
+                return rows.Count == 1;
             });
+
+            var stormTable = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
+            var result = stormTable.GetShadowRoot().FindElement(By.CssSelector("p"));
+            That(result.Text, Is.EqualTo("沒有找到符合的結果"));
+        }
+
+        [Test]
+        [Order(4)]
+        public async Task TwcN100_12To13()
+        {
+            await TwcN100_12();
+            await TwcN100_13();
         }
         public async Task TwcN100_12()
         {
+            await TestHelper.Login(_driver, "meizi", TestHelper.Password!);
+            _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/systemannouncement");
+
+            _wait.Until(_ =>
+            {
+                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='公告管理']"));
+                return stormCard != null;
+            });
+
+            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='公告管理']")));
+            var systemannounceManage = stormCard.GetShadowRoot().FindElement(By.CssSelector("h5"));
+            That(systemannounceManage.Text, Is.EqualTo("公告管理"));
+
             await TwcN100_03();
         }
         public async Task TwcN100_13()
         {
-            var nameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
-            nameInput.SendKeys("公告測試2");
+            var stormInputGroupNameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
+            stormInputGroupNameInput.SendKeys("公告測試2");
+            That(stormInputGroupNameInput.GetAttribute("value"), Is.EqualTo("公告測試2"));
 
-            DateTime currentDateTime = DateTime.Now;
+            var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
+            stormTextEditorInput.SendKeys("測試公告自動下架");
+            That(stormTextEditorInput.Text, Is.EqualTo("測試公告自動下架"));
 
-            var releaseDateInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='上架日期'] input")));
+            var submitButton = _driver.FindElement(By.XPath("//button[contains(text(), '確定')]"));
+            _actions.MoveToElement(submitButton).Click().Perform();
 
-            string formattedReleaseDate = currentDateTime.ToString("yyyy-MM-dd");
-            ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedReleaseDate}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", releaseDateInput);
+            _wait.Until(_ =>
+            {
+                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/systemannouncement"));
+                Thread.Sleep(1000);
 
-            var expiryDateInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='下架日期'] input")));
+                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
 
-            DateTime targetReleaseExpiryDate = currentDateTime.AddDays(1);
-            string formattedExpiryDate = targetReleaseExpiryDate.ToString("yyyy-MM-dd");
-            ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedExpiryDate}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", expiryDateInput);
+                return rows.Count >= 1;
+            });
 
-            var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor")));
-            editorInput.SendKeys("測試公告自動下架");
+            var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+            var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
+            That(name.Text, Is.EqualTo("公告測試2"));
 
-            var createButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[form='create']")));
-            _actions.MoveToElement(createButton).Click().Perform();
+            var marquee = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='marquee'] span span"));
+            That(marquee.Text, Is.EqualTo("<h6>測試公告自動下架</h6>"));
+        }
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增公告']")));
-
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='name'] span")!.Text, Is.EqualTo("公告測試2"));
-            That(TestHelper.WaitStormTableUpload(_driver, "td[data-field ='marquee'] span")!.Text, Is.EqualTo("<h6>測試公告自動下架</h6>"));
+        [Test]
+        [Order(5)]
+        public async Task TwcN100_14To16()
+        {
+            await TwcN100_14();
+            await TwcN100_15();
+            await TwcN100_16();
         }
         public async Task TwcN100_14()
         {
-            await TwcN100_03();
+            await TwcN100_12();
         }
         public async Task TwcN100_15()
         {
-            var nameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
-            nameInput.SendKeys("公告測試3");
+            var stormInputGroupNameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
+            stormInputGroupNameInput.SendKeys("公告測試3");
+            That(stormInputGroupNameInput.GetAttribute("value"), Is.EqualTo("公告測試3"));
 
             DateTime currentDateTime = DateTime.Now;
-
-            var releaseDateInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='上架日期'] input")));
-
-            string formattedReleaseDate = currentDateTime.ToString("yyyy-MM-dd");
-            ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedReleaseDate}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", releaseDateInput);
 
             var expiryDateInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='下架日期'] input")));
 
             string formattedExpiryDate = currentDateTime.ToString("yyyy-MM-dd");
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedExpiryDate}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", expiryDateInput);
 
-            var editorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.ql-editor")));
-            editorInput.SendKeys("測試公告");
+            var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
+            stormTextEditorInput.SendKeys("測試公告");
+            That(stormTextEditorInput.Text, Is.EqualTo("測試公告"));
 
-            var createButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.CssSelector("button[form='create']")));
-            _actions.MoveToElement(createButton).Click().Perform();
+            var submitButton = _driver.FindElement(By.XPath("//button[contains(text(), '確定')]"));
+            _actions.MoveToElement(submitButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("storm-card[headline='新增公告']")));
+            _wait.Until(_ =>
+            {
+                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/systemannouncement"));
+                Thread.Sleep(1000);
 
-            That(TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) td[data-field ='name'] span")!.Text, Is.EqualTo("公告測試3"));
-            That(TestHelper.WaitStormTableUpload(_driver, "tr:nth-child(2) td[data-field ='marquee'] span")!.Text, Is.EqualTo("<h6>測試公告</h6>"));
+                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
+
+                return rows.Count >= 1;
+            });
+
+            var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+            var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+
+            var systemannouncementName = rows.Any(row =>
+            {
+                var systemannouncementName = row.FindElement(By.CssSelector("td[data-field='name'] span span"));
+                return systemannouncementName.Text == "公告測試3";
+            });
+
+            var systemannouncementMarquee = rows.Any(row =>
+            {
+                var systemannouncementMarquee = row.FindElement(By.CssSelector("td[data-field='marquee'] span span"));
+                return systemannouncementMarquee.Text == "<h6>測試公告</h6>";
+            });
         }
         public async Task TwcN100_16()
         {
-            var logout = TestHelper.FindAndMoveElement(_driver, "storm-tooltip > div > a[href='./logout']");
+            var logout = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//i[text()='logout']")));
             _actions.MoveToElement(logout).Click().Perform();
+
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='登入']")));
+        }
+
+        [Test]
+        [Order(6)]
+        public async Task TwcN100_17To18()
+        {
+            await TwcN100_17();
+            await TwcN100_18();
         }
         public async Task TwcN100_17()
         {
-            await TestHelper.ChangeUser(_driver, "0511");
+            await TestHelper.Login(_driver, "0511", TestHelper.Password!);
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
         }
         public async Task TwcN100_18()
         {
-            var systemannouncement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("div.flex-column h6")));
+            _wait.Until(_ =>
+            {
+                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='系統公告']"));
+                return stormCard != null;
+            });
+
+            var systemannouncement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h6[contains(text(), '測試公告自動下架')]")));
             That(systemannouncement.Text, Is.EqualTo("測試公告自動下架"));
         }
     }
