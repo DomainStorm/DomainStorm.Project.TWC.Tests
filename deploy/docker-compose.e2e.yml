@@ -5,7 +5,7 @@ x-common-config: &common-env
 
 services:
   sqlserver:
-    image: mcr.microsoft.com/mssql/server:2017-latest
+    image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: sqlserver
     hostname: sqlserver
     environment:
