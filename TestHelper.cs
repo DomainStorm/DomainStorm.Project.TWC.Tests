@@ -354,6 +354,7 @@ public class TestHelper
             durationInput.SendKeys("10");
         }
 
+        Thread.Sleep(1000);
         var fileNameInput = wait.Until(d => d.FindElement(By.XPath("//storm-input-group[@label='名稱']//input")));
         That(fileNameInput.GetAttribute("value"), Is.EqualTo(fileName));
 
