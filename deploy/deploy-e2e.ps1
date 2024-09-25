@@ -58,6 +58,7 @@ function WaitForHealthy {
         docker compose stop $containerName
     }
 }
+WaitForHealthy "sqlserver"
 WaitForHealthy "kong"
 WaitForHealthy "elasticsearch"
 WaitForHealthy "openidconnect.com.tw"
