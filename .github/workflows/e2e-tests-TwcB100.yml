@@ -76,10 +76,14 @@ jobs:
       #  run: | 
       #    docker logs twcweb
 
-      - name: logs sqlserver
+
+      - name: Logs sqlserver
         run: | 
           docker logs sqlserver
-          
+                    
+      - name: Run Seed-Kong
+        run: pwsh -File deploy/deploy-seed-kong.ps1
+        
       - name: Curl openid
         run: | 
           curl -k -L -i http://${{ env.IP_ADDRESS }}:8000/openid
@@ -87,8 +91,7 @@ jobs:
       - name: Docker exec resourceapi Curl openid
         run: | 
           docker exec -i resourceapi /bin/bash 
-          curl -k -L -i http://${{ env.IP_ADDRESS }}:8000/openid                           
-          
+          curl -k -L -i http://${{ env.IP_ADDRESS }}:8000/openid  
 
       - name: Run Seed
         run: pwsh -File deploy/deploy-seed-pipeline-e2e.ps1
