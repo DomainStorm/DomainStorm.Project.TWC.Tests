@@ -86,8 +86,8 @@ jobs:
           
       - name: Docker exec resourceapi Curl openid
         run: | 
-          docker exec -T resourceapi /bin/bash 
-          curl -k -L -i http://${{ env.IP_ADDRESS }}:8000/openid                        
+          docker exec -i resourceapi /bin/bash 
+          curl -k -L -i http://${{ env.IP_ADDRESS }}:8000/openid                             
           
 
       - name: Run Seed
