@@ -395,7 +395,13 @@ public class TestHelper
             stormTableInput.Clear();
             stormTableInput.SendKeys(caseNo + Keys.Enter);
         }
-        Thread.Sleep(500);
+
+        _wait.Until(driver =>
+        {
+            var stormTable = driver.FindElement(By.CssSelector("storm-table"));
+            var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+            return rows.Count == 1;
+        });
 
         var applyCaseNo = _wait.Until(driver =>
         {
