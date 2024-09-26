@@ -289,33 +289,42 @@ public class TestHelper
         });
     }
 
-    public void UploadFileAndCheck(string fileName, string cssSelectorInput)
+    public void UploadFilesAndCheck(string[] fileNames, string cssSelectorInput)
     {
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName);
-
         WaitElementExists(By.CssSelector(cssSelectorInput));
-        InputSendkeys(By.CssSelector(cssSelectorInput), filePath);
 
-        var fileExtension = Path.GetExtension(filePath).ToLower();
-        if (fileExtension == ".png")
+        var filePaths = fileNames.Select(fileName =>Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName)).ToArray();
+        var currentFileNames = new List<string>();
+
+        foreach (var filePath in filePaths)
         {
-            var durationInputSelector = By.XPath("//storm-input-group[@label='播放秒數']//input");
-            WaitElementExists(durationInputSelector);
-            InputSendkeys(durationInputSelector, "10");
+            InputSendkeys(By.CssSelector(cssSelectorInput), filePath);
+            currentFileNames.Add(Path.GetFileName(filePath));
+            CheckFileName(string.Join(",", currentFileNames));
+            //CheckFileName(Path.GetFileName(filePath));
         }
-
-        Thread.Sleep(500);
-
-        var fileNameInputSelector = By.XPath("//storm-input-group[@label='名稱']//input");
-        WaitElementExists(fileNameInputSelector);
-
-        var fileNameInput = _driver.FindElement(fileNameInputSelector);
-        That(fileNameInput.GetAttribute("value"), Is.EqualTo(fileName));
+        Thread.Sleep(1000);
 
         var uploadButton = By.XPath("//button[text()='上傳']");
         WaitElementExists(uploadButton);
         ElementClick(uploadButton);
     }
+
+    private void CheckFileName(string expectedFileName)
+    {
+        var fileNameInputSelector = By.XPath("//storm-input-group[@label='名稱']//input");
+        WaitElementExists(fileNameInputSelector);
+
+        _wait.Until(driver =>
+        {
+            var fileNameInput = driver.FindElement(fileNameInputSelector);
+            return fileNameInput.GetAttribute("value") == expectedFileName;
+        });
+
+        var fileNameInput = _driver.FindElement(fileNameInputSelector);
+        That(fileNameInput.GetAttribute("value"), Is.EqualTo(expectedFileName));
+    }
+
 
     public IWebElement WaitShadowElement(string cssSelector, string expectedText, bool isEditTable = false)
     {
@@ -361,62 +370,6 @@ public class TestHelper
         _actions.MoveToElement(element).Perform();
         That(element.Text, Is.EqualTo(expectedText));
     }
-
-
-    public static async Task NavigateAndWait(IWebDriver driver, string pageUrl)
-    {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
-        int retryCount = 3;
-        bool isNavigatedSuccessfully = false;
-
-        for (int attempt = 0; attempt < retryCount; attempt++)
-        {
-            try
-            {
-                driver.Navigate().GoToUrl($@"{BaseUrl}{pageUrl}");
-
-                //wait.Until(driver =>
-                //{
-                //    var stormSideNav = driver.FindElement(By.CssSelector("storm-sidenav"));
-                //    return stormSideNav != null;
-                //});
-
-  
-                    wait.Until(driver =>
-                    {
-                        try
-                        {
-                            var stormSideNav = driver.FindElement(By.CssSelector("storm-sidenav"));
-                            return stormSideNav != null;
-                        }
-                        catch (NoSuchElementException)
-                        {
-                            return false;
-                        }
-                    });
-
-                isNavigatedSuccessfully = true;
-                break;
-            }
-            catch (NoSuchElementException)
-            {
-                Console.WriteLine("未找到 storm-sidenav 元素，嘗試重試...");
-                driver.Navigate().Refresh();
-                await Task.Delay(1000);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"錯誤訊息：{ex.Message}");
-                break;
-            }
-        }
-
-        if (!isNavigatedSuccessfully)
-        {
-            throw new Exception("導航到指定頁面失敗。");
-        }
-    }
-
     public void ClickRow(string caseNo)
     {
         _wait.Until(driver =>
@@ -451,100 +404,6 @@ public class TestHelper
         });
 
         _actions.MoveToElement(applyCaseNo).Click().Perform();
-    }
-
-    public static Task ChangeUser(IWebDriver webDriver, string userName)
-    {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        Actions actions = new Actions(webDriver);
-
-        var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
-        usernameElement.SendKeys(userName);
-
-        var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
-        passwordElement.SendKeys(TestHelper.Password!);
-
-        var submitButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
-        actions.MoveToElement(submitButton).Click().Perform();
-
-        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
-
-        return Task.CompletedTask;
-    }
-
-    public static string GetLastSegmentFromUrl(IWebDriver webDriver)
-    {
-        string targetUrl = webDriver.Url;
-
-        WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        wait.Until(webDriver => webDriver.Url != targetUrl);
-
-        string[] segments = webDriver.Url.Split('/');
-        string uuid = segments[^1];
-
-        return uuid;
-    }
-
-    public static void ClickElementInWindow(IWebDriver driver, string xpath, int windowIndex)
-    {
-        var _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        var _actions = new Actions(driver);
-
-        driver.SwitchTo().Window(driver.WindowHandles[windowIndex]);
-        driver.SwitchTo().DefaultContent();
-
-        var element = _wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
-        _actions.MoveToElement(element).Click().Perform();
-    }
-    public static void HoverOverElementInWindow(IWebDriver driver, string xpath, int windowIndex)
-    {
-        var _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        var actions = new Actions(driver);
-
-        driver.SwitchTo().Window(driver.WindowHandles[windowIndex]);
-        driver.SwitchTo().DefaultContent();
-
-        var element = _wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
-        actions.MoveToElement(element).Perform();
-    }
-
-    
-
-    public static void UploadFile(IWebDriver webDriver, string filePath, string css)
-    {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        var lastHiddenInput = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
-        lastHiddenInput.SendKeys(filePath);
-    }
-
-    public static bool DownloadFileAndVerify(IWebDriver webDriver, string fileName, string xpath)
-    {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
-        var actions = new Actions(webDriver);
-        var downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
-        var filePath = Path.Combine(downloadDirectory, fileName);
-
-        Directory.CreateDirectory(downloadDirectory);
-
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
-
-        var downloadButton = webDriver.FindElement(By.XPath(xpath));
-        actions.MoveToElement(downloadButton).Click().Perform();
-
-        wait.Until(driver =>
-        {
-            foreach (var file in Directory.GetFiles(downloadDirectory))
-            {
-                Console.WriteLine($"-----filename: {file}-----");
-            }
-
-            return File.Exists(filePath);
-        });
-
-        return File.Exists(filePath);
     }
 
     public static void CleanDb()

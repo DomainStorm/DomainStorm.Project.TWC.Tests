@@ -8,13 +8,13 @@ using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
 {
-    public class TwcA101Tests
+    public class TwcB101Tests
     {
         private IWebDriver _driver = null!;
         private WebDriverWait _wait = null!;
         private Actions _actions = null!;
-        private TestHelper _testHelper =null!;
-        public TwcA101Tests()
+        private TestHelper _testHelper = null!;
+        public TwcB101Tests()
         {
             TestHelper.CleanDb();
         }
@@ -23,7 +23,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             var testMethod = TestContext.CurrentContext.Test.MethodName;
-            var methodInfo = typeof(TwcA101Tests).GetMethod(testMethod!);
+            var methodInfo = typeof(TwcB101Tests).GetMethod(testMethod!);
             var noBrowser = methodInfo?.GetCustomAttribute<NoBrowserAttribute>() != null;
 
             if (!noBrowser)
@@ -44,8 +44,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Test]
         [Order(0)]
         [NoBrowser]
-
-        public Task TwcA101_01()
+        public Task TwcB101_01()
         {
             TestHelper.AccessToken = TestHelper.GetAccessToken().Result;
             That(TestHelper.AccessToken, Is.Not.Empty);
@@ -56,10 +55,9 @@ namespace DomainStorm.Project.TWC.Tests
         [Test]
         [Order(1)]
         [NoBrowser]
-
-        public Task TwcA101_02()
+        public Task TwcB101_02()
         {
-            var statusCode = TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json")).Result;
+            var statusCode = TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmRecoverApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-B101_bmRecoverApply.json")).Result;
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
 
             return Task.CompletedTask;
@@ -67,105 +65,82 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(2)]
-        public Task TwcA101_03To04()
+        public Task TwcB101_03To08()
         {
-            TwcA101_03();
-            TwcA101_04();
+            TwcB101_03();
+            TwcB101_04();
+            TwcB101_05();
+            TwcB101_06();
+            TwcB101_07();
+            TwcB101_08();
 
             return Task.CompletedTask;
         }
-
-        public Task TwcA101_03()
+        public Task TwcB101_03()
         {
             _testHelper.Login("0511", TestHelper.Password!);
             _testHelper.NavigateWait("/draft", By.CssSelector("storm-sidenav"));
             _testHelper.ClickRow(TestHelper.ApplyCaseNo!);
-            _testHelper.ElementClick(By.XPath("//button[text()='捨棄草稿']"));
-            _testHelper.WaitElementExists(By.XPath("//h2[text()='是否刪除？']"));
 
-            var check = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//button[text()='刪除']")));
-            That(check.Text, Is.EqualTo("刪除"));
+            _testHelper.WaitElementExists(By.XPath("//button[text()='新增文件']"));
 
-            return Task.CompletedTask;
-        }
+            var addFileButton = _driver.FindElement(By.XPath("//button[text()='新增文件']"));
+            _actions.MoveToElement(addFileButton).Perform();
 
-        public Task TwcA101_04()
-        {
-            _testHelper.ElementClick(By.XPath("//button[text()='刪除']"));
-
-            var content = _testHelper.WaitShadowElement("p", "沒有找到符合的結果");
-            That(content.Text, Is.EqualTo("沒有找到符合的結果"));
+            _wait.Until(ExpectedConditions.ElementToBeClickable(addFileButton));
+            That(addFileButton.Displayed, Is.True);
 
             return Task.CompletedTask;
         }
-
-        [Test]
-        [Order(3)]
-        [NoBrowser]
-        public Task TwcA101_05()
+        public Task TwcB101_04()
         {
-            TestHelper.AccessToken = TestHelper.GetAccessToken().Result;
-            That(TestHelper.AccessToken, Is.Not.Empty);
-
-            return Task.CompletedTask;
-        }
-
-        [Test]
-        [Order(4)]
-        [NoBrowser]
-        public Task TwcA101_06()
-        {
-            var statusCode = TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json")).Result;
-            That(statusCode, Is.EqualTo(HttpStatusCode.OK));
-
-            return Task.CompletedTask;
-        }
-
-        [Test]
-        [Order(5)]
-        public Task TwcA101_07To13()
-        {
-            TwcA101_07();
-            TwcA101_08();
-            TwcA101_09();
-            TwcA101_10();
-            TwcA101_11();
-            TwcA101_12();
-            TwcA101_13();
-
-            return Task.CompletedTask;
-        }
-        public Task TwcA101_07()
-        {
-            _testHelper.Login("0511", TestHelper.Password!);
-            _testHelper.NavigateWait("/draft", By.CssSelector("storm-sidenav"));
-            _testHelper.ClickRow(TestHelper.ApplyCaseNo!);
             _testHelper.ElementClick(By.XPath("//button[text()='新增文件']"));
+            _testHelper.WaitElementExists(By.CssSelector("storm-card[headline='新增檔案']"));
+            _testHelper.UploadFilesAndCheck(new[] { "twcweb_01_1_夾帶附件1.pdf", "twcweb_01_1_夾帶附件2.pdf" }, "input.dz-hidden-input:nth-of-type(3)");
+            _testHelper.WaitElementExists(By.CssSelector("storm-edit-table"));
+
+            var stormEditTable = _driver.FindElement(By.CssSelector("storm-edit-table"));
+            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+
+            _wait.Until(driver =>
+            {
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                return rows.Count == 2;
+            });
+
+            var targetRow = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr")).First(row =>
+            {
+                var fileNameElement = row.FindElement(By.CssSelector("td[data-field='name'] storm-table-cell span span"));
+                return fileNameElement.Text == "twcweb_01_1_夾帶附件1.pdf";
+            });
+
+            var deleteButton = targetRow.FindElement(By.CssSelector("td.action storm-table-toolbar storm-toolbar-item storm-button button"));
+            _actions.MoveToElement(deleteButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h2[text()='是否刪除？']")));
+
+            _testHelper.ElementClick(By.XPath("//button[contains(text(), '刪除')]"));
+
+            _wait.Until(driver =>
+            {
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                return rows.Count == 1;
+            });
+
+            var remainingFileName = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-table-cell span"));
+            That(remainingFileName.Text, Is.EqualTo("twcweb_01_1_夾帶附件2.pdf"));
 
             return Task.CompletedTask;
         }
-        public Task TwcA101_08()
+        public Task TwcB101_05()
         {
-            _testHelper.UploadFilesAndCheck(new[] { "twcweb_01_1_夾帶附件1.pdf" }, "input.dz-hidden-input:nth-of-type(3)");
-
-            return Task.CompletedTask;
-        }
-        public Task TwcA101_09()
-        {
-            var content = _testHelper.WaitShadowElement("td[data-field='name'] span span", "twcweb_01_1_夾帶附件1.pdf", isEditTable: true);
-            That(content.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
-
-            return Task.CompletedTask;
-        }
-        public Task TwcA101_10()
-        {
-             _testHelper.ElementClick(By.CssSelector("#用印或代送件只需夾帶附件"));
+            _testHelper.ElementClick(By.CssSelector("#用印或代送件只需夾帶附件"));
 
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#用印或代送件只需夾帶附件")));
 
             return Task.CompletedTask;
         }
-        public Task TwcA101_11()
+        public Task TwcB101_06()
         {
             _testHelper.ElementClick(By.XPath("//button[text()='確認受理']"));
 
@@ -178,7 +153,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
-        public Task TwcA101_12()
+        public Task TwcB101_07()
         {
             _driver.SwitchTo().Frame(0);
 
@@ -193,7 +168,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
-        public Task TwcA101_13()
+        public Task TwcB101_08()
         {
             _driver.SwitchTo().DefaultContent();
 
@@ -213,8 +188,16 @@ namespace DomainStorm.Project.TWC.Tests
         }
 
         [Test]
-        [Order(6)]
-        public Task TwcA101_14()
+        [Order(3)]
+
+        public Task TwcB101_09To10()
+        {
+            TwcB101_09();
+            TwcB101_10();
+
+            return Task.CompletedTask;
+        }
+        public Task TwcB101_09()
         {
             _testHelper.Login("0511", TestHelper.Password!);
             _testHelper.NavigateWait("/unfinished", By.CssSelector("storm-sidenav"));
@@ -226,7 +209,13 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.MoveAndCheck("#消費性用水服務契約");
             _testHelper.MoveAndCheck("#公司個人資料保護告知事項");
             _testHelper.MoveAndCheck("#公司營業章程");
-            _testHelper.CheckElementText("a[download='twcweb_01_1_夾帶附件1.pdf']", "twcweb_01_1_夾帶附件1.pdf");
+
+            return Task.CompletedTask;
+        }
+
+        public Task TwcB101_10()
+        {
+            _testHelper.CheckElementText("a[download='twcweb_01_1_夾帶附件2.pdf']", "twcweb_01_1_夾帶附件2.pdf");
 
             return Task.CompletedTask;
         }
