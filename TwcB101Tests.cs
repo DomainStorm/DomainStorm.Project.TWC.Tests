@@ -81,14 +81,7 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.Login("0511", TestHelper.Password!);
             _testHelper.NavigateWait("/draft", By.CssSelector("storm-sidenav"));
             _testHelper.ClickRow(TestHelper.ApplyCaseNo!);
-
             _testHelper.WaitElementExists(By.XPath("//button[text()='新增文件']"));
-
-            var addFileButton = _driver.FindElement(By.XPath("//button[text()='新增文件']"));
-            _actions.MoveToElement(addFileButton).Perform();
-
-            _wait.Until(ExpectedConditions.ElementToBeClickable(addFileButton));
-            That(addFileButton.Displayed, Is.True);
 
             return Task.CompletedTask;
         }

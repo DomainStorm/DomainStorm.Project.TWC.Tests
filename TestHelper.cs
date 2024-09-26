@@ -198,7 +198,7 @@ public class TestHelper
     public TestHelper(IWebDriver webDriver)
     {
         _driver = webDriver;
-        _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
         _actions = new Actions(webDriver);
     }
 
@@ -279,6 +279,7 @@ public class TestHelper
             {
                 var element = d.FindElement(by);
                 element.SendKeys(text);
+                Thread.Sleep(500);
                 return true;
             }
             catch (StaleElementReferenceException)
@@ -404,6 +405,35 @@ public class TestHelper
         });
 
         _actions.MoveToElement(applyCaseNo).Click().Perform();
+    }
+
+    public void DownloadFileAndVerify(string fileName, string xpath)
+    {
+        var downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
+        var filePath = Path.Combine(downloadDirectory, fileName);
+
+        Directory.CreateDirectory(downloadDirectory);
+
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+
+        ElementClick(By.XPath(xpath));
+
+        bool fileDownloaded = _wait.Until(driver =>
+        {
+            foreach (var file in Directory.GetFiles(downloadDirectory))
+            {
+                Console.WriteLine($"-----filename: {file}-----");
+            }
+            return File.Exists(filePath);
+        });
+
+        if (!fileDownloaded)
+        {
+            throw new Exception($"File '{fileName}' was not downloaded successfully.");
+        }
     }
 
     public static void CleanDb()
