@@ -8,13 +8,13 @@ using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
 {
-    public class TwcE101Tests
+    public class TwcF101Tests
     {
         private IWebDriver _driver = null!;
         private WebDriverWait _wait = null!;
         private Actions _actions = null!;
         private TestHelper _testHelper = null!;
-        public TwcE101Tests()
+        public TwcF101Tests()
         {
             TestHelper.CleanDb();
         }
@@ -23,7 +23,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             var testMethod = TestContext.CurrentContext.Test.MethodName;
-            var methodInfo = typeof(TwcE101Tests).GetMethod(testMethod!);
+            var methodInfo = typeof(TwcF101Tests).GetMethod(testMethod!);
             var noBrowser = methodInfo?.GetCustomAttribute<NoBrowserAttribute>() != null;
 
             if (!noBrowser)
@@ -44,7 +44,7 @@ namespace DomainStorm.Project.TWC.Tests
         [Test]
         [Order(0)]
         [NoBrowser]
-        public Task TwcE101_01()
+        public Task TwcF101_01()
         {
             TestHelper.AccessToken = TestHelper.GetAccessToken().Result;
             That(TestHelper.AccessToken, Is.Not.Empty);
@@ -55,9 +55,9 @@ namespace DomainStorm.Project.TWC.Tests
         [Test]
         [Order(1)]
         [NoBrowser]
-        public Task TwcE101_02()
+        public Task TwcF101_02()
         {
-            var statusCode = TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTransferApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-E101_bmTransferApply.json")).Result;
+            var statusCode = TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmTypeChangeApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-F101_bmTypeChangeApply.json")).Result;
             That(statusCode, Is.EqualTo(HttpStatusCode.OK));
 
             return Task.CompletedTask;
@@ -65,21 +65,19 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(2)]
-        public Task TwcE101_03To11()
+        public Task TwcF101_03To09()
         {
-            TwcE101_03();
-            TwcE101_04();
-            TwcE101_05();
-            TwcE101_06();
-            TwcE101_07();
-            TwcE101_08();
-            TwcE101_09();
-            TwcE101_10();
-            TwcE101_11();
+            TwcF101_03();
+            TwcF101_04();
+            TwcF101_05();
+            TwcF101_06();
+            TwcF101_07();
+            TwcF101_08();
+            TwcF101_09();
 
             return Task.CompletedTask;
         }
-        public Task TwcE101_03()
+        public Task TwcF101_03()
         {
             _testHelper.Login("0511", TestHelper.Password!);
             _testHelper.NavigateWait("/draft", By.CssSelector("storm-sidenav"));
@@ -88,16 +86,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var stiEnd = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#中結")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiEnd);
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiEnd);
-            _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#中結")));
-
-            return Task.CompletedTask;
-        }
-
-        public Task TwcE101_04()
-        {
             var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#accept-sign")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
@@ -109,8 +97,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
-
-        public Task TwcE101_05()
+        public Task TwcF101_04()
         {
             _driver.SwitchTo().DefaultContent();
 
@@ -120,8 +107,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
-
-        public Task TwcE101_06()
+        public Task TwcF101_05()
         {
             _testHelper.ElementClick(By.XPath("//button[text()='確認受理']"));
 
@@ -130,49 +116,30 @@ namespace DomainStorm.Project.TWC.Tests
 
             _testHelper.ElementClick(By.XPath("//button[text()='確定']"));
 
-            _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.XPath("//button[text()='確定']")));
-
             return Task.CompletedTask;
         }
-
-        public async Task TwcE101_07()
+        public Task TwcF101_06()
         {
-            _driver.SwitchTo().Frame(0);
-
-            _testHelper.InputSendkeys(By.CssSelector("span[sti-email-tel-no] input"), "02-12345678" + Keys.Tab);
-
-            var phoneElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-email-tel-no] input")));
-            That(phoneElement.GetAttribute("value"), Is.EqualTo("02-12345678"));
-        }
-
-        public Task TwcE101_08()
-        {
-            _driver.SwitchTo().DefaultContent();
-
             _testHelper.WaitElementExists(By.XPath("//button[text()='新增文件']"));
 
             return Task.CompletedTask;
         }
-
-        public Task TwcE101_09()
+        public Task TwcF101_07()
         {
             _testHelper.ElementClick(By.XPath("//button[text()='新增文件']"));
             _testHelper.WaitElementExists(By.CssSelector("storm-card[headline='新增檔案']"));
-
             _testHelper.UploadFilesAndCheck(new[] { "twcweb_01_1_夾帶附件1.pdf" }, "input.dz-hidden-input:nth-of-type(3)");
 
             return Task.CompletedTask;
         }
-
-        public Task TwcE101_10()
+        public Task TwcF101_08()
         {
             var content = _testHelper.WaitShadowElement("td[data-field='name'] span span", "twcweb_01_1_夾帶附件1.pdf", isEditTable: true);
             That(content.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             return Task.CompletedTask;
         }
-
-        public Task TwcE101_11()
+        public Task TwcF101_09()
         {
             _testHelper.ElementClick(By.XPath("//button[text()='確認受理']"));
 
@@ -191,23 +158,12 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(3)]
-        public Task TwcE101_12()
+        public Task TwcF101_10()
         {
             _testHelper.Login("0511", TestHelper.Password!);
             _testHelper.NavigateWait("/unfinished", By.CssSelector("storm-sidenav"));
             _testHelper.ClickRow(TestHelper.ApplyCaseNo!);
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
-
-            _driver.SwitchTo().Frame(0);
-
-            var phoneNumber = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#電子帳單聯絡電話")));
-            That(phoneNumber.Text, Is.EqualTo("02-12345678"));
-
-            var stiEnd = _driver.FindElement(By.CssSelector("#中結"));
-            That(stiEnd.Selected);
-
-            var stiPostUserFullName = _driver.FindElement(By.CssSelector("span[sti-post-user-full-name]"));
-            That(stiPostUserFullName.Text, Is.EqualTo("張博文"));
 
             _driver.SwitchTo().DefaultContent();
 
@@ -221,15 +177,15 @@ namespace DomainStorm.Project.TWC.Tests
 
         [Test]
         [Order(4)]
-        public Task TwcE101_13To15()
+        public Task TwcF101_11To13()
         {
-            TwcE101_13();
-            TwcE101_14();
-            TwcE101_15();
+            TwcF101_11();
+            TwcF101_12();
+            TwcF101_13();
 
             return Task.CompletedTask;
         }
-        public Task TwcE101_13()
+        public Task TwcF101_11()
         {
             _testHelper.Login("0511", TestHelper.Password!);
             _testHelper.NavigateWait("/search", By.CssSelector("storm-card"));
@@ -252,8 +208,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
-
-        public Task TwcE101_14()
+        public Task TwcF101_12()
         {
             _testHelper.ClickRow(TestHelper.ApplyCaseNo!);
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
@@ -264,10 +219,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
-
-        public Task TwcE101_15()
+        public Task TwcF101_13()
         {
-            _testHelper.DownloadFileAndVerify("41881288118.pdf", "//button[text()='轉PDF']");
+            _testHelper.DownloadFileAndVerify("41188239939.pdf", "//button[text()='轉PDF']");
 
             return Task.CompletedTask;
         }
