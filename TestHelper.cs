@@ -11,6 +11,7 @@ using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
 using static NUnit.Framework.Assert;
+using System;
 
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
@@ -201,68 +202,30 @@ public class TestHelper
         _actions = new Actions(webDriver);
     }
 
-    public static async Task Login(IWebDriver webDriver, string userId, string password)
+    public void Login(string userId, string password)
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-        var action = new Actions(webDriver);
-        int retryCount = 3;
-        bool isLoginSuccessful = false;
+        _driver.Navigate().GoToUrl(LoginUrl);
 
-        for (int attempt = 0; attempt < retryCount; attempt++)
-        {
-            try
-            {
-                webDriver.Navigate().GoToUrl(LoginUrl);
+        //Console.WriteLine($"::group::Login---------{LoginUrl}---------");
+        //Console.WriteLine($"---------{LoginUrl}---------");
+        //Console.WriteLine(webDriver.PageSource);
+        //Console.WriteLine("::endgroup::");
+        _wait.Until(ExpectedConditions.UrlContains("account"));
 
-                //Console.WriteLine($"::group::Login---------{LoginUrl}---------");
-                //Console.WriteLine($"---------{LoginUrl}---------");
-                //Console.WriteLine(webDriver.PageSource);
-                //Console.WriteLine("::endgroup::");
-                wait.Until(ExpectedConditions.UrlContains("account"));
+        //Console.WriteLine($"::group::Login---------{webDriver.Url}---------");
+        //Console.WriteLine(webDriver.PageSource);
+        //Console.WriteLine("::endgroup::");
 
-                //Console.WriteLine($"::group::Login---------{webDriver.Url}---------");
-                //Console.WriteLine(webDriver.PageSource);
-                //Console.WriteLine("::endgroup::");
+        WaitElementExists(By.CssSelector("[name=Username]"));
+        InputSendkeys(By.CssSelector("[name=Username]"), userId);
+        InputSendkeys(By.CssSelector("[name=Password]"), password);
+        WaitElementExists(By.CssSelector("button"));
+        ElementClick(By.CssSelector("button"));
 
-                wait.Until(driver =>
-                {
-                    var usernameElement = driver.FindElement(By.CssSelector("[name=Username]"));
-                    return usernameElement != null;
-                });
-
-                var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
-                var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
-
-                usernameElement.SendKeys(userId);
-                passwordElement.SendKeys(password);
-
-                var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
-                action.MoveToElement(button).Click().Perform();
-
-                wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
-
-                isLoginSuccessful = true;
-                break;
-            }
-            catch (NoSuchElementException)
-            {
-                Console.WriteLine("未找到登入元素，嘗試重試...");
-                webDriver.Navigate().Refresh();
-                await Task.Delay(1000);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"錯誤訊息：{ex.Message}");
-                break;
-            }
-            if (!isLoginSuccessful)
-            {
-                throw new Exception("登入失敗。");
-            }
-        }
+        _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
     }
 
-    public async Task WaitElementExists(By by)
+    public void WaitElementExists(By by)
     {
         _wait.Until(driver =>
         {
@@ -273,14 +236,15 @@ public class TestHelper
             }
             catch (NoSuchElementException)
             {
+                Thread.Sleep(500);
                 return false;
             }
         });
     }
 
-    public async Task ElementClick(By by)
+    public void ElementClick(By by)
     {
-        await WaitElementExists(by);
+        WaitElementExists(by);
 
         var element = _driver.FindElement(by);
 
@@ -299,16 +263,15 @@ public class TestHelper
         }
     }
 
-    public async Task NavigateWait(string url, By by)
+    public void NavigateWait(string url, By by)
     {
         _driver.Navigate().GoToUrl($@"{BaseUrl}{url}");
-
-        await WaitElementExists(by);
+        WaitElementExists(by);
     }
 
-    public async Task InputText(By by, string text)
+    public void InputSendkeys(By by, string text)
     {
-        await WaitElementExists(by);
+        WaitElementExists(by);
 
         _wait.Until(d =>
         {
@@ -326,202 +289,56 @@ public class TestHelper
         });
     }
 
-    public async Task UploadFileAndCheck(string fileName, string cssSelectorInput)
+    public void UploadFileAndCheck(string fileName, string cssSelectorInput)
     {
         var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName);
 
-        await WaitElementExists(By.CssSelector(cssSelectorInput));
-        await InputText(By.CssSelector(cssSelectorInput), filePath);
+        WaitElementExists(By.CssSelector(cssSelectorInput));
+        InputSendkeys(By.CssSelector(cssSelectorInput), filePath);
 
         var fileExtension = Path.GetExtension(filePath).ToLower();
         if (fileExtension == ".png")
         {
             var durationInputSelector = By.XPath("//storm-input-group[@label='播放秒數']//input");
-            await WaitElementExists(durationInputSelector);
-            await InputText(durationInputSelector, "10");
+            WaitElementExists(durationInputSelector);
+            InputSendkeys(durationInputSelector, "10");
         }
 
-        await Task.Delay(500);
+        Thread.Sleep(500);
 
         var fileNameInputSelector = By.XPath("//storm-input-group[@label='名稱']//input");
-        await WaitElementExists(fileNameInputSelector);
+        WaitElementExists(fileNameInputSelector);
 
         var fileNameInput = _driver.FindElement(fileNameInputSelector);
         That(fileNameInput.GetAttribute("value"), Is.EqualTo(fileName));
 
         var uploadButton = By.XPath("//button[text()='上傳']");
-        await WaitElementExists(uploadButton);
-        await ElementClick(uploadButton);
+        WaitElementExists(uploadButton);
+        ElementClick(uploadButton);
     }
 
-    public static IWebElement WaitStormTableWithText(IWebDriver driver, string cssSelector, string expectedText)
-    {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-
-        return wait.Until(_ =>
-        {
-            IWebElement resultElement = null!;
-
-            var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-            var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
-            var selectedRow = rows.FirstOrDefault(tr =>
-            {
-                var element = tr.FindElement(By.CssSelector(cssSelector));
-                return element.Text == expectedText;
-            });
-
-            if (selectedRow != null)
-            {
-                resultElement = selectedRow.FindElement(By.CssSelector(cssSelector));
-            }
-
-            return resultElement;
-        });
-    }
-
-    //public static async Task WaitForElement(IWebDriver driver, By by, int timeoutSeconds)
-    //{
-    //    var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds));
-    //    wait.Until(driver =>
-    //    {
-    //        try
-    //        {
-    //            var element = driver.FindElement(by);
-    //            return element != null;
-    //        }
-    //        catch (NoSuchElementException)
-    //        {
-    //            return false;
-    //        }
-    //    });
-    //}
-
-    //public static async Task WaitAndClick(IWebDriver driver, By by, int timeoutSeconds) 
-    //{
-    //    var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(timeoutSeconds));
-    //    Actions actions = new Actions(driver);
-
-    //    await WaitForElement(driver, by, timeoutSeconds);
-
-    //    var element = driver.FindElement(by);
-
-    //    if (element.Displayed)
-    //    {
-    //        actions.MoveToElement(element).Click().Perform();
-    //    }
-    //    else
-    //    {
-    //        Thread.Sleep(1000);
-    //        actions.MoveToElement(element).Perform();
-    //        wait.Until(d => element.Displayed);
-    //        element = wait.Until(ExpectedConditions.ElementToBeClickable(by));
-    //        actions.Click().Perform();
-    //    }
-    //}
-
-    //public static async Task EnterText(IWebDriver driver, By by, string text)
-    //{
-    //    var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
-
-    //    wait.Until( d =>
-    //    {
-    //        try
-    //        {
-    //            var element = d.FindElement(by);
-    //            element.SendKeys(text);
-    //            return true;
-    //        }
-    //        catch (StaleElementReferenceException)
-    //        {
-    //            Thread.Sleep(500);
-    //            return false;
-    //        }
-    //    });
-    //}
-
-    //public static async Task NavigateAndWaitForElement(IWebDriver driver, string url, By by, int timeoutSeconds)
-    //{
-    //    driver.Navigate().GoToUrl($@"{BaseUrl}{url}");
-    //    await WaitForElement(driver, by, timeoutSeconds);
-    //}
-
-    //public static async Task UploadFileAndCheck(IWebDriver driver, string fileName, string cssSelectorInput)
-    //{
-    //    var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-    //    var actions = new Actions(driver);
-
-    //    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName);
-
-    //    wait.Until(d =>
-    //    {
-    //        try
-    //        {
-    //            var hiddenInput = d.FindElement(By.CssSelector(cssSelectorInput));
-    //            return true;
-    //        }
-    //        catch (NoSuchElementException)
-    //        {
-    //            Thread.Sleep(500);
-    //            return false;
-    //        }
-    //    });
-
-    //    var hiddenInput = wait.Until(d => d.FindElement(By.CssSelector(cssSelectorInput)));
-    //    hiddenInput.SendKeys(filePath);
-
-    //    var fileExtension = Path.GetExtension(filePath).ToLower();
-    //    if (fileExtension == ".png")
-    //    {
-    //        var durationInput = wait.Until(d => d.FindElement(By.XPath("//storm-input-group[@label='播放秒數']//input")));
-    //        durationInput.SendKeys("10");
-    //    }
-
-    //    Thread.Sleep(1000);
-    //    var fileNameInput = wait.Until(d => d.FindElement(By.XPath("//storm-input-group[@label='名稱']//input")));
-    //    That(fileNameInput.GetAttribute("value"), Is.EqualTo(fileName));
-
-    //    var uploadButton = wait.Until(d => d.FindElement(By.XPath("//button[text()='上傳']")));
-    //    actions.MoveToElement(uploadButton).Click().Perform();
-    //}
-
-    public static IWebElement WaitStormEditTableWithText(IWebDriver driver, string cssSelector, string expectedText)
-    {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-
-        return wait.Until(_ =>
-        {
-            IWebElement resultElement = null!;
-
-            var stormEditTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
-            var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-            var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
-            var selectedRow = rows.FirstOrDefault(tr =>
-            {
-                var textElement = tr.FindElement(By.CssSelector("td[data-field='name'] span span"));
-                return textElement.Text == expectedText;
-            });
-
-            if (selectedRow != null)
-            {
-                resultElement = selectedRow.FindElement(By.CssSelector(cssSelector));
-            }
-
-            return resultElement;
-        });
-    }
-
-    public IWebElement WaitStormTableElement(string cssSelector, string expectedText)
+    public IWebElement WaitShadowElement(string cssSelector, string expectedText, bool isEditTable = false)
     {
         return _wait.Until(_ =>
         {
             IWebElement resultElement = null!;
+            IWebElement stormTable;
 
-            var stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+            if (isEditTable)
+            {
+                var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            }
+            else
+            {
+                stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+            }
+
             var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
             var selectedRow = rows.FirstOrDefault(tr =>
             {
-                var element = tr.FindElement(By.CssSelector(cssSelector));
-                return element.Text == expectedText;
+                var columns = tr.FindElements(By.CssSelector("td"));
+                return columns.Any(td => td.FindElement(By.CssSelector(cssSelector)).Text == expectedText);
             });
 
             if (selectedRow != null)
@@ -532,21 +349,19 @@ public class TestHelper
             return resultElement;
         });
     }
-
-    public static async Task ClickButton(IWebDriver driver, By buttonCssSelector)
+    public void MoveAndCheck(string cssSelector)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        var actions = new Actions(driver);
-
-        var button = wait.Until(ExpectedConditions.ElementToBeClickable(buttonCssSelector));
-        actions.MoveToElement(button).Click().Perform();
+        var element = _driver.FindElement(By.CssSelector(cssSelector));
+        _actions.MoveToElement(element).Perform();
+        That(element.Selected);
+    }
+    public void CheckElementText(string cssSelector, string expectedText)
+    {
+        var element = _driver.FindElement(By.CssSelector(cssSelector));
+        _actions.MoveToElement(element).Perform();
+        That(element.Text, Is.EqualTo(expectedText));
     }
 
-    public static async Task WaitElementDisappear(IWebDriver driver, By elementCssSelector)
-    {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        wait.Until(ExpectedConditions.InvisibilityOfElementLocated(elementCssSelector));
-    }
 
     public static async Task NavigateAndWait(IWebDriver driver, string pageUrl)
     {
@@ -602,12 +417,9 @@ public class TestHelper
         }
     }
 
-    public static async Task ClickRow(IWebDriver webDriver, string caseNo)
+    public void ClickRow(string caseNo)
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-        var action = new Actions(webDriver);
-
-        wait.Until(driver =>
+        _wait.Until(driver =>
         {
             try
             {
@@ -621,7 +433,7 @@ public class TestHelper
             }
         });
 
-        var stormTable = webDriver.FindElement(By.CssSelector("storm-table"));
+        var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
         var stormTableInput = stormTable.GetShadowRoot().FindElements(By.CssSelector("input[placeholder='請輸入關鍵字']")).FirstOrDefault();
 
         if (stormTableInput != null)
@@ -629,16 +441,16 @@ public class TestHelper
             stormTableInput.Clear();
             stormTableInput.SendKeys(caseNo + Keys.Enter);
         }
-        Thread.Sleep(1500);
+        Thread.Sleep(500);
 
-        var applyCaseNo = wait.Until(driver =>
+        var applyCaseNo = _wait.Until(driver =>
         {
             var stormTable = driver.FindElement(By.CssSelector("storm-table"));
             var applyCaseNoElements = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='__radio_1']"));
             return applyCaseNoElements;
         });
 
-        action.MoveToElement(applyCaseNo).Click().Perform();
+        _actions.MoveToElement(applyCaseNo).Click().Perform();
     }
 
     public static Task ChangeUser(IWebDriver webDriver, string userName)
