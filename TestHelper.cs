@@ -302,7 +302,13 @@ public class TestHelper
             InputSendkeys(By.CssSelector(cssSelectorInput), filePath);
             currentFileNames.Add(Path.GetFileName(filePath));
             CheckFileName(string.Join(",", currentFileNames));
-            //CheckFileName(Path.GetFileName(filePath));
+
+            var fileExtension = Path.GetExtension(filePath).ToLower();
+            if (fileExtension == ".png")
+            {
+                var durationInput = _wait.Until(d => d.FindElement(By.XPath("//storm-input-group[@label='播放秒數']//input")));
+                durationInput.SendKeys("10");
+            }
         }
         Thread.Sleep(1000);
 
