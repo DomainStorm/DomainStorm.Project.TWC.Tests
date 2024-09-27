@@ -11,7 +11,6 @@ using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
 using static NUnit.Framework.Assert;
-using System;
 
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
@@ -366,6 +365,11 @@ public class TestHelper
                         Thread.Sleep(500);
                         return false;
                     }
+                    catch (StaleElementReferenceException)
+                    {
+                        Thread.Sleep(500);
+                        return false;
+                    }
                 });
             });
 
@@ -483,6 +487,40 @@ public class TestHelper
             throw new Exception($"File '{fileName}' was not downloaded successfully.");
         }
     }
+    public void OpenNewWindowWithLastSegmentUrlAndVerify()
+    {
+        string[] segments = _driver.Url.Split('/');
+        string uuid = segments[^1];
+
+        ((IJavaScriptExecutor)_driver).ExecuteScript("window.open();");
+        _driver.SwitchTo().Window(_driver.WindowHandles[1]);
+        _driver.Navigate().GoToUrl($"{BaseUrl}/draft/second-screen/{uuid}");
+
+        WaitElementExists(By.CssSelector("iframe"));
+
+        _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
+        _driver.SwitchTo().Frame(0);
+
+        var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
+        That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+    }
+
+    public void SwitchWindowAndClick(string xpath)
+    {
+        ElementClick(By.XPath(xpath));
+
+        _driver.SwitchTo().Window(_driver.WindowHandles[0]);
+        _driver.SwitchTo().DefaultContent();
+
+        WaitElementExists(By.XPath(xpath));
+
+        var element = _driver.FindElement(By.XPath(xpath));
+        _actions.MoveToElement(element).Perform();
+
+        _driver.SwitchTo().Window(_driver.WindowHandles[1]);
+        _driver.SwitchTo().DefaultContent();
+    }
+
     public static void CleanDb()
     {
         if (GetChromeConfig().CleanDbable)
