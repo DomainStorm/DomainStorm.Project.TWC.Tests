@@ -289,7 +289,6 @@ public class TestHelper
             }
         });
     }
-
     public void UploadFilesAndCheck(string[] fileNames, string cssSelectorInput)
     {
         WaitElementExists(By.CssSelector(cssSelectorInput));
@@ -354,7 +353,20 @@ public class TestHelper
             var selectedRow = rows.FirstOrDefault(tr =>
             {
                 var columns = tr.FindElements(By.CssSelector("td"));
-                return columns.Any(td => td.FindElement(By.CssSelector(cssSelector)).Text == expectedText);
+
+                return columns.Any(td =>
+                {
+                    try
+                    {
+                        var targetElement = td.FindElement(By.CssSelector(cssSelector));
+                        return targetElement.Text == expectedText;
+                    }
+                    catch (NoSuchElementException)
+                    {
+                        Thread.Sleep(500);
+                        return false;
+                    }
+                });
             });
 
             if (selectedRow != null)
@@ -394,29 +406,53 @@ public class TestHelper
         });
 
         var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-        var stormTableInput = stormTable.GetShadowRoot().FindElements(By.CssSelector("input[placeholder='請輸入關鍵字']")).FirstOrDefault();
 
-        if (stormTableInput != null)
+        string currentUrl = _driver.Url;
+
+        if (!currentUrl.Contains("/search"))
         {
-            stormTableInput.Clear();
-            stormTableInput.SendKeys(caseNo + Keys.Enter);
+            // 如果 URL 不包含 "/search"，處理有輸入框的情況
+            var stormTableInput = stormTable.GetShadowRoot()
+                .FindElements(By.CssSelector("input[placeholder='請輸入關鍵字']")).FirstOrDefault();
+
+            if (stormTableInput != null)
+            {
+                stormTableInput.Clear();
+                stormTableInput.SendKeys(caseNo + Keys.Enter);
+
+                _wait.Until(driver =>
+                {
+                    var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                    return rows.Count == 1;
+                });
+            }
         }
+        Thread.Sleep(1000);
 
-        _wait.Until(driver =>
+        var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+        var selectedRow = rows.FirstOrDefault(tr =>
         {
-            var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-            var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
-            return rows.Count == 1;
+            try
+            {
+                var applyCaseNoElement = tr.FindElement(By.CssSelector("td[data-field='applyCaseNo']"));
+                return applyCaseNoElement.Text == caseNo;
+            }
+            catch (NoSuchElementException)
+            {
+                Thread.Sleep(500);
+                return false;
+            }
         });
 
-        var applyCaseNo = _wait.Until(driver =>
+        if (selectedRow != null)
         {
-            var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-            var applyCaseNoElements = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='__radio_1']"));
-            return applyCaseNoElements;
-        });
-
-        _actions.MoveToElement(applyCaseNo).Click().Perform();
+            var radioButton = selectedRow.FindElement(By.CssSelector("td[data-field='__radio_1']"));
+            _actions.MoveToElement(radioButton).Click().Perform();
+        }
+        else
+        {
+            throw new Exception($"找不到匹配的 applyCaseNo: {caseNo}");
+        }
     }
 
     public void DownloadFileAndVerify(string fileName, string xpath)
@@ -447,7 +483,6 @@ public class TestHelper
             throw new Exception($"File '{fileName}' was not downloaded successfully.");
         }
     }
-
     public static void CleanDb()
     {
         if (GetChromeConfig().CleanDbable)
@@ -475,74 +510,6 @@ public class TestHelper
             cn.Query("delete QuestionnaireFormAnswer");
         }
     }
-    public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
-    {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-
-        return wait.Until(driver =>
-        {
-            IWebElement e = null;
-
-            wait.Until(_ =>
-            {
-                try
-                {
-                    var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-
-                    if (stormTable != null)
-                    {
-                        e = stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
-                        return true;
-                    }
-                }
-
-                catch
-                {
-                    return false;
-                }
-
-                return false;
-            });
-
-            return e;
-        });
-    }
-
-    public static IWebElement? WaitStormEditTableUpload(IWebDriver webDriver, string css)
-    {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-
-        return wait.Until(_ =>
-        {
-            IWebElement e = null;
-
-            wait.Until(_ =>
-            {
-                try
-                {
-                    var stormEditTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
-                    var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-
-                    if (stormTable != null)
-                    {
-                        e = stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
-
-                        return true;
-                    }
-                }
-
-                catch
-                {
-                    return false;
-                }
-
-                return false;
-            });
-
-            return e;
-        });
-    }
-
     public class WaterForm
     {
         public string? ApplyCaseNo { get; set; }

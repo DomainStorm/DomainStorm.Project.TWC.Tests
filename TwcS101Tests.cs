@@ -71,11 +71,9 @@ namespace DomainStorm.Project.TWC.Tests
             That(content.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             _testHelper.ElementClick(By.CssSelector("#用印或代送件只需夾帶附件"));
-
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#用印或代送件只需夾帶附件")));
 
             _testHelper.ElementClick(By.XPath("//button[text()='確認受理']"));
-
             _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/unfinished"));
 
             _testHelper.ClickRow(TestHelper.ApplyCaseNo!);
