@@ -224,20 +224,18 @@ public class TestHelper
         _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
     }
 
-    public void WaitElementExists(By by)
+    public IWebElement WaitElementExists(By by)
     {
-        _wait.Until(ExpectedConditions.ElementExists(by));
+        return _wait.Until(ExpectedConditions.ElementExists(by));
     }
-    public void WaitElementVisible(By by)
+    public IWebElement WaitElementVisible(By by)
     {
-        _wait.Until(ExpectedConditions.ElementIsVisible(by));
+        return _wait.Until(ExpectedConditions.ElementIsVisible(by));
     }
 
     public void ElementClick(By by)
     {
-        WaitElementExists(by);
-
-        var element = _driver.FindElement(by);
+        var element = WaitElementExists(by);
 
         if (element.Displayed)
         {
@@ -247,7 +245,7 @@ public class TestHelper
         else
         {
             _actions.MoveToElement(element).Perform();
-            _wait.Until(d => element.Displayed);
+            _wait.Until(_ => element.Displayed);
 
             element = _wait.Until(ExpectedConditions.ElementToBeClickable(by));
             _actions.Click(element).Perform();
@@ -262,23 +260,8 @@ public class TestHelper
 
     public void InputSendkeys(By by, string text)
     {
-        WaitElementExists(by);
-
-        _wait.Until(d =>
-        {
-            try
-            {
-                var element = d.FindElement(by);
-                element.SendKeys(text);
-                Thread.Sleep(500);
-                return true;
-            }
-            catch (StaleElementReferenceException)
-            {
-                Thread.Sleep(500);
-                return false;
-            }
-        });
+        var element = WaitElementVisible(by);
+        element.SendKeys(text);
     }
     public void UploadFilesAndCheck(string[] fileNames, string cssSelectorInput)
     {
@@ -400,22 +383,6 @@ public class TestHelper
             {
                 stormTableInput.Clear();
                 stormTableInput.SendKeys(caseNo + Keys.Enter);
-
-                //selectedRow = _wait.Until(_ =>
-                //{
-                //    var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
-
-                //    if (rows.Count == 1)
-                //    {
-                //        var row = rows[0];
-
-                //        var applyCaseNoElement = _wait.Until(_ => row.FindElement(By.CssSelector("td[data-field='applyCaseNo']")));
-                //        if (applyCaseNoElement.Text == caseNo)
-                //            return row;
-                //    }
-
-                //    return null;
-                //});
             }
         }
 
@@ -425,34 +392,13 @@ public class TestHelper
 
             foreach (var row in rows)
             {
-                var applyCaseNoElement = _wait.Until(_ => row.FindElement(By.CssSelector("td[data-field='applyCaseNo']")));
-                if (applyCaseNoElement.Text == caseNo)
+                var applyCaseNoElement = _wait.Until(_ => row.FindElement(By.XPath($"//td[@data-field='applyCaseNo'][text()='{caseNo}']")));
+                if (applyCaseNoElement != null)
                     return row;
             }
 
             return null;
         });
-
-
-        // Thread.Sleep(1000);
-
-        //var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
-
-
-
-        //var selectedRow = rows.FirstOrDefault(tr =>
-        //{
-        //    try
-        //    {
-        //        var applyCaseNoElement = tr.FindElement(By.CssSelector("td[data-field='applyCaseNo']"));
-        //        return applyCaseNoElement.Text == caseNo;
-        //    }
-        //    catch (NoSuchElementException)
-        //    {
-        //        Thread.Sleep(500);
-        //        return false;
-        //    }
-        //});
 
         if (selectedRow != null)
         {
