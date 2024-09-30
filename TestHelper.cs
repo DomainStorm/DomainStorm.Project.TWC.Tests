@@ -424,29 +424,54 @@ public class TestHelper
                 stormTableInput.Clear();
                 stormTableInput.SendKeys(caseNo + Keys.Enter);
 
-                _wait.Until(driver =>
+                _wait.Until(_ =>
                 {
                     var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
-                    return rows.Count == 1;
+
+                    if (rows.Count == 1)
+                    {
+                        var row = rows[0];
+                        var applyCaseNoElement = row.FindElement(By.CssSelector("td[data-field='applyCaseNo']"));
+                        if (applyCaseNoElement.Text == caseNo)
+                            return true;
+                    }
+
+                    return false;
                 });
             }
         }
-        Thread.Sleep(1000);
+        // Thread.Sleep(1000);
 
-        var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
-        var selectedRow = rows.FirstOrDefault(tr =>
+        //var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+
+        var selectedRow = _wait.Until(_ =>
         {
-            try
+            var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+
+            if (rows.Count == 1)
             {
-                var applyCaseNoElement = tr.FindElement(By.CssSelector("td[data-field='applyCaseNo']"));
-                return applyCaseNoElement.Text == caseNo;
+                var row = rows[0];
+                var applyCaseNoElement = row.FindElement(By.CssSelector("td[data-field='applyCaseNo']"));
+                if (applyCaseNoElement.Text == caseNo)
+                    return applyCaseNoElement;
             }
-            catch (NoSuchElementException)
-            {
-                Thread.Sleep(500);
-                return false;
-            }
+
+            return null;
         });
+
+        //var selectedRow = rows.FirstOrDefault(tr =>
+        //{
+        //    try
+        //    {
+        //        var applyCaseNoElement = tr.FindElement(By.CssSelector("td[data-field='applyCaseNo']"));
+        //        return applyCaseNoElement.Text == caseNo;
+        //    }
+        //    catch (NoSuchElementException)
+        //    {
+        //        Thread.Sleep(500);
+        //        return false;
+        //    }
+        //});
 
         if (selectedRow != null)
         {

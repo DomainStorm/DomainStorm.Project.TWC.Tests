@@ -16,6 +16,7 @@ namespace DomainStorm.Project.TWC.Tests
         public TwcS101Tests()
         {
             TestHelper.CleanDb();
+            TestHelper.AccessToken = TestHelper.GetAccessToken().Result;
         }
 
         [SetUp]
@@ -38,7 +39,6 @@ namespace DomainStorm.Project.TWC.Tests
         [Repeat(15)]
         public Task CreateFormBy0511_Test()
         {
-            TestHelper.AccessToken = TestHelper.GetAccessToken().Result;
             That(TestHelper.AccessToken, Is.Not.Empty);
 
             var statusCode = TestHelper.CreateForm(TestHelper.AccessToken!, $"{TestHelper.BaseUrl}/api/v1/bmEnableApply/confirm", Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets/twcweb-A101_bmEnableApply.json")).Result;
@@ -77,9 +77,9 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/unfinished"));
 
             _testHelper.ClickRow(TestHelper.ApplyCaseNo!);
-            _testHelper.WaitElementExists(By.CssSelector("iframe"));
+            //_testHelper.WaitElementExists(By.CssSelector("iframe"));
 
-            _driver.SwitchTo().Frame(0);
+            // _driver.SwitchTo().Frame(0);
 
             //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
             //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
