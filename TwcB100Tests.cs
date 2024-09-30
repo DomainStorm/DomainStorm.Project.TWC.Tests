@@ -103,8 +103,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _testHelper.WaitElementExists(By.XPath("//span[@id='身分證號碼']"));
 
-            var check = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@id='身分證號碼']")));
-            That(check.Text, Is.EqualTo("A123456789"));
+            _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@id='身分證號碼'][text()='A123456789']")));
 
             return Task.CompletedTask;
         }
@@ -168,7 +167,6 @@ namespace DomainStorm.Project.TWC.Tests
         public Task TwcB100_10()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
-
             _testHelper.ElementClick(By.XPath("//span[text()='簽名']"));
             _testHelper.WaitElementExists(By.XPath("//img[@alt='簽名_001.tiff']"));
 

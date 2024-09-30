@@ -364,10 +364,19 @@ public class TestHelper
     }
     public void CheckElementText(string cssSelector, string expectedText)
     {
-        var element = _driver.FindElement(By.CssSelector(cssSelector));
-        _actions.MoveToElement(element).Perform();
-        That(element.Text, Is.EqualTo(expectedText));
+        //var element = _driver.FindElement(By.CssSelector(cssSelector));
+        //_actions.MoveToElement(element).Perform();
+        //That(element.Text, Is.EqualTo(expectedText));
+
+        CheckElementText(By.CssSelector(cssSelector), expectedText);
     }
+
+    public void CheckElementText(By cssSelector, string expectedText)
+    {
+        var element = WaitElementExists(cssSelector);
+        _wait.Until(_ => element.Text == expectedText);
+    }
+
     public void ClickRow(string caseNo)
     {
         var stormTable = _wait.Until(_ => _driver.FindElement(By.CssSelector("storm-table")));
