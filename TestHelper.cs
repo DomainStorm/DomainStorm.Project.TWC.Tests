@@ -448,15 +448,8 @@ public class TestHelper
         {
             var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
 
-            if (rows.Count == 1)
-            {
-                var row = rows[0];
-                var applyCaseNoElement = row.FindElement(By.CssSelector("td[data-field='applyCaseNo']"));
-                if (applyCaseNoElement.Text == caseNo)
-                    return applyCaseNoElement;
-            }
-
-            return null;
+            return rows.Select(row => row.FindElement(By.CssSelector("td[data-field='applyCaseNo']")))
+                .FirstOrDefault(applyCaseNoElement => applyCaseNoElement.Text == caseNo);
         });
 
         //var selectedRow = rows.FirstOrDefault(tr =>
