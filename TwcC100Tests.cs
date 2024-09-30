@@ -181,11 +181,13 @@ namespace DomainStorm.Project.TWC.Tests
         public Task TwcC100_10()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
+            _driver.SwitchTo().DefaultContent();
 
             _testHelper.ElementClick(By.XPath("//span[text()='簽名']"));
             _testHelper.WaitElementExists(By.XPath("//img[@alt='簽名_001.tiff']"));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
+            _driver.SwitchTo().DefaultContent();
 
             _testHelper.WaitElementExists(By.XPath("//img[@alt='簽名_001.tiff']"));
 
