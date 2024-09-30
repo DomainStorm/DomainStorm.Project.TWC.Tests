@@ -449,8 +449,14 @@ public class TestHelper
         {
             var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
 
-            return rows.Select(row => _wait.Until(_ => row.FindElement(By.CssSelector("td[data-field='applyCaseNo']"))))
-                .FirstOrDefault(webElement => webElement.Text == caseNo);
+            foreach (var row in rows)
+            {
+                var applyCaseNoElement = _wait.Until(_ => row.FindElement(By.CssSelector("td[data-field='applyCaseNo']")));
+
+                if (applyCaseNoElement.Text == caseNo)
+                    return row;
+            }
+            return null;
         });
 
         //var selectedRow = rows.FirstOrDefault(tr =>
