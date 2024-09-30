@@ -55,9 +55,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
 
-            _testHelper.WaitElementExists(By.CssSelector("span[sti-post-user-full-name='']"));
-
-            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-post-user-full-name='']")));
+            var content = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-post-user-full-name='']")));
             That(content.Text, Is.EqualTo("張博文"));
 
             _driver.SwitchTo().DefaultContent();
@@ -110,9 +108,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
 
-            _testHelper.WaitElementExists(By.CssSelector("span[sti-post-user-full-name='']"));
-
-            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-post-user-full-name='']")));
+            var content = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-post-user-full-name='']")));
             That(content.Text, Is.EqualTo("謝德威"));
 
             _driver.SwitchTo().DefaultContent();
@@ -209,9 +205,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
 
-            _testHelper.WaitElementExists(By.CssSelector("span[sti-post-user-full-name='']"));
-
-            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-post-user-full-name='']")));
+            var content = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-post-user-full-name='']")));
             That(content.Text, Is.EqualTo("陳宥甯"));
 
             return Task.CompletedTask;
