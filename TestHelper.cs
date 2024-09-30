@@ -484,7 +484,7 @@ public class TestHelper
         WaitElementExists(By.XPath(xpath));
 
         var element = _driver.FindElement(By.XPath(xpath));
-        _actions.MoveToElement(element).Perform();
+        _actions.ScrollToElement(element).MoveToElement(element).Perform();
 
         _driver.SwitchTo().Window(_driver.WindowHandles[1]);
         _driver.SwitchTo().DefaultContent();

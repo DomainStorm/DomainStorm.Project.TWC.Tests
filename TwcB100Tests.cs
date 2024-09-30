@@ -151,27 +151,23 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().DefaultContent();
             _testHelper.SwitchWindowAndClick("//label[@for='消費性用水服務契約']");
-
             return Task.CompletedTask;
         }
         public Task TwcB100_08()
         {
             _testHelper.SwitchWindowAndClick("//label[@for='公司個人資料保護告知事項']");
-
             return Task.CompletedTask;
         }
         public Task TwcB100_09()
         {
             _testHelper.SwitchWindowAndClick("//label[@for='公司營業章程']");
-
             return Task.CompletedTask;
         }
         public Task TwcB100_10()
         {
-            _driver.SwitchTo().Window(_driver.WindowHandles[1]);
-            _driver.SwitchTo().DefaultContent();
-
             _testHelper.ElementClick(By.XPath("//span[text()='簽名']"));
+
+            //_testHelper.ElementClick(By.XPath("//span[text()='簽名']"));
             _testHelper.WaitElementExists(By.XPath("//img[@alt='簽名_001.tiff']"));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
