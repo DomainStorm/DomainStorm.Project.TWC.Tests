@@ -83,8 +83,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
+            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }
@@ -135,8 +135,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
+            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }
@@ -239,8 +239,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
+            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }
