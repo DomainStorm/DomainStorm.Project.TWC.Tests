@@ -370,7 +370,7 @@ public class TestHelper
     }
     public void ClickRow(string caseNo)
     {
-        var stormTable = _wait.Until(driver => _driver.FindElement(By.CssSelector("storm-table")));
+        var stormTable = _wait.Until(_ => _driver.FindElement(By.CssSelector("storm-table")));
         var currentUrl = _driver.Url;
 
         if (!currentUrl.Contains("/search"))
@@ -392,8 +392,8 @@ public class TestHelper
 
             foreach (var row in rows)
             {
-                var applyCaseNoElement = _wait.Until(_ => row.FindElement(By.XPath($"//td[@data-field='applyCaseNo'][text()='{caseNo}']")));
-                if (applyCaseNoElement != null)
+                var applyCaseNoElement = _wait.Until(_ => row.FindElement(By.CssSelector("td[data-field='applyCaseNo']")));
+                if (applyCaseNoElement.Text == caseNo)
                     return row;
             }
 
