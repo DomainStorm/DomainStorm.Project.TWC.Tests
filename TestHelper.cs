@@ -215,10 +215,10 @@ public class TestHelper
         //Console.WriteLine(webDriver.PageSource);
         //Console.WriteLine("::endgroup::");
 
-        WaitElementExists(By.CssSelector("[name=Username]"));
+        WaitElementVisible(By.CssSelector("[name=Username]"));
         InputSendkeys(By.CssSelector("[name=Username]"), userId);
         InputSendkeys(By.CssSelector("[name=Password]"), password);
-        WaitElementExists(By.CssSelector("button"));
+        WaitElementVisible(By.CssSelector("button"));
         ElementClick(By.CssSelector("button"));
 
         _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
@@ -226,19 +226,11 @@ public class TestHelper
 
     public void WaitElementExists(By by)
     {
-        _wait.Until(driver =>
-        {
-            try
-            {
-                var element = driver.FindElement(by);
-                return element != null;
-            }
-            catch (NoSuchElementException)
-            {
-                Thread.Sleep(500);
-                return false;
-            }
-        });
+        _wait.Until(ExpectedConditions.ElementExists(by));
+    }
+    public void WaitElementVisible(By by)
+    {
+        _wait.Until(ExpectedConditions.ElementIsVisible(by));
     }
 
     public void ElementClick(By by)

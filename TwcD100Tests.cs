@@ -177,8 +177,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            var signElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-post-user-full-name='']")));
-            That(signElement.Text, Is.EqualTo("張博文"));
+            That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-post-user-full-name][text()='張博文']"))), Is.Not.Null);
 
             return Task.CompletedTask;
         }

@@ -203,8 +203,9 @@ namespace DomainStorm.Project.TWC.Tests
             var stiEnd = _driver.FindElement(By.CssSelector("#中結"));
             That(stiEnd.Selected);
 
-            var stiPostUserFullName = _driver.FindElement(By.CssSelector("span[sti-post-user-full-name]"));
-            That(stiPostUserFullName.Text, Is.EqualTo("張博文"));
+            That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-post-user-full-name][text()='張博文']"))), Is.Not.Null);
+
+
 
             _driver.SwitchTo().DefaultContent();
 

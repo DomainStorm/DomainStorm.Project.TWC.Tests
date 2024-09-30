@@ -258,8 +258,7 @@ namespace DomainStorm.Project.TWC.Tests
             var stiPay = _driver.FindElement(By.CssSelector("#繳費"));
             That(stiPay.Selected);
 
-            var stiPostUserFullName = _driver.FindElement(By.CssSelector("span[sti-post-user-full-name]"));
-            That(stiPostUserFullName.Text, Is.EqualTo("張博文"));
+            That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-post-user-full-name][text()='張博文']"))), Is.Not.Null);
 
             return Task.CompletedTask;
         }

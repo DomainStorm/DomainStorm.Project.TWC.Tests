@@ -148,15 +148,14 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//td[@id='受理']")));
-            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
+            var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#accept-sign")));
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            var signElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-post-user-full-name='']")));
-            That(signElement.Text, Is.EqualTo("張博文"));
+            That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-post-user-full-name][text()='張博文']"))), Is.Not.Null);
 
             return Task.CompletedTask;
         }
