@@ -130,7 +130,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("input[value='撫卹令或撫卹金分領證書']")));
             That(pensionCertificateSelect.Selected);
 
-            _testHelper.InputSendkeys(By.CssSelector("span[sti-identification] input"), "BBB" + Keys.Tab);
+            _testHelper.InputSendKeys(By.CssSelector("span[sti-identification] input"), "BBB" + Keys.Tab);
 
             _wait.Until(ExpectedConditions.TextToBePresentInElementValue(By.CssSelector("span[sti-identification] input"), "BBB"));
 
@@ -170,14 +170,14 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().Frame(0);
 
-            _testHelper.InputSendkeys(By.CssSelector("span[sti-email] input"), "aaa@bbb.ccc" + Keys.Tab);
+            _testHelper.InputSendKeys(By.CssSelector("span[sti-email] input"), "aaa@bbb.ccc" + Keys.Tab);
 
             _wait.Until(ExpectedConditions.TextToBePresentInElementValue(By.CssSelector("span[sti-email] input"), "aaa@bbb.ccc"));
 
             var stiEmailInput = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("span[sti-email] input")));
             That(stiEmailInput.GetAttribute("value"), Is.EqualTo("aaa@bbb.ccc"));
 
-            _testHelper.InputSendkeys(By.CssSelector("span[sti-email-tel-no] input"), "02-12345678" + Keys.Tab);
+            _testHelper.InputSendKeys(By.CssSelector("span[sti-email-tel-no] input"), "02-12345678" + Keys.Tab);
 
             _wait.Until(ExpectedConditions.TextToBePresentInElementValue(By.CssSelector("span[sti-email-tel-no] input"), "02-12345678"));
 

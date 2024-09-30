@@ -136,7 +136,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _driver.SwitchTo().Frame(0);
 
-            _testHelper.InputSendkeys(By.CssSelector("span[sti-email-tel-no] input"), "02-12345678" + Keys.Tab);
+            _testHelper.InputSendKeys(By.CssSelector("span[sti-email-tel-no] input"), "02-12345678" + Keys.Tab);
 
             var phoneElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-email-tel-no] input")));
             That(phoneElement.GetAttribute("value"), Is.EqualTo("02-12345678"));

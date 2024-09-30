@@ -98,7 +98,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            _testHelper.InputSendkeys(By.XPath("//span[@sti-trustee-id-no]/input"), "A123456789" + Keys.Tab);
+            _testHelper.InputSendKeys(By.XPath("//span[@sti-trustee-id-no]/input"), "A123456789" + Keys.Tab);
             var idElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='身分證號碼']/input")));
             That(idElement.GetAttribute("value"), Is.EqualTo("A123456789"));
 
@@ -117,7 +117,7 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            _testHelper.InputSendkeys(By.XPath("//span[@sti-note]/input"), "備註內容" + Keys.Tab);
+            _testHelper.InputSendKeys(By.XPath("//span[@sti-note]/input"), "備註內容" + Keys.Tab);
             var stiNote = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-note]/input")));
             That(stiNote.GetAttribute("value"), Is.EqualTo("備註內容"));
 
@@ -140,7 +140,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiEnd);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiEnd);
 
-            _testHelper.InputSendkeys(By.XPath("//input[@id='中結']"), Keys.Tab);
+            _testHelper.InputSendKeys(By.XPath("//input[@id='中結']"), Keys.Tab);
 
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#中結")));
             That(stiEnd.Selected);
@@ -149,7 +149,7 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", stiPay);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", stiPay);
 
-            _testHelper.InputSendkeys(By.XPath("//input[@id='繳費']"), Keys.Tab);
+            _testHelper.InputSendKeys(By.XPath("//input[@id='繳費']"), Keys.Tab);
 
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#繳費")));
             That(stiPay.Selected);

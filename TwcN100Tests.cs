@@ -75,11 +75,11 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public Task TwcN100_04()
         {
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='名稱'] input"), "公告測試");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='名稱'] input"), "公告測試");
             var stormInputGroupNameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
             That(stormInputGroupNameInput.GetAttribute("value"), Is.EqualTo("公告測試"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-text-editor div.ql-editor"), "水籍系統將於12/20進行系統更新，造成不便敬請見諒");
+            _testHelper.InputSendKeys(By.CssSelector("storm-text-editor div.ql-editor"), "水籍系統將於12/20進行系統更新，造成不便敬請見諒");
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
             That(stormTextEditorInput.Text, Is.EqualTo("水籍系統將於12/20進行系統更新，造成不便敬請見諒"));
 
@@ -287,11 +287,11 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public Task TwcN100_13()
         {
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='名稱'] input"), "公告測試2");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='名稱'] input"), "公告測試2");
             var stormInputGroupNameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
             That(stormInputGroupNameInput.GetAttribute("value"), Is.EqualTo("公告測試2"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-text-editor div.ql-editor"), "測試公告自動下架");
+            _testHelper.InputSendKeys(By.CssSelector("storm-text-editor div.ql-editor"), "測試公告自動下架");
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
             That(stormTextEditorInput.Text, Is.EqualTo("測試公告自動下架"));
 
@@ -336,7 +336,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public Task TwcN100_15()
         {
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='名稱'] input"), "公告測試3");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='名稱'] input"), "公告測試3");
             var stormInputGroupNameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
             That(stormInputGroupNameInput.GetAttribute("value"), Is.EqualTo("公告測試3"));
 
@@ -347,7 +347,7 @@ namespace DomainStorm.Project.TWC.Tests
             string formattedExpiryDate = currentDateTime.ToString("yyyy-MM-dd");
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{formattedExpiryDate}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", expiryDateInput);
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-text-editor div.ql-editor"), "測試公告");
+            _testHelper.InputSendKeys(By.CssSelector("storm-text-editor div.ql-editor"), "測試公告");
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
             That(stormTextEditorInput.Text, Is.EqualTo("測試公告"));
 

@@ -73,15 +73,15 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public Task TwcQ100_03()
         {
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='問卷名稱'] input"), "這是問卷名稱");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='問卷名稱'] input"), "這是問卷名稱");
             var nameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='問卷名稱'] input")));
             That(nameInput.GetAttribute("value"), Is.EqualTo("這是問卷名稱"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='問卷頁首說明'] input"), "這是問卷頁首說明");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='問卷頁首說明'] input"), "這是問卷頁首說明");
             var descriptionInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='問卷頁首說明'] input")));
             That(descriptionInput.GetAttribute("value"), Is.EqualTo("這是問卷頁首說明"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='問卷結尾文字'] input"), "這是問卷結尾文字");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='問卷結尾文字'] input"), "這是問卷結尾文字");
             var textInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='問卷結尾文字'] input")));
             That(textInput.GetAttribute("value"), Is.EqualTo("這是問卷結尾文字"));
 
@@ -106,26 +106,26 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public Task TwcQ100_05()
         {
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='題目'] input"), "整體而言，我對本次活動非常滿意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='題目'] input"), "整體而言，我對本次活動非常滿意");
             var contentInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目'] input")));
             That(contentInput.GetAttribute("value"), Is.EqualTo("整體而言，我對本次活動非常滿意"));
 
             _testHelper.ElementClick(By.CssSelector("storm-select[label='選項數量'] >div.choices"));
             _testHelper.ElementClick(By.CssSelector("div[data-value='5']"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 1'] input"), "非常同意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 1'] input"), "非常同意");
             var optionOneInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1'] input")));
             That(optionOneInput.GetAttribute("value"), Is.EqualTo("非常同意"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 2'] input"), "同意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 2'] input"), "同意");
             var optionTwoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2'] input")));
             That(optionTwoInput.GetAttribute("value"), Is.EqualTo("同意"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 3'] input"), "普通");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 3'] input"), "普通");
             var optionThreeInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3'] input")));
             That(optionThreeInput.GetAttribute("value"), Is.EqualTo("普通"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 4'] input"), "不同意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 4'] input"), "不同意");
             var optionFourInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 4'] input")));
             That(optionFourInput.GetAttribute("value"), Is.EqualTo("不同意"));
 
@@ -138,7 +138,7 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public Task TwcQ100_06()
         {
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 5'] input"), "非常不同意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 5'] input"), "非常不同意");
             var optionFiveInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 5'] input")));
             That(optionFiveInput.GetAttribute("value"), Is.EqualTo("非常不同意"));
 
@@ -173,30 +173,30 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public Task TwcQ100_08()
         {
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='題目'] input"), "本次活動內容對我有幫助");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='題目'] input"), "本次活動內容對我有幫助");
             var contentInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目'] input")));
             That(contentInput.GetAttribute("value"), Is.EqualTo("本次活動內容對我有幫助"));
 
             _testHelper.ElementClick(By.CssSelector("storm-select[label='選項數量'] >div.choices"));
             _testHelper.ElementClick(By.CssSelector("div[data-value='5']"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 1'] input"), "非常同意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 1'] input"), "非常同意");
             var optionOneInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1'] input")));
             That(optionOneInput.GetAttribute("value"), Is.EqualTo("非常同意"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 2'] input"), "同意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 2'] input"), "同意");
             var optionTwoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2'] input")));
             That(optionTwoInput.GetAttribute("value"), Is.EqualTo("同意"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 3'] input"), "普通");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 3'] input"), "普通");
             var optionThreeInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3'] input")));
             That(optionThreeInput.GetAttribute("value"), Is.EqualTo("普通"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 4'] input"), "不同意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 4'] input"), "不同意");
             var optionFourInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 4'] input")));
             That(optionFourInput.GetAttribute("value"), Is.EqualTo("不同意"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 5'] input"), "非常不同意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 5'] input"), "非常不同意");
             var optionFiveInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 5'] input")));
             That(optionFiveInput.GetAttribute("value"), Is.EqualTo("非常不同意"));
 
@@ -230,30 +230,30 @@ namespace DomainStorm.Project.TWC.Tests
         }
         public Task TwcQ100_10()
         {
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='題目'] input"), "本次活動讓我收穫豐富");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='題目'] input"), "本次活動讓我收穫豐富");
             var contentInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目'] input")));
             That(contentInput.GetAttribute("value"), Is.EqualTo("本次活動讓我收穫豐富"));
 
             _testHelper.ElementClick(By.CssSelector("storm-select[label='選項數量'] >div.choices"));
             _testHelper.ElementClick(By.CssSelector("div[data-value='5']"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 1'] input"), "非常同意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 1'] input"), "非常同意");
             var optionOneInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 1'] input")));
             That(optionOneInput.GetAttribute("value"), Is.EqualTo("非常同意"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 2'] input"), "同意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 2'] input"), "同意");
             var optionTwoInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 2'] input")));
             That(optionTwoInput.GetAttribute("value"), Is.EqualTo("同意"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 3'] input"), "普通");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 3'] input"), "普通");
             var optionThreeInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 3'] input")));
             That(optionThreeInput.GetAttribute("value"), Is.EqualTo("普通"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 4'] input"), "不同意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 4'] input"), "不同意");
             var optionFourInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 4'] input")));
             That(optionFourInput.GetAttribute("value"), Is.EqualTo("不同意"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='選項 5'] input"), "非常不同意");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='選項 5'] input"), "非常不同意");
             var optionFiveInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='選項 5'] input")));
             That(optionFiveInput.GetAttribute("value"), Is.EqualTo("非常不同意"));
 

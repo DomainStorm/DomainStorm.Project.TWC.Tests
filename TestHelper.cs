@@ -216,8 +216,8 @@ public class TestHelper
         //Console.WriteLine("::endgroup::");
 
         WaitElementVisible(By.CssSelector("[name=Username]"));
-        InputSendkeys(By.CssSelector("[name=Username]"), userId);
-        InputSendkeys(By.CssSelector("[name=Password]"), password);
+        InputSendKeys(By.CssSelector("[name=Username]"), userId);
+        InputSendKeys(By.CssSelector("[name=Password]"), password);
         WaitElementVisible(By.CssSelector("button"));
         ElementClick(By.CssSelector("button"));
 
@@ -258,9 +258,9 @@ public class TestHelper
         WaitElementExists(by);
     }
 
-    public void InputSendkeys(By by, string text)
+    public void InputSendKeys(By by, string text)
     {
-        var element = WaitElementVisible(by);
+        var element = WaitElementExists(by);
         element.SendKeys(text);
     }
     public void UploadFilesAndCheck(string[] fileNames, string cssSelectorInput)
@@ -272,7 +272,7 @@ public class TestHelper
 
         foreach (var filePath in filePaths)
         {
-            InputSendkeys(By.CssSelector(cssSelectorInput), filePath);
+            InputSendKeys(By.CssSelector(cssSelectorInput), filePath);
             currentFileNames.Add(Path.GetFileName(filePath));
             CheckFileName(string.Join(",", currentFileNames));
 

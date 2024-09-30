@@ -61,19 +61,19 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.ElementClick(By.XPath("//button[contains(text(), '新增文字')]"));
             _testHelper.WaitElementExists(By.CssSelector("storm-card[headline='新增文字']"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='名稱'] input"), "宣導文字");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='名稱'] input"), "宣導文字");
             var stormInputGroupNameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='名稱'] input")));
             That(stormInputGroupNameInput.GetAttribute("value"), Is.EqualTo("宣導文字"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='說明'] input"), "宣導說明文字");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='說明'] input"), "宣導說明文字");
             var stormInputGroupDescInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='說明'] input")));
             That(stormInputGroupDescInput.GetAttribute("value"), Is.EqualTo("宣導說明文字"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='播放秒數'] input"), "10");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='播放秒數'] input"), "10");
             var stormInputGroupDurationInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='播放秒數'] input")));
             That(stormInputGroupDurationInput.GetAttribute("value"), Is.EqualTo("10"));
 
-            _testHelper.InputSendkeys(By.CssSelector("storm-text-editor div.ql-editor"), "跑馬燈內容");
+            _testHelper.InputSendKeys(By.CssSelector("storm-text-editor div.ql-editor"), "跑馬燈內容");
             var stormTextEditorInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-text-editor div.ql-editor")));
             That(stormTextEditorInput.Text, Is.EqualTo("跑馬燈內容"));
 
@@ -230,7 +230,7 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(editButton).Click().Perform();
 
             _testHelper.WaitElementExists(By.CssSelector("storm-card[headline='修改']"));
-            _testHelper.InputSendkeys(By.CssSelector("storm-input-group[label='說明'] input"), "描述圖示說明");
+            _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='說明'] input"), "描述圖示說明");
 
             _testHelper.ElementClick(By.XPath("//button[contains(text(), '更新')]"));
             _testHelper.WaitElementExists(By.CssSelector("storm-card[headline='媒體管理']"));
