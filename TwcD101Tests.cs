@@ -29,7 +29,7 @@ namespace DomainStorm.Project.TWC.Tests
             if (!noBrowser)
             {
                 _driver = TestHelper.GetNewChromeDriver();
-                _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
+                _wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(15));
                 _actions = new Actions(_driver);
                 _testHelper = new TestHelper(_driver);
             }

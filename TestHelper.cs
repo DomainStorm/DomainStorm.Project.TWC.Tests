@@ -374,6 +374,7 @@ public class TestHelper
     public void CheckElementText(By cssSelector, string expectedText)
     {
         var element = WaitElementExists(cssSelector);
+        _actions.MoveToElement(element).Perform();
         _wait.Until(_ => element.Text == expectedText);
     }
 
