@@ -104,7 +104,9 @@ namespace DomainStorm.Project.TWC.Tests
 
             _testHelper.WaitElementExists(By.XPath("//span[@id='身分證號碼']"));
 
-            var check = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@id='身分證號碼']")));
+            var check = _wait.Until(
+                ExpectedConditions.ElementExists(By.XPath("//span[@id='身分證號碼'][text()='A123456789']")));
+
             That(check.Text, Is.EqualTo("A123456789"));
 
             return Task.CompletedTask;
@@ -135,11 +137,9 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            stiEnd = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='中結']")));
-            That(stiEnd.Selected);
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='中結']")));
 
-            stiPay = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='繳費']")));
-            That(stiPay.Selected);
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='繳費']")));
 
             return Task.CompletedTask;
         }
@@ -181,13 +181,10 @@ namespace DomainStorm.Project.TWC.Tests
         public Task TwcC100_10()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
-            _driver.SwitchTo().DefaultContent();
-
             _testHelper.ElementClick(By.XPath("//span[text()='簽名']"));
             _testHelper.WaitElementExists(By.XPath("//img[@alt='簽名_001.tiff']"));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
-            _driver.SwitchTo().DefaultContent();
 
             _testHelper.WaitElementExists(By.XPath("//img[@alt='簽名_001.tiff']"));
 
