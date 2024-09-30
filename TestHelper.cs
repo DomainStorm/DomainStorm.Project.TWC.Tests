@@ -11,6 +11,7 @@ using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
 using static NUnit.Framework.Assert;
+using AngleSharp.Dom;
 
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
@@ -244,12 +245,18 @@ public class TestHelper
         }
         else
         {
-            _actions.MoveToElement(element).Perform();
+            _actions.ScrollToElement(element).MoveToElement(element).Perform();
             _wait.Until(_ => element.Displayed);
 
             element = _wait.Until(ExpectedConditions.ElementToBeClickable(by));
             _actions.Click(element).Perform();
         }
+
+        //WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        //var element = wait.Until(ExpectedConditions.ElementIsVisible(By.Id(elementId)));
+
+        //Actions action = new Actions(driver);
+        //action.MoveToElement(element).Perform();
     }
 
     public void NavigateWait(string url, By by)

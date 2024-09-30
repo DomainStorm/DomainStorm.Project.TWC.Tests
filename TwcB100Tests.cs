@@ -124,8 +124,10 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            stiPay = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='繳費']")));
-            That(stiPay.Selected);
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='繳費']")));
+
+            // stiPay = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='繳費']")));
+            // That(stiPay.Selected);
 
             return Task.CompletedTask;
         }
