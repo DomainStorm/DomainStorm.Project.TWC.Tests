@@ -395,23 +395,8 @@ public class TestHelper
     }
     public void ClickRow(string caseNo)
     {
-        _wait.Until(driver =>
-        {
-            try
-            {
-                var stormTable = driver.FindElement(By.CssSelector("storm-table"));
-                return stormTable != null;
-            }
-            catch (NoSuchElementException)
-            {
-                Thread.Sleep(500);
-                return false;
-            }
-        });
-
-        var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-
-        string currentUrl = _driver.Url;
+        var stormTable = _wait.Until(driver => _driver.FindElement(By.CssSelector("storm-table")));
+        var currentUrl = _driver.Url;
 
         if (!currentUrl.Contains("/search"))
         {
@@ -424,26 +409,23 @@ public class TestHelper
                 stormTableInput.Clear();
                 stormTableInput.SendKeys(caseNo + Keys.Enter);
 
-                _wait.Until(_ =>
-                {
-                    var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                //selectedRow = _wait.Until(_ =>
+                //{
+                //    var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
 
-                    if (rows.Count == 1)
-                    {
-                        var row = rows[0];
+                //    if (rows.Count == 1)
+                //    {
+                //        var row = rows[0];
 
-                        var applyCaseNoElement = _wait.Until(_ => row.FindElement(By.CssSelector("td[data-field='applyCaseNo']")));
-                        if (applyCaseNoElement.Text == caseNo)
-                            return true;
-                    }
+                //        var applyCaseNoElement = _wait.Until(_ => row.FindElement(By.CssSelector("td[data-field='applyCaseNo']")));
+                //        if (applyCaseNoElement.Text == caseNo)
+                //            return row;
+                //    }
 
-                    return false;
-                });
+                //    return null;
+                //});
             }
         }
-        // Thread.Sleep(1000);
-
-        //var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
 
         var selectedRow = _wait.Until(_ =>
         {
@@ -452,12 +434,19 @@ public class TestHelper
             foreach (var row in rows)
             {
                 var applyCaseNoElement = _wait.Until(_ => row.FindElement(By.CssSelector("td[data-field='applyCaseNo']")));
-
                 if (applyCaseNoElement.Text == caseNo)
                     return row;
             }
+
             return null;
         });
+
+
+        // Thread.Sleep(1000);
+
+        //var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+
+
 
         //var selectedRow = rows.FirstOrDefault(tr =>
         //{
@@ -475,7 +464,7 @@ public class TestHelper
 
         if (selectedRow != null)
         {
-            var radioButton = selectedRow.FindElement(By.CssSelector("td[data-field='__radio_1']"));
+            var radioButton = _wait.Until(_ => selectedRow.FindElement(By.CssSelector("td[data-field='__radio_1']")));
             _actions.MoveToElement(radioButton).Click().Perform();
         }
         else
