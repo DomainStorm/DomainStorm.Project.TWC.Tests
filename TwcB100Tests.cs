@@ -1,9 +1,11 @@
-﻿using OpenQA.Selenium;
+﻿using AngleSharp.Dom;
+using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System.Net;
 using System.Reflection;
+using System.Xml.Linq;
 using static NUnit.Framework.Assert;
 
 namespace DomainStorm.Project.TWC.Tests
@@ -150,24 +152,26 @@ namespace DomainStorm.Project.TWC.Tests
         public Task TwcB100_07()
         {
             _driver.SwitchTo().DefaultContent();
-            _testHelper.SwitchWindowAndClick("//label[@for='消費性用水服務契約']");
+            _testHelper.SwitchWindowAndClick("//input[@id='消費性用水服務契約']");
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='消費性用水服務契約']")));
             return Task.CompletedTask;
         }
         public Task TwcB100_08()
         {
-            _testHelper.SwitchWindowAndClick("//label[@for='公司個人資料保護告知事項']");
+            _testHelper.SwitchWindowAndClick("//input[@id='公司個人資料保護告知事項']");
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='公司個人資料保護告知事項']")));
             return Task.CompletedTask;
         }
         public Task TwcB100_09()
         {
-            _testHelper.SwitchWindowAndClick("//label[@for='公司營業章程']");
+            _testHelper.SwitchWindowAndClick("//input[@id='公司營業章程']");
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='公司營業章程']")));
             return Task.CompletedTask;
         }
         public Task TwcB100_10()
         {
-            _testHelper.ElementClick(By.XPath("//span[text()='簽名']"));
 
-            //_testHelper.ElementClick(By.XPath("//span[text()='簽名']"));
+            _testHelper.ElementClick(By.XPath("//span[text()='簽名']"));
             _testHelper.WaitElementExists(By.XPath("//img[@alt='簽名_001.tiff']"));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);

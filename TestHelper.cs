@@ -251,12 +251,6 @@ public class TestHelper
             element = _wait.Until(ExpectedConditions.ElementToBeClickable(by));
             _actions.Click(element).Perform();
         }
-
-        //WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        //var element = wait.Until(ExpectedConditions.ElementIsVisible(By.Id(elementId)));
-
-        //Actions action = new Actions(driver);
-        //action.MoveToElement(element).Perform();
     }
 
     public void NavigateWait(string url, By by)
