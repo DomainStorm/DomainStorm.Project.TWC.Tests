@@ -104,10 +104,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _testHelper.WaitElementExists(By.XPath("//span[@id='身分證號碼']"));
 
-            var check = _wait.Until(
-                ExpectedConditions.ElementExists(By.XPath("//span[@id='身分證號碼'][text()='A123456789']")));
-
-            That(check.Text, Is.EqualTo("A123456789"));
+            That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@id='身分證號碼'][text()='A123456789']"))), Is.Not.Null);
 
             return Task.CompletedTask;
         }

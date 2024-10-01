@@ -401,6 +401,8 @@ public class TestHelper
                 stormTableInput.SendKeys(caseNo + Keys.Enter);
 
                 _wait.Until(_ => stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr")).Count == 1);
+
+                _wait.Until(ExpectedConditions.TextToBePresentInElement(stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody > tr")), caseNo));
             }
         }
 
