@@ -388,12 +388,16 @@ public class TestHelper
     public void ClickRow(string caseNo)
     {
         var stormTable = WaitElementExists(By.CssSelector("storm-table"));
+        IWebElement? selectedRow = null;
 
         if (!_driver.Url.Contains("/search"))
         {
             // 如果 URL 不包含 "/search"，處理有輸入框的情況
-            var stormTableInput = stormTable.GetShadowRoot()
-                .FindElements(By.CssSelector("input[placeholder='請輸入關鍵字']")).FirstOrDefault();
+            var stormTableInput = _wait.Until(_ =>
+            {
+                var elements = stormTable.GetShadowRoot().FindElements(By.CssSelector("input[placeholder='請輸入關鍵字']"));
+                return elements.Any() ? elements.First() : null;
+            });
 
             if (stormTableInput != null)
             {
@@ -402,23 +406,27 @@ public class TestHelper
 
                 _wait.Until(_ => stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr")).Count == 1);
 
-                _wait.Until(ExpectedConditions.TextToBePresentInElement(stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody > tr")), caseNo));
+                var row = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody > tr"));
+                _wait.Until(ExpectedConditions.TextToBePresentInElement(row, caseNo));
+                selectedRow = row;
             }
         }
-
-        var selectedRow = _wait.Until(_ =>
+        else
         {
-            var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
-
-            foreach (var row in rows)
+            selectedRow = _wait.Until(_ =>
             {
-                var applyCaseNoElement = _wait.Until(_ => row.FindElement(By.CssSelector("td[data-field='applyCaseNo']")));
-                if (applyCaseNoElement.Text == caseNo)
-                    return row;
-            }
+                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
 
-            return null;
-        });
+                foreach (var row in rows)
+                {
+                    var applyCaseNoElement = _wait.Until(_ => row.FindElement(By.CssSelector("td[data-field='applyCaseNo']")));
+                    if (applyCaseNoElement.Text == caseNo)
+                        return row;
+                }
+
+                return null;
+            });
+        }
 
         if (selectedRow != null)
         {
