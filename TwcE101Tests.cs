@@ -197,11 +197,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var phoneNumber = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("#電子帳單聯絡電話")));
-            That(phoneNumber.Text, Is.EqualTo("02-12345678"));
+            var phoneNumber = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#電子帳單聯絡電話")));
+            _wait.Until(ExpectedConditions.TextToBePresentInElement(phoneNumber, "02-12345678"));
+            // That(phoneNumber.Text, Is.EqualTo("02-12345678"));
 
-            var stiEnd = _driver.FindElement(By.CssSelector("#中結"));
-            That(stiEnd.Selected);
+            //var stiEnd = _driver.FindElement(By.CssSelector("#中結"));
+            //That(stiEnd.Selected);
+            var stiEnd = _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#中結")));
+            That(stiEnd);
 
             That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-post-user-full-name][text()='張博文']"))), Is.Not.Null);
 

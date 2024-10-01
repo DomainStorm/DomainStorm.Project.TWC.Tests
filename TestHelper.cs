@@ -255,7 +255,9 @@ public class TestHelper
 
     public void NavigateWait(string url, By by)
     {
-        _driver.Navigate().GoToUrl($@"{BaseUrl}{url}");
+        _driver.Navigate().GoToUrl($"{BaseUrl}{url}");
+        _wait.Until(ExpectedConditions.UrlToBe($"{BaseUrl}{url}"));
+
         WaitElementExists(by);
     }
 
