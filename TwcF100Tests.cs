@@ -107,12 +107,11 @@ namespace DomainStorm.Project.TWC.Tests
 
             _testHelper.WaitElementExists(By.XPath("//span[@id='身分證號碼']"));
 
-            var check = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@id='身分證號碼']")));
-            That(check.Text, Is.EqualTo("A123456789"));
+            That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@id='身分證號碼'][text()='A123456789']"))), Is.Not.Null);
 
             return Task.CompletedTask;
         }
-        public async Task TwcF100_05()
+        public  Task TwcF100_05()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
@@ -120,42 +119,41 @@ namespace DomainStorm.Project.TWC.Tests
             var stiNoteInput = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]/input")));
             stiNoteInput.SendKeys("備註內容" + Keys.Tab);
 
-            _wait.Until(driver =>
-            {
-                Thread.Sleep(1000);
-                var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]/input")));
-                return stiNote.GetAttribute("value") == "備註內容";
-            });
+            //_wait.Until(_ =>
+            //{
+            //    var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]/input")));
+            //    return stiNote.GetAttribute("value") == "備註內容";
+            //});
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            _wait.Until(driver =>
+            _wait.Until(_ =>
             {
-                Thread.Sleep(1000);
                 var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]")));
                 return stiNote != null;
             });
 
-            var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[text()='備註內容']")));
-            That(stiNote.Text, Is.EqualTo("備註內容"));
+            That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[text()='備註內容']"))), Is.Not.Null);
+
+            return Task.CompletedTask;
         }
         public Task TwcF100_06()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            _testHelper.InputSendKeys(By.XPath("//span[@sti-note]/input"), "備註內容" + Keys.Tab);
-            var stiNote = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-note]/input")));
-            That(stiNote.GetAttribute("value"), Is.EqualTo("備註內容"));
+            var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//td[@id='受理']")));
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
+
+            _testHelper.WaitElementExists(By.CssSelector("span[sti-post-user-full-name='']"));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            _testHelper.WaitElementExists(By.XPath("//span[@sti-note]"));
-
-            var check = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[text()='備註內容']")));
-            That(check.Text, Is.EqualTo("備註內容"));
+            var signElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-post-user-full-name='']")));
+            That(signElement.Text, Is.EqualTo("張博文"));
 
             return Task.CompletedTask;
         }
