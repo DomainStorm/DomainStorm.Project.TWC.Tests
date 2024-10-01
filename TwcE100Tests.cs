@@ -140,14 +140,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             _testHelper.InputSendKeys(By.XPath("//input[@id='中結']"), Keys.Tab);
 
-            _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#中結")));
-            That(stiEnd.Selected);
+            That(_wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#中結"))));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            stiEnd = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='中結']")));
-            That(stiEnd.Selected);
+            That(_wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='中結']"))));
 
             return Task.CompletedTask;
         }
