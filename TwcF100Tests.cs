@@ -147,43 +147,39 @@ namespace DomainStorm.Project.TWC.Tests
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
 
-            _testHelper.WaitElementExists(By.CssSelector("span[sti-post-user-full-name='']"));
-
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            var signElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-post-user-full-name='']")));
-            That(signElement.Text, Is.EqualTo("張博文"));
+            That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-post-user-full-name][text()='張博文']"))), Is.Not.Null);
 
             return Task.CompletedTask;
         }
         public Task TwcF100_07()
         {
             _driver.SwitchTo().DefaultContent();
-            _testHelper.SwitchWindowAndClick("//label[@for='消費性用水服務契約']");
-
+            _testHelper.SwitchWindowAndClick("//input[@id='消費性用水服務契約']");
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='消費性用水服務契約']")));
             return Task.CompletedTask;
         }
         public Task TwcF100_08()
         {
-            _testHelper.SwitchWindowAndClick("//label[@for='公司個人資料保護告知事項']");
-
+            _testHelper.SwitchWindowAndClick("//input[@id='公司個人資料保護告知事項']");
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='公司個人資料保護告知事項']")));
             return Task.CompletedTask;
         }
         public Task TwcF100_09()
         {
-            _testHelper.SwitchWindowAndClick("//label[@for='公司營業章程']");
-
+            _testHelper.SwitchWindowAndClick("//input[@id='公司營業章程']");
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='公司營業章程']")));
             return Task.CompletedTask;
         }
         public Task TwcF100_10()
         {
-            _driver.SwitchTo().Window(_driver.WindowHandles[1]);
-
             _testHelper.ElementClick(By.XPath("//span[text()='簽名']"));
             _testHelper.WaitElementExists(By.XPath("//img[@alt='簽名_001.tiff']"));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
+            _driver.SwitchTo().DefaultContent();
 
             _testHelper.WaitElementExists(By.XPath("//img[@alt='簽名_001.tiff']"));
 
