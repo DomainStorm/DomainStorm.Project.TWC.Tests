@@ -387,10 +387,9 @@ public class TestHelper
 
     public void ClickRow(string caseNo)
     {
-        var stormTable = _wait.Until(_ => _driver.FindElement(By.CssSelector("storm-table")));
-        var currentUrl = _driver.Url;
+        var stormTable = WaitElementExists(By.CssSelector("storm-table"));
 
-        if (!currentUrl.Contains("/search"))
+        if (!_driver.Url.Contains("/search"))
         {
             // 如果 URL 不包含 "/search"，處理有輸入框的情況
             var stormTableInput = stormTable.GetShadowRoot()
@@ -400,6 +399,8 @@ public class TestHelper
             {
                 stormTableInput.Clear();
                 stormTableInput.SendKeys(caseNo + Keys.Enter);
+
+                _wait.Until(_ => stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr")).Count == 1);
             }
         }
 
@@ -421,6 +422,8 @@ public class TestHelper
         {
             var radioButton = _wait.Until(_ => selectedRow.FindElement(By.CssSelector("td[data-field='__radio_1']")));
             _actions.MoveToElement(radioButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.StalenessOf(radioButton));
         }
         else
         {
