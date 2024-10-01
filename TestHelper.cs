@@ -12,6 +12,7 @@ using System.Data.SqlClient;
 using Dapper;
 using static NUnit.Framework.Assert;
 using AngleSharp.Dom;
+using System.Xml.Linq;
 
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
@@ -301,7 +302,7 @@ public class TestHelper
     }
 
 
-    public IWebElement? WaitShadowElement(string cssSelector, string expectedText, bool isEditTable = false)
+    public IWebElement? WaitShadowElement(string cssSelector, string? expectedText = null, bool isEditTable = false)
     {
         return _wait.Until(_ =>
         {
@@ -319,8 +320,13 @@ public class TestHelper
 
             return _wait.Until(_ =>
             {
-                var targetElement = stormTable.GetShadowRoot().FindElement(By.CssSelector(cssSelector));
-                return targetElement?.Text == expectedText ? targetElement : null;
+                var targetElements = stormTable.GetShadowRoot().FindElements(By.CssSelector(cssSelector));
+                var targetElement = targetElements.First();
+                _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(targetElements));
+                if (expectedText != null)
+                    return targetElement?.Text == expectedText ? targetElement : null;
+
+                return targetElement;
             });
 
             //var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
