@@ -222,7 +222,7 @@ namespace DomainStorm.Project.TWC.Tests
         {
             _testHelper.Login("tw491", TestHelper.Password!);
             _testHelper.NavigateWait("/search", By.CssSelector("storm-card"));
-            _testHelper.WaitElementExists(By.XPath("//button[text()='查詢']"));
+            _testHelper.WaitElementVisible(By.XPath("//button[text()='查詢']"));
 
             var applyDateBegin = "2023-03-06";
             var applyDateBeginSelect = _driver.FindElement(By.CssSelector("storm-input-group[label='受理日期起'] input"));

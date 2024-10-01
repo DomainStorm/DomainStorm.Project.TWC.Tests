@@ -91,9 +91,13 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.Login("0511", TestHelper.Password!);
             _testHelper.NavigateWait("/unfinished", By.CssSelector("storm-table"));
 
-            var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-            var content = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
-            That(content.Text, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
+            That(_testHelper.WaitShadowElement("div.table-bottom > div.table-pageInfo", "顯示第 1 至 10 筆，共 15 筆", isEditTable: true), Is.Not.Null);
+
+
+
+            //var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+            //var content = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
+            //That(content.Text, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
 
             return Task.CompletedTask;
         }

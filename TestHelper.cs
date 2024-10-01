@@ -234,7 +234,7 @@ public class TestHelper
         return _wait.Until(ExpectedConditions.ElementIsVisible(by));
     }
 
-    public void ElementClick(By by)
+    public IWebElement ElementClick(By by)
     {
         var element = WaitElementExists(by);
         _actions.ScrollToElement(element).Perform();
@@ -242,19 +242,7 @@ public class TestHelper
         _actions.MoveToElement(element).Perform();
         _actions.Click(element).Perform();
 
-        //if (element.Displayed)
-        //{
-        //    _wait.Until(ExpectedConditions.ElementToBeClickable(by));
-        //    _actions.MoveToElement(element).Click().Perform();
-        //}
-        //else
-        //{
-        //    _actions.ScrollToElement(element).MoveToElement(element).Perform();
-        //    _wait.Until(_ => element.Displayed);
-
-        //    element = _wait.Until(ExpectedConditions.ElementToBeClickable(by));
-        //    _actions.Click(element).Perform();
-        //}
+        return element;
     }
 
     public void NavigateWait(string url, By by)

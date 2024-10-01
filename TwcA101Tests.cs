@@ -38,7 +38,7 @@ namespace DomainStorm.Project.TWC.Tests
         [TearDown]
         public void TearDown()
         {
-            _driver.Quit();
+            _driver?.Quit();
         }
 
         [Test]
