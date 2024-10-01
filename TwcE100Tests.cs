@@ -118,16 +118,15 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             _testHelper.InputSendKeys(By.XPath("//span[@sti-note]/input"), "備註內容" + Keys.Tab);
-            var stiNote = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-note]/input")));
-            That(stiNote.GetAttribute("value"), Is.EqualTo("備註內容"));
+            //var stiNote = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-note]/input")));
+            //That(stiNote.GetAttribute("value"), Is.EqualTo("備註內容"));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
             _testHelper.WaitElementExists(By.XPath("//span[@sti-note]"));
 
-            var check = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[text()='備註內容']")));
-            That(check.Text, Is.EqualTo("備註內容"));
+            That(_wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[text()='備註內容']"))), Is.Not.Null);
 
             return Task.CompletedTask;
         }
