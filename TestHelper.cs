@@ -237,20 +237,24 @@ public class TestHelper
     public void ElementClick(By by)
     {
         var element = WaitElementExists(by);
+        _actions.ScrollToElement(element).Perform();
+        _wait.Until(ExpectedConditions.ElementToBeClickable(by));
+        _actions.MoveToElement(element).Perform();
+        _actions.Click(element).Perform();
 
-        if (element.Displayed)
-        {
-            _wait.Until(ExpectedConditions.ElementToBeClickable(by));
-            _actions.MoveToElement(element).Click().Perform();
-        }
-        else
-        {
-            _actions.ScrollToElement(element).MoveToElement(element).Perform();
-            _wait.Until(_ => element.Displayed);
+        //if (element.Displayed)
+        //{
+        //    _wait.Until(ExpectedConditions.ElementToBeClickable(by));
+        //    _actions.MoveToElement(element).Click().Perform();
+        //}
+        //else
+        //{
+        //    _actions.ScrollToElement(element).MoveToElement(element).Perform();
+        //    _wait.Until(_ => element.Displayed);
 
-            element = _wait.Until(ExpectedConditions.ElementToBeClickable(by));
-            _actions.Click(element).Perform();
-        }
+        //    element = _wait.Until(ExpectedConditions.ElementToBeClickable(by));
+        //    _actions.Click(element).Perform();
+        //}
     }
 
     public void NavigateWait(string url, By by)
