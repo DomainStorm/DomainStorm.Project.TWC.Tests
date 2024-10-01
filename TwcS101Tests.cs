@@ -91,7 +91,7 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.Login("0511", TestHelper.Password!);
             _testHelper.NavigateWait("/unfinished", By.CssSelector("storm-table"));
 
-            That(_testHelper.WaitShadowElement("div.table-bottom > div.table-pageInfo", "顯示第 1 至 10 筆，共 15 筆", isEditTable: true), Is.Not.Null);
+            That(_testHelper.WaitShadowElement("div.table-bottom > div.table-pageInfo", "顯示第 1 至 10 筆，共 15 筆", isEditTable: false), Is.Not.Null);
 
 
 

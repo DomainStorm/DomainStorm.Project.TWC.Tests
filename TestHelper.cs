@@ -301,11 +301,10 @@ public class TestHelper
     }
 
 
-    public IWebElement WaitShadowElement(string cssSelector, string expectedText, bool isEditTable = false)
+    public IWebElement? WaitShadowElement(string cssSelector, string expectedText, bool isEditTable = false)
     {
         return _wait.Until(_ =>
         {
-            IWebElement resultElement = null!;
             IWebElement stormTable;
 
             if (isEditTable)
@@ -318,37 +317,43 @@ public class TestHelper
                 stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
             }
 
-            var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
-            var selectedRow = rows.FirstOrDefault(tr =>
+            return _wait.Until(_ =>
             {
-                var columns = tr.FindElements(By.CssSelector("td"));
-
-                return columns.Any(td =>
-                {
-                    try
-                    {
-                        var targetElement = td.FindElement(By.CssSelector(cssSelector));
-                        return targetElement.Text == expectedText;
-                    }
-                    catch (NoSuchElementException)
-                    {
-                        Thread.Sleep(500);
-                        return false;
-                    }
-                    catch (StaleElementReferenceException)
-                    {
-                        Thread.Sleep(500);
-                        return false;
-                    }
-                });
+                var targetElement = stormTable.GetShadowRoot().FindElement(By.CssSelector(cssSelector));
+                return targetElement?.Text == expectedText ? targetElement : null;
             });
 
-            if (selectedRow != null)
-            {
-                resultElement = selectedRow.FindElement(By.CssSelector(cssSelector));
-            }
+            //var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
+            //var selectedRow = rows.FirstOrDefault(tr =>
+            //{
+            //    var columns = tr.FindElements(By.CssSelector("td"));
 
-            return resultElement;
+            //    return columns.Any(td =>
+            //    {
+            //        try
+            //        {
+            //            var targetElement = td.FindElement(By.CssSelector(cssSelector));
+            //            return targetElement.Text == expectedText;
+            //        }
+            //        catch (NoSuchElementException)
+            //        {
+            //            Thread.Sleep(500);
+            //            return false;
+            //        }
+            //        catch (StaleElementReferenceException)
+            //        {
+            //            Thread.Sleep(500);
+            //            return false;
+            //        }
+            //    });
+            //});
+
+            //if (selectedRow != null)
+            //{
+            //    resultElement = selectedRow.FindElement(By.CssSelector(cssSelector));
+            //}
+
+            //return resultElement;
         });
     }
     public void MoveAndCheck(string cssSelector)
