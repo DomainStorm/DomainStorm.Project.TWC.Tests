@@ -321,7 +321,10 @@ public class TestHelper
             return _wait.Until(_ =>
             {
                 var targetElements = stormTable.GetShadowRoot().FindElements(By.CssSelector(cssSelector));
-                var targetElement = targetElements.First();
+                var targetElement = targetElements.FirstOrDefault();
+                if(targetElement == null)
+                    return null;
+
                 _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(targetElements));
                 if (expectedText != null)
                     return targetElement?.Text == expectedText ? targetElement : null;
