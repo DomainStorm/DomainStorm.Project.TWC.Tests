@@ -390,7 +390,8 @@ public class TestHelper
         var stormTable = WaitElementExists(By.CssSelector("storm-table"));
         IWebElement? selectedRow = null;
 
-        if (!_driver.Url.Contains("/search"))
+        var url = _driver.Url;
+        if (!url.Contains("/search"))
         {
             // 如果 URL 不包含 "/search"，處理有輸入框的情況
             var stormTableInput = _wait.Until(_ =>
@@ -437,6 +438,8 @@ public class TestHelper
             _actions.MoveToElement(radioButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.StalenessOf(radioButton));
+            
+            _wait.Until(webDriver => !ExpectedConditions.UrlToBe(url).Invoke(webDriver));
         }
         else
         {
