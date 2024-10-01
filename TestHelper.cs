@@ -396,7 +396,10 @@ public class TestHelper
             var stormTableInput = _wait.Until(_ =>
             {
                 var elements = stormTable.GetShadowRoot().FindElements(By.CssSelector("input[placeholder='請輸入關鍵字']"));
-                return elements.Any() ? elements.First() : null;
+                if (!elements.Any()) return null;
+                var element = elements.First();
+                _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(elements));
+                return element;
             });
 
             if (stormTableInput != null)
