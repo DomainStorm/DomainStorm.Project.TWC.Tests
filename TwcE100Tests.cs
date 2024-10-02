@@ -123,8 +123,6 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            _testHelper.WaitElementExists(By.XPath("//span[@sti-note]"));
-
             That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[text()='備註內容']"))), Is.Not.Null);
 
             return Task.CompletedTask;

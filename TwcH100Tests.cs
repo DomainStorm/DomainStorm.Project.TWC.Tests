@@ -55,7 +55,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _testHelper.WaitElementVisible(By.CssSelector("storm-card[headline='媒體管理']"));
 
-            That(_testHelper.WaitShadowElement( "td[data-field='name'] span span", "台水官網圖.png"), Is.Not.NaN);
+            That(_testHelper.WaitShadowElement( "td[data-field='name'] span span", "台水官網圖.png", isEditTable: true), Is.Not.Null);
             return Task.CompletedTask;
         }
 
@@ -73,7 +73,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _testHelper.WaitElementVisible(By.CssSelector("storm-card[headline='媒體管理']"));
 
-            That(_testHelper.WaitShadowElement("td[data-field='name'] span span", "testmedia.mp4"), Is.Not.NaN);
+            That(_testHelper.WaitShadowElement("td[data-field='name'] span span", "testmedia.mp4", isEditTable: true), Is.Not.Null);
             return Task.CompletedTask;
         }
 

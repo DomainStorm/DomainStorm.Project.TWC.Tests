@@ -260,6 +260,7 @@ public class TestHelper
         {
             if (retryCount > 0)
             {
+                Console.Write($"NavigateWait retry retryCount: {retryCount}, url: {_driver.Url}");
                 _driver.Navigate().Refresh();
                 NavigateWait(url, by, retryCount -1);
             }
