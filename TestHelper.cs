@@ -276,9 +276,9 @@ public class TestHelper
     }
     public void UploadFilesAndCheck(string[] fileNames, string cssSelectorInput)
     {
-        WaitElementExists(By.CssSelector(cssSelectorInput));
+        WaitElementVisible(By.CssSelector(cssSelectorInput));
 
-        var filePaths = fileNames.Select(fileName =>Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName)).ToArray();
+        var filePaths = fileNames.Select(fileName => Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName)).ToArray();
         var currentFileNames = new List<string>();
 
         foreach (var filePath in filePaths)
@@ -297,8 +297,10 @@ public class TestHelper
         Thread.Sleep(1000);
 
         var uploadButton = By.XPath("//button[text()='上傳']");
-        WaitElementExists(uploadButton);
-        _wait.Until(ExpectedConditions.StalenessOf(ElementClick(uploadButton)));
+        WaitElementVisible(uploadButton);
+        ElementClick(uploadButton);
+        WaitElementVisible(By.XPath("//a[@class=dz-remove]"));
+        //dz-remove
     }
 
     private void CheckFileName(string expectedFileName)
