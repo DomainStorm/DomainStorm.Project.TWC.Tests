@@ -294,12 +294,12 @@ public class TestHelper
                 durationInput.SendKeys("10");
             }
         }
-        Thread.Sleep(1000);
+        // Thread.Sleep(1000);
+        WaitElementVisible(By.XPath("//a[@class=dz-remove]"));
 
         var uploadButton = By.XPath("//button[text()='上傳']");
         WaitElementVisible(uploadButton);
         ElementClick(uploadButton);
-        WaitElementVisible(By.XPath("//a[@class=dz-remove]"));
         //dz-remove
     }
 
