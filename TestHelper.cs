@@ -10,10 +10,10 @@ using OpenQA.Selenium.Chrome;
 using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
-using Newtonsoft.Json.Linq;
 using static NUnit.Framework.Assert;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using System;
+using AngleSharp.Dom;
+using System.Xml.Linq;
+
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
 {
@@ -29,7 +29,7 @@ public class TestHelper
         option.AddArgument("--disable-web-security");
         option.AddArgument("--ignore-certificate-errors");
 
-        if (GetChromeConfig().Headless) 
+        if (GetChromeConfig().Headless)
         {
             option.AddArgument("--headless");
             option.AddArgument("--start-maximized");
@@ -151,7 +151,11 @@ public class TestHelper
         request.AddParameter("scope", "template_read post_read serialNumber_write dublinCore_write");
 
         var response = await client.PostAsync<TokenResponse>(request);
-        return response?.Access_token ?? throw new InvalidOperationException("Failed to get access token.");
+        var accessToken = response?.Access_token ?? throw new InvalidOperationException("Failed to get access token.");
+
+        Console.WriteLine($"Access Token: {accessToken}");
+
+        return accessToken;
     }
     public static async Task<HttpStatusCode> CreateForm(string accessToken, string apiUrl, string jsonFilePath, bool modifyApplyDate = false)
     {
@@ -188,160 +192,254 @@ public class TestHelper
 
         return response.StatusCode;
     }
-    public static Task Login(IWebDriver webDriver, string userId, string password)
+
+    private readonly IWebDriver _driver;
+    private readonly WebDriverWait _wait;
+    private readonly Actions _actions;
+    public TestHelper(IWebDriver webDriver)
     {
-        ((IJavaScriptExecutor)webDriver).ExecuteScript($"window.location.href = '{LoginUrl}';");
-
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-
-        Console.WriteLine($"::group::Login---------{LoginUrl}---------");
-        Console.WriteLine($"---------{LoginUrl}---------");
-        Console.WriteLine(webDriver.PageSource);
-        Console.WriteLine("::endgroup::");
-        wait.Until(ExpectedConditions.UrlContains("account"));
-
-        Console.WriteLine($"::group::Login---------{webDriver.Url}---------");
-        Console.WriteLine(webDriver.PageSource);
-        Console.WriteLine("::endgroup::");
-
-        var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
-        var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
-
-        usernameElement.SendKeys(userId);
-        passwordElement.SendKeys(password);
-
-        var button = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
-        button.Click();
-
-        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
-
-        return Task.CompletedTask;
-    }
-    public static Task ChangeUser(IWebDriver webDriver, string userName)
-    {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        Actions actions = new Actions(webDriver);
-
-        var usernameElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Username]")));
-        usernameElement.SendKeys(userName);
-
-        var passwordElement = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[name=Password]")));
-        passwordElement.SendKeys(TestHelper.Password!);
-
-        var submitButton = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("button")));
-        actions.MoveToElement(submitButton).Click().Perform();
-
-        wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
-
-        return Task.CompletedTask;
+        _driver = webDriver;
+        _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        _actions = new Actions(webDriver);
     }
 
-    public static void ClickRow(IWebDriver webDriver, string applyCaseNo)
+    public void Login(string userId, string password)
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        _driver.Navigate().GoToUrl(LoginUrl);
 
-        Console.WriteLine($"::group::ClickRow---------{webDriver.Url}---------");
-        Console.WriteLine(webDriver.PageSource);
-        Console.WriteLine("::endgroup::");
+        //Console.WriteLine($"::group::Login---------{LoginUrl}---------");
+        //Console.WriteLine($"---------{LoginUrl}---------");
+        //Console.WriteLine(webDriver.PageSource);
+        //Console.WriteLine("::endgroup::");
+        _wait.Until(ExpectedConditions.UrlContains("account"));
 
-        wait.Until(_ =>
-        {
-            var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-            return stormTable != null;
-        });
+        //Console.WriteLine($"::group::Login---------{webDriver.Url}---------");
+        //Console.WriteLine(webDriver.PageSource);
+        //Console.WriteLine("::endgroup::");
 
-        var stormTable = wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-table")));
-        var stormInputGroup = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-input-group"));
-        var keyInput = stormInputGroup.FindElement(By.CssSelector("input"));
-        keyInput.SendKeys(applyCaseNo);
+        WaitElementVisible(By.CssSelector("[name=Username]"));
+        InputSendKeys(By.CssSelector("[name=Username]"), userId);
+        InputSendKeys(By.CssSelector("[name=Password]"), password);
+        WaitElementVisible(By.CssSelector("button"));
+        ElementClick(By.CssSelector("button"));
 
-        IWebElement? element = null;
-
-        wait.Until(_ =>
-        {
-            var findElements = stormTable.GetShadowRoot().FindElements(By.CssSelector("table > tbody > tr > td[data-field='applyCaseNo']"));
-            Thread.Sleep(500);
-            element = findElements.FirstOrDefault(e => e.Text == applyCaseNo);
-            return element != null && !string.IsNullOrEmpty(element.Text) && element is { Displayed: true, Enabled: true };
-        });
-
-        var action = new Actions(webDriver);
-        action.MoveToElement(element).Click().Perform();
-    }
-    public static string GetLastSegmentFromUrl(IWebDriver webDriver)
-    {
-        string targetUrl = webDriver.Url;
-
-        WebDriverWait wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        wait.Until(webDriver => webDriver.Url != targetUrl);
-
-        string[] segments = webDriver.Url.Split('/');
-        string uuid = segments[^1];
-
-        return uuid;
+        _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
     }
 
-    public static void ClickElementInNewWindow(IWebDriver driver, string xpathSelector, int initialWindowIndex, int newWindowIndex)
+    public IWebElement WaitElementExists(By by)
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-
-        // 切換到初始窗口並重置iframe上下文
-        driver.SwitchTo().Window(driver.WindowHandles[initialWindowIndex]);
-        driver.SwitchTo().DefaultContent();
-
-        // 查找並等待元素可見
-        var element = FindAndMoveElement(driver, xpathSelector);
-        wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathSelector)));
-
-        // 切換到新窗口
-        driver.SwitchTo().Window(driver.WindowHandles[newWindowIndex]);
-
-        // 查找並點擊元素
-        element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathSelector)));
-        ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].click();", element);
-
-        // 切換回初始窗口
-        driver.SwitchTo().Window(driver.WindowHandles[initialWindowIndex]);
-
-        // 驗證元素是否被選中
-        element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpathSelector)));
-        That(element.GetAttribute("checked"), Is.EqualTo("true"));
+        return _wait.Until(ExpectedConditions.ElementExists(by));
+    }
+    public IWebElement WaitElementVisible(By by)
+    {
+        return _wait.Until(ExpectedConditions.ElementIsVisible(by));
     }
 
-    public static void ClickElementInWindow(IWebDriver driver, string xpath, int windowIndex)
+    public IWebElement ElementClick(By by)
     {
-        var _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        var _actions = new Actions(driver);
-
-        driver.SwitchTo().Window(driver.WindowHandles[windowIndex]);
-        driver.SwitchTo().DefaultContent();
-
-        var element = _wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
-        _actions.MoveToElement(element).Click().Perform();
-    }
-    public static void HoverOverElementInWindow(IWebDriver driver, string xpath, int windowIndex)
-    {
-        var _wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-        var _actions = new Actions(driver);
-
-        driver.SwitchTo().Window(driver.WindowHandles[windowIndex]);
-        driver.SwitchTo().DefaultContent();
-
-        var element = _wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
+        var element = WaitElementExists(by);
+        _actions.ScrollToElement(element).Perform();
+        _wait.Until(ExpectedConditions.ElementToBeClickable(by));
         _actions.MoveToElement(element).Perform();
+        _actions.Click(element).Perform();
+
+        return element;
     }
 
-    public static void UploadFile(IWebDriver webDriver, string filePath, string css)
+    public void NavigateWait(string url, By by, int retryCount = 1)
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        var lastHiddenInput = wait.Until(ExpectedConditions.ElementExists(By.CssSelector(css)));
-        lastHiddenInput.SendKeys(filePath);
+
+        _driver.Navigate().GoToUrl($"{BaseUrl}{url}");
+        _wait.Until(ExpectedConditions.UrlToBe($"{BaseUrl}{url}"));
+
+        try
+        {
+            WaitElementExists(by);
+        }
+        catch(Exception)
+        {
+            if (retryCount > 0)
+            {
+                Console.Write($"NavigateWait retry retryCount: {retryCount}, url: {_driver.Url}");
+                _driver.Navigate().Refresh();
+                NavigateWait(url, by, retryCount -1);
+            }
+        }
     }
 
-    public static bool DownloadFileAndVerify(IWebDriver webDriver, string fileName, string xpath)
+    public IWebElement InputSendKeys(By by, string text)
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(20));
-        var actions = new Actions(webDriver);
+        var element = WaitElementExists(by);
+        element.SendKeys(text);
+
+        return element;
+    }
+    public void UploadFilesAndCheck(string[] fileNames, string cssSelectorInput)
+    {
+        WaitElementExists(By.CssSelector(cssSelectorInput));
+
+        var filePaths = fileNames.Select(fileName =>Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName)).ToArray();
+        var currentFileNames = new List<string>();
+
+        foreach (var filePath in filePaths)
+        {
+            InputSendKeys(By.CssSelector(cssSelectorInput), filePath);
+            currentFileNames.Add(Path.GetFileName(filePath));
+            CheckFileName(string.Join(",", currentFileNames));
+
+            var fileExtension = Path.GetExtension(filePath).ToLower();
+            if (fileExtension == ".png")
+            {
+                var durationInput = _wait.Until(d => d.FindElement(By.XPath("//storm-input-group[@label='播放秒數']//input")));
+                durationInput.SendKeys("10");
+            }
+        }
+        Thread.Sleep(1000);
+
+        var uploadButton = By.XPath("//button[text()='上傳']");
+        WaitElementExists(uploadButton);
+        ElementClick(uploadButton);
+    }
+
+    private void CheckFileName(string expectedFileName)
+    {
+        var fileNameInputSelector = By.XPath("//storm-input-group[@label='名稱']//input");
+        WaitElementExists(fileNameInputSelector);
+
+        _wait.Until(driver =>
+        {
+            var fileNameInput = driver.FindElement(fileNameInputSelector);
+            return fileNameInput.GetAttribute("value") == expectedFileName;
+        });
+
+        var fileNameInput = _driver.FindElement(fileNameInputSelector);
+        That(fileNameInput.GetAttribute("value"), Is.EqualTo(expectedFileName));
+    }
+
+
+    public IWebElement? WaitShadowElement(string cssSelector, string? expectedText = null, bool isEditTable = false)
+    {
+        return _wait.Until(_ =>
+        {
+            IWebElement GetStormTable()
+            {
+                IWebElement stormTable;
+
+                if (isEditTable)
+                {
+                    var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                    stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                }
+                else
+                {
+                    stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                }
+
+                return stormTable;
+            }
+
+            return _wait.Until(_ =>
+            {
+                var targetElements = GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector));
+                var targetElement = targetElements.FirstOrDefault();
+                if(targetElement == null)
+                    return null;
+
+                _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(targetElements));
+                if (expectedText != null)
+                    return targetElement?.Text == expectedText ? targetElement : null;
+
+                return targetElement;
+            });
+
+        });
+    }
+    public void MoveAndCheck(string cssSelector)
+    {
+        var element = _driver.FindElement(By.CssSelector(cssSelector));
+        _actions.ScrollToElement(element).MoveToElement(element).Perform();
+        That(element.Selected);
+    }
+    public void CheckElementText(string cssSelector, string expectedText)
+    {
+        //var element = _driver.FindElement(By.CssSelector(cssSelector));
+        //_actions.MoveToElement(element).Perform();
+        //That(element.Text, Is.EqualTo(expectedText));
+
+        CheckElementText(By.CssSelector(cssSelector), expectedText);
+    }
+
+    public void CheckElementText(By cssSelector, string expectedText)
+    {
+        var element = WaitElementExists(cssSelector);
+        _actions.ScrollToElement(element).MoveToElement(element).Perform();
+        _wait.Until(_ => element.Text == expectedText);
+    }
+
+    public void ClickRow(string caseNo)
+    {
+        WaitElementVisible(By.CssSelector("storm-table"));
+        IWebElement? selectedRow = null;
+
+        var url = _driver.Url;
+        if (!url.Contains("/search"))
+        {
+            // 如果 URL 不包含 "/search"，處理有輸入框的情況
+            var stormTableInput = _wait.Until(_ =>
+            {
+                var elements = WaitElementVisible(By.CssSelector("storm-table")).GetShadowRoot().FindElements(By.CssSelector("input[placeholder='請輸入關鍵字']"));
+                if (!elements.Any()) return null;
+                var element = elements.First();
+                _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(elements));
+                return element;
+            });
+
+            if (stormTableInput != null)
+            {
+                stormTableInput.Clear();
+                stormTableInput.SendKeys(caseNo + Keys.Enter);
+
+                _wait.Until(_ => WaitElementVisible(By.CssSelector("storm-table")).GetShadowRoot().FindElements(By.CssSelector("tbody > tr")).Count == 1);
+
+                var row = WaitElementVisible(By.CssSelector("storm-table")).GetShadowRoot().FindElement(By.CssSelector("tbody > tr"));
+                _wait.Until(ExpectedConditions.TextToBePresentInElement(row, caseNo));
+                selectedRow = row;
+            }
+        }
+        else
+        {
+            selectedRow = _wait.Until(_ =>
+            {
+                var rows = WaitElementVisible(By.CssSelector("storm-table")).GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+
+                foreach (var row in rows)
+                {
+                    var applyCaseNoElement = _wait.Until(_ => row.FindElement(By.CssSelector("td[data-field='applyCaseNo']")));
+                    if (applyCaseNoElement.Text == caseNo)
+                        return row;
+                }
+
+                return null;
+            });
+        }
+
+        if (selectedRow != null)
+        {
+            var radioButton = _wait.Until(_ => selectedRow.FindElement(By.CssSelector("td[data-field='__radio_1']")));
+            _actions.MoveToElement(radioButton).Click().Perform();
+
+            _wait.Until(ExpectedConditions.StalenessOf(radioButton));
+            
+            _wait.Until(webDriver => !ExpectedConditions.UrlToBe(url).Invoke(webDriver));
+        }
+        else
+        {
+            throw new Exception($"找不到匹配的 applyCaseNo: {caseNo}");
+        }
+    }
+
+    public void DownloadFileAndVerify(string fileName, string xpath)
+    {
         var downloadDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
         var filePath = Path.Combine(downloadDirectory, fileName);
 
@@ -352,22 +450,55 @@ public class TestHelper
             File.Delete(filePath);
         }
 
-        var downloadButton = wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
-        actions.MoveToElement(downloadButton).Click().Perform();
+        ElementClick(By.XPath(xpath));
 
-        wait.Until(driver =>
+        bool fileDownloaded = _wait.Until(driver =>
         {
             foreach (var file in Directory.GetFiles(downloadDirectory))
             {
                 Console.WriteLine($"-----filename: {file}-----");
             }
-
             return File.Exists(filePath);
         });
 
-        return File.Exists(filePath);
+        if (!fileDownloaded)
+        {
+            throw new Exception($"File '{fileName}' was not downloaded successfully.");
+        }
+    }
+    public void OpenNewWindowWithLastSegmentUrlAndVerify()
+    {
+        string[] segments = _driver.Url.Split('/');
+        string uuid = segments[^1];
+
+        ((IJavaScriptExecutor)_driver).ExecuteScript("window.open();");
+        _driver.SwitchTo().Window(_driver.WindowHandles[1]);
+        _driver.Navigate().GoToUrl($"{BaseUrl}/draft/second-screen/{uuid}");
+
+        WaitElementExists(By.CssSelector("iframe"));
+
+        _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("iframe")));
+        _driver.SwitchTo().Frame(0);
+
+        var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
+        That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
     }
 
+    public void SwitchWindowAndClick(string xpath)
+    {
+        ElementClick(By.XPath(xpath));
+
+        _driver.SwitchTo().Window(_driver.WindowHandles[0]);
+        _driver.SwitchTo().DefaultContent();
+
+        WaitElementExists(By.XPath(xpath));
+
+        var element = _driver.FindElement(By.XPath(xpath));
+        _actions.ScrollToElement(element).MoveToElement(element).Perform();
+
+        _driver.SwitchTo().Window(_driver.WindowHandles[1]);
+        _driver.SwitchTo().DefaultContent();
+    }
 
     public static void CleanDb()
     {
@@ -396,199 +527,45 @@ public class TestHelper
             cn.Query("delete QuestionnaireFormAnswer");
         }
     }
-
-    public static IWebElement? WaitStormTableUpload(IWebDriver webDriver, string css)
+    public class WaterForm
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-
-        return wait.Until(driver =>
-        {
-            IWebElement e = null;
-
-            wait.Until(_ =>
-            {
-                try
-                {
-                    var stormTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-
-                    if (stormTable != null)
-                    {
-                        e = stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
-                        return true;
-                    }
-                }
-
-                catch
-                {
-                    return false;
-                }
-
-                return false;
-            });
-
-            return e;
-        });
+        public string? ApplyCaseNo { get; set; }
+        public string? ApplyDate { get; set; }
+        public string? OperatingArea { get; set; }
+        public string? WaterNo { get; set; }
+        public string? TypeChange { get; set; }
+        public string? UserCode { get; set; }
+        public string? ChangeAddress { get; set; }
+        public string? CancelPayAccount { get; set; }
+        public string? CancelEbill { get; set; }
+        public string? ApplyEbill { get; set; }
+        public string? CancelSmsBill { get; set; }
+        public string? ApplyEmailAddr { get; set; }
+        public string? DeviceLocation { get; set; }
+        public string? Applicant { get; set; }
+        public string? IdNo { get; set; }
+        public string? Unino { get; set; }
+        public string? TelNo { get; set; }
+        public string? MobileNo { get; set; }
+        public string? PipeDiameter { get; set; }
+        public string? WaterType { get; set; }
+        public string? ScoreSheet { get; set; }
+        public string? WaterBuildLic { get; set; }
+        public string? WaterUseLic { get; set; }
+        public string? BillAddress { get; set; }
     }
-
-    public static IWebElement? WaitStormEditTableUpload(IWebDriver webDriver, string css)
+    public class TestConfig
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-
-        return wait.Until(_ =>
-        {
-            IWebElement e = null;
-
-            wait.Until(_ =>
-            {
-                try
-                {
-                    var stormEditTable = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
-                    var stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-
-                    if (stormTable != null)
-                    {
-                        e = stormTable.GetShadowRoot().FindElement(By.CssSelector(css));
-
-                        return true;
-                    }
-                }
-
-                catch
-                {
-                    return false;
-                }
-
-                return false;
-            });
-
-            return e;
-        });
+        public string? BaseUrl { get; set; }
+        public string? TokenUrl { get; set; }
+        public string? LoginUrl { get; set; }
+        public string? AccessToken { get; set; }
+        public string? ApplyCaseNo { get; set; }
+        public string? Password { get; set; }
     }
-
-
-    public static IWebElement? FindNavigationBySpan(IWebDriver webDriver, string spanText)
+    public class ChromeConfig
     {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        var action = new Actions(webDriver);
-
-        return wait.Until(driver =>
-        {
-            // 定位到 storm-tree-view 的 ShadowRoot
-            var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
-            var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-
-            if (stormTreeView != null)
-            {
-                var treeShadowRoot = stormTreeView.GetShadowRoot();
-
-                // 查找所有 storm-tree-node 元素
-                var treeNodes = treeShadowRoot.FindElements(By.CssSelector("storm-tree-node"));
-
-                foreach (var treeNode in treeNodes)
-                {
-                    // 查找每個 storm-tree-node 中的 a 標籤的所有 span 標籤
-                    var spans = treeNode.FindElements(By.CssSelector("a span"));
-
-                    foreach (var span in spans)
-                    {
-                        // 檢查 span 標籤的文本是否包含指定的文本
-                        if (span.Text.Contains(spanText))
-                        {
-                            return span; // 返回第一个匹配的 span 元素
-                        }
-                    }
-                }
-            }
-
-            return null;
-        });
+        public bool Headless { get; set; }
+        public bool CleanDbable { get; set; }
     }
-
-    public static IWebElement? FindShadowRootElement(IWebDriver webDriver, string css)
-    {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
-        var action = new Actions(webDriver);
-
-        return wait.Until(_ =>
-        {
-            IWebElement e = null;
-
-            wait.Until(_ =>
-            {
-                try
-                {
-                    var stormVerticalNavigation = wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-vertical-navigation")));
-                    var stormTreeView = stormVerticalNavigation.GetShadowRoot().FindElement(By.CssSelector("storm-tree-view"));
-
-                    if (stormTreeView != null)
-                    {
-                        e = stormTreeView.GetShadowRoot().FindElement(By.CssSelector(css));
-
-                        return true;
-                    }
-                }
-
-                catch
-                {
-                    return false;
-                }
-
-                return false;
-            });
-
-            return e;
-        });
-    }
-    public static IWebElement FindAndMoveElement(IWebDriver webDriver, string xpath)
-    {
-        var wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
-        var action = new Actions(webDriver);
-        var element = wait.Until(ExpectedConditions.ElementExists(By.XPath(xpath)));
-
-        action.MoveToElement(element).Perform();
-        wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpath)));
-
-        return element;
-    }
-}
-public class WaterForm
-{
-    public string? ApplyCaseNo { get; set; }
-    public string? ApplyDate { get; set; }
-    public string? OperatingArea { get; set; }
-    public string? WaterNo { get; set; }
-    public string? TypeChange { get; set; }
-    public string? UserCode { get; set; }
-    public string? ChangeAddress { get; set; }
-    public string? CancelPayAccount { get; set; }
-    public string? CancelEbill { get; set; }
-    public string? ApplyEbill { get; set; }
-    public string? CancelSmsBill { get; set; }
-    public string? ApplyEmailAddr { get; set; }
-    public string? DeviceLocation { get; set; }
-    public string? Applicant { get; set; }
-    public string? IdNo { get; set; }
-    public string? Unino { get; set; }
-    public string? TelNo { get; set; }
-    public string? MobileNo { get; set; }
-    public string? PipeDiameter { get; set; }
-    public string? WaterType { get; set; }
-    public string? ScoreSheet { get; set; }
-    public string? WaterBuildLic { get; set; }
-    public string? WaterUseLic { get; set; }
-    public string? BillAddress { get; set; }
-}
-public class TestConfig
-{
-    public string? BaseUrl { get; set; }
-    public string? TokenUrl { get; set; }
-    public string? LoginUrl { get; set; }
-    public string? AccessToken { get; set; }
-    public string? ApplyCaseNo { get; set; }
-    public string? Password { get; set; }
-}
-public class ChromeConfig
-{
-    public bool Headless { get; set; }
-    public bool CleanDbable { get; set; }
 }

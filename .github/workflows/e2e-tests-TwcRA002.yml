@@ -1,5 +1,4 @@
-name: E2E Tests TwcB101
-
+name: E2E Tests TwcRA002
 on:
   push:
     branches:
@@ -76,7 +75,6 @@ jobs:
       #  run: | 
       #    docker logs twcweb
 
-
       - name: Logs sqlserver
         run: | 
           docker logs sqlserver
@@ -91,7 +89,8 @@ jobs:
       - name: Docker exec resourceapi Curl openid
         run: | 
           docker exec -i resourceapi /bin/bash 
-          curl -k -L -i http://${{ env.IP_ADDRESS }}:8000/openid  
+          curl -k -L -i http://${{ env.IP_ADDRESS }}:8000/openid                              
+          
 
       - name: Run Seed
         run: pwsh -File deploy/deploy-seed-pipeline-e2e.ps1
@@ -115,4 +114,4 @@ jobs:
       #    curl -L -i http://127.0.0.1:8000/jwtauthapi/swagger/index.html       
       - name: Test
         run: 
-            dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcB101Tests --no-build --verbosity normal
+            dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcRA002Tests --no-build --verbosity normal

@@ -19,15 +19,15 @@ $env:KONG_POSTGRES_USER = "admin"
 $env:KONG_POSTGRES_DB = "kong"
 $env:KONG_POSTGRES_PASSWORD = "adminadmin"
 
-$env:MetadataApi_Version = "1.1.4"
+$env:MetadataApi_Version = "1.1.5"
 $env:MultiMediaApi_Version = "0.0.8"
 $env:JwtAuthApi_Version = "0.4.9"
 $env:OpenidProvider_Version = "0.4.9"
 $env:ResourceApi_Version = "0.2.1"
-$env:ServiceBus_Version = "0.0.8"
+$env:ServiceBus_Version = "0.0.9"
 
-$env:TwcWeb_Version = "1.5.4"
-$env:TwcReport_Version = "0.1.8"
+$env:TwcWeb_Version = "1.7.3"
+$env:TwcReport_Version = "0.2.1"
 
 docker compose -f docker-compose.yml -f docker-compose.metadataapi.yml -f docker-compose.e2e.yml up -d
 
@@ -53,11 +53,15 @@ function WaitForHealthy {
     }
 
     if ($retries -eq $maxRetries) {
-        Write-Host "Container $containerName did not become healthy within the specified time"
+        
 		docker logs $containerName
-        docker-compose stop $containerName
+        docker compose stop $containerName
+
+        throw "Container $containerName did not become healthy within the specified time"
     }
 }
+
+WaitForHealthy "sqlserver"
 WaitForHealthy "kong"
 WaitForHealthy "elasticsearch"
 WaitForHealthy "openidconnect.com.tw"
@@ -66,4 +70,4 @@ WaitForHealthy "multimediaapi"
 WaitForHealthy "resourceapi"
 WaitForHealthy "twcweb"
 WaitForHealthy "servicebus"
-WaitForHealthy "twcreport"
+WaitForHealthy "twcreport"  

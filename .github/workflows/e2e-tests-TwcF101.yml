@@ -1,4 +1,4 @@
-name: E2E Tests TwcB101
+name: E2E Tests TwcF101
 
 on:
   push:
@@ -115,4 +115,4 @@ jobs:
       #    curl -L -i http://127.0.0.1:8000/jwtauthapi/swagger/index.html       
       - name: Test
         run: 
-            dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcB101Tests --no-build --verbosity normal
+            dotnet test --filter FullyQualifiedName~DomainStorm.Project.TWC.Tests.TwcF101Tests --no-build --verbosity normal
