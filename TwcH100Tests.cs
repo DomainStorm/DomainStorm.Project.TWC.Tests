@@ -232,6 +232,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             _testHelper.ElementClick(By.XPath("//button[text()='確定']"));
 
+            _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
+
             _testHelper.WaitElementVisible(By.CssSelector("storm-card[headline='節目單管理']"));
 
             That(_testHelper.WaitShadowElement("td[data-field='name'] span span", "節目單測試"), Is.Not.Null);

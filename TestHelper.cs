@@ -256,7 +256,7 @@ public class TestHelper
         {
             WaitElementExists(by);
         }
-        catch(NoSuchElementException)
+        catch(Exception)
         {
             if (retryCount > 0)
             {
