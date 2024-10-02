@@ -338,8 +338,6 @@ public class TestHelper
                 return stormTable;
             }
 
-
-
             return _wait.Until(_ =>
             {
                 var targetElements = GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector));
@@ -354,37 +352,6 @@ public class TestHelper
                 return targetElement;
             });
 
-            //var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
-            //var selectedRow = rows.FirstOrDefault(tr =>
-            //{
-            //    var columns = tr.FindElements(By.CssSelector("td"));
-
-            //    return columns.Any(td =>
-            //    {
-            //        try
-            //        {
-            //            var targetElement = td.FindElement(By.CssSelector(cssSelector));
-            //            return targetElement.Text == expectedText;
-            //        }
-            //        catch (NoSuchElementException)
-            //        {
-            //            Thread.Sleep(500);
-            //            return false;
-            //        }
-            //        catch (StaleElementReferenceException)
-            //        {
-            //            Thread.Sleep(500);
-            //            return false;
-            //        }
-            //    });
-            //});
-
-            //if (selectedRow != null)
-            //{
-            //    resultElement = selectedRow.FindElement(By.CssSelector(cssSelector));
-            //}
-
-            //return resultElement;
         });
     }
     public void MoveAndCheck(string cssSelector)

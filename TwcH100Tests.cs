@@ -71,6 +71,8 @@ namespace DomainStorm.Project.TWC.Tests
 
             _testHelper.UploadFilesAndCheck(new[] { "testmedia.mp4" }, "input.dz-hidden-input");
 
+            _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/multimedia"));
+
             _testHelper.WaitElementVisible(By.CssSelector("storm-card[headline='媒體管理']"));
 
             That(_testHelper.WaitShadowElement("td[data-field='name'] span span", "testmedia.mp4", isEditTable: true), Is.Not.Null);
