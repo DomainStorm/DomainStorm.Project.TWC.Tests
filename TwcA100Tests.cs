@@ -119,7 +119,6 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(approveButton).Click().Perform();
 
             var checkButton =_testHelper.ElementClick(By.XPath("//span[text()='核准']"));
-            _actions.MoveToElement(checkButton).Click().Perform();
 
             That(_testHelper.WaitShadowElement("div.table-responsive td[data-field='playListStatus'] span", "核准", false), Is.Not.Null);
         }
@@ -139,16 +138,18 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcA100_10();
             await TwcA100_11();
         }
-        public async Task TwcA100_02()
+        public Task TwcA100_02()
         {
             _testHelper.Login("meizi", TestHelper.Password!);
+            return Task.CompletedTask;
         }
-        public async Task TwcA100_03()
+        public Task TwcA100_03()
         {
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/questionnaire/create");
             _testHelper.NavigateWait("/questionnaire/create", By.CssSelector("storm-card[headline='新增問卷']"));
+            return Task.CompletedTask;
         }
-        public async Task TwcA100_04()
+        public Task TwcA100_04()
         {
             var nameInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='問卷名稱'] input")));
             nameInput.SendKeys("測試名稱");
@@ -165,29 +166,19 @@ namespace DomainStorm.Project.TWC.Tests
             var nextPageButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '下一頁')]")));
             _actions.MoveToElement(nextPageButton).Click().Perform();
 
-            _wait.Until(driver =>
-            {
-                var h5Element = _driver.FindElement(By.XPath("//h5[contains(text(), '建立題目')]"));
-                return h5Element != null;
-            });
-
             var contentTitle = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '建立題目')]")));
             That(contentTitle.Text, Is.EqualTo("建立題目"));
+            return Task.CompletedTask;
         }
-        public async Task TwcA100_05()
+        public Task TwcA100_05()
         {
             var addQuestionButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '新增題目')]")));
             _actions.MoveToElement(addQuestionButton).Click().Perform();
 
-            _wait.Until(driver =>
-            {
-                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='新增題目']"));
-                return stormCard != null;
-            });
-
             var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='新增題目']")));
             var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("h5"));
             That(stormCardTitle.Text, Is.EqualTo("新增題目"));
+            return Task.CompletedTask;
         }
 
         public async Task TwcA100_06()
@@ -217,12 +208,6 @@ namespace DomainStorm.Project.TWC.Tests
             var addButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '加入')]")));
             _actions.MoveToElement(addButton).Click().Perform();
 
-            _wait.Until(driver =>
-            {
-                var content = _driver.FindElement(By.XPath("//h5[contains(text(), '題目1')]"));
-                return content != null;
-            });
-
             var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '題目1')]")));
             That(content.Text, Is.EqualTo("題目1"));
         }
@@ -233,7 +218,7 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcA100_05();
         }
 
-        public async Task TwcA100_08()
+        public Task TwcA100_08()
         {
             var contentInput = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='題目'] input")));
             contentInput.SendKeys("題目2");
@@ -260,75 +245,33 @@ namespace DomainStorm.Project.TWC.Tests
             var addButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '加入')]")));
             _actions.MoveToElement(addButton).Click().Perform();
 
-            _wait.Until(driver =>
-            {
-                var content = _driver.FindElement(By.XPath("//h5[contains(text(), '題目2')]"));
-                return content != null;
-            });
-
             var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '題目2')]")));
             That(content.Text, Is.EqualTo("題目2"));
+            return Task.CompletedTask;
         }
-        public async Task TwcA100_09()
+        public Task TwcA100_09()
         {
-            var nextPageButton = _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("(//button[contains(text(), '下一頁')])[2]")));
-            _actions.MoveToElement(nextPageButton).Click().Perform();
+            _testHelper.ElementClick(By.XPath("(//button[contains(text(), '下一頁')])[2]"));
+            _testHelper.WaitElementVisible(By.XPath("//h5[contains(text(), '問卷預覽')]"));
 
-            _wait.Until(driver =>
-            {
-                var content = _driver.FindElement(By.XPath("//h5[contains(text(), '問卷預覽')]"));
-                return content != null;
-            });
-
-            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '問卷預覽')]")));
-            That(content.Text, Is.EqualTo("問卷預覽"));
+            return Task.CompletedTask;
         }
-        public async Task TwcA100_10()
+        public Task TwcA100_10()
         {
-            var nextPageButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("(//button[contains(text(), '下一頁')])[3]")));
-            _actions.MoveToElement(nextPageButton).Perform();
+            _testHelper.ElementClick(By.XPath("(//button[contains(text(), '下一頁')])[3]"));
+            _testHelper.WaitElementVisible(By.XPath("//h5[contains(text(), '問卷完成')]"));
 
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("(//button[contains(text(), '下一頁')])[3]")));
-            _actions.MoveToElement(nextPageButton).Click().Perform();
-
-            _wait.Until(driver =>
-            {
-                var content = _driver.FindElement(By.XPath("//h5[contains(text(), '問卷完成')]"));
-                return content != null;
-            });
-
-            var content = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//h5[contains(text(), '問卷完成')]")));
-            That(content.Text, Is.EqualTo("問卷完成"));
+            return Task.CompletedTask;
         }
-        public async Task TwcA100_11()
+        public Task TwcA100_11()
         {
-            var submitButton = _wait.Until(ExpectedConditions.ElementExists(By.XPath("(//button[contains(text(), '送出')])")));
-            _actions.MoveToElement(submitButton).Click().Perform();
+            _testHelper.ElementClick(By.XPath("(//button[contains(text(), '送出')])"));
+            _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/questionnaire"));
+            _testHelper.WaitElementVisible(By.XPath("//storm-card[@headline='問卷狀態']"));
 
-            _wait.Until(driver =>
-            {
-                var stormCard = _driver.FindElement(By.CssSelector("storm-card[headline='問卷狀態']"));
-                return stormCard != null;
-            });
+            That(_testHelper.WaitShadowElement("td[data-field='name'] span span", "測試名稱"), Is.Not.Null);
 
-            var stormCard = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-card[headline='問卷狀態']")));
-            var stormCardTitle = stormCard.GetShadowRoot().FindElement(By.CssSelector("h5"));
-            That(stormCardTitle.Text, Is.EqualTo("問卷狀態"));
-
-            _wait.Until(_ =>
-            {
-                _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/questionnaire"));
-                Thread.Sleep(1000);
-
-                var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody tr"));
-
-                return rows.Count >= 1;
-            });
-
-            var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-            var name = stormTable.GetShadowRoot().FindElement(By.CssSelector("td[data-field='name'] span span"));
-            That(name.Text, Is.EqualTo("測試名稱"));
+            return Task.CompletedTask;
         }
         [Test]
         [Order(2)]
@@ -371,12 +314,14 @@ namespace DomainStorm.Project.TWC.Tests
             await TwcA100_29();
             await TwcA100_30();
         }
-        public async Task TwcA100_14()
+        public Task TwcA100_14()
         {
             _testHelper.Login( "4e03", TestHelper.Password!);
             _testHelper.NavigateWait("/draft", By.CssSelector("storm-sidenav"));
 
             _testHelper.ClickRow(TestHelper.ApplyCaseNo!);
+            string[] segments = _driver.Url.Split('/');
+            string uuid = segments[^1];
 
             ((IJavaScriptExecutor)_driver).ExecuteScript("window.open();");
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
@@ -386,9 +331,9 @@ namespace DomainStorm.Project.TWC.Tests
             var videoAutoPlay = stormCarousel.GetShadowRoot().FindElement(By.CssSelector("video[autoplay]"));
             That(videoAutoPlay, Is.Not.Null, "影片正在撥放");
 
-            string[] segments = _driver.Url.Split('/');
-            string uuid = segments[^1];
+
             _driver.Navigate().GoToUrl($@"{TestHelper.BaseUrl}/draft/second-screen/{uuid}");
+            return Task.CompletedTask;
         }
 
         public async Task TwcA100_15()
