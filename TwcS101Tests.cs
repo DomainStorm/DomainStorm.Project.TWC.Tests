@@ -125,16 +125,7 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.ElementClick(By.XPath("//button[text()='查詢']"));
             _testHelper.WaitElementExists(By.CssSelector("storm-table"));
 
-            var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-
-            _wait.Until(driver =>
-            {
-                var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
-                return pageInfo.Text == "顯示第 1 至 10 筆，共 15 筆";
-            });
-
-            var pageInfoFinal = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
-            That(pageInfoFinal.Text, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
+            That(_testHelper.WaitShadowElement("div.table-bottom > div.table-pageInfo", "顯示第 1 至 10 筆，共 15 筆", isEditTable: false), Is.Not.Null);
 
             return Task.CompletedTask;
         }
@@ -145,14 +136,7 @@ namespace DomainStorm.Project.TWC.Tests
             var nextPage = stormPagination.GetShadowRoot().FindElement(By.CssSelector("ul > li:nth-child(3) > a"));
             _actions.MoveToElement(nextPage).Click().Perform();
 
-            _wait.Until(driver =>
-            {
-                var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
-                return pageInfo.Text == "顯示第 11 至 15 筆，共 15 筆";
-            });
-
-            var pageInfoFinal = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
-            That(pageInfoFinal.Text, Is.EqualTo("顯示第 11 至 15 筆，共 15 筆"));
+            That(_testHelper.WaitShadowElement("div.table-bottom > div.table-pageInfo", "顯示第 11 至 15 筆，共 15 筆", isEditTable: false), Is.Not.Null);
 
             return Task.CompletedTask;
         }
@@ -163,14 +147,7 @@ namespace DomainStorm.Project.TWC.Tests
             var backPage = stormPagination.GetShadowRoot().FindElement(By.CssSelector("ul > li > a"));
             _actions.MoveToElement(backPage).Click().Perform();
 
-            _wait.Until(driver =>
-            {
-                var pageInfo = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
-                return pageInfo.Text == "顯示第 1 至 10 筆，共 15 筆";
-            });
-
-            var pageInfoFinal = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
-            That(pageInfoFinal.Text, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
+            That(_testHelper.WaitShadowElement("div.table-bottom > div.table-pageInfo", "顯示第 1 至 10 筆，共 15 筆", isEditTable: false), Is.Not.Null);
 
             return Task.CompletedTask;
         }

@@ -267,10 +267,12 @@ public class TestHelper
         }
     }
 
-    public void InputSendKeys(By by, string text)
+    public IWebElement InputSendKeys(By by, string text)
     {
         var element = WaitElementExists(by);
         element.SendKeys(text);
+
+        return element;
     }
     public void UploadFilesAndCheck(string[] fileNames, string cssSelectorInput)
     {
@@ -402,12 +404,13 @@ public class TestHelper
 
     public void ClickRow(string caseNo)
     {
-        var stormTable = WaitElementExists(By.CssSelector("storm-table"));
+        var stormTable = WaitElementVisible(By.CssSelector("storm-table"));
         IWebElement? selectedRow = null;
 
         var url = _driver.Url;
         if (!url.Contains("/search"))
         {
+            stormTable = WaitElementExists(By.CssSelector("storm-table"));
             // 如果 URL 不包含 "/search"，處理有輸入框的情況
             var stormTableInput = _wait.Until(_ =>
             {

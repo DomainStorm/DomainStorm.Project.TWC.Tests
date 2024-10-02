@@ -116,7 +116,12 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            _testHelper.InputSendKeys(By.XPath("//span[@sti-note]/input"), "備註內容" + Keys.Tab);
+            ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].dispatchEvent(new Event('focusout'));",
+                _testHelper.InputSendKeys(By.XPath("//span[@sti-note]/input"),
+                    "備註內容"));
+
+            Thread.Sleep(1000);
+
             //var stiNote = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-note]/input")));
             //That(stiNote.GetAttribute("value"), Is.EqualTo("備註內容"));
 
