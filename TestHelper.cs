@@ -298,7 +298,7 @@ public class TestHelper
 
         var uploadButton = By.XPath("//button[text()='上傳']");
         WaitElementExists(uploadButton);
-        ElementClick(uploadButton);
+        _wait.Until(ExpectedConditions.StalenessOf(ElementClick(uploadButton)));
     }
 
     private void CheckFileName(string expectedFileName)
