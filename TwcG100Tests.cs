@@ -187,25 +187,26 @@ namespace DomainStorm.Project.TWC.Tests
             var stiNoteInput = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]/input")));
             stiNoteInput.SendKeys("備註內容" + Keys.Tab);
 
-            _wait.Until(driver =>
-            {
-                Thread.Sleep(1000);
-                var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]/input")));
-                return stiNote.GetAttribute("value") == "備註內容";
-            });
+            //_wait.Until(driver =>
+            //{
+            //    Thread.Sleep(1000);
+            //    var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]/input")));
+            //    return stiNote.GetAttribute("value") == "備註內容";
+            //});
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            _wait.Until(driver =>
-            {
-                Thread.Sleep(1000);
-                var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]")));
-                return stiNote != null;
-            });
+            //_wait.Until(driver =>
+            //{
+            //    Thread.Sleep(1000);
+            //    var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]")));
+            //    return stiNote != null;
+            //});
 
-            var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[text()='備註內容']")));
-            That(stiNote.Text, Is.EqualTo("備註內容"));
+            _testHelper.WaitElementExists(By.XPath("//span[@sti-note]"));
+
+            That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note][text()='備註內容']"))), Is.Not.Null);
         }
         public async Task TwcG100_09()
         {

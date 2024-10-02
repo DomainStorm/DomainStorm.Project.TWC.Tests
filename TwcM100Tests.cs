@@ -228,6 +228,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             var editButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(2) button"));
             _actions.MoveToElement(editButton).Click().Perform();
+            Thread.Sleep(1000);
 
             _testHelper.WaitElementExists(By.CssSelector("storm-card[headline='修改']"));
             _testHelper.InputSendKeys(By.CssSelector("storm-input-group[label='說明'] input"), "描述圖示說明");

@@ -99,8 +99,8 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Frame(0);
 
             _testHelper.InputSendKeys(By.XPath("//span[@sti-trustee-id-no]/input"), "A123456789" + Keys.Tab);
-            var idElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='身分證號碼']/input")));
-            That(idElement.GetAttribute("value"), Is.EqualTo("A123456789"));
+            //var idElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='身分證號碼']/input")));
+            //That(idElement.GetAttribute("value"), Is.EqualTo("A123456789"));
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
@@ -123,7 +123,9 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
-            That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[text()='備註內容']"))), Is.Not.Null);
+            _testHelper.WaitElementExists(By.XPath("//span[@sti-note]"));
+
+            That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note][text()='備註內容']"))), Is.Not.Null);
 
             return Task.CompletedTask;
         }

@@ -116,8 +116,8 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            var stiNoteInput = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]/input")));
-            stiNoteInput.SendKeys("備註內容" + Keys.Tab);
+            
+            _testHelper.InputSendKeys(By.XPath("//span[@sti-note]/input"), "備註內容" + Keys.Tab);
 
             //_wait.Until(_ =>
             //{
