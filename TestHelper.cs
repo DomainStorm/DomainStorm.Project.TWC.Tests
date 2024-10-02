@@ -246,12 +246,24 @@ public class TestHelper
         return element;
     }
 
-    public void NavigateWait(string url, By by)
+    public void NavigateWait(string url, By by, int retryCount = 1)
     {
+
         _driver.Navigate().GoToUrl($"{BaseUrl}{url}");
         _wait.Until(ExpectedConditions.UrlToBe($"{BaseUrl}{url}"));
 
-        WaitElementExists(by);
+        try
+        {
+            WaitElementExists(by);
+        }
+        catch(NoSuchElementException)
+        {
+            if (retryCount > 0)
+            {
+                _driver.Navigate().Refresh();
+                NavigateWait(url, by, retryCount -1);
+            }
+        }
     }
 
     public void InputSendKeys(By by, string text)
