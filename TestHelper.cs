@@ -321,21 +321,28 @@ public class TestHelper
     {
         return _wait.Until(_ =>
         {
-            IWebElement stormTable;
+            IWebElement GetStormTable()
+            {
+                IWebElement stormTable;
 
-            if (isEditTable)
-            {
-                var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
-                stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                if (isEditTable)
+                {
+                    var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                    stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+                }
+                else
+                {
+                    stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
+                }
+
+                return stormTable;
             }
-            else
-            {
-                stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-            }
+
+
 
             return _wait.Until(_ =>
             {
-                var targetElements = stormTable.GetShadowRoot().FindElements(By.CssSelector(cssSelector));
+                var targetElements = GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector));
                 var targetElement = targetElements.FirstOrDefault();
                 if(targetElement == null)
                     return null;
@@ -404,17 +411,16 @@ public class TestHelper
 
     public void ClickRow(string caseNo)
     {
-        var stormTable = WaitElementVisible(By.CssSelector("storm-table"));
+        WaitElementVisible(By.CssSelector("storm-table"));
         IWebElement? selectedRow = null;
 
         var url = _driver.Url;
         if (!url.Contains("/search"))
         {
-            stormTable = WaitElementExists(By.CssSelector("storm-table"));
             // 如果 URL 不包含 "/search"，處理有輸入框的情況
             var stormTableInput = _wait.Until(_ =>
             {
-                var elements = stormTable.GetShadowRoot().FindElements(By.CssSelector("input[placeholder='請輸入關鍵字']"));
+                var elements = WaitElementVisible(By.CssSelector("storm-table")).GetShadowRoot().FindElements(By.CssSelector("input[placeholder='請輸入關鍵字']"));
                 if (!elements.Any()) return null;
                 var element = elements.First();
                 _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(elements));
@@ -426,9 +432,9 @@ public class TestHelper
                 stormTableInput.Clear();
                 stormTableInput.SendKeys(caseNo + Keys.Enter);
 
-                _wait.Until(_ => stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr")).Count == 1);
+                _wait.Until(_ => WaitElementVisible(By.CssSelector("storm-table")).GetShadowRoot().FindElements(By.CssSelector("tbody > tr")).Count == 1);
 
-                var row = stormTable.GetShadowRoot().FindElement(By.CssSelector("tbody > tr"));
+                var row = WaitElementVisible(By.CssSelector("storm-table")).GetShadowRoot().FindElement(By.CssSelector("tbody > tr"));
                 _wait.Until(ExpectedConditions.TextToBePresentInElement(row, caseNo));
                 selectedRow = row;
             }
@@ -437,7 +443,7 @@ public class TestHelper
         {
             selectedRow = _wait.Until(_ =>
             {
-                var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                var rows = WaitElementVisible(By.CssSelector("storm-table")).GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
 
                 foreach (var row in rows)
                 {
