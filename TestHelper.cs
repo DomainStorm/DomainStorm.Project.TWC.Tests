@@ -276,7 +276,7 @@ public class TestHelper
     }
     public void UploadFilesAndCheck(string[] fileNames, string cssSelectorInput)
     {
-        WaitElementVisible(By.CssSelector(cssSelectorInput));
+        WaitElementExists(By.CssSelector(cssSelectorInput));
 
         var filePaths = fileNames.Select(fileName => Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName)).ToArray();
         var currentFileNames = new List<string>();
