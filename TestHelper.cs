@@ -399,6 +399,7 @@ public class TestHelper
 
     public void ClickRow(string caseNo)
     {
+        WaitElementExists(By.CssSelector("storm-table"));
         WaitElementVisible(By.CssSelector("storm-table"));
         IWebElement? selectedRow = null;
 

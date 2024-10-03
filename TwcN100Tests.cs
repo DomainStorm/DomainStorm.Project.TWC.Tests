@@ -183,9 +183,13 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.Login("meizi", TestHelper.Password!);
             _testHelper.NavigateWait("/systemannouncement", By.CssSelector("storm-table"));
 
-            var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-            var editButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(2)"));
+            //var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
+            //var editButton = stormTable.GetShadowRoot().FindElement(By.CssSelector("storm-toolbar-item:nth-of-type(2)"));
+
+            var editButton = _testHelper.WaitShadowElement("storm-toolbar-item:nth-of-type(2)");
             _actions.MoveToElement(editButton).Click().Perform();
+
+
 
             _testHelper.WaitElementExists(By.CssSelector("storm-card[headline='修改公告']"));
 
