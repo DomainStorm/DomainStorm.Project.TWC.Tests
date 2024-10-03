@@ -391,7 +391,7 @@ public class TestHelper
                     if (retryCount <= 0) throw;
 
                     Console.Write($"ExpectedText retry retryCount: {retryCount}");
-                    return ExpectedText(retryCount);
+                    return ExpectedText(retryCount -1);
 
                 }
             }
