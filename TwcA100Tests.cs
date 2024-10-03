@@ -69,7 +69,7 @@ namespace DomainStorm.Project.TWC.Tests
             That(_testHelper.WaitShadowElement("td[data-field='name'] span span", "testmedia.mp4", isEditTable: true), Is.Not.Null);
             return Task.CompletedTask;
         }
-        public async Task TwcH100()
+        public Task TwcH100()
         {
             _testHelper.NavigateWait("/playlist", By.CssSelector("storm-card[headline='節目單管理']"));
 
@@ -109,6 +109,14 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.ElementClick(By.XPath("//button[@form='create']"));
 
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
+            _testHelper.WaitElementExists(By.CssSelector("storm-sidenav"));
+            _testHelper.WaitElementExists(By.CssSelector("storm-main-content"));
+
+
+            Console.WriteLine($"::group::TwcH100---------{TestHelper.BaseUrl}/playlist---------");
+            Console.WriteLine(_wait.Until(ExpectedConditions.ElementExists(By.CssSelector("body"))).GetAttribute("innerHTML"));
+            Console.WriteLine("::endgroup::");
+            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
             _testHelper.WaitElementExists(By.CssSelector("storm-card[headline='節目單管理']"));
 
             That(_testHelper.WaitShadowElement( "div.table-bottom > div.table-pageInfo", "顯示第 1 至 1 筆，共 1 筆", false), Is.Not.Null);
@@ -121,6 +129,7 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.ElementClick(By.XPath("//span[text()='核准']"));
 
             That(_testHelper.WaitShadowElement("td[data-field='playListStatus']", "核准"), Is.Not.Null);
+            return Task.CompletedTask;
 
             //var checkButton =_testHelper.ElementClick(By.XPath("//span[text()='核准']"));
 

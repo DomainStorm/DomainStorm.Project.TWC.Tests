@@ -58,10 +58,11 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("storm-sidenav"));
             _testHelper.WaitElementExists(By.CssSelector("storm-main-content"));
 
-            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
+
             Console.WriteLine($"::group::TwcH100_01_M100_01---------{TestHelper.BaseUrl}/playlist---------");
-            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine(_wait.Until(ExpectedConditions.ElementExists(By.CssSelector("body"))).GetAttribute("innerHTML"));
             Console.WriteLine("::endgroup::");
+            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
 
             _testHelper.WaitElementVisible(By.CssSelector("storm-card[headline='媒體管理']"));
 
@@ -86,10 +87,10 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("storm-sidenav"));
             _testHelper.WaitElementExists(By.CssSelector("storm-main-content"));
 
-            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
             Console.WriteLine($"::group::TwcH100_01_M100_02---------{TestHelper.BaseUrl}/playlist---------");
-            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine(_wait.Until(ExpectedConditions.ElementExists(By.CssSelector("body"))).GetAttribute("innerHTML"));
             Console.WriteLine("::endgroup::");
+            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
 
             _testHelper.WaitElementVisible(By.CssSelector("storm-card[headline='媒體管理']"));
 
@@ -154,10 +155,11 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("storm-sidenav"));
             _testHelper.WaitElementExists(By.CssSelector("storm-main-content"));
             
-            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
+            
             Console.WriteLine($"::group::TwcH100_05---------{TestHelper.BaseUrl}/playlist---------");
-            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine(_wait.Until(ExpectedConditions.ElementExists(By.CssSelector("body"))).GetAttribute("innerHTML"));
             Console.WriteLine("::endgroup::");
+            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
 
             _testHelper.WaitElementVisible(By.CssSelector("storm-card[headline='節目單管理']"));
 
@@ -265,10 +267,11 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("storm-sidenav"));
             _testHelper.WaitElementExists(By.CssSelector("storm-main-content"));
 
-            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
+
             Console.WriteLine($"::group::TwcH100_12---------{TestHelper.BaseUrl}/playlist---------");
-            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine(_wait.Until(ExpectedConditions.ElementExists(By.CssSelector("body"))).GetAttribute("innerHTML"));
             Console.WriteLine("::endgroup::");
+            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
 
             _testHelper.WaitElementVisible(By.CssSelector("storm-card[headline='節目單管理']"));
 
