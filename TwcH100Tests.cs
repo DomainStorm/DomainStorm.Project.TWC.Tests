@@ -53,6 +53,16 @@ namespace DomainStorm.Project.TWC.Tests
 
             _testHelper.UploadFilesAndCheck(new[] { "台水官網圖.png"}, "input.dz-hidden-input");
 
+            _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/multimedia"));
+
+            _testHelper.WaitElementExists(By.CssSelector("storm-sidenav"));
+            _testHelper.WaitElementExists(By.CssSelector("storm-main-content"));
+
+            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
+            Console.WriteLine($"::group::TwcH100_01_M100_01---------{TestHelper.BaseUrl}/playlist---------");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::");
+
             _testHelper.WaitElementVisible(By.CssSelector("storm-card[headline='媒體管理']"));
 
             That(_testHelper.WaitShadowElement( "td[data-field='name'] span span", "台水官網圖.png", isEditTable: true), Is.Not.Null);
@@ -72,6 +82,14 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.UploadFilesAndCheck(new[] { "testmedia.mp4" }, "input.dz-hidden-input");
 
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/multimedia"));
+
+            _testHelper.WaitElementExists(By.CssSelector("storm-sidenav"));
+            _testHelper.WaitElementExists(By.CssSelector("storm-main-content"));
+
+            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
+            Console.WriteLine($"::group::TwcH100_01_M100_02---------{TestHelper.BaseUrl}/playlist---------");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::");
 
             _testHelper.WaitElementVisible(By.CssSelector("storm-card[headline='媒體管理']"));
 

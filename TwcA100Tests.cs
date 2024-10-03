@@ -118,9 +118,13 @@ namespace DomainStorm.Project.TWC.Tests
             var approveButton = _testHelper.WaitShadowElement( "td[data-field ='__action_8'] storm-toolbar-item:nth-child(3)");
             _actions.MoveToElement(approveButton).Click().Perform();
 
-            var checkButton =_testHelper.ElementClick(By.XPath("//span[text()='核准']"));
+            _testHelper.ElementClick(By.XPath("//span[text()='核准']"));
 
-            That(_testHelper.WaitShadowElement("div.table-responsive td[data-field='playListStatus'] span", "核准", false), Is.Not.Null);
+            That(_testHelper.WaitShadowElement("td[data-field='playListStatus']", "核准"), Is.Not.Null);
+
+            //var checkButton =_testHelper.ElementClick(By.XPath("//span[text()='核准']"));
+
+            //That(_testHelper.WaitShadowElement("div.table-responsive td[data-field='playListStatus'] span", "核准", false), Is.Not.Null);
         }
 
         [Test]
