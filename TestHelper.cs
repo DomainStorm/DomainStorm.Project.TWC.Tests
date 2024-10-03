@@ -362,10 +362,14 @@ public class TestHelper
         }
         catch (Exception e)
         {
+            var blazor_error_ui = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#blazor-error-ui")));
+            if (blazor_error_ui.Displayed)
+                throw new Exception("blazor_error");
+
             Console.WriteLine("::group::--------------------WaitShadowElement Exception start --------------------");
             Console.WriteLine("--------------------");
             Console.WriteLine(e);
-            Console.WriteLine(_wait.Until(ExpectedConditions.ElementExists(By.CssSelector("html"))).GetAttribute("innerHTML"));
+            Console.WriteLine(_wait.Until(ExpectedConditions.ElementExists(By.CssSelector("body"))).GetAttribute("innerHTML"));
             Console.WriteLine("::endgroup::--------------------WaitShadowElement Exception end --------------------");
             throw;
         }
@@ -419,6 +423,7 @@ public class TestHelper
                 _wait.Until(_ => WaitElementVisible(By.CssSelector("storm-table")).GetShadowRoot().FindElements(By.CssSelector("tbody > tr")).Count == 1);
 
                 var row = WaitElementVisible(By.CssSelector("storm-table")).GetShadowRoot().FindElement(By.CssSelector("tbody > tr"));
+                _wait.Until(_ => row.Displayed);
                 _wait.Until(ExpectedConditions.TextToBePresentInElement(row, caseNo));
                 selectedRow = row;
             }
@@ -428,6 +433,7 @@ public class TestHelper
             selectedRow = _wait.Until(_ =>
             {
                 var rows = WaitElementVisible(By.CssSelector("storm-table")).GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
+                _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(rows));
 
                 foreach (var row in rows)
                 {
