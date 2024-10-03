@@ -134,7 +134,7 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
 
             _testHelper.WaitElementExists(By.CssSelector("storm-card"));
-            Console.WriteLine($"::group::Login---------{TestHelper.BaseUrl}/playlist---------");
+            Console.WriteLine($"::group::TwcH100_05---------{TestHelper.BaseUrl}/playlist---------");
             Console.WriteLine(_driver.PageSource);
             Console.WriteLine("::endgroup::");
 

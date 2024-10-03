@@ -321,39 +321,38 @@ public class TestHelper
 
     public IWebElement? WaitShadowElement(string cssSelector, string? expectedText = null, bool isEditTable = false)
     {
-        return _wait.Until(_ =>
+        IWebElement GetStormTable()
         {
-            IWebElement GetStormTable()
+            IWebElement stormTable;
+
+            if (isEditTable)
             {
-                IWebElement stormTable;
-
-                if (isEditTable)
-                {
-                    var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
-                    stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-                }
-                else
-                {
-                    stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-                }
-
-                return stormTable;
+                var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            }
+            else
+            {
+                stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
             }
 
-            return _wait.Until(_ =>
-            {
-                var targetElements = GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector));
-                var targetElement = targetElements.FirstOrDefault();
-                if(targetElement == null)
-                    return null;
+            return stormTable;
+        }
 
-                _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(targetElements));
-                if (expectedText != null)
-                    return targetElement?.Text == expectedText ? targetElement : null;
+        return _wait.Until(_ =>
+        {
+            _wait.Until(_ => GetStormTable().Displayed);
 
-                return targetElement;
-            });
+            var targetElements = GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector));
+            var targetElement = targetElements.FirstOrDefault();
+            if (targetElement == null)
+                return null;
 
+            _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(targetElements));
+
+            if (expectedText != null)
+                return targetElement?.Text == expectedText ? targetElement : null;
+
+            return targetElement;
         });
     }
     public void MoveAndCheck(string cssSelector)
