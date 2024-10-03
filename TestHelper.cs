@@ -341,22 +341,36 @@ public class TestHelper
             return stormTable;
         }
 
-        return _wait.Until(_ =>
+        try
         {
-            _wait.Until(_ => GetStormTable().Displayed);
 
-            var targetElements = GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector));
-            var targetElement = targetElements.FirstOrDefault();
-            if (targetElement == null)
-                return null;
+            return _wait.Until(_ =>
+            {
+                _wait.Until(_ => GetStormTable().Displayed);
 
-            _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(targetElements));
+                var targetElements = GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector));
+                var targetElement = targetElements.FirstOrDefault();
+                if (targetElement == null)
+                    return null;
 
-            if (expectedText != null)
-                return targetElement?.Text == expectedText ? targetElement : null;
+                _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(targetElements));
 
-            return targetElement;
-        });
+                if (expectedText != null)
+                    return targetElement?.Text == expectedText ? targetElement : null;
+
+                return targetElement;
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("::group::--------------------WaitShadowElement Exception start --------------------");
+            Console.WriteLine("--------------------");
+            Console.WriteLine(e);
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::--------------------WaitShadowElement Exception end --------------------");
+            throw;
+        }
+
     }
     public void MoveAndCheck(string cssSelector)
     {

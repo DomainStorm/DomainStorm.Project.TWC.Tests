@@ -119,7 +119,8 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.XPath("//button[text()='查詢']"));
 
             var applyDateBegin = "2023-03-06";
-            var applyDateBeginSelect = _driver.FindElement(By.CssSelector("storm-input-group[label='受理日期起'] input"));
+            var applyDateBeginSelect = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-input-group[label='受理日期起'] input")));
+
             ((IJavaScriptExecutor)_driver).ExecuteScript($"arguments[0].value = '{applyDateBegin}'; arguments[0].dispatchEvent(new Event('input')); arguments[0].dispatchEvent(new Event('change'));", applyDateBeginSelect);
 
             _testHelper.ElementClick(By.XPath("//button[text()='查詢']"));
