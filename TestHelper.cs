@@ -352,13 +352,11 @@ public class TestHelper
 
             if (isEditTable)
             {
-                var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                var stormEditTable = WaitElementExists(By.CssSelector("storm-edit-table"));
                 stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
             }
             else
-            {
-                stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-            }
+                stormTable = WaitElementExists(By.CssSelector("storm-table"));
 
             return stormTable;
         }
