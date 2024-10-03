@@ -237,14 +237,16 @@ public class TestHelper
 
     public IWebElement ElementClick(By by)
     {
-        var element = WaitElementExists(by);
-        element = WaitElementVisible(by);
-        _actions.ScrollToElement(element).Perform();
-        _wait.Until(ExpectedConditions.ElementToBeClickable(by));
-        _actions.MoveToElement(element).Perform();
-        _actions.Click(element).Perform();
+        return _wait.Until(_ =>
+        {
+            _actions.ScrollToElement(WaitElementExists(by)).Perform();
+            var element = WaitElementVisible(by);
+            _actions.MoveToElement(element).Perform();
+            _wait.Until(_ => element.Enabled);
+            _actions.Click(element).Perform();
 
-        return element;
+            return element;
+        }); ;
     }
 
     public void NavigateWait(string url, By by, int retryCount = 1)
