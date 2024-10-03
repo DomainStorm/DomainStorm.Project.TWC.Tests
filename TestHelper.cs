@@ -238,6 +238,7 @@ public class TestHelper
     public IWebElement ElementClick(By by)
     {
         var element = WaitElementExists(by);
+        element = WaitElementVisible(by);
         _actions.ScrollToElement(element).Perform();
         _wait.Until(ExpectedConditions.ElementToBeClickable(by));
         _actions.MoveToElement(element).Perform();
