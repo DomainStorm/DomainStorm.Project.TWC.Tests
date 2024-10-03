@@ -278,7 +278,7 @@ public class TestHelper
     {
         WaitElementExists(By.CssSelector(cssSelectorInput));
 
-        var filePaths = fileNames.Select(fileName =>Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName)).ToArray();
+        var filePaths = fileNames.Select(fileName => Path.Combine(Directory.GetCurrentDirectory(), "Assets", fileName)).ToArray();
         var currentFileNames = new List<string>();
 
         foreach (var filePath in filePaths)
@@ -294,11 +294,13 @@ public class TestHelper
                 durationInput.SendKeys("10");
             }
         }
-        Thread.Sleep(1000);
+        // Thread.Sleep(1000);
+        WaitElementVisible(By.XPath("//a[@class='dz-remove']"));
 
         var uploadButton = By.XPath("//button[text()='上傳']");
-        WaitElementExists(uploadButton);
+        WaitElementVisible(uploadButton);
         ElementClick(uploadButton);
+        //dz-remove
     }
 
     private void CheckFileName(string expectedFileName)
@@ -319,39 +321,38 @@ public class TestHelper
 
     public IWebElement? WaitShadowElement(string cssSelector, string? expectedText = null, bool isEditTable = false)
     {
-        return _wait.Until(_ =>
+        IWebElement GetStormTable()
         {
-            IWebElement GetStormTable()
+            IWebElement stormTable;
+
+            if (isEditTable)
             {
-                IWebElement stormTable;
-
-                if (isEditTable)
-                {
-                    var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
-                    stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
-                }
-                else
-                {
-                    stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
-                }
-
-                return stormTable;
+                var stormEditTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-edit-table")));
+                stormTable = stormEditTable.GetShadowRoot().FindElement(By.CssSelector("storm-table"));
+            }
+            else
+            {
+                stormTable = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("storm-table")));
             }
 
-            return _wait.Until(_ =>
-            {
-                var targetElements = GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector));
-                var targetElement = targetElements.FirstOrDefault();
-                if(targetElement == null)
-                    return null;
+            return stormTable;
+        }
 
-                _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(targetElements));
-                if (expectedText != null)
-                    return targetElement?.Text == expectedText ? targetElement : null;
+        return _wait.Until(_ =>
+        {
+            _wait.Until(_ => GetStormTable().Displayed);
 
-                return targetElement;
-            });
+            var targetElements = GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector));
+            var targetElement = targetElements.FirstOrDefault();
+            if (targetElement == null)
+                return null;
 
+            _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(targetElements));
+
+            if (expectedText != null)
+                return targetElement?.Text == expectedText ? targetElement : null;
+
+            return targetElement;
         });
     }
     public void MoveAndCheck(string cssSelector)

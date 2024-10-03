@@ -78,7 +78,7 @@ namespace DomainStorm.Project.TWC.Tests
         public Task TwcA101_03()
         {
             _testHelper.Login("0511", TestHelper.Password!);
-            _testHelper.NavigateWait("/draft", By.CssSelector("storm-sidenav"));
+            _testHelper.NavigateWait("/draft", By.CssSelector("storm-table"));
             _testHelper.ClickRow(TestHelper.ApplyCaseNo!);
             _testHelper.ElementClick(By.XPath("//button[text()='捨棄草稿']"));
             _testHelper.WaitElementExists(By.XPath("//h2[text()='是否刪除？']"));

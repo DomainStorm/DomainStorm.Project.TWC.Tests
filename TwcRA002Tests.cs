@@ -293,7 +293,8 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.NavigateWait("/report/RA002", By.CssSelector("iframe"));
 
             _driver.SwitchTo().Frame(0);
-            //_testHelper.WaitElementExists(By.CssSelector("storm-card"));
+            _testHelper.WaitElementVisible(By.CssSelector("body"));
+            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
             _testHelper.ElementClick(By.CssSelector("div.choices__item[data-id='1']"));
             _testHelper.ElementClick(By.CssSelector("div.choices__item[data-id='2']"));
             _testHelper.ElementClick(By.XPath("//storm-select[@label='選擇年份']/div[@class='choices']"));
