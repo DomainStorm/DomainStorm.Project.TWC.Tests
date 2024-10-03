@@ -295,7 +295,7 @@ public class TestHelper
             }
         }
         // Thread.Sleep(1000);
-        WaitElementVisible(By.XPath("//a[@class=dz-remove]"));
+        WaitElementVisible(By.XPath("//a[@class='dz-remove']"));
 
         var uploadButton = By.XPath("//button[text()='上傳']");
         WaitElementVisible(uploadButton);
