@@ -252,11 +252,15 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            var stiApplyEmail = _driver.FindElement(By.CssSelector("#申請電子帳單勾選"));
-            That(stiApplyEmail.Selected);
+            //var stiApplyEmail = _driver.FindElement(By.CssSelector("#申請電子帳單勾選"));
+            //That(stiApplyEmail.Selected);
 
-            var stiPay = _driver.FindElement(By.CssSelector("#繳費"));
-            That(stiPay.Selected);
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//申請電子帳單勾選")));
+
+            //var stiPay = _driver.FindElement(By.CssSelector("#繳費"));
+            //That(stiPay.Selected);
+
+            _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//繳費")));
 
             That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-post-user-full-name][text()='張博文']"))), Is.Not.Null);
 

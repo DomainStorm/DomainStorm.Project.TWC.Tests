@@ -244,6 +244,14 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
 
+            _testHelper.WaitElementExists(By.CssSelector("storm-sidenav"));
+            _testHelper.WaitElementExists(By.CssSelector("storm-main-content"));
+
+            _testHelper.WaitElementExists(By.CssSelector("storm-card"));
+            Console.WriteLine($"::group::TwcH100_12---------{TestHelper.BaseUrl}/playlist---------");
+            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine("::endgroup::");
+
             _testHelper.WaitElementVisible(By.CssSelector("storm-card[headline='節目單管理']"));
 
             That(_testHelper.WaitShadowElement("td[data-field='name'] span span", "節目單測試"), Is.Not.Null);
