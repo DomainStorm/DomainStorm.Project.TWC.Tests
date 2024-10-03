@@ -109,6 +109,7 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.ElementClick(By.XPath("//button[@form='create']"));
 
             _wait.Until(ExpectedConditions.UrlToBe($"{TestHelper.BaseUrl}/playlist"));
+
             _testHelper.WaitElementExists(By.CssSelector("storm-sidenav"));
             _testHelper.WaitElementExists(By.CssSelector("storm-main-content"));
 

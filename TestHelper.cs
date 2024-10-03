@@ -225,14 +225,35 @@ public class TestHelper
 
         _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("storm-sidenav")));
     }
+    public void CheckPageException()
+    {
+        try
+        {
+            var webElement = new WebDriverWait(_driver, TimeSpan.FromSeconds(3)).Until(ExpectedConditions.ElementExists(By.CssSelector("div.alert-danger")));
+            throw new Exception(webElement.Text);
+        }
+        catch(WebDriverTimeoutException)
+        {
+
+        }
+    }
 
     public IWebElement WaitElementExists(By by)
     {
-        return _wait.Until(ExpectedConditions.ElementExists(by));
+        return _wait.Until(driver =>
+        {
+            CheckPageException();
+            return ExpectedConditions.ElementExists(by).Invoke(driver);
+        });
     }
+
     public IWebElement WaitElementVisible(By by)
     {
-        return _wait.Until(ExpectedConditions.ElementIsVisible(by));
+        return _wait.Until(driver =>
+        {
+            CheckPageException();
+            return ExpectedConditions.ElementIsVisible(by).Invoke(driver);
+        });
     }
 
     public IWebElement ElementClick(By by)
