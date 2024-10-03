@@ -343,17 +343,14 @@ public class TestHelper
 
         try
         {
+            _wait.Until(_ => GetStormTable().Displayed);
+            _wait.Until(_ => GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector)).Any());
+            _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector))));
 
             return _wait.Until(_ =>
             {
-                _wait.Until(_ => GetStormTable().Displayed);
-
                 var targetElements = GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector));
-                var targetElement = targetElements.FirstOrDefault();
-                if (targetElement == null)
-                    return null;
-
-                _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(targetElements));
+                var targetElement = targetElements.First();
 
                 if (expectedText != null)
                     return targetElement?.Text == expectedText ? targetElement : null;
@@ -366,7 +363,7 @@ public class TestHelper
             Console.WriteLine("::group::--------------------WaitShadowElement Exception start --------------------");
             Console.WriteLine("--------------------");
             Console.WriteLine(e);
-            Console.WriteLine(_driver.PageSource);
+            Console.WriteLine(_wait.Until(ExpectedConditions.ElementExists(By.CssSelector("html"))).GetAttribute("innerHTML"));
             Console.WriteLine("::endgroup::--------------------WaitShadowElement Exception end --------------------");
             throw;
         }

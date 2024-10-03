@@ -111,8 +111,10 @@ namespace DomainStorm.Project.TWC.Tests
             var deleteButton = targetRow.FindElement(By.CssSelector("td.action storm-table-toolbar storm-toolbar-item storm-button button"));
             _actions.MoveToElement(deleteButton).Click().Perform();
 
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//h2[text()='是否刪除？']")));
-            _wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '刪除')]")));
+            _testHelper.ElementClick(By.XPath("//h2[text()='是否刪除？']"));
+
+            //_wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//h2[text()='是否刪除？']")));
+            //_wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '刪除')]")));
             _testHelper.ElementClick(By.XPath("//button[contains(text(), '刪除')]"));
 
             _wait.Until(driver =>

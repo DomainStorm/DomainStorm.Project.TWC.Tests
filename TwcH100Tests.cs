@@ -135,6 +135,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             _testHelper.WaitElementExists(By.CssSelector("storm-sidenav"));
             _testHelper.WaitElementExists(By.CssSelector("storm-main-content"));
+            
             _testHelper.WaitElementExists(By.CssSelector("storm-card"));
             Console.WriteLine($"::group::TwcH100_05---------{TestHelper.BaseUrl}/playlist---------");
             Console.WriteLine(_driver.PageSource);
