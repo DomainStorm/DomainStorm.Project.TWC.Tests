@@ -13,6 +13,7 @@ using Dapper;
 using static NUnit.Framework.Assert;
 using AngleSharp.Dom;
 using System.Xml.Linq;
+using System;
 
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
@@ -368,18 +369,34 @@ public class TestHelper
             _wait.Until(_ => GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector)).Any());
             _wait.Until(ExpectedConditions.VisibilityOfAllElementsLocatedBy(GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector))));
 
-            return _wait.Until(_ =>
+            IWebElement? ExpectedText(int retryCount = 1)
             {
-                var targetElements = GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector));
-                var targetElement = targetElements.FirstOrDefault();
-                if (targetElement == null)
-                    return null;
+                try
+                {
+                    return _wait.Until(_ =>
+                    {
+                        var targetElements = GetStormTable().GetShadowRoot().FindElements(By.CssSelector(cssSelector));
+                        var targetElement = targetElements.FirstOrDefault();
+                        if (targetElement == null)
+                            return null;
 
-                if (expectedText != null)
-                    return targetElement?.Text == expectedText ? targetElement : null;
+                        if (expectedText != null)
+                            return targetElement?.Text == expectedText ? targetElement : null;
 
-                return targetElement;
-            });
+                        return targetElement;
+                    });
+                }
+                catch (Exception)
+                {
+                    if (retryCount <= 0) throw;
+
+                    Console.Write($"ExpectedText retry retryCount: {retryCount}");
+                    return ExpectedText(retryCount);
+
+                }
+            }
+
+            return ExpectedText();
         }
         catch (Exception e)
         {
