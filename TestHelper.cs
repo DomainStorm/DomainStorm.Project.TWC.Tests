@@ -227,7 +227,7 @@ public class TestHelper
     {
         try
         {
-            var webElement = new WebDriverWait(_driver, TimeSpan.FromSeconds(1)).Until(ExpectedConditions.ElementExists(By.CssSelector("div.alert-danger")));
+            var webElement = new WebDriverWait(_driver, TimeSpan.FromSeconds(3)).Until(ExpectedConditions.ElementExists(By.CssSelector("div.alert-danger")));
             throw new Exception(webElement.Text);
         }
         catch(WebDriverTimeoutException)
