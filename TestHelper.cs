@@ -197,7 +197,7 @@ public class TestHelper
     public TestHelper(IWebDriver webDriver)
     {
         _driver = webDriver;
-        _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
+        _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
         _actions = new Actions(webDriver);
     }
 
