@@ -65,7 +65,7 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.UploadFilesAndCheck(new[] { "twcweb_01_1_夾帶附件1.pdf" }, "input.dz-hidden-input:nth-of-type(3)");
 
             var content = _testHelper.WaitShadowElement("td[data-field='name'] span span", "twcweb_01_1_夾帶附件1.pdf", isEditTable: true);
-            That(content.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(content!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             _testHelper.ElementClick(By.CssSelector("#用印或代送件只需夾帶附件"));
 
@@ -79,9 +79,6 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
 
             _driver.SwitchTo().Frame(0);
-
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }
@@ -129,9 +126,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
-
             return Task.CompletedTask;
         }
 
@@ -177,9 +171,6 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
 
             _driver.SwitchTo().Frame(0);
-
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }
@@ -238,7 +229,7 @@ namespace DomainStorm.Project.TWC.Tests
         public Task TwcRA002_06()
         {
             var content = _testHelper.WaitShadowElement("td[data-field='name'] span span", "twcweb_01_1_夾帶附件1.pdf", isEditTable: true);
-            That(content.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(content!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             return Task.CompletedTask;
         }
@@ -278,9 +269,6 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
 
             _driver.SwitchTo().Frame(0);
-
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }

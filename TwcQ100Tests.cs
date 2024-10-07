@@ -487,7 +487,7 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.ElementClick(By.XPath("//span[text()='刪除']"));
 
             var content = _testHelper.WaitShadowElement("p", "沒有找到符合的結果");
-            That(content.Text, Is.EqualTo("沒有找到符合的結果"));
+            That(content!.Text, Is.EqualTo("沒有找到符合的結果"));
 
             return Task.CompletedTask;
         }

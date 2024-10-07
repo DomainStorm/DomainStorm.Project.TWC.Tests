@@ -65,7 +65,7 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.UploadFilesAndCheck(new[] { "twcweb_01_1_夾帶附件1.pdf" }, "input.dz-hidden-input:nth-of-type(3)");
 
             var content = _testHelper.WaitShadowElement("td[data-field='name'] span span", "twcweb_01_1_夾帶附件1.pdf", isEditTable: true);
-            That(content.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(content!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             _testHelper.ElementClick(By.CssSelector("#用印或代送件只需夾帶附件"));
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#用印或代送件只需夾帶附件")));
@@ -74,12 +74,9 @@ namespace DomainStorm.Project.TWC.Tests
             _wait.Until(ExpectedConditions.UrlContains($"{TestHelper.BaseUrl}/unfinished"));
 
             _testHelper.ClickRow(TestHelper.ApplyCaseNo!);
-            //_testHelper.WaitElementExists(By.CssSelector("iframe"));
+            _testHelper.WaitElementExists(By.CssSelector("iframe"));
 
-            // _driver.SwitchTo().Frame(0);
-
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+            _driver.SwitchTo().Frame(0);
 
             return Task.CompletedTask;
         }
@@ -92,12 +89,6 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.NavigateWait("/unfinished", By.CssSelector("storm-table"));
 
             That(_testHelper.WaitShadowElement("div.table-bottom > div.table-pageInfo", "顯示第 1 至 10 筆，共 15 筆", isEditTable: false), Is.Not.Null);
-
-
-
-            //var stormTable = _driver.FindElement(By.CssSelector("storm-table"));
-            //var content = stormTable.GetShadowRoot().FindElement(By.CssSelector("div.table-bottom > div.table-pageInfo"));
-            //That(content.Text, Is.EqualTo("顯示第 1 至 10 筆，共 15 筆"));
 
             return Task.CompletedTask;
         }

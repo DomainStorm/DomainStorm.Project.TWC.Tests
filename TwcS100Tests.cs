@@ -71,7 +71,6 @@ namespace DomainStorm.Project.TWC.Tests
 
             That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-post-user-full-name][text()='張博文']"))), Is.Not.Null);
 
-
             _driver.SwitchTo().DefaultContent();
 
             _testHelper.WaitElementExists(By.XPath("//button[text()='新增文件']"));
@@ -80,7 +79,7 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.UploadFilesAndCheck(new[] { "twcweb_01_1_夾帶附件1.pdf" }, "input.dz-hidden-input:nth-of-type(3)");
 
             var content = _testHelper.WaitShadowElement("td[data-field='name'] span span", "twcweb_01_1_夾帶附件1.pdf", isEditTable: true);
-            That(content.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(content!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             _testHelper.ElementClick(By.CssSelector("#用印或代送件只需夾帶附件"));
 
@@ -94,9 +93,6 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
 
             _driver.SwitchTo().Frame(0);
-
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }
@@ -173,7 +169,7 @@ namespace DomainStorm.Project.TWC.Tests
         public Task TwcS100_07()
         {
             var content = _testHelper.WaitShadowElement("td[data-field='name'] span span", "twcweb_01_1_夾帶附件1.pdf", isEditTable: true);
-            That(content.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(content!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             return Task.CompletedTask;
         }
@@ -209,9 +205,6 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
 
             _driver.SwitchTo().Frame(0);
-
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }
@@ -281,7 +274,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
-        public async Task TwcS100_13()
+        public Task TwcS100_13()
         {
             _testHelper.WaitElementExists(By.XPath("//button[text()='查詢']"));
 
@@ -293,7 +286,9 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("storm-table"));
 
             var content = _testHelper.WaitShadowElement("p", "沒有找到符合的結果");
-            That(content.Text, Is.EqualTo("沒有找到符合的結果"));
+            That(content!.Text, Is.EqualTo("沒有找到符合的結果"));
+
+            return Task.CompletedTask;
         }
     }
 }

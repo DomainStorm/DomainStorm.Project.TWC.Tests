@@ -11,9 +11,6 @@ using WebDriverManager;
 using System.Data.SqlClient;
 using Dapper;
 using static NUnit.Framework.Assert;
-using AngleSharp.Dom;
-using System.Xml.Linq;
-using System;
 
 namespace DomainStorm.Project.TWC.Tests;
 public class TestHelper
@@ -200,7 +197,7 @@ public class TestHelper
     public TestHelper(IWebDriver webDriver)
     {
         _driver = webDriver;
-        _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(15));
+        _wait = new WebDriverWait(webDriver, TimeSpan.FromSeconds(10));
         _actions = new Actions(webDriver);
     }
 
@@ -230,7 +227,7 @@ public class TestHelper
     {
         try
         {
-            var webElement = new WebDriverWait(_driver, TimeSpan.FromSeconds(3)).Until(ExpectedConditions.ElementExists(By.CssSelector("div.alert-danger")));
+            var webElement = new WebDriverWait(_driver, TimeSpan.FromSeconds(1)).Until(ExpectedConditions.ElementExists(By.CssSelector("div.alert-danger")));
             throw new Exception(webElement.Text);
         }
         catch(WebDriverTimeoutException)
@@ -558,6 +555,46 @@ public class TestHelper
 
         _driver.SwitchTo().Window(_driver.WindowHandles[1]);
         _driver.SwitchTo().DefaultContent();
+    }
+
+    public void PrepareData(string userName, string apiUrl, string jsonFileName, string expectedUserName) 
+    {
+        AccessToken = GetAccessToken().Result;
+        That(AccessToken, Is.Not.Empty);
+
+        var statusCode = CreateForm(AccessToken!, apiUrl, Path.Combine(AppDomain.CurrentDomain.BaseDirectory, jsonFileName)).Result;
+        That(statusCode, Is.EqualTo(HttpStatusCode.OK));
+
+        Login(userName, Password!);
+        NavigateWait("/draft", By.CssSelector("storm-sidenav"));
+        ClickRow(ApplyCaseNo!);
+        WaitElementExists(By.CssSelector("iframe"));
+
+        _driver.SwitchTo().Frame(0);
+
+        var acceptSign = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("#accept-sign")));
+        ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].scrollIntoView(true);", acceptSign);
+        ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].click();", acceptSign);
+
+        var expectedUserElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath($"//span[@sti-post-user-full-name][text()='{expectedUserName}']")));
+        That(expectedUserElement, Is.Not.Null);
+
+        _driver.SwitchTo().DefaultContent();
+
+        WaitElementExists(By.XPath("//button[text()='新增文件']"));
+        ElementClick(By.XPath("//button[text()='新增文件']"));
+        WaitElementExists(By.CssSelector("storm-card[headline='新增檔案']"));
+        UploadFilesAndCheck(new[] { "twcweb_01_1_夾帶附件1.pdf" }, "input.dz-hidden-input:nth-of-type(3)");
+
+        ElementClick(By.CssSelector("#用印或代送件只需夾帶附件"));
+        _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#用印或代送件只需夾帶附件")));
+        ElementClick(By.XPath("//button[text()='確認受理']"));
+
+        _wait.Until(ExpectedConditions.UrlContains($"{BaseUrl}/unfinished"));
+        ClickRow(ApplyCaseNo!);
+
+        var logout = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("a[href='./logout']")));
+        _actions.MoveToElement(logout).Click().Perform();
     }
 
     public static void CleanDb()
