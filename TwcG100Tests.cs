@@ -107,10 +107,6 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            //_testHelper.InputSendKeys(By.XPath("//span[@sti-trustee-id-no]/input"), "A123456789" + Keys.Tab);
-            //var idElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='身分證號碼']/input")));
-            //That(idElement.GetAttribute("value"), Is.EqualTo("A123456789"));
-
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].dispatchEvent(new Event('focusout'));",
                 _testHelper.InputSendKeys(By.XPath("//span[@sti-trustee-id-no]/input"),
                     "A123456789"));
@@ -126,7 +122,7 @@ namespace DomainStorm.Project.TWC.Tests
 
             return Task.CompletedTask;
         }
-        public async Task TwcG100_05()
+        public Task TwcG100_05()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
@@ -139,16 +135,18 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#申請電子帳單勾選")));
             That(stiApplyEmail.Selected);
-            await Task.Delay(1000);
+            Thread.Sleep(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
-            await Task.Delay(1000);
+            Thread.Sleep(1000);
 
             stiApplyEmail = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='申請電子帳單勾選']")));
             That(stiApplyEmail.Selected);
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_06()
+        public Task TwcG100_06()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
@@ -179,13 +177,17 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stiIdentification = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='檢附證件']")));
             That(stiIdentification.Text, Is.EqualTo("BBB"));
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_07()
+        public Task TwcG100_07()
         {
             var stiOverApply = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-over-apply]")));
             That(stiOverApply.Text, Is.EqualTo("否"));
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_08()
+        public Task TwcG100_08()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
@@ -193,28 +195,16 @@ namespace DomainStorm.Project.TWC.Tests
             var stiNoteInput = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]/input")));
             stiNoteInput.SendKeys("備註內容" + Keys.Tab);
 
-            //_wait.Until(driver =>
-            //{
-            //    Thread.Sleep(1000);
-            //    var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]/input")));
-            //    return stiNote.GetAttribute("value") == "備註內容";
-            //});
-
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
-
-            //_wait.Until(driver =>
-            //{
-            //    Thread.Sleep(1000);
-            //    var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note]")));
-            //    return stiNote != null;
-            //});
 
             _testHelper.WaitElementExists(By.XPath("//span[@sti-note]"));
 
             That(_wait.Until(ExpectedConditions.ElementExists(By.XPath("//span[@sti-note][text()='備註內容']"))), Is.Not.Null);
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_09()
+        public Task TwcG100_09()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
@@ -226,16 +216,18 @@ namespace DomainStorm.Project.TWC.Tests
 
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.CssSelector("#繳費")));
             That(stiPay.Selected);
-            await Task.Delay(1000);
+            Thread.Sleep(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
-            await Task.Delay(1000);
+            Thread.Sleep(1000);
 
             stiPay = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//input[@id='繳費']")));
             That(stiPay.Selected);
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_10()
+        public Task TwcG100_10()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
@@ -250,28 +242,36 @@ namespace DomainStorm.Project.TWC.Tests
 
                 return signElement != null;
             });
-            await Task.Delay(1000);
+            Thread.Sleep(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
             _driver.SwitchTo().Frame(0);
 
             var signElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@sti-post-user-full-name='']")));
             That(signElement.Text, Is.EqualTo("張博文"));
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_11()
+        public Task TwcG100_11()
         {
             _driver.SwitchTo().DefaultContent();
             _testHelper.SwitchWindowAndClick("//label[@for='消費性用水服務契約']");
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_12()
+        public Task TwcG100_12()
         {
             _testHelper.SwitchWindowAndClick("//label[@for='公司個人資料保護告知事項']");
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_13()
+        public Task TwcG100_13()
         {
             _testHelper.SwitchWindowAndClick("//label[@for='公司營業章程']");
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_14()
+        public Task TwcG100_14()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
@@ -292,14 +292,16 @@ namespace DomainStorm.Project.TWC.Tests
 
                 return signElement != null;
             });
-            await Task.Delay(1000);
+            Thread.Sleep(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
             var signElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//img[@alt='簽名_001.tiff']")));
             That(signElement, Is.Not.Null);
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_15()
+        public Task TwcG100_15()
         {
             _wait.Until(driver =>
             {
@@ -318,7 +320,7 @@ namespace DomainStorm.Project.TWC.Tests
 
                 return imgElement != null;
             });
-            await Task.Delay(1000);
+            Thread.Sleep(1000);
 
             _driver.SwitchTo().Window(_driver.WindowHandles[1]);
 
@@ -332,8 +334,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             var imgElement = _wait.Until(ExpectedConditions.ElementExists(By.XPath("//img[@alt='證件_005.tiff']")));
             That(imgElement, Is.Not.Null);
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_16()
+        public Task TwcG100_16()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
@@ -350,8 +354,10 @@ namespace DomainStorm.Project.TWC.Tests
                 var rows = stormTable.GetShadowRoot().FindElements(By.CssSelector("tbody > tr"));
                 return rows.Count == 2;
             });
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_17()
+        public Task TwcG100_17()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
 
@@ -365,8 +371,10 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(closeButton).Click().Perform();
 
             _wait.Until(ExpectedConditions.InvisibilityOfElementLocated(By.CssSelector("div.swal2-popup > div.swal2-actions > button.swal2-confirm")));
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_18()
+        public Task TwcG100_18()
         {
             _driver.SwitchTo().Frame(0);
 
@@ -401,8 +409,10 @@ namespace DomainStorm.Project.TWC.Tests
 
             var stiEmailTelNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("[sti-email-tel-no]")));
             That(stiEmailTelNo.Text, Is.EqualTo("02-12345678"));
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_19()
+        public Task TwcG100_19()
         {
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().DefaultContent();
@@ -424,37 +434,49 @@ namespace DomainStorm.Project.TWC.Tests
 
             var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
             That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_20()
+        public Task TwcG100_20()
         {
             var stiNote = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[sti-note]")));
             That(stiNote.Text, Is.EqualTo("備註內容"));
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_21()
+        public Task TwcG100_21()
         {
             var stiPay = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[id='繳費']")));
             That(stiPay.Selected);
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_22()
+        public Task TwcG100_22()
         {
             var stiEmail = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[sti-email]")));
             That(stiEmail.Text, Is.EqualTo("aaa@bbb.ccc"));
 
             var stiEmailTelNo = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[sti-email-tel-no]")));
             That(stiEmailTelNo.Text, Is.EqualTo("02-12345678"));
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_23()
+        public Task TwcG100_23()
         {
             var stiIdentificationChoose = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[sti-identification-choose]")));
             That(stiIdentificationChoose.Text, Is.EqualTo("撫卹令或撫卹金分領證書"));
 
             var stiIdentification = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[sti-identification]")));
             That(stiIdentification.Text, Is.EqualTo("BBB"));
+
+            return Task.CompletedTask;
         }
-        public async Task TwcG100_24()
+        public Task TwcG100_24()
         {
             var stiOverApply = _wait.Until(ExpectedConditions.ElementExists(By.CssSelector("[sti-over-apply]")));
             That(stiOverApply.Text, Is.EqualTo("否"));
+
+            return Task.CompletedTask;
         }
     }
 }

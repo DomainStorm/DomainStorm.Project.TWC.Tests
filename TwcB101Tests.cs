@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
@@ -112,9 +111,6 @@ namespace DomainStorm.Project.TWC.Tests
             _actions.MoveToElement(deleteButton).Click().Perform();
 
             _testHelper.ElementClick(By.XPath("//h2[text()='是否刪除？']"));
-
-            //_wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//h2[text()='是否刪除？']")));
-            //_wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//button[contains(text(), '刪除')]")));
             _testHelper.ElementClick(By.XPath("//button[contains(text(), '刪除')]"));
 
             _wait.Until(driver =>
@@ -173,9 +169,6 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
 
             _driver.SwitchTo().Frame(0);
-
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }

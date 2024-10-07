@@ -23,7 +23,7 @@ namespace DomainStorm.Project.TWC.Tests
         public void Setup()
         {
             var testMethod = TestContext.CurrentContext.Test.MethodName;
-            var methodInfo = typeof(TwcDA001Tests).GetMethod(testMethod)!;
+            var methodInfo = typeof(TwcDA001Tests).GetMethod(testMethod!);
             var noBrowser = methodInfo?.GetCustomAttribute<NoBrowserAttribute>() != null;
 
             if (!noBrowser)
@@ -97,7 +97,7 @@ namespace DomainStorm.Project.TWC.Tests
         public Task TwcDA001_05()
         {
             var content = _testHelper.WaitShadowElement("td[data-field='name'] span span", "twcweb_01_1_夾帶附件1.pdf", isEditTable: true);
-            That(content.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(content!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             return Task.CompletedTask;
         }
@@ -133,9 +133,6 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
 
             _driver.SwitchTo().Frame(0);
-
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }
