@@ -65,7 +65,7 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.UploadFilesAndCheck(new[] { "twcweb_01_1_夾帶附件1.pdf" }, "input.dz-hidden-input:nth-of-type(3)");
 
             var content = _testHelper.WaitShadowElement("td[data-field='name'] span span", "twcweb_01_1_夾帶附件1.pdf", isEditTable: true);
-            That(content.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(content!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             _testHelper.ElementClick(By.CssSelector("#用印或代送件只需夾帶附件"));
 
@@ -79,9 +79,6 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
 
             _driver.SwitchTo().Frame(0);
-
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }
@@ -128,9 +125,6 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
 
             _driver.SwitchTo().Frame(0);
-
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }
@@ -190,7 +184,7 @@ namespace DomainStorm.Project.TWC.Tests
         public Task TwcRA001_06()
         {
             var content = _testHelper.WaitShadowElement("td[data-field='name'] span span", "twcweb_01_1_夾帶附件1.pdf", isEditTable: true);
-            That(content.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(content!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             return Task.CompletedTask;
         }
@@ -230,15 +224,12 @@ namespace DomainStorm.Project.TWC.Tests
 
             _driver.SwitchTo().Frame(0);
 
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
-
             return Task.CompletedTask;
         }
 
         [Test]
         [Order(3)]
-        public async Task TwcRA001_10()
+        public Task TwcRA001_10()
         {
             _testHelper.Login("0511", TestHelper.Password!);
             _testHelper.NavigateWait("/report/RA001", By.CssSelector("iframe"));
@@ -275,6 +266,8 @@ namespace DomainStorm.Project.TWC.Tests
             string E8Value = worksheet.Cells["E8"].Text;
 
             That(E7Value == "2" && E8Value == "1", Is.True);
+
+            return Task.CompletedTask;
         }
     }
 }

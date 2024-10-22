@@ -94,7 +94,7 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.ElementClick(By.XPath("//button[text()='刪除']"));
 
             var content = _testHelper.WaitShadowElement("p", "沒有找到符合的結果");
-            That(content.Text, Is.EqualTo("沒有找到符合的結果"));
+            That(content!.Text, Is.EqualTo("沒有找到符合的結果"));
 
             return Task.CompletedTask;
         }
@@ -153,7 +153,7 @@ namespace DomainStorm.Project.TWC.Tests
         public Task TwcA101_09()
         {
             var content = _testHelper.WaitShadowElement("td[data-field='name'] span span", "twcweb_01_1_夾帶附件1.pdf", isEditTable: true);
-            That(content.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
+            That(content!.Text, Is.EqualTo("twcweb_01_1_夾帶附件1.pdf"));
 
             return Task.CompletedTask;
         }
@@ -202,9 +202,6 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
 
             _driver.SwitchTo().Frame(0);
-
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }

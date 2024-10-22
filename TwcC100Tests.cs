@@ -95,11 +95,6 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().Window(_driver.WindowHandles[0]);
             _driver.SwitchTo().Frame(0);
 
-            //_testHelper.InputSendKeys(By.XPath("//span[@sti-trustee-id-no]/input"), "A123456789" + Keys.Tab);
-            //var idElement = _wait.Until(ExpectedConditions.ElementIsVisible(By.XPath("//span[@id='身分證號碼']/input")));
-            //That(idElement.GetAttribute("value"), Is.EqualTo("A123456789"));
-
-
             ((IJavaScriptExecutor)_driver).ExecuteScript("arguments[0].dispatchEvent(new Event('focusout'));",
                 _testHelper.InputSendKeys(By.XPath("//span[@sti-trustee-id-no]/input"),
                     "A123456789"));
@@ -168,18 +163,21 @@ namespace DomainStorm.Project.TWC.Tests
             _driver.SwitchTo().DefaultContent();
             _testHelper.SwitchWindowAndClick("//input[@id='消費性用水服務契約']");
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='消費性用水服務契約']")));
+
             return Task.CompletedTask;
         }
         public Task TwcC100_08()
         {
             _testHelper.SwitchWindowAndClick("//input[@id='公司個人資料保護告知事項']");
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='公司個人資料保護告知事項']")));
+
             return Task.CompletedTask;
         }
         public Task TwcC100_09()
         {
             _testHelper.SwitchWindowAndClick("//input[@id='公司營業章程']");
             _wait.Until(ExpectedConditions.ElementToBeSelected(By.XPath("//input[@id='公司營業章程']")));
+
             return Task.CompletedTask;
         }
         public Task TwcC100_10()
@@ -236,9 +234,6 @@ namespace DomainStorm.Project.TWC.Tests
             _testHelper.WaitElementExists(By.CssSelector("iframe"));
 
             _driver.SwitchTo().Frame(0);
-
-            //var applyCaseNo = _wait.Until(ExpectedConditions.ElementIsVisible(By.CssSelector("span[sti-apply-case-no]")));
-            //That(applyCaseNo.Text, Is.EqualTo(TestHelper.ApplyCaseNo));
 
             return Task.CompletedTask;
         }
